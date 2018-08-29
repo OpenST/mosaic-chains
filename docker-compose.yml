@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+
+  geth_rinkeby:
+    image: ethereum/client-go
+    ports:
+      - "8545:8545"
+      - "30303:30303"
+    volumes:
+      - rinkeby:/root/.ethereum
+    command: ["--rinkeby", "--rpc", "--rpcaddr", "0.0.0.0", "--rpcvhosts", "*"]
+
+  geth_utility_1409:
+    image: openstfoundation/utility-node-1409
+    ports:
+      - "8547:8547"
+      - "8548:8548"
+      - "30304:30304"
+    volumes:
+      - utility1409:/usr/utility_node
+
+  rum:
+    image: openstfoundation/rust-mosaic
+    environment:
+      - MOSAIC_ORIGIN_ENDPOINT=http://geth_rinkeby:8545
+      - MOSAIC_AUXILIARY_ENDPOINT=http://geth_utility_1409:8547
+    depends_on:
+      - geth_rinkeby
+      - geth_utility_1409
+    restart: unless-stopped
+
+
+volumes:
+  rinkeby:
+  utility1409:
