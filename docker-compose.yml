@@ -12,7 +12,7 @@ services:
     command: ["--rinkeby", "--rpc", "--rpcaddr", "0.0.0.0", "--rpcvhosts", "*"]
 
   geth_utility_1409:
-    image: openstfoundation/utility-node-1409
+    image: openstfoundation/utility-node:latest-uc1409
     ports:
       - "8547:8547"
       - "8548:8548"
