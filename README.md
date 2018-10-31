@@ -28,4 +28,13 @@ docker run -it -v utility1409:/usr/utility_node -p 8547:8547 -p 8548:8548 -p 303
 
 Note that `8547` is the default RPC port and `8548` is the default ws port for the utility chain 1409 image.
 You can override the command to specify different ports.
-See the Dockerfile for the default command, including the boot nodes.
+See the Dockerfile for the default command, including the boot nodes:
+```
+docker run -it -v utility1409:/usr/utility_node -p 8547:8547 -p 8548:8548 -p 30304:30304 openstfoundation/utility-node:latest-uc1409 --networkid 1409 --datadir ./uc_node --port 30304 --rpc --rpcapi eth,net,web3,personal --rpcport 8547 --ws --wsport 8548 --bootnodes enode://a4a27ee96b770d2ae801c04ac32ac494e222e0b40442b0e8400a762e5097658c47d4f66530a1459c17847215315e7dab1d99481e99cfbe9988a1bf02c2083b2e@35.173.117.179:30301,enode://08a5d0bcff92d06a8c1f7acef47d37610ffc0fb5146b693111b73656e0e2001c522971124eb8321687dcf21edd87dcf04d20276c9153ce5d045f075337c362c7@35.172.92.122:30301
+```
+
+⚠️ If you want to access the ethereum node, you need to enable access from the host [as per the go-ethereum documentation](https://hub.docker.com/r/ethereum/client-go/).
+You can do that for example by adding `--rpcaddr 0.0.0.0`, if you want to access RPC from other containers and/or hosts:
+```
+docker run -it -v utility1409:/usr/utility_node -p 8547:8547 -p 8548:8548 -p 30304:30304 openstfoundation/utility-node:latest-uc1409 --networkid 1409 --datadir ./uc_node --port 30304 --rpc --rpcaddr 0.0.0.0 --rpcapi eth,net,web3,personal --rpcport 8547 --ws --wsport 8548 --bootnodes enode://a4a27ee96b770d2ae801c04ac32ac494e222e0b40442b0e8400a762e5097658c47d4f66530a1459c17847215315e7dab1d99481e99cfbe9988a1bf02c2083b2e@35.173.117.179:30301,enode://08a5d0bcff92d06a8c1f7acef47d37610ffc0fb5146b693111b73656e0e2001c522971124eb8321687dcf21edd87dcf04d20276c9153ce5d045f075337c362c7@35.172.92.122:30301
+```
