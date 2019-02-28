@@ -1,29 +1,39 @@
 # ⛓ Mosaic Chains
 
 You need docker installed to run the chains.
-Origin will run a parity client and auxiliary will run a go-ethereum client.
+
+Mosaic will automatically identify if you want to run a utility chain (geth) or ethereum mainnet/testnet (parity).
+
+When you start more than one container, mosaic will increase the port numbers for docker publish with every next chain.
+If you already have containers or other services running at the default host ports for publishing, use the `-p` and/or `-r` options to start at a different port number.
 
 ## Running mosaic
 
-For origin, everything that parity takes as a "chain" argument is allowed.
+Usage: `mosaic.sh [options] <command> <chains>`
 
-```bash
-# Usage: mosaic.sh [-d <path>] <origin> <auxiliary> <action>
+Commands:
+* `start <chains...>`
+* `stop <chains...>`
+* `attach <chain>`
+* `logs <chain>`
 
-# Example for ropsten as origin and 200 as auxiliary:
-$ ./mosaic.sh ropsten 200 start
-$ ./mosaic.sh ropsten 200 stop
-```
+Options:
+* `-d, --data-dir <path>`:  a path to a directory where the chain data will be stored
+* `-p, --port <port>    `:  the first port to use for forwarding from host to container
+* `-r, --rpc-port <port>`:  the first RPC port to use for forwarding from host to container
 
-* Origin RPC endpoint: `geth attach http://localhost:8545`
-* Auxiliary RPC endpoint: `geth attach http://localhost:8546`
+Examples:
+* Starts three containers to follow these chains:
+  * `./mosaic start 200 ropsten rinkeby`
 
-Example commands to access the logs:
+* Uses /external to store the chain data:
+  * `./mosaic -d /external start 200`
 
-```bash
-docker logs -f mosaic-ropsten-utility_chain_200_origin_1
-docker logs -f mosaic-ropsten-utility_chain_200_auxiliary_1
-```
+* Attaches a geth node to the given chain:
+  * `./mosaic attach ropsten`
+
+* Follows the logs of a given chain:
+  * `./mosaic logs ropsten`
 
 ## Adding a new auxiliary chain
 

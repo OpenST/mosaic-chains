@@ -1,0 +1,144 @@
+#!/bin/bash
+
+function help() {
+  echo "Usage: mosaic.sh [options] <command> <chains>"
+  echo ""
+  echo "mosaic is a script to run and inspect mosaic chain nodes."
+  echo ""
+  echo "Commands:"
+  echo "  start <chains...>"
+  echo "  stop <chains...>"
+  echo "  attach <chain>"
+  echo "  logs <chain>"
+  echo ""
+  echo "Options:"
+  echo "  -d, --data-dir <path>  a path to a directory where the chain data will be stored"
+  echo "  -p, --port <port>      the first port to use for forwarding from host to container"
+  echo "  -r, --rpc-port <port>  the first RPC port to use for forwarding from host to container"
+  echo ""
+  echo "Examples:"
+  echo "  Starts three containers to follow these chains:"
+  echo "  ./mosaic start 200 ropsten rinkeby"
+  echo ""
+  echo "  Uses /external to store the chain data:"
+  echo "  ./mosaic -d /external start 200"
+  echo ""
+  echo "  Attaches a geth node to the given chain:"
+  echo "  ./mosaic attach ropsten"
+  echo ""
+  echo "  Follows the logs of a given chain:"
+  echo "  ./mosaic logs ropsten"
+}
+
+# Constants:
+PREFIX="mosaic_"
+PARITY_CHAINS=("ethereum" "classic" "poacore" "tobalaba" "expanse" "musicoin" "ellaism" "easthub" "social" "mix" "callisto" "morden" "ropsten" "kovan" "poasokol" "testnet" "dev")
+
+# Defaults:
+DATA_DIR=~/.mosaic
+PORT=30303
+RPC_PORT=8545
+
+# Checking input:
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+  -h|--help)
+    help
+    exit 0
+    ;;
+  -d|--data-dir)
+    DATA_DIR=${2%/} # removes trailing slash if exists
+    shift # past argument
+    shift # past value
+    ;;
+  -p|--port)
+    PORT=$2
+    shift # past argument
+    shift # past value
+    ;;
+  -r|--rpc-port)
+    RPC_PORT=$2
+    shift # past argument
+    shift # past value
+    ;;
+  *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+# Make sure docker network "mosaic" exists
+docker network create mosaic 1>/dev/null 2>&1
+
+# Take action based on command
+if [ "$1" = "start" ]; then
+  shift # past command
+
+  echo "Info: Data dir:  $DATA_DIR"
+
+  if [ ! -d $DATA_DIR ]; then
+    echo "Info: $DATA_DIR does not exist; initializing"
+    mkdir $DATA_DIR
+  fi
+
+  # iterate over given chains
+  for chain in "$@"
+  do
+    # Check if the given chain name is a valid parity chain name
+    if [[ " ${PARITY_CHAINS[@]} " =~ " ${chain} " ]]; then
+      echo "Info: Starting parity container to run $chain."
+      if [ ! -d $DATA_DIR/$chain ]; then
+        echo "Info: $DATA_DIR/$chain does not exist; initializing."
+        mkdir $DATA_DIR/$chain
+      fi
+      docker run --network mosaic --rm -d --name "$PREFIX$chain" -p $PORT:30303 -p $RPC_PORT:8545 -v ${DATA_DIR}/$chain:/home/parity/.local/share/io.parity.ethereum/ parity/parity:v2.3.4 "--chain" "${chain}" "--base-path" "/home/parity/.local/share/io.parity.ethereum/" "--jsonrpc-apis" "all" "--jsonrpc-interface" "all" "--jsonrpc-experimental"
+    
+    # Check if directory for utility chain existis
+    elif [ -d ./utility_chain_$chain ]; then
+      if [ ! -d $DATA_DIR/utility_chain_$chain ]; then
+        echo "Info: $DATA_DIR/utility_chain_$chain does not exist; initializing."
+        mkdir $DATA_DIR/utility_chain_$chain
+        cp -r ./utility_chain_$chain/geth $DATA_DIR/utility_chain_$chain/
+      fi
+
+      source utility_chain_$chain/environment.sh
+      echo "Info: Starting geth container to run utility chain $chain."
+      docker run --network mosaic --rm -d --name "$PREFIX$chain" -p $PORT:30303 -p $RPC_PORT:8545 -v ${DATA_DIR}/utility_chain_$chain:/chain_data ethereum/client-go "--networkid" "${UTILITY_NETWORK}" "--datadir" "./chain_data" "--port" "30303" "--rpc" "--rpcaddr" "0.0.0.0" "--rpcvhosts" "*" "--rpcapi" "eth,net,web3,personal" "--rpcport" "8545" "--bootnodes" "${UTILITY_BOOTNODES}"
+    else
+      echo "Error: Unknown chain identifier '$chain'."
+      echo ""
+      help
+      exit 1
+    fi
+
+    PORT=$((PORT + 1))
+    RPC_PORT=$((RPC_PORT + 1))
+  done
+elif [ "$1" = "stop" ]; then
+  shift # past command
+
+  # iterate over given chains
+  for chain in "$@"
+  do
+    echo "Info: Attempting to stop $PREFIX$chain."
+    docker stop $PREFIX$chain
+  done
+elif [ "$1" = "attach" ]; then
+  docker run --network mosaic -it --rm ethereum/client-go attach "http://$PREFIX$2:8545"
+elif [ "$1" = "logs" ]; then
+  docker logs -f "$PREFIX$2"
+else
+  echo "Error: '$1' is not a valid action"
+  echo ""
+  help
+  exit 1
+fi
+
+exit 0
+
