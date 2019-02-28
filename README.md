@@ -7,6 +7,9 @@ Mosaic will automatically identify if you want to run a utility chain (geth) or 
 When you start more than one container, mosaic will increase the port numbers for docker publish with every next chain.
 If you already have containers or other services running at the default host ports for publishing, use the `-p` and/or `-r` options to start at a different port number.
 
+Stopping a container that was started with mosaic completely removes that container from the host.
+Only the content in the mounted data directory remains.
+
 ## Running mosaic
 
 Usage: `mosaic.sh [options] <command> <chains>`
