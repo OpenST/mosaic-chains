@@ -15,6 +15,15 @@ function help() {
   echo "  -d, --data-dir <path>  a path to a directory where the chain data will be stored"
   echo "  -p, --port <port>      the first port to use for forwarding from host to container"
   echo "  -r, --rpc-port <port>  the first RPC port to use for forwarding from host to container"
+  echo "  -w, --ws-port <port>   the first WS port to use for forwarding from host to container"
+  echo ""
+  echo "  data-dir defaults to ~/.mosaic"
+  echo "  port defaults to 30303"
+  echo "  rpc-port defaults to 8545"
+  echo "  ws-port defaults to 8646"
+  echo ""
+  echo "  Make sure you have enough room between RPC and WS port for all nodes, as they are increased"
+  echo "  by one for each additional node."
   echo ""
   echo "Examples:"
   echo "  Starts three containers to follow these chains:"
@@ -38,6 +47,7 @@ PARITY_CHAINS=("ethereum" "classic" "poacore" "tobalaba" "expanse" "musicoin" "e
 DATA_DIR=~/.mosaic
 PORT=30303
 RPC_PORT=8545
+WS_PORT=8646
 
 # Checking input:
 POSITIONAL=()
@@ -62,6 +72,11 @@ case $key in
     ;;
   -r|--rpc-port)
     RPC_PORT=$2
+    shift # past argument
+    shift # past value
+    ;;
+  -w|--ws-port)
+    WS_PORT=$2
     shift # past argument
     shift # past value
     ;;
@@ -97,7 +112,26 @@ if [ "$1" = "start" ]; then
         echo "Info: $DATA_DIR/$chain does not exist; initializing."
         mkdir $DATA_DIR/$chain
       fi
-      docker run --network mosaic --rm -d --name "$PREFIX$chain" -p $PORT:30303 -p $RPC_PORT:8545 -v ${DATA_DIR}/$chain:/home/parity/.local/share/io.parity.ethereum/ parity/parity:v2.3.4 "--chain" "${chain}" "--base-path" "/home/parity/.local/share/io.parity.ethereum/" "--jsonrpc-apis" "all" "--jsonrpc-interface" "all" "--jsonrpc-experimental"
+      docker run \
+      --network mosaic \
+      --rm \
+      -d \
+      --name "$PREFIX$chain" \
+      -p $PORT:30303 \
+      -p $RPC_PORT:8545 \
+      -p $WS_PORT:8546 \
+      -v ${DATA_DIR}/$chain:/home/parity/.local/share/io.parity.ethereum/ \
+      parity/parity:v2.3.4 \
+      "--chain" "${chain}" \
+      "--base-path" "/home/parity/.local/share/io.parity.ethereum/" \
+      "--jsonrpc-apis" "all" \
+      "--jsonrpc-interface" "all" \
+      "--jsonrpc-experimental" \
+      "--ws-port" "8546" \
+      "--ws-interface" "all" \
+      "--ws-apis" "all" \
+      "--ws-origins" "all" \
+      "--ws-hosts" "all"
     
     # Check if directory for utility chain existis
     elif [ -d ./utility_chain_$chain ]; then
@@ -109,7 +143,30 @@ if [ "$1" = "start" ]; then
 
       source utility_chain_$chain/environment.sh
       echo "Info: Starting geth container to run utility chain $chain."
-      docker run --network mosaic --rm -d --name "$PREFIX$chain" -p $PORT:30303 -p $RPC_PORT:8545 -v ${DATA_DIR}/utility_chain_$chain:/chain_data ethereum/client-go "--networkid" "${UTILITY_NETWORK}" "--datadir" "./chain_data" "--port" "30303" "--rpc" "--rpcaddr" "0.0.0.0" "--rpcvhosts" "*" "--rpcapi" "eth,net,web3,personal" "--rpcport" "8545" "--bootnodes" "${UTILITY_BOOTNODES}"
+      docker run \
+        --network mosaic \
+        --rm \
+        -d \
+        --name "$PREFIX$chain" \
+        -p $PORT:30303 \
+        -p $RPC_PORT:8545 \
+        -p $WS_PORT:8546 \
+        -v ${DATA_DIR}/utility_chain_$chain:/chain_data \
+        ethereum/client-go \
+        "--networkid" "${UTILITY_NETWORK}" \
+        "--datadir" "./chain_data" \
+        "--port" "30303" \
+        "--rpc" \
+        "--rpcaddr" "0.0.0.0" \
+        "--rpcvhosts" "*" \
+        "--rpcapi" "eth,net,web3,network,debug,txpool" \
+        "--rpcport" "8545" \
+        "--ws" \
+        "--wsaddr" "0.0.0.0" \
+        "--wsport" "8546" \
+        "--wsapi" "eth,net,web3,network,debug,txpool" \
+        "--wsorigins" "*" \
+        "--bootnodes" "${UTILITY_BOOTNODES}"
     else
       echo "Error: Unknown chain identifier '$chain'."
       echo ""
@@ -119,6 +176,7 @@ if [ "$1" = "start" ]; then
 
     PORT=$((PORT + 1))
     RPC_PORT=$((RPC_PORT + 1))
+    WS_PORT=$((WS_PORT + 1))
   done
 elif [ "$1" = "stop" ]; then
   shift # past command
