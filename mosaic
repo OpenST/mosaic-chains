@@ -152,7 +152,7 @@ if [ "$1" = "start" ]; then
         -p $RPC_PORT:8545 \
         -p $WS_PORT:8546 \
         -v ${DATA_DIR}/utility_chain_$chain:/chain_data \
-        ethereum/client-go \
+        ethereum/client-go:v1.8.23 \
         "--networkid" "${UTILITY_NETWORK}" \
         "--datadir" "./chain_data" \
         "--port" "30303" \
