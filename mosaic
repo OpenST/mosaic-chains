@@ -109,7 +109,7 @@ if [ "$1" = "start" ]; then
 
       source utility_chain_$chain/environment.sh
       echo "Info: Starting geth container to run utility chain $chain."
-      docker run --network mosaic --rm -d --name "$PREFIX$chain" -p $PORT:30303 -p $RPC_PORT:8545 -v ${DATA_DIR}/utility_chain_$chain:/chain_data ethereum/client-go "--networkid" "${UTILITY_NETWORK}" "--datadir" "./chain_data" "--port" "30303" "--rpc" "--rpcaddr" "0.0.0.0" "--rpcvhosts" "*" "--rpcapi" "eth,net,web3,personal" "--rpcport" "8545" "--bootnodes" "${UTILITY_BOOTNODES}"
+      docker run --network mosaic --rm -d --name "$PREFIX$chain" -p $PORT:30303 -p $RPC_PORT:8545 -v ${DATA_DIR}/utility_chain_$chain:/chain_data ethereum/client-go:v1.8.23 "--networkid" "${UTILITY_NETWORK}" "--datadir" "./chain_data" "--port" "30303" "--rpc" "--rpcaddr" "0.0.0.0" "--rpcvhosts" "*" "--rpcapi" "eth,net,web3,personal" "--rpcport" "8545" "--bootnodes" "${UTILITY_BOOTNODES}"
     else
       echo "Error: Unknown chain identifier '$chain'."
       echo ""
