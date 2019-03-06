@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function help() {
-  echo "Usage: mosaic.sh [options] <command> <chains>"
+  echo "Usage: mosaic.sh [options] <command> <chains...>"
   echo ""
   echo "mosaic is a script to run and inspect mosaic chain nodes."
   echo ""
@@ -10,8 +10,9 @@ function help() {
   echo "  stop <chains...>"
   echo "  attach <chain>"
   echo "  logs <chain>"
+  echo "  list"
   echo ""
-  echo "Options:"
+  echo "Options for the start command:"
   echo "  -d, --data-dir <path>  a path to a directory where the chain data will be stored"
   echo "  -p, --port <port>      the first port to use for forwarding from host to container"
   echo "  -r, --rpc-port <port>  the first RPC port to use for forwarding from host to container"
@@ -37,6 +38,9 @@ function help() {
   echo ""
   echo "  Follows the logs of a given chain:"
   echo "  ./mosaic logs ropsten"
+  echo ""
+  echo "  Lists currently running containers:"
+  echo "  ./mosaic list"
 }
 
 # Constants:
@@ -191,6 +195,11 @@ elif [ "$1" = "attach" ]; then
   docker run --network mosaic -it --rm ethereum/client-go attach "http://$PREFIX$2:8545"
 elif [ "$1" = "logs" ]; then
   docker logs -f "$PREFIX$2"
+elif [ "$1" = "list" ]; then
+  docker ps \
+    -a \
+    --filter "name=mosaic_" \
+    --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Image}}\t{{.ID}}"
 else
   echo "Error: '$1' is not a valid action"
   echo ""
