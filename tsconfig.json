@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "sourceMap": true,
+        "types": [
+            "node",
+            "mocha"
+        ],
+        "resolveJsonModule": true
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/bin/mosaic.ts",
+        "src/bin/mosaic-attach.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
