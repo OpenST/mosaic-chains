@@ -3,16 +3,19 @@
 import * as mosaic from 'commander';
 import { version } from '../../package.json';
 import Shell from '../Shell';
-import Chain from '../Chain/Chain';
+import Node from '../Node/Node'
+import NodeDescription from '../Node/NodeDescription'
+import NodeFactory from '../Node/NodeFactory'
 
 mosaic
   .version(version)
   .arguments('<chain>')
-  .action((chainId) => {
+  .action((chainId: string) => {
+    const node: Node = NodeFactory.create(new NodeDescription(chainId));
     const args = [
       'logs',
       '-f',
-      `${Chain.prefix}${chainId}`,
+      node.getContainerName(),
     ];
     Shell.executeDockerCommand(args);
   })

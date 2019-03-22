@@ -19,7 +19,6 @@ export default class Directory {
    * Sanitizes given directory strings:
    * - replaces `~` at the beginning with the absolute path to the home directory.
    * - translates relative paths to absolute paths.
-   * Relative paths are assumed to be relative to the project root.
    * @param directory The directory string to sanitize.
    */
   static sanitize(directory: string): string {
@@ -30,7 +29,7 @@ export default class Directory {
     // Relative directory name
     if (directory.substr(0, 1) !== '/') {
       directory = path.join(
-        Directory.projectRoot,
+        process.cwd(),
         directory,
       );
     }

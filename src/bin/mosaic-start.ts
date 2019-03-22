@@ -2,23 +2,24 @@
 
 import * as mosaic from 'commander';
 import { version } from '../../package.json';
-import ChainFactory from '../Chain/ChainFactory';
-import Chain from '../Chain/Chain';
+import NodeFactory from '../Node/NodeFactory';
+import Node from '../Node/Node';
 
 // These defaults will be used if the relevant option is not given on the command line.
 const DEFAULT_DATA_DIR = '~/.mosaic'
 const DEFAULT_PORT = 30303;
 const DEFAULT_RPC_PORT = 8545;
-const DEFAULT_WS_PORT = 8646;
+const DEFAULT_WS_PORT = 8645;
 
 /**
  * Defines the available options of this command and their types.
  */
 interface Options {
-  dataDir: string;
+  mosaicDir: string;
   port: number;
   rpcPort: number;
-  wsPort: number;
+  websocketPort: number;
+  keepAfterStop: boolean;
 }
 
 /**
@@ -28,45 +29,58 @@ interface Options {
  */
 function parseOptions(options): Options {
   const parsedOptions = {
-    dataDir: options.dataDir || DEFAULT_DATA_DIR,
+    mosaicDir: options.mosaicDir || DEFAULT_DATA_DIR,
     port: options.port || DEFAULT_PORT,
     rpcPort: options.rpcPort || DEFAULT_RPC_PORT,
-    wsPort: options.wsPort || DEFAULT_WS_PORT,
+    websocketPort: options.wsPort || DEFAULT_WS_PORT,
+    keepAfterStop: options.keep ? true : false,
   };
 
   return parsedOptions;
 }
 
+/**
+ * Converts a given string to a decimal number.
+ * @param string The string to convert.
+ * @returns The parsed decimal.
+ */
+function stringToDecimal(string: string): number {
+  return parseInt(string, 10);
+}
+
 mosaic
   .version(version)
   .arguments('<chains...>')
-  .option('-d,--data-dir <dir>', 'a path to a directory where the chain data will be stored', DEFAULT_DATA_DIR)
-  .option('-p,--port <port>', 'the first port to use for forwarding from host to container', parseInt, DEFAULT_PORT)
-  .option('-r,--rpc-port <port>', 'the first RPC port to use for forwarding from host to container', parseInt, DEFAULT_RPC_PORT)
-  .option('-w,--ws-port <port>', 'the first WS port to use for forwarding from host to container', parseInt, DEFAULT_WS_PORT)
-  .action((chainIds, options) => {
+  .option('-d,--mosaic-dir <dir>', 'a path to a directory where the chain data will be stored', DEFAULT_DATA_DIR)
+  .option('-p,--port <port>', 'the first port to use for forwarding from host to container', stringToDecimal, DEFAULT_PORT)
+  .option('-r,--rpc-port <port>', 'the first RPC port to use for forwarding from host to container', stringToDecimal, DEFAULT_RPC_PORT)
+  .option('-w,--ws-port <port>', 'the first WS port to use for forwarding from host to container', stringToDecimal, DEFAULT_WS_PORT)
+  .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped')
+  .action((chainIds: string[], options) => {
     let {
-      dataDir,
+      mosaicDir,
       port,
       rpcPort,
-      wsPort
+      websocketPort,
+      keepAfterStop,
     } = parseOptions(options);
 
     for (const chainId of chainIds) {
-      const chain: Chain = ChainFactory.build(
+      const chain: Node = NodeFactory.create({
         chainId,
-        dataDir,
+        mosaicDir,
         port,
         rpcPort,
-        wsPort,
-      );
+        websocketPort,
+        keepAfterStop,
+      });
 
       chain.start();
 
       // Every additional chain will have all published docker ports increased by one.
       port += 1;
       rpcPort += 1;
-      wsPort += 1;
+      websocketPort += 1;
     }
   })
   .parse(process.argv);

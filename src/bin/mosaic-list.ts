@@ -2,7 +2,7 @@
 
 import * as mosaic from 'commander';
 import { version } from '../../package.json';
-import Chain from '../Chain/Chain'
+import Node from '../Node/Node'
 import Shell from '../Shell';
 
 mosaic
@@ -11,7 +11,7 @@ mosaic
     const args = [
       'ps',
       '-a',
-      '--filter', `name=${Chain.prefix}`,
+      '--filter', `name=${Node.prefix}`,
       '--format', 'table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Image}}\t{{.ID}}',
     ];
     Shell.executeDockerCommand(args);

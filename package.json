@@ -11,8 +11,8 @@
     "type": "git",
     "url": "git+https://github.com/OpenST/mosaic-chains.git"
   },
-  "author": "",
-  "license": "MIT",
+  "author": "OpenST Ltd.",
+  "license": "LGPL-3.0-only",
   "bugs": {
     "url": "https://github.com/OpenST/mosaic-chains/issues"
   },
@@ -30,6 +30,7 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "@typescript-eslint/parser": "^1.4.2",
+    "@typescript-eslint/eslint-plugin": "^1.5.0",
     "chai": "^4.2.0",
     "eslint": "5.10.0",
     "eslint-config-airbnb-base": "13.1.0",

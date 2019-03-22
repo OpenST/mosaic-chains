@@ -2,16 +2,17 @@
 
 import * as mosaic from 'commander';
 import { version } from '../../package.json';
-import ChainFactory from '../Chain/ChainFactory';
-import Chain from '../Chain/Chain';
+import NodeFactory from '../Node/NodeFactory';
+import NodeDescription from '../Node/NodeDescription';
+import Node from '../Node/Node';
 
 mosaic
   .version(version)
   .arguments('<chains...>')
-  .action((chainIds) => {
+  .action((chainIds: string[]) => {
 
     for (const chainId of chainIds) {
-      const chain: Chain = ChainFactory.build(chainId);
+      const chain: Node = NodeFactory.create(new NodeDescription(chainId));
 
       chain.stop();
     }

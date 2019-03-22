@@ -1,9 +1,10 @@
 import 'mocha';
 import { assert } from 'chai';
-import Chain from '../../src/Chain/Chain';
-import ChainFactory from '../../src/Chain/ChainFactory';
-import OfficialChain from '../../src/Chain/OfficialChain';
-import UtilityChain from '../../src/Chain/UtilityChain';
+import Node from '../../src/Node/Node';
+import NodeDescription from '../../src/Node/NodeDescription';
+import NodeFactory from '../../src/Node/NodeFactory';
+import ParityNode from '../../src/Node/ParityNode';
+import GethNode from '../../src/Node/GethNode';
 
 describe('ChainFactory.build()', () => {
   it('returns an official chain for an official id', () => {
@@ -13,8 +14,8 @@ describe('ChainFactory.build()', () => {
     ];
 
     for (const id of ids) {
-      const chain: Chain = ChainFactory.build(id);
-      assert.instanceOf(chain, OfficialChain);
+      const chain: Node = NodeFactory.create(new NodeDescription(id));
+      assert.instanceOf(chain, ParityNode);
     }
   });
 
@@ -25,8 +26,8 @@ describe('ChainFactory.build()', () => {
     ];
 
     for (const id of ids) {
-      const chain: Chain = ChainFactory.build(id);
-      assert.instanceOf(chain, UtilityChain);
+      const chain: Node = NodeFactory.create(new NodeDescription(id));
+      assert.instanceOf(chain, GethNode);
     }
   });
 });

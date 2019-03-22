@@ -2,9 +2,11 @@
 
 You need node and docker installed to run the chains.
 
-Mosaic will automatically identify if you want to run a utility chain (geth) or ethereum mainnet/testnet (parity).
+Mosaic will automatically identify if you want to run a geth node or a parity node based on the chain id.
+Any string supported by parity as a network option will start a parity node container.
+Any other string it tries to match to one of the available IDs in the `./utility_chains` directory, e.g. `200`.
 
-The default ports published with docker on the host are:
+The default ports published with docker on the host are starting from:
 
 * port: `30303`
 * RPC: `8545`
@@ -15,6 +17,7 @@ If you already have containers or other services running at the default host por
 
 Stopping a container that was started with mosaic completely removes that container from the host.
 Only the content in the mounted data directory remains.
+If you want to keep the container around, for example to debug in the logs after it was stopped automatically after starting, use the `--keep` option of `./mosaic start`.
 
 ⚠️ Nodes started with `mosaic` open *all* available APIs. If necessary, make sure your machine is secured.
 
@@ -22,6 +25,9 @@ Only the content in the mounted data directory remains.
 
 Clone `git clone git@github.com:OpenST/mosaic-chains.git` and install `npm install`.
 Run `./mosaic` to get the help output.
+
+The default directory for mosaic to store chain data is `~/.mosaic`.
+You can specify a different directory with the `--mosaic-dir` option.
 
 Examples:
 * Starts three containers to follow these chains:
