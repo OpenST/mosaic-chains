@@ -4,6 +4,7 @@ import * as mosaic from 'commander';
 import { version } from '../../package.json';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
+import Logger from '../Logger';
 
 // These defaults will be used if the relevant option is not given on the command line.
 const DEFAULT_DATA_DIR = '~/.mosaic'
@@ -20,6 +21,28 @@ interface Options {
   rpcPort: number;
   websocketPort: number;
   keepAfterStop: boolean;
+  unlock: string;
+  password: string;
+}
+
+/**
+ * Checks if unlock or password were given as a command line option but not the other.
+ * You have to give both options or none of them.
+ * @param options The parsed command line options.
+ * @returns True if one option was given but not the other.
+ */
+function unlockOrPasswordWithoutTheOther(options: Options): boolean {
+  const { unlock, password } = options;
+
+  if (unlock !== '' && password === '') {
+    return true;
+  }
+
+  if (unlock === '' && password !== '') {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -34,7 +57,14 @@ function parseOptions(options): Options {
     rpcPort: options.rpcPort || DEFAULT_RPC_PORT,
     websocketPort: options.wsPort || DEFAULT_WS_PORT,
     keepAfterStop: options.keep ? true : false,
+    unlock: options.unlock || '',
+    password: options.password || '',
   };
+
+  if (unlockOrPasswordWithoutTheOther(parsedOptions)) {
+    Logger.error('cannot use --unlock or --password without the other');
+    process.exit(1);
+  }
 
   return parsedOptions;
 }
@@ -55,6 +85,8 @@ mosaic
   .option('-p,--port <port>', 'the first port to use for forwarding from host to container', stringToDecimal, DEFAULT_PORT)
   .option('-r,--rpc-port <port>', 'the first RPC port to use for forwarding from host to container', stringToDecimal, DEFAULT_RPC_PORT)
   .option('-w,--ws-port <port>', 'the first WS port to use for forwarding from host to container', stringToDecimal, DEFAULT_WS_PORT)
+  .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
+  .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped')
   .action((chainIds: string[], options) => {
     let {
@@ -63,6 +95,8 @@ mosaic
       rpcPort,
       websocketPort,
       keepAfterStop,
+      unlock,
+      password,
     } = parseOptions(options);
 
     for (const chainId of chainIds) {
@@ -73,6 +107,8 @@ mosaic
         rpcPort,
         websocketPort,
         keepAfterStop,
+        unlock,
+        password,
       });
 
       chain.start();

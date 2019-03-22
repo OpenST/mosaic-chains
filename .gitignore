@@ -2,6 +2,9 @@
 .idea/
 .vscode/
 
+# Node passwords
+password.txt
+
 # Logs
 logs
 npm-debug.log*
