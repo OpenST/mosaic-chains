@@ -8,6 +8,8 @@ export default class NodeDescription {
   rpcPort: number = 8545;
   websocketPort: number = 8645;
   keepAfterStop: boolean = false;
+  unlock: string = '';
+  password: string = '';
 
   constructor(chainId: string) {
     this.chainId = chainId;

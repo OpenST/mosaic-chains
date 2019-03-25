@@ -48,10 +48,25 @@ Examples:
 * Lists all running mosaic chain containers:
   * `./mosaic list`
 
+## Creating a new auxiliary chain
+
+Creating a new auxiliary chain assumes that you have an unlocked account on a node that is connected to the **origin chain.**
+If that is **not** the case, do one or more of the steps below as required.
+You should know what you are doing here.
+
+1. Make sure you have an origin node running. If that is not the case, start one (e.g. `./mosaic start ropsten`).
+2. Attach to the node (e.g. `./mosaic attach ropsten`).
+3. Create a new account (`personal.newAccount("password")`).
+4. Create a `./password.txt` (or different) file that contains `password` followed by a newline.
+5. Unlock the account (e.g. `./mosaic stop ropsten; ./mosaic start --unlock address --password ./password.txt ropsten`).
+6. You want to lock the account again after creating the auxiliary chain has finished (e.g. `./mosaic stop ropsten; ./mosaic start ropsten`).
+7. You may want to delete the password file.
+
 ## Tests
 
 Run the tests with `npm test`.
 
+<!-- TODO: delete below!
 ## Adding a new auxiliary chain
 
 1. Create a new directory `./utility_chains/utility_chain_<id>`.
@@ -59,3 +74,4 @@ Run the tests with `npm test`.
 3. Add `<id>` to the `CHAINS` array at the beginning of `build.sh`.
 4. Run `./build.sh` to generate all chain inits.
 5. Add `./utility_chains/utility_chain_<id>/environment.json` and add the relevant data (see other chains for examples).
+-->

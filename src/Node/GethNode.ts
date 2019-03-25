@@ -35,15 +35,24 @@ export default class GethNode extends Node {
     }
 
     args = args.concat([
-      '--network', `${Node.network}`,
+      '--network', Node.network,
       '--detach',
-      '--name', `${this.containerName}`,
+      '--name', this.containerName,
       '--publish', `${this.port}:30303`,
       '--publish', `${this.rpcPort}:8545`,
       '--publish', `${this.websocketPort}:8546`,
       '--volume', `${this.chainDir}:/chain_data`,
+    ]);
+
+    if (this.password !== '') {
+      args = args.concat([
+        '--volume', `${this.password}:/password.txt`
+      ]);
+    }
+
+    args = args.concat([
       'ethereum/client-go:v1.8.23',
-      '--networkid', `${this.chainId}`,
+      '--networkid', this.chainId,
       '--datadir', './chain_data',
       '--port', '30303',
       '--rpc',
@@ -56,8 +65,15 @@ export default class GethNode extends Node {
       '--wsport', '8546',
       '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
       '--wsorigins', '*',
-      '--bootnodes', `${this.bootnodes}`,
+      '--bootnodes', this.bootnodes,
     ]);
+
+    if (this.unlock !== '') {
+      args = args.concat([
+        '--unlock', this.unlock,
+        '--password', '/password.txt',
+      ]);
+    }
 
     Shell.executeDockerCommand(args);
   }

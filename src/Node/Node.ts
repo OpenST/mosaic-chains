@@ -25,6 +25,10 @@ export default abstract class Node {
   protected containerName: string;
   /** If set to true, the container is not deleted when stopped. */
   protected keepAfterStop: boolean;
+  /** A comma separated list of addresses that get unlocked while the process is running. */
+  protected unlock: string;
+  /** The path to the password file to unlock the accounts given in unlock. */
+  protected password: string;
 
   /**
    * Docker container names will have this prefix.
@@ -49,6 +53,8 @@ export default abstract class Node {
     this.rpcPort = nodeDescription.rpcPort;
     this.websocketPort = nodeDescription.websocketPort;
     this.keepAfterStop = nodeDescription.keepAfterStop;
+    this.unlock = nodeDescription.unlock;
+    this.password = Directory.sanitize(nodeDescription.password);
 
     this.chainDir = path.join(this.mosaicDir, this.chainId);
     this.containerName = `${Node.prefix}${this.chainId}`;
