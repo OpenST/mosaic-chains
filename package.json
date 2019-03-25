@@ -18,12 +18,14 @@
   },
   "homepage": "https://github.com/OpenST/mosaic-chans#readme",
   "dependencies": {
+    "@openst/mosaic.js": "^0.10.0-beta.5",
     "@types/fs-extra": "^5.0.5",
     "@types/node": "^11.11.3",
     "commander": "^2.19.0",
     "fs-extra": "^7.0.1",
     "ts-node": "^8.0.3",
     "typescript": "^3.3.3333",
+    "web3": "^1.0.0-beta.37",
     "winston": "^3.2.1"
   },
   "devDependencies": {
