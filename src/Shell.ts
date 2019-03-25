@@ -1,4 +1,4 @@
-import { spawn, ChildProcess, exec } from 'child_process';
+import { ChildProcess, exec, spawnSync, SpawnSyncReturns } from 'child_process';
 
 /**
  * Executes shell commands in child processes.
@@ -8,8 +8,8 @@ export default class Shell {
    * Executes a docker child process with the given arguments passed to docker.
    * @param args Arguments to the docker command.
    */
-  public static executeDockerCommand(args: string[]): ChildProcess {
-    const childProcess: ChildProcess = Shell.execute('docker', args);
+  public static executeDockerCommand(args: string[]): SpawnSyncReturns<Buffer> {
+    const childProcess: SpawnSyncReturns<Buffer> = Shell.execute('docker', args);
 
     return childProcess;
   }
@@ -24,9 +24,9 @@ export default class Shell {
    * @param args The args to pass to the command.
    * @returns The child process that was spawned by this call.
    */
-  public static execute(command: string, args: string[]): ChildProcess {
+  public static execute(command: string, args: string[]): SpawnSyncReturns<Buffer> {
     // `stdio: 'inherit'` ensures that stdio of this process is inherited by the child process.
-    return spawn(command, args, { stdio: 'inherit'});
+    return spawnSync(command, args, { stdio: 'inherit' });
   }
 
   /**

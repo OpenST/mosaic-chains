@@ -43,7 +43,10 @@ export default class NodeFactory {
     if (NodeFactory.officialIdentifiers.includes(nodeDescription.chainId)) {
       return new ParityNode(nodeDescription);
     } else {
-      return new GethNode(nodeDescription);
+      const node = new GethNode(nodeDescription);
+      node.readBootnodes();
+
+      return node;
     }
   }
 }

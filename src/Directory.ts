@@ -16,6 +16,27 @@ export default class Directory {
   }
 
   /**
+   * @returns The absolute path to the utility chains directory in the project.
+   */
+  static get projectUtilityChainsDir(): string {
+    return path.join(
+      Directory.projectRoot,
+      'utility_chains',
+    );
+  }
+
+  /**
+   * @param chainId The chain id of the chain.
+   * @returns The absolute path to the directory of the given utility chain.
+   */
+  static getProjectUtilityChainDir(chainId: string): string {
+    return path.join(
+      Directory.projectUtilityChainsDir,
+      `utility_chain_${chainId}`
+    );
+  }
+
+  /**
    * Sanitizes given directory strings:
    * - replaces `~` at the beginning with the absolute path to the home directory.
    * - translates relative paths to absolute paths.

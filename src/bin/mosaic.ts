@@ -11,4 +11,5 @@ mosaic
   .command('attach <chain>', 'attach to the ethereum node of the given chain')
   .command('logs <chain>', 'follow the logs in the container of the given chain')
   .command('list', 'list all running containers that run a mosaic chain')
+  .command('new <new-chain-id> <origin-websocket> <password-file>', 'initializes a new auxiliary chain on the given origin chain')
   .parse(process.argv);
