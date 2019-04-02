@@ -21,6 +21,12 @@ export default class ParityNode extends Node {
       args = args.concat('--rm');
     }
 
+    // `\b` in grep is used to match the exact string.
+    //  Command for creating network only if network doesn't exists.
+    let createNetwork = 'docker network ls | grep \b' + Node.network+'\b || docker network create ' + Node.network;
+    Shell.executeCommand(createNetwork);
+
+
     args = args.concat([
       '--network', Node.network,
       '--detach',
