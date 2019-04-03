@@ -23,6 +23,7 @@ export default class GethNode extends Node {
    */
   public start(): void {
     this.initializeDirectories();
+
     this.logInfo('starting geth container');
 
     super.ensureNetworkExists();
