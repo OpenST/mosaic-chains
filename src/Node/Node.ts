@@ -92,6 +92,9 @@ export default abstract class Node {
     return this.keepAfterStop;
   }
 
+  /**
+   * Create a docker network if network doesn't exists.
+   */
   public ensureNetworkExists(): void {
     // `\b` in grep is used to match the exact string.
     //  Command for creating network only if network doesn't exists.
