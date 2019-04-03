@@ -22,13 +22,10 @@ export default class GethNode extends Node {
    * Starts the container that runs this chain node.
    */
   public start(): void {
+    let args = super.setup();
     this.initializeDirectories();
 
     this.logInfo('starting geth container');
-
-    let args = [];
-
-    args = super.setup();
 
     args = args.concat([
       'ethereum/client-go:v1.8.23',
@@ -47,6 +44,13 @@ export default class GethNode extends Node {
       '--wsorigins', '*',
       '--bootnodes', this.bootnodes,
     ]);
+
+    if (this.unlock !== '') {
+      args = args.concat([
+        '--unlock', this.unlock,
+        '--password', '/home/parity/password.txt',
+      ]);
+    }
 
     Shell.executeDockerCommand(args);
   }

@@ -94,6 +94,11 @@ export default abstract class Node {
 
   public setup(): string[] {
 
+    // `\b` in grep is used to match the exact string.
+    //  Command for creating network only if network doesn't exists.
+    let createNetwork = 'docker network ls | grep \b' + Node.network + '\b || docker network create ' + Node.network;
+    Shell.executeInShell(createNetwork);
+
     let args = [
       'run',
     ];
@@ -101,11 +106,6 @@ export default abstract class Node {
     if (!this.keepAfterStop) {
       args = args.concat('--rm');
     }
-
-    // `\b` in grep is used to match the exact string.
-    //  Command for creating network only if network doesn't exists.
-    let createNetwork = 'docker network ls | grep \b' + Node.network + '\b || docker network create ' + Node.network;
-    Shell.executeInShell(createNetwork);
 
     if (this.password !== '') {
       args = args.concat([
@@ -122,13 +122,6 @@ export default abstract class Node {
       '--publish', `${this.websocketPort}:8546`,
       '--volume', `${this.chainDir}:/home/parity/.local/share/io.parity.ethereum/`,
     ]);
-
-    if (this.unlock !== '') {
-      args = args.concat([
-        '--unlock', this.unlock,
-        '--password', '/home/parity/password.txt',
-      ]);
-    }
 
     return args;
 

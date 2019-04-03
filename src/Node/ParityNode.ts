@@ -10,12 +10,10 @@ export default class ParityNode extends Node {
    * Starts the container that runs this chain node.
    */
   public start(): void {
-    this.logInfo('starting parity container');
+    let args = super.setup();
     this.initializeDirectories();
 
-    let args = [];
-
-    args = super.setup();
+    this.logInfo('starting parity container');
 
     args = args.concat([
       'parity/parity:v2.3.4',
@@ -30,6 +28,13 @@ export default class ParityNode extends Node {
       '--ws-origins', 'all',
       '--ws-hosts', 'all',
     ]);
+
+    if (this.unlock !== '') {
+      args = args.concat([
+        '--unlock', this.unlock,
+        '--password', '/home/parity/password.txt',
+      ]);
+    }
 
     Shell.executeDockerCommand(args);
   }
