@@ -25,7 +25,7 @@ export default class ParityNode extends Node {
       '--network', Node.network,
       '--detach',
       '--name', this.containerName,
-      '--publish', `${this.port}:30303`,
+      '--publish', `${this.port}:${this.port}`,
       '--publish', `${this.rpcPort}:8545`,
       '--publish', `${this.websocketPort}:8546`,
       '--volume', `${this.chainDir}:/home/parity/.local/share/io.parity.ethereum/`,
@@ -39,16 +39,17 @@ export default class ParityNode extends Node {
 
     args = args.concat([
       'parity/parity:v2.3.4',
-      '--chain', this.chainId,
-      '--base-path', '/home/parity/.local/share/io.parity.ethereum/',
-      '--jsonrpc-apis', 'all',
-      '--jsonrpc-interface', 'all',
+      `--chain=${this.chainId}`,
+      '--base-path=/home/parity/.local/share/io.parity.ethereum/',
+      `--port=${this.port}`,
+      '--jsonrpc-apis=all',
+      '--jsonrpc-interface=all',
       '--jsonrpc-experimental',
-      '--ws-port', '8546',
-      '--ws-interface', 'all',
-      '--ws-apis', 'all',
-      '--ws-origins', 'all',
-      '--ws-hosts', 'all',
+      '--ws-port=8546',
+      '--ws-interface=all',
+      '--ws-apis=all',
+      '--ws-origins=all',
+      '--ws-hosts=all',
     ]);
 
     if (this.unlock !== '') {
