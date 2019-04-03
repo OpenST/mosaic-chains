@@ -10,8 +10,8 @@ export default class ParityNode extends Node {
    * Starts the container that runs this chain node.
    */
   public start(): void {
-    this.initializeDirectories();
     this.logInfo('starting parity container');
+    this.initializeDirectories();
 
     super.ensureNetworkExists();
 
