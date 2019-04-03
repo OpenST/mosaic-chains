@@ -22,10 +22,34 @@ export default class GethNode extends Node {
    * Starts the container that runs this chain node.
    */
   public start(): void {
-    let args = super.setup();
     this.initializeDirectories();
-
     this.logInfo('starting geth container');
+
+    super.ensureNetworkExists();
+
+    let args = [
+      'run',
+    ];
+
+    if (!this.keepAfterStop) {
+      args = args.concat('--rm');
+    }
+
+    args = args.concat([
+      '--network', Node.network,
+      '--detach',
+      '--name', this.containerName,
+      '--publish', `${this.port}:30303`,
+      '--publish', `${this.rpcPort}:8545`,
+      '--publish', `${this.websocketPort}:8546`,
+      '--volume', `${this.chainDir}:/chain_data`,
+    ]);
+
+    if (this.password !== '') {
+      args = args.concat([
+        '--volume', `${this.password}:/password.txt`
+      ]);
+    }
 
     args = args.concat([
       'ethereum/client-go:v1.8.23',
@@ -48,7 +72,7 @@ export default class GethNode extends Node {
     if (this.unlock !== '') {
       args = args.concat([
         '--unlock', this.unlock,
-        '--password', '/home/parity/password.txt',
+        '--password', '/password.txt',
       ]);
     }
 

@@ -92,39 +92,11 @@ export default abstract class Node {
     return this.keepAfterStop;
   }
 
-  public setup(): string[] {
-
+  public ensureNetworkExists(): void {
     // `\b` in grep is used to match the exact string.
     //  Command for creating network only if network doesn't exists.
     let createNetwork = 'docker network ls | grep \b' + Node.network + '\b || docker network create ' + Node.network;
     Shell.executeInShell(createNetwork);
-
-    let args = [
-      'run',
-    ];
-
-    if (!this.keepAfterStop) {
-      args = args.concat('--rm');
-    }
-
-    if (this.password !== '') {
-      args = args.concat([
-        '--volume', `${this.password}:/home/parity/password.txt`
-      ]);
-    }
-
-    args = args.concat([
-      '--network', Node.network,
-      '--detach',
-      '--name', this.containerName,
-      '--publish', `${this.port}:30303`,
-      '--publish', `${this.rpcPort}:8545`,
-      '--publish', `${this.websocketPort}:8546`,
-      '--volume', `${this.chainDir}:/home/parity/.local/share/io.parity.ethereum/`,
-    ]);
-
-    return args;
-
   }
 
   /**
@@ -160,6 +132,6 @@ export default abstract class Node {
    * @param message The message to log.
    */
   protected logInfo(message: string): void {
-    Logger.info(message, {chain: this.chainId});
+    Logger.info(message, { chain: this.chainId });
   }
 }

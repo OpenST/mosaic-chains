@@ -10,10 +10,34 @@ export default class ParityNode extends Node {
    * Starts the container that runs this chain node.
    */
   public start(): void {
-    let args = super.setup();
     this.initializeDirectories();
-
     this.logInfo('starting parity container');
+
+    super.ensureNetworkExists();
+
+    let args = [
+      'run',
+    ];
+
+    if (!this.keepAfterStop) {
+      args = args.concat('--rm');
+    }
+
+    args = args.concat([
+      '--network', Node.network,
+      '--detach',
+      '--name', this.containerName,
+      '--publish', `${this.port}:30303`,
+      '--publish', `${this.rpcPort}:8545`,
+      '--publish', `${this.websocketPort}:8546`,
+      '--volume', `${this.chainDir}:/home/parity/.local/share/io.parity.ethereum/`,
+    ]);
+
+    if (this.password !== '') {
+      args = args.concat([
+        '--volume', `${this.password}:/home/parity/password.txt`
+      ]);
+    }
 
     args = args.concat([
       'parity/parity:v2.3.4',
