@@ -26,16 +26,16 @@ export default class Shell {
    */
   public static execute(command: string, args: string[]): ChildProcess {
     // `stdio: 'inherit'` ensures that stdio of this process is inherited by the child process.
-    return spawn(command, args, { stdio: 'inherit' });
+    return spawn(command, args, { stdio: 'inherit'});
   }
 
-    /**
-     * Executes a command in child process and returns it.
-     * It must be used when we need to utilize shell functionality such as pipe, redirects.
-     * @param {string} command Command string to execute.
-     * @returns Child process that was spawned by this call.
-     */
-  public static executeCommand(command: string): ChildProcess {
+  /**
+   * Executes a command in child process and returns it.
+   * It must be used when we need to utilize shell functionality such as pipe, redirects.
+   * @param {string} command Command string to execute.
+   * @returns Child process that was spawned by this call.
+   */
+  public static executeInShell(command: string): ChildProcess {
     return exec(command);
   }
 }

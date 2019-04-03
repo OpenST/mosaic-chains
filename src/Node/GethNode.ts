@@ -26,29 +26,9 @@ export default class GethNode extends Node {
 
     this.logInfo('starting geth container');
 
-    let args = [
-      'run',
-    ];
+    let args = [];
 
-    if (!this.keepAfterStop) {
-      args = args.concat('--rm');
-    }
-
-    args = args.concat([
-      '--network', Node.network,
-      '--detach',
-      '--name', this.containerName,
-      '--publish', `${this.port}:30303`,
-      '--publish', `${this.rpcPort}:8545`,
-      '--publish', `${this.websocketPort}:8546`,
-      '--volume', `${this.chainDir}:/chain_data`,
-    ]);
-
-    if (this.password !== '') {
-      args = args.concat([
-        '--volume', `${this.password}:/password.txt`
-      ]);
-    }
+    args = super.setup();
 
     args = args.concat([
       'ethereum/client-go:v1.8.23',
@@ -67,13 +47,6 @@ export default class GethNode extends Node {
       '--wsorigins', '*',
       '--bootnodes', this.bootnodes,
     ]);
-
-    if (this.unlock !== '') {
-      args = args.concat([
-        '--unlock', this.unlock,
-        '--password', '/password.txt',
-      ]);
-    }
 
     Shell.executeDockerCommand(args);
   }

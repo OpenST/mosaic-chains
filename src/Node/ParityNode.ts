@@ -13,35 +13,9 @@ export default class ParityNode extends Node {
     this.logInfo('starting parity container');
     this.initializeDirectories();
 
-    let args = [
-      'run',
-    ];
+    let args = [];
 
-    if (!this.keepAfterStop) {
-      args = args.concat('--rm');
-    }
-
-    // `\b` in grep is used to match the exact string.
-    //  Command for creating network only if network doesn't exists.
-    let createNetwork = 'docker network ls | grep \b' + Node.network+'\b || docker network create ' + Node.network;
-    Shell.executeCommand(createNetwork);
-
-
-    args = args.concat([
-      '--network', Node.network,
-      '--detach',
-      '--name', this.containerName,
-      '--publish', `${this.port}:30303`,
-      '--publish', `${this.rpcPort}:8545`,
-      '--publish', `${this.websocketPort}:8546`,
-      '--volume', `${this.chainDir}:/home/parity/.local/share/io.parity.ethereum/`,
-    ]);
-
-    if (this.password !== '') {
-      args = args.concat([
-        '--volume', `${this.password}:/home/parity/password.txt`
-      ]);
-    }
+    args = super.setup();
 
     args = args.concat([
       'parity/parity:v2.3.4',
@@ -56,13 +30,6 @@ export default class ParityNode extends Node {
       '--ws-origins', 'all',
       '--ws-hosts', 'all',
     ]);
-
-    if (this.unlock !== '') {
-      args = args.concat([
-        '--unlock', this.unlock,
-        '--password', '/home/parity/password.txt',
-      ]);
-    }
 
     Shell.executeDockerCommand(args);
   }

@@ -92,6 +92,48 @@ export default abstract class Node {
     return this.keepAfterStop;
   }
 
+  public setup(): string[] {
+
+    let args = [
+      'run',
+    ];
+
+    if (!this.keepAfterStop) {
+      args = args.concat('--rm');
+    }
+
+    // `\b` in grep is used to match the exact string.
+    //  Command for creating network only if network doesn't exists.
+    let createNetwork = 'docker network ls | grep \b' + Node.network + '\b || docker network create ' + Node.network;
+    Shell.executeInShell(createNetwork);
+
+    if (this.password !== '') {
+      args = args.concat([
+        '--volume', `${this.password}:/home/parity/password.txt`
+      ]);
+    }
+
+    args = args.concat([
+      '--network', Node.network,
+      '--detach',
+      '--name', this.containerName,
+      '--publish', `${this.port}:30303`,
+      '--publish', `${this.rpcPort}:8545`,
+      '--publish', `${this.websocketPort}:8546`,
+      '--volume', `${this.chainDir}:/home/parity/.local/share/io.parity.ethereum/`,
+    ]);
+
+    if (this.unlock !== '') {
+      args = args.concat([
+        '--unlock', this.unlock,
+        '--password', '/home/parity/password.txt',
+      ]);
+    }
+
+    return args;
+
+  }
+
   /**
    * Starts the docker container that runs this chain.
    */
@@ -125,6 +167,6 @@ export default abstract class Node {
    * @param message The message to log.
    */
   protected logInfo(message: string): void {
-    Logger.info(message, { chain: this.chainId });
+    Logger.info(message, {chain: this.chainId});
   }
 }
