@@ -13,6 +13,8 @@ export default class ParityNode extends Node {
     this.logInfo('starting parity container');
     this.initializeDirectories();
 
+    super.ensureNetworkExists();
+
     let args = [
       'run',
     ];

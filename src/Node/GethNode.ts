@@ -26,6 +26,8 @@ export default class GethNode extends Node {
 
     this.logInfo('starting geth container');
 
+    super.ensureNetworkExists();
+
     let args = [
       'run',
     ];
