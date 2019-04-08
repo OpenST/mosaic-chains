@@ -31,10 +31,10 @@ You can specify a different directory with the `--mosaic-dir` option.
 
 Examples:
 * Starts three containers to follow these chains:
-  * `./mosaic start 200 ropsten rinkeby`
+  * `./mosaic start 200 ropsten rinkeby 1406 1407 1414`
 
 * Stops two containers of these chains:
-  * `./mosaic stop ropsten 200`
+  * `./mosaic stop ropsten 200 1406 1407 1414`
 
 * Uses /external to store the chains data:
   * `./mosaic -d /external start 200`
