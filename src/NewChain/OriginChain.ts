@@ -93,7 +93,7 @@ export default class OriginChain {
   public async stake(
     mosaicConfig: MosaicConfig,
     hashLockSecret: string,
-  ): Promise<{ blockNumber: number, stateRoot: string, messageHash: string }> {
+  ): Promise<{ blockNumber: number, stateRoot: string, messageHash: string, nonce: string }> {
     // First stake on the new gateway.
     const nonce = '1';
     const hashLockHash = Web3.utils.sha3(hashLockSecret);
@@ -136,6 +136,7 @@ export default class OriginChain {
       blockNumber,
       stateRoot,
       messageHash,
+      nonce,
     }
   }
 

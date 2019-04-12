@@ -240,6 +240,7 @@ export default class AuxiliaryChain {
    */
   public proveStake(
     mosaicConfig: MosaicConfig,
+    nonce: string,
     hashLockSecret: string,
     proofData: Proof,
   ): Promise<void> {
@@ -255,9 +256,6 @@ export default class AuxiliaryChain {
       proofData.accountProof,
       this.txOptions,
     ).then(() => {
-      // Nonce is always one as it is always a new chain with a new gateway where this account has
-      // not staked before.
-      const nonce = '1';
       return ostCoGateway
         .confirmStakeIntent(
           this.initConfig.originTxOptions.from,

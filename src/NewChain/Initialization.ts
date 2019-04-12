@@ -105,6 +105,7 @@ export default class Initialization {
       originBlockNumber,
       originStateRoot,
       originMessageHash,
+      stakeMessageNonce,
       proofData,
     } = await Initialization.initializeOrigin(
       mosaicConfig,
@@ -118,6 +119,7 @@ export default class Initialization {
       auxiliaryChain,
       originBlockNumber,
       originStateRoot,
+      stakeMessageNonce,
       hashLockSecret,
       proofData,
     );
@@ -161,12 +163,14 @@ export default class Initialization {
     originBlockNumber: number,
     originStateRoot: string,
     originMessageHash: string,
+    stakeMessageNonce: string,
     proofData: Proof,
   }> {
     const {
       blockNumber: originBlockNumber,
       stateRoot: originStateRoot,
       messageHash: originMessageHash,
+      nonce: stakeMessageNonce,
     } = await originChain.stake(mosaicConfig, hashLockSecret);
     const proofData: Proof = await Initialization.getStakeProof(
       originChain.getWeb3(),
@@ -181,6 +185,7 @@ export default class Initialization {
       originBlockNumber,
       originStateRoot,
       originMessageHash,
+      stakeMessageNonce,
       proofData,
     };
   }
@@ -194,6 +199,7 @@ export default class Initialization {
     auxiliaryChain: AuxiliaryChain,
     originBlockNumber: number,
     originStateRoot: string,
+    stakeMessageNonce: string,
     hashLockSecret: string,
     proofData: Proof,
   ): Promise<MosaicConfig> {
@@ -203,7 +209,7 @@ export default class Initialization {
       originStateRoot,
     );
     await auxiliaryChain.transferAllOstIntoOstPrime(mosaicConfig);
-    await auxiliaryChain.proveStake(mosaicConfig, hashLockSecret, proofData);
+    await auxiliaryChain.proveStake(mosaicConfig, stakeMessageNonce, hashLockSecret, proofData);
 
     return mosaicConfig;
   }
