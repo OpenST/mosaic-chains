@@ -187,21 +187,21 @@ export default class AuxiliaryChain {
       anchorOrganization.address,
     );
     mosaicConfig.auxiliaryAnchorAddress = anchor.address;
-    const ostPrimeAndCoGatewayOrganization = await this.deployOrganization(
+    const coGatewayAndOstPrimeOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryCoGatewayAndOstPrimeOrganizationOwner,
       this.deployer,
     );
-    mosaicConfig.auxiliaryOstPrimeAndCoGatewayOrganizationAddress = ostPrimeAndCoGatewayOrganization.address;
+    mosaicConfig.auxiliaryCoGatewayAndOstPrimeOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
     const ostPrime = await this.deployOstPrime(
       this.initConfig.originOstAddress,
-      ostPrimeAndCoGatewayOrganization.address,
+      coGatewayAndOstPrimeOrganization.address,
     );
     mosaicConfig.auxiliaryOstPrimeAddress = ostPrime.address;
     const ostCoGateway = await this.deployOstCoGateway(
       this.initConfig.originOstAddress,
       ostPrime.address,
       anchor.address,
-      ostPrimeAndCoGatewayOrganization.address,
+      coGatewayAndOstPrimeOrganization.address,
       mosaicConfig.originOstGatewayAddress,
     )
     mosaicConfig.auxiliaryOstCoGatewayAddress = ostCoGateway.address;

@@ -15,7 +15,7 @@ export default class MosaicConfig {
   public auxiliaryChainId: string;
   public auxiliaryAnchorOrganizationAddress: string;
   public auxiliaryAnchorAddress: string;
-  public auxiliaryOstPrimeAndCoGatewayOrganizationAddress: string;
+  public auxiliaryCoGatewayAndOstPrimeOrganizationAddress: string;
   public auxiliaryOstPrimeAddress: string;
   public auxiliaryOstCoGatewayAddress: string;
 }
