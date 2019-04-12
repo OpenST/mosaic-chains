@@ -7,11 +7,10 @@ export default class Shell {
   /**
    * Executes a docker child process with the given arguments passed to docker.
    * @param args Arguments to the docker command.
+   * @throws If the docker command returns an error.
    */
-  public static executeDockerCommand(args: string[]): SpawnSyncReturns<Buffer> {
-    const childProcess: SpawnSyncReturns<Buffer> = Shell.execute('docker', args);
-
-    return childProcess;
+  public static executeDockerCommand(args: string[]): void {
+    Shell.execute('docker', args);
   }
 
   /**
@@ -23,10 +22,14 @@ export default class Shell {
    * @param command The command to execute.
    * @param args The args to pass to the command.
    * @returns The child process that was spawned by this call.
+   * @throws If the child process returns an error.
    */
-  public static execute(command: string, args: string[]): SpawnSyncReturns<Buffer> {
+  public static execute(command: string, args: string[]): void {
     // `stdio: 'inherit'` ensures that stdio of this process is inherited by the child process.
-    return spawnSync(command, args, { stdio: 'inherit' });
+    const childProcess = spawnSync(command, args, { stdio: 'inherit' });
+    if (childProcess.error instanceof Error) {
+      throw childProcess.error;
+    }
   }
 
   /**
