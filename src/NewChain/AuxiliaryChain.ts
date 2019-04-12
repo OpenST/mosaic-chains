@@ -25,6 +25,28 @@ export default class AuxiliaryChain {
   private sealer: string;
   private deployer: string;
 
+  // The below nonces are more for documentation.
+  // However, they are set on the deployment transaction options to enforce failure if the order
+  // changes or a contract is added or removed.
+  // Co-gateway nonce is used when calculating its expected address.
+  private anchorOrganizationDeploymentNonce = 0;
+  private anchorDeploymentNonce = 1;
+  private coGatewayAndOstPrimeOrganizationDeploymentNonce = 2;
+  private ostPrimeDeploymentNonce = 3;
+  private merklePatriciaProofLibraryDeploymentNonce = 4;
+  private messageBusDeploymentNonce = 5;
+  private gatewayLibDeploymentNonce = 5;
+  private coGatewayDeploymentNonce = 7;
+
+  /*
+  Anchor
+   * * Organization for co-gateway and OST prime
+   * * OST prime
+   * * OST co-gateway with all its libraries:
+   *     * Merkle Patricia proof
+   *     * Message bus
+   *     * Gateway lib
+   */
   constructor(
     private initConfig: InitConfig,
     private chainId: string,
@@ -146,10 +168,6 @@ export default class AuxiliaryChain {
    * pre-calculated and the co-gateway is not actually deployed.
    */
   public getExpectedOstCoGatewayAddress(auxiliaryDeployer: string): string {
-    // This magic nonce results from the number of contracts that the deployer deploys on
-    // auxiliary before it deploys the co-gateway. Nonces start at 0 and increase by 1 for each
-    // deployed contract (transaction).
-    const nonce = 7;
     // Forcing type `any`, as web3 sha3 otherwise complains that it only accepts strings.
     // `RLP.encode()` returns a `Buffer`.
     // However, converting the buffer to a string first yields the wrong result. The buffer has to
@@ -157,13 +175,13 @@ export default class AuxiliaryChain {
     const encoded: any = RLP.encode(
       [
         auxiliaryDeployer,
-        nonce,
+        this.coGatewayDeploymentNonce,
       ],
     );
     const nonceHash: string = this.web3.utils.sha3(encoded);
     // Remove leading `0x` and first 24 characters (12 bytes) of the hex
     // string leaving us with the remaining 40 characters (20 bytes) that
-    // make up the address.
+    // make up the address. Also adding the removed leading `0x` again.
     const expectedOstCoGatewayAddress = this.web3.utils.toChecksumAddress(
       `0x${nonceHash.substring(26)}`
     );
@@ -194,6 +212,7 @@ export default class AuxiliaryChain {
     const anchorOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryAnchorOrganizationOwner,
       this.initConfig.auxiliaryAnchorOrganizationAdmin,
+      this.anchorOrganizationDeploymentNonce,
     );
     mosaicConfig.auxiliaryAnchorOrganizationAddress = anchorOrganization.address;
     const anchor = await this.deployAnchor(
@@ -206,6 +225,7 @@ export default class AuxiliaryChain {
     const coGatewayAndOstPrimeOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryCoGatewayAndOstPrimeOrganizationOwner,
       this.deployer,
+      this.coGatewayAndOstPrimeOrganizationDeploymentNonce,
     );
     mosaicConfig
       .auxiliaryCoGatewayAndOstPrimeOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
@@ -301,6 +321,7 @@ export default class AuxiliaryChain {
   }
 
   /**
+   * Nonce is often added to enforce failure when deploying in wrong order or missing a contract.
    * @returns The transaction options to use for transactions to the auxiliary chain.
    */
   private get txOptions(): Tx {
@@ -446,9 +467,17 @@ export default class AuxiliaryChain {
   /**
    * Deploys an organization.
    */
-  private deployOrganization(owner: string, admin: string): Promise<ContractInteract.Organization> {
+  private deployOrganization(
+    owner: string,
+    admin: string,
+    nonce: number,
+  ): Promise<ContractInteract.Organization> {
     this.logInfo('deploying organization', { owner, admin });
-    return Contracts.deployOrganization(this.web3, this.txOptions, owner, admin);
+    const txOptions: Tx = {
+      ...this.txOptions,
+      nonce
+    };
+    return Contracts.deployOrganization(this.web3, txOptions, owner, admin);
   }
 
   /**
@@ -464,9 +493,13 @@ export default class AuxiliaryChain {
       'deploying anchor',
       { originChainId, initialHeight, initialStateRoot, organizationAddress },
     );
+    const txOptions: Tx = {
+      ...this.txOptions,
+      nonce: this.anchorDeploymentNonce,
+    };
     return Contracts.deployAnchor(
       this.web3,
-      this.txOptions,
+      txOptions,
       originChainId,
       initialHeight,
       initialStateRoot,
@@ -483,9 +516,13 @@ export default class AuxiliaryChain {
     organizationAddress: string,
   ): Promise<ContractInteract.OSTPrime> {
     this.logInfo('deploying ost prime', { ostAddress, organizationAddress });
+    const txOptions: Tx = {
+      ...this.txOptions,
+      nonce: this.ostPrimeDeploymentNonce,
+    };
     const ostPrime = Contracts.deployOstPrime(
       this.web3,
-      this.txOptions,
+      txOptions,
       ostAddress,
       organizationAddress,
     );
@@ -525,13 +562,6 @@ export default class AuxiliaryChain {
    */
   private logInfo(message: string, metaData: any = {}): void {
     Logger.info(message, { chain: 'auxiliary', chainId: this.chainId, ...metaData });
-  }
-
-  /**
-   * Logs the given message and meta data as log level warn.
-   */
-  private logWarn(message: string, metaData: any = {}): void {
-    Logger.warn(message, { chain: 'auxiliary', chainId: this.chainId, ...metaData });
   }
 
   /**
