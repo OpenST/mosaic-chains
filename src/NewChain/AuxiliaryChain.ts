@@ -74,6 +74,10 @@ export default class AuxiliaryChain {
       '--datadir', '/chain_data',
     ];
 
+    // The command is executed twice in order to create two accounts. Each time the command is run,
+    // it creates one new account. This is also the reason why the password file must contain the
+    // same password twice, once per line. Both accounts get created with the password on the first
+    // line of the file, but both lines are read for unlocking when the node is later started.
     Shell.executeDockerCommand(args);
     Shell.executeDockerCommand(args);
 
