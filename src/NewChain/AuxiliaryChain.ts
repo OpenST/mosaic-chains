@@ -172,7 +172,18 @@ export default class AuxiliaryChain {
   }
 
   /**
-   * Deploys all the contracts that are required for a new auxiliary chain to be linked to origin.
+   * Deploys all the contracts that are required for a new auxiliary chain to be linked to origin:
+   *
+   * * Anchor organization
+   * * Anchor
+   * * Organization for co-gateway and OST prime
+   * * OST prime
+   * * OST co-gateway with all its libraries:
+   *     * Merkle Patricia proof
+   *     * Message bus
+   *     * Gateway lib
+   *
+   * Also links the contracts.
    */
   public async deployContracts(
     mosaicConfig: MosaicConfig,
