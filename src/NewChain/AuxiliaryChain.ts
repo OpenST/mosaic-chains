@@ -78,9 +78,10 @@ export default class AuxiliaryChain {
     Shell.executeDockerCommand(args);
 
 
-    const { sealer, deployer } = this.getSealerAndDeployer();
-    mosaicConfig.auxiliaryOriginalSealer = sealer;
-    mosaicConfig.auxiliaryOriginalDeployer = deployer;
+    // It doesn't matter which account we assign which role as both accounts are new.
+    [this.sealer, this.deployer] = this.getAccounts();
+    mosaicConfig.auxiliaryOriginalSealer = this.sealer;
+    mosaicConfig.auxiliaryOriginalDeployer = this.deployer;
 
     return mosaicConfig;
   }
@@ -368,7 +369,7 @@ export default class AuxiliaryChain {
    * Reads the sealer and deployer addresses from the keystore.
    * @returns Both addresses with leading `0x`.
    */
-  private getSealerAndDeployer(): { sealer: string, deployer: string } {
+  private getAccounts(): string[] {
     this.logInfo('reading sealer and deployer address from disk');
     const addresses: string[] = this.readAddressesFromKeystore();
     if (addresses.length !== 2) {
@@ -377,11 +378,7 @@ export default class AuxiliaryChain {
       throw new Error(message);
     }
 
-    [this.sealer, this.deployer] = addresses.map(address => `0x${address}`);
-    return {
-      sealer: this.sealer,
-      deployer: this.deployer,
-    }
+    return addresses.map(address => `0x${address}`);
   }
 
   /**
