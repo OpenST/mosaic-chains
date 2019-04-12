@@ -383,8 +383,9 @@ export default class AuxiliaryChain {
     this.logInfo('reading sealer and deployer address from disk');
     const addresses: string[] = this.readAddressesFromKeystore();
     if (addresses.length !== 2) {
-      Logger.error('did not find exactly two addresses in auxiliary keystore; aborting');
-      throw new Error();
+      const message: string = 'did not find exactly two addresses in auxiliary keystore; aborting';
+      Logger.error(message);
+      throw new Error(message);
     }
 
     [this.sealer, this.deployer] = addresses.map(address => `0x${address}`);

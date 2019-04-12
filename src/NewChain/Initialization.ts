@@ -31,11 +31,11 @@ export default class Initialization {
   ) {
     const initConfig: InitConfig = InitConfig.createFromFile(newChainId);
     if (!initConfig.isValid()) {
-      throw new Error();
+      throw new Error('no valid configuration found');
     }
 
     if (!Initialization.environmentIsClean(auxiliaryNodeDescription)) {
-      throw new Error();
+      throw new Error('chain dir exists; it must be empty to generate a new chain');
     }
 
     const originWeb3: Web3 = new Web3(originWebsocket);

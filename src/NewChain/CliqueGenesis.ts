@@ -831,8 +831,9 @@ export default class CliqueGenesis {
     const output = parseInt(input, 10);
 
     if (output === NaN) {
-      Logger.error('could not convert chain id to integer', { input });
-      throw new Error();
+      const message: string = 'could not convert chain id to integer';
+      Logger.error(message, { input });
+      throw new Error(message);
     }
 
     return output;
