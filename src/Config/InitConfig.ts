@@ -8,35 +8,35 @@ import Directory from '../Directory';
  */
 export default class InitConfig {
   /** Required to know the sender account when sending transactions to the origin node. */
-  public originTxOptions: { from: string };
+  readonly originTxOptions: { from: string };
   /** Bounty to set on the gateway on origin. */
-  public originBounty: string = '';
+  readonly originBounty: string = '';
   /** Bounty to set on the co-gateway on auxiliary. */
-  public auxiliaryBounty: string = '';
+  readonly auxiliaryBounty: string = '';
 
   /** For the initial stake, the gas price to set. */
-  public originStakeGasPrice: string = '';
+  readonly originStakeGasPrice: string = '';
   /** For the initial stake, the gas limit to set. */
-  public originStakeGasLimit: string = '';
+  readonly originStakeGasLimit: string = '';
   /** The amount of OST to stake to initialize the auxiliary chain with, in Wei. */
-  public originStakeAmount: string = '';
+  readonly originStakeAmount: string = '';
   /**
    * For the initial stake, wait this number of blocks after staking before reading the state root
    * from origin.
    */
-  public originStakeBlocksToWait: number = 0;
+  readonly originStakeBlocksToWait: number = 0;
 
   /** The address of the OST EIP20 token on origin. */
-  public originOstAddress: string = '';
+  readonly originOstAddress: string = '';
   /** Where to send burned tokens on origin. */
-  public originBurnerAddress: string = '';
+  readonly originBurnerAddress: string = '';
   /** Where to send burned tokens on auxiliary. */
-  public auxiliaryBurnerAddress: string = '';
+  readonly auxiliaryBurnerAddress: string = '';
 
   /** How many state roots to store in the anchor ring buffer on origin. */
-  public originAnchorBufferSize: string = '';
+  readonly originAnchorBufferSize: string = '';
   /** How many state roots to store in the anchor ring buffer on auxiliary. */
-  public auxiliaryAnchorBufferSize: string = '';
+  readonly auxiliaryAnchorBufferSize: string = '';
 
   // The owners and admins of the organizations.
   // !! Note that the origin and auxiliary gateway and co-gateway organization admins cannot be

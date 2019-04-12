@@ -21,27 +21,16 @@ import Proof from './Proof';
  */
 export default class AuxiliaryChain {
   private web3: Web3;
-
-  private chainId: string;
-  private originChainId: string;
   private chainDir: string;
-  private initConfig: InitConfig;
-  private nodeDescription: NodeDescription;
-
   private sealer: string;
   private deployer: string;
 
   constructor(
-    initConfig: InitConfig,
-    chainId: string,
-    originChainId: string,
-    nodeDescription: NodeDescription,
+    private initConfig: InitConfig,
+    private chainId: string,
+    private originChainId: string,
+    private nodeDescription: NodeDescription,
   ) {
-    this.initConfig = initConfig;
-    this.chainId = chainId;
-    this.originChainId = originChainId;
-    this.nodeDescription = nodeDescription;
-
     this.chainDir = path.join(nodeDescription.mosaicDir, this.chainId);
   }
 

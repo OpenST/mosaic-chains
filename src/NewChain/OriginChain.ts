@@ -9,18 +9,14 @@ import Contracts from './Contracts';
  * The origin chain when creating a new auxiliary chain.
  */
 export default class OriginChain {
-  private initConfig: InitConfig;
-  private web3: Web3;
-  private auxiliaryChainId: string;
   private chainId: string;
-
   private ostGateway: ContractInteract.EIP20Gateway;
 
-  constructor(initConfig: InitConfig, originWeb3: Web3, auxiliaryChainId: string) {
-    this.initConfig = initConfig;
-    this.web3 = originWeb3;
-    this.auxiliaryChainId = auxiliaryChainId;
-  }
+  constructor(
+    private initConfig: InitConfig,
+    private web3: Web3,
+    private auxiliaryChainId: string,
+  ) { }
 
   /**
    * @returns The Web3 instance of this chain.
