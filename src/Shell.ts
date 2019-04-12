@@ -1,4 +1,4 @@
-import { ChildProcess, exec, spawnSync, SpawnSyncReturns } from 'child_process';
+import { spawnSync, execSync } from 'child_process';
 
 /**
  * Executes shell commands in child processes.
@@ -38,7 +38,7 @@ export default class Shell {
    * @param {string} command Command string to execute.
    * @returns Child process that was spawned by this call.
    */
-  public static executeInShell(command: string): ChildProcess {
-    return exec(command);
+  public static executeInShell(command: string): Buffer {
+    return execSync(command);
   }
 }

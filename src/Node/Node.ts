@@ -95,9 +95,9 @@ export default abstract class Node {
    * Create a docker network if network doesn't exists.
    */
   public ensureNetworkExists(): void {
-    // `\b` in grep is used to match the exact string.
+    // `-w` in grep is used to match the exact string.
     //  Command for creating network only if network doesn't exists.
-    let createNetwork = 'docker network ls | grep \b' + Node.network + '\b || docker network create ' + Node.network;
+    let createNetwork = `docker network ls | grep -w ${Node.network} || docker network create ${Node.network}`;
     Shell.executeInShell(createNetwork);
   }
 
