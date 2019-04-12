@@ -13,7 +13,6 @@ import NodeDescription from '../Node/NodeDescription';
 import GethNode from '../Node/GethNode';
 import { Tx } from 'web3/eth/types';
 import InitConfig from '../Config/InitConfig';
-import MosaicConfig from '../Config/MosaicConfig';
 import Proof from './Proof';
 
 /**
@@ -22,8 +21,8 @@ import Proof from './Proof';
 export default class AuxiliaryChain {
   private web3: Web3;
   private chainDir: string;
-  private sealer: string;
-  private deployer: string;
+  readonly sealer: string;
+  readonly deployer: string;
 
   // The below nonces are more for documentation.
   // However, they are set on the deployment transaction options to enforce failure if the order
@@ -71,83 +70,19 @@ export default class AuxiliaryChain {
   }
 
   /**
-   * Generates two new accounts with an ethereum node and adds the addresses to the mosaic config
-   * as auxiliaryOriginalSealer and auxiliaryOriginalDeployer. These accounts will be used to run
-   * the sealer and deploy the contracts on auxiliary.
-   * @throws If keystore already exists for the chain.
+   * Generates a new chain, starts a sealer that runs the chain, and returns the addresses of the
+   * sealer and a deployer that can deploy contracts. The deployer gets the initial value allocated
+   * to it in the genesis file.
    */
-  public generateAccounts(mosaicConfig: MosaicConfig): MosaicConfig {
-    if (fs.existsSync(path.join(this.chainDir, 'keystore'))) {
-      const message: string = 'keystore already exists; cannot continue; delete keystore before running command again';
-      this.logError(message);
+  public async startNewChainSealer(): Promise<{ sealer: string, deployer: string }> {
+    this.generateAccounts();
+    this.generateChain();
+    await this.startNewSealer();
 
-      throw new Error(message);
+    return {
+      sealer: this.sealer,
+      deployer: this.deployer,
     }
-
-    this.logInfo('generating auxiliary address for sealer and deployer');
-
-    const args = [
-      'run',
-      '--rm',
-      '--volume', `${this.chainDir}:/chain_data`,
-      '--volume', `${this.nodeDescription.password}:/password.txt`,
-      'ethereum/client-go:v1.8.23',
-      'account',
-      'new',
-      '--password', '/password.txt',
-      '--datadir', '/chain_data',
-    ];
-
-    // The command is executed twice in order to create two accounts. Each time the command is run,
-    // it creates one new account. This is also the reason why the password file must contain the
-    // same password twice, once per line. Both accounts get created with the password on the first
-    // line of the file, but both lines are read for unlocking when the node is later started.
-    Shell.executeDockerCommand(args);
-    Shell.executeDockerCommand(args);
-
-
-    // It doesn't matter which account we assign which role as both accounts are new.
-    [this.sealer, this.deployer] = this.getAccounts();
-    mosaicConfig.auxiliaryOriginalSealer = this.sealer;
-    mosaicConfig.auxiliaryOriginalDeployer = this.deployer;
-
-    return mosaicConfig;
-  }
-
-  /**
-   * Initializes a new chain from a new genesis.
-   */
-  public generateChain(): void {
-    this.logInfo('generating a new auxiliary chain');
-    this.generateGenesisFile();
-    this.initFromGenesis();
-    this.copyStateToChainsDir();
-  }
-
-  /**
-   * Start a sealer node that runs the new auxiliary chain.
-   */
-  public async startSealer(): Promise<void> {
-    this.logInfo('starting a sealer node');
-    const bootKeyFile = this.generateBootKey();
-
-    const unlockAccounts = [this.sealer, this.deployer];
-    this.nodeDescription.unlock = unlockAccounts.join(',');
-
-    const node = new GethNode(this.nodeDescription);
-    // We always start a new chain with gas price zero.
-    const gasPrice = '0';
-    // 10 mio. as per `CliqueGenesis.ts`.
-    const targetGasLimit = '10000000';
-    node.startSealer(gasPrice, targetGasLimit, bootKeyFile);
-    // The sealer runs locally on this machine and the port is published to the host from the
-    // docker container.
-    this.logInfo('waiting 5 seconds for the sealer port to become available');
-    await AuxiliaryChain.sleep(5000);
-    // Has to be RPC and not WS. WS connection was closed before deploying the Co-Gateway.
-    // Reason unknown. Possibly due to the fact that according to `lsof` node keeps opening new
-    // connections.
-    this.web3 = new Web3(`http://127.0.0.1:${this.nodeDescription.rpcPort}`);
   }
 
   /**
@@ -190,6 +125,147 @@ export default class AuxiliaryChain {
   }
 
   /**
+   * 
+   * @param originOstGatewayAddress TODO: document
+   * @param originHeight 
+   * @param originStateRoot 
+   */
+  public async initializeContracts(
+    originOstGatewayAddress: string,
+    originHeight: string,
+    originStateRoot: string,
+    stakeMessageNonce: string,
+    hashLockSecret: string,
+    proofData: Proof,
+  ): Promise<{
+    anchorOrganization: ContractInteract.Organization,
+    anchor: ContractInteract.Anchor,
+    coGatewayAndOstPrimeOrganization: ContractInteract.Organization,
+    ostPrime: ContractInteract.OSTPrime,
+    ostCoGateway: ContractInteract.EIP20CoGateway,
+  }> {
+    const {
+      anchorOrganization,
+      anchor,
+      coGatewayAndOstPrimeOrganization,
+      ostPrime,
+      ostCoGateway,
+    } = await this.deployContracts(
+      originOstGatewayAddress,
+      originHeight,
+      originStateRoot,
+    );
+
+    await this.transferAllOstIntoOstPrime(ostPrime.address);
+    await this.proveStake(
+      ostCoGateway.address,
+      stakeMessageNonce,
+      hashLockSecret,
+      proofData,
+    );
+
+    return {
+      anchorOrganization,
+      anchor,
+      coGatewayAndOstPrimeOrganization,
+      ostPrime,
+      ostCoGateway,
+    };
+  }
+
+  /**
+   * Progresses an already proven stake intent with the secret of the hash lock.
+   */
+  public async progressWithSecret(
+    auxiliaryOstCoGatewayAddress: string,
+    messageHash: string,
+    hashLockSecret: string,
+  ): Promise<void> {
+    this.logInfo('progressing mint with secret');
+    const ostCoGateway = new ContractInteract.EIP20CoGateway(
+      this.web3,
+      auxiliaryOstCoGatewayAddress,
+    );
+    return ostCoGateway.progressMint(messageHash, hashLockSecret, this.txOptions)
+  }
+
+  /**
+   * Generates two new accounts with an ethereum node and adds the addresses to the mosaic config
+   * as auxiliaryOriginalSealer and auxiliaryOriginalDeployer. These accounts will be used to run
+   * the sealer and deploy the contracts on auxiliary.
+   * @throws If keystore already exists for the chain.
+   */
+  private generateAccounts(): void {
+    if (fs.existsSync(path.join(this.chainDir, 'keystore'))) {
+      const message: string = 'keystore already exists; cannot continue; delete keystore before running command again';
+      this.logError(message);
+
+      throw new Error(message);
+    }
+
+    this.logInfo('generating auxiliary address for sealer and deployer');
+
+    const args = [
+      'run',
+      '--rm',
+      '--volume', `${this.chainDir}:/chain_data`,
+      '--volume', `${this.nodeDescription.password}:/password.txt`,
+      'ethereum/client-go:v1.8.23',
+      'account',
+      'new',
+      '--password', '/password.txt',
+      '--datadir', '/chain_data',
+    ];
+
+    // The command is executed twice in order to create two accounts. Each time the command is run,
+    // it creates one new account. This is also the reason why the password file must contain the
+    // same password twice, once per line. Both accounts get created with the password on the first
+    // line of the file, but both lines are read for unlocking when the node is later started.
+    Shell.executeDockerCommand(args);
+    Shell.executeDockerCommand(args);
+
+
+    // It doesn't matter which account we assign which role as both accounts are new.
+    [this.sealer, this.deployer] = this.getAccounts();
+  }
+
+  /**
+   * Initializes a new chain from a new genesis.
+   */
+  private generateChain(): void {
+    this.logInfo('generating a new auxiliary chain');
+    this.generateGenesisFile();
+    this.initFromGenesis();
+    this.copyStateToChainsDir();
+  }
+
+  /**
+   * Start a sealer node that runs the new auxiliary chain.
+   */
+  private async startNewSealer(): Promise<void> {
+    this.logInfo('starting a sealer node');
+    const bootKeyFile = this.generateBootKey();
+
+    const unlockAccounts = [this.sealer, this.deployer];
+    this.nodeDescription.unlock = unlockAccounts.join(',');
+
+    const node = new GethNode(this.nodeDescription);
+    // We always start a new chain with gas price zero.
+    const gasPrice = '0';
+    // 10 mio. as per `CliqueGenesis.ts`.
+    const targetGasLimit = '10000000';
+    node.startSealer(gasPrice, targetGasLimit, bootKeyFile);
+    // The sealer runs locally on this machine and the port is published to the host from the
+    // docker container.
+    this.logInfo('waiting 5 seconds for the sealer port to become available');
+    await AuxiliaryChain.sleep(5000);
+    // Has to be RPC and not WS. WS connection was closed before deploying the Co-Gateway.
+    // Reason unknown. Possibly due to the fact that according to `lsof` node keeps opening new
+    // connections.
+    this.web3 = new Web3(`http://127.0.0.1:${this.nodeDescription.rpcPort}`);
+  }
+
+  /**
    * Deploys all the contracts that are required for a new auxiliary chain to be linked to origin:
    *
    * * Anchor organization
@@ -203,60 +279,66 @@ export default class AuxiliaryChain {
    *
    * Also links the contracts.
    */
-  public async deployContracts(
-    mosaicConfig: MosaicConfig,
+  private async deployContracts(
+    originOstGatewayAddress: string,
     originHeight: string,
     originStateRoot: string,
-  ): Promise<MosaicConfig> {
+  ): Promise<{
+    anchorOrganization: ContractInteract.Organization,
+    anchor: ContractInteract.Anchor,
+    coGatewayAndOstPrimeOrganization: ContractInteract.Organization,
+    ostPrime: ContractInteract.OSTPrime,
+    ostCoGateway: ContractInteract.EIP20CoGateway,
+  }> {
     this.logInfo('deploying contracts');
     const anchorOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryAnchorOrganizationOwner,
       this.initConfig.auxiliaryAnchorOrganizationAdmin,
       this.anchorOrganizationDeploymentNonce,
     );
-    mosaicConfig.auxiliaryAnchorOrganizationAddress = anchorOrganization.address;
     const anchor = await this.deployAnchor(
       this.originChainId,
       originHeight,
       originStateRoot,
       anchorOrganization.address,
     );
-    mosaicConfig.auxiliaryAnchorAddress = anchor.address;
     const coGatewayAndOstPrimeOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryCoGatewayAndOstPrimeOrganizationOwner,
       this.deployer,
       this.coGatewayAndOstPrimeOrganizationDeploymentNonce,
     );
-    mosaicConfig
-      .auxiliaryCoGatewayAndOstPrimeOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
     const ostPrime = await this.deployOstPrime(
       this.initConfig.originOstAddress,
       coGatewayAndOstPrimeOrganization.address,
     );
-    mosaicConfig.auxiliaryOstPrimeAddress = ostPrime.address;
     const ostCoGateway = await this.deployOstCoGateway(
       this.initConfig.originOstAddress,
       ostPrime.address,
       anchor.address,
       coGatewayAndOstPrimeOrganization.address,
-      mosaicConfig.originOstGatewayAddress,
+      originOstGatewayAddress,
     )
-    mosaicConfig.auxiliaryOstCoGatewayAddress = ostCoGateway.address;
 
     this.logInfo('setting co-gateway on ost prime');
     await ostPrime.setCoGateway(ostCoGateway.address, this.txOptions);
 
-    return mosaicConfig;
+    return {
+      anchorOrganization,
+      anchor,
+      coGatewayAndOstPrimeOrganization,
+      ostPrime,
+      ostCoGateway,
+    };
   }
 
   /**
    * Transfers all the base tokens of the new chain to the OST prime contract.
    */
-  public async transferAllOstIntoOstPrime(mosaicConfig: MosaicConfig): Promise<void> {
+  private async transferAllOstIntoOstPrime(auxiliaryOstPrimeAddress: string): Promise<void> {
     this.logInfo('initializing ost prime with all tokens');
     const ostPrime = new ContractInteract.OSTPrime(
       this.web3,
-      mosaicConfig.auxiliaryOstPrimeAddress,
+      auxiliaryOstPrimeAddress,
     );
 
     // 800 mio as per definition of OST.
@@ -270,8 +352,8 @@ export default class AuxiliaryChain {
   /**
    * Proves the gateway and the stake intent on the co-gateway.
    */
-  public proveStake(
-    mosaicConfig: MosaicConfig,
+  private proveStake(
+    auxiliaryOstCoGatewayAddress: string,
     nonce: string,
     hashLockSecret: string,
     proofData: Proof,
@@ -280,7 +362,7 @@ export default class AuxiliaryChain {
     const hashLockHash = Web3.utils.sha3(hashLockSecret);
     const ostCoGateway = new ContractInteract.EIP20CoGateway(
       this.web3,
-      mosaicConfig.auxiliaryOstCoGatewayAddress,
+      auxiliaryOstCoGatewayAddress,
     );
     return ostCoGateway.proveGateway(
       proofData.blockNumber,
@@ -292,7 +374,7 @@ export default class AuxiliaryChain {
         .confirmStakeIntent(
           this.initConfig.originTxOptions.from,
           nonce,
-          mosaicConfig.auxiliaryOriginalDeployer,
+          this.deployer,
           this.initConfig.originStakeAmount,
           this.initConfig.originStakeGasPrice,
           this.initConfig.originStakeGasLimit,
@@ -302,22 +384,6 @@ export default class AuxiliaryChain {
           this.txOptions,
         );
     });
-  }
-
-  /**
-   * Progresses an already proven stake intent with the secret of the hash lock.
-   */
-  public async progressWithSecret(
-    mosaicConfig: MosaicConfig,
-    messageHash: string,
-    hashLockSecret: string,
-  ): Promise<void> {
-    this.logInfo('progressing mint with secret');
-    const ostCoGateway = new ContractInteract.EIP20CoGateway(
-      this.web3,
-      mosaicConfig.auxiliaryOstCoGatewayAddress,
-    );
-    return ostCoGateway.progressMint(messageHash, hashLockSecret, this.txOptions)
   }
 
   /**

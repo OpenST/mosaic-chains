@@ -28,6 +28,7 @@ export default class Initialization {
     originWebsocket: string,
     auxiliaryNodeDescription: NodeDescription,
   ) {
+    // Preparing environment and objects before actually creating the new chain:
     const initConfig: InitConfig = InitConfig.createFromFile(newChainId);
 
     if (!Initialization.environmentIsClean(auxiliaryNodeDescription)) {
@@ -50,6 +51,7 @@ export default class Initialization {
     const mosaicConfig = new MosaicConfig();
     mosaicConfig.originChainId = originChainId;
 
+    // Actually creating the new chain:
     await Initialization.createAuxiliaryChain(
       auxiliaryNodeDescription,
       mosaicConfig,
@@ -73,7 +75,9 @@ export default class Initialization {
   }
 
   /**
-   * Creates a new auxiliary chain from a new genesis with a new container.
+   * Creates a new auxiliary chain from a new genesis with a new docker container.
+   * This method is deliberately written in a way where it executes all steps transparently one
+   * after the other and updates the mosaic config based on the return values.
    */
   private static async createAuxiliaryChain(
     auxiliaryNodeDescription: NodeDescription,
@@ -85,93 +89,36 @@ export default class Initialization {
     Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
     mosaicConfig.auxiliaryChainId = auxiliaryNodeDescription.chainId;
 
-    [mosaicConfig, auxiliaryChain] = await Initialization.startAuxiliary(
-      mosaicConfig,
-      auxiliaryChain,
-    );
+    const { sealer, deployer } = await auxiliaryChain.startNewChainSealer();
+    mosaicConfig.auxiliaryOriginalSealer = sealer;
+    mosaicConfig.auxiliaryOriginalDeployer = deployer;
 
     const auxiliaryStateRootZero: string = await auxiliaryChain.getStateRootZero();
     const expectedOstCoGatewayAddress: string = auxiliaryChain.getExpectedOstCoGatewayAddress(
       mosaicConfig.auxiliaryOriginalDeployer,
     );
 
-    mosaicConfig = await originChain.deployContracts(
-      mosaicConfig,
+    const {
+      anchorOrganization: originAnchorOrganization,
+      anchor: originAnchor,
+      ostGatewayOrganization,
+      ostGateway,
+    } = await originChain.deployContracts(
       auxiliaryStateRootZero,
       expectedOstCoGatewayAddress,
     );
+    mosaicConfig.originAnchorOrganizationAddress = originAnchorOrganization.address;
+    mosaicConfig.originAnchorAddress = originAnchor.address;
+    mosaicConfig.originOstGatewayOrganizationAddress = ostGatewayOrganization.address;
+    mosaicConfig.originOstGatewayAddress = ostGateway.address;
 
-    const {
-      originBlockNumber,
-      originStateRoot,
-      originMessageHash,
-      stakeMessageNonce,
-      proofData,
-    } = await Initialization.initializeOrigin(
-      mosaicConfig,
-      originChain,
-      auxiliaryChain,
-      hashLockSecret,
-    );
-
-    mosaicConfig = await Initialization.finalizeAuxiliary(
-      mosaicConfig,
-      auxiliaryChain,
-      originBlockNumber,
-      originStateRoot,
-      stakeMessageNonce,
-      hashLockSecret,
-      proofData,
-    );
-
-    // Progressing on both chains in parallel (with hash lock secret).
-    await Promise.all([
-      originChain.progressWithSecret(mosaicConfig, originMessageHash, hashLockSecret),
-      auxiliaryChain.progressWithSecret(mosaicConfig, originMessageHash, hashLockSecret),
-    ]);
-
-    Initialization.writeMosaicConfigToUtilityChainDirectory(
-      mosaicConfig,
-      auxiliaryChain.getChainId(),
-    );
-  }
-
-  /**
-   * Generates new accounts, chain, and starts a running sealer to run the new chain.
-   */
-  private static async startAuxiliary(
-    mosaicConfig: MosaicConfig,
-    auxiliaryChain: AuxiliaryChain,
-  ): Promise<[MosaicConfig, AuxiliaryChain]> {
-    mosaicConfig = auxiliaryChain.generateAccounts(mosaicConfig);
-    auxiliaryChain.generateChain();
-    await auxiliaryChain.startSealer();
-
-    return [mosaicConfig, auxiliaryChain];
-  }
-
-  /**
-   * Stakes and generates the proof for the stake.
-   * @returns The proof.
-   */
-  private static async initializeOrigin(
-    mosaicConfig: MosaicConfig,
-    originChain: OriginChain,
-    auxiliaryChain: AuxiliaryChain,
-    hashLockSecret: string,
-  ): Promise<{
-    originBlockNumber: number,
-    originStateRoot: string,
-    originMessageHash: string,
-    stakeMessageNonce: string,
-    proofData: Proof,
-  }> {
     const {
       blockNumber: originBlockNumber,
       stateRoot: originStateRoot,
       messageHash: originMessageHash,
       nonce: stakeMessageNonce,
-    } = await originChain.stake(mosaicConfig, hashLockSecret);
+    } = await originChain.stake(mosaicConfig.auxiliaryOriginalDeployer, hashLockSecret);
+
     const proofData: Proof = await Initialization.getStakeProof(
       originChain.getWeb3(),
       auxiliaryChain.getWeb3(),
@@ -181,37 +128,46 @@ export default class Initialization {
       originStateRoot,
     );
 
-    return {
-      originBlockNumber,
-      originStateRoot,
-      originMessageHash,
-      stakeMessageNonce,
-      proofData,
-    };
-  }
-
-  /**
-   * Executes the last steps before progressing stake and mint.
-   * Transfers all base tokens into the OST prime contract and proves the stake on the co-gateway.
-   */
-  private static async finalizeAuxiliary(
-    mosaicConfig: MosaicConfig,
-    auxiliaryChain: AuxiliaryChain,
-    originBlockNumber: number,
-    originStateRoot: string,
-    stakeMessageNonce: string,
-    hashLockSecret: string,
-    proofData: Proof,
-  ): Promise<MosaicConfig> {
-    mosaicConfig = await auxiliaryChain.deployContracts(
-      mosaicConfig,
+    const {
+      anchorOrganization,
+      anchor,
+      coGatewayAndOstPrimeOrganization,
+      ostPrime,
+      ostCoGateway,
+    } = await auxiliaryChain.initializeContracts(
+      mosaicConfig.originOstGatewayAddress,
       originBlockNumber.toString(10),
       originStateRoot,
+      stakeMessageNonce,
+      hashLockSecret,
+      proofData,
     );
-    await auxiliaryChain.transferAllOstIntoOstPrime(mosaicConfig);
-    await auxiliaryChain.proveStake(mosaicConfig, stakeMessageNonce, hashLockSecret, proofData);
+    mosaicConfig.auxiliaryAnchorOrganizationAddress = anchorOrganization.address;
+    mosaicConfig.auxiliaryAnchorAddress = anchor.address;
+    mosaicConfig
+      .auxiliaryCoGatewayAndOstPrimeOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
+    mosaicConfig.auxiliaryOstPrimeAddress = ostPrime.address;
+    mosaicConfig.auxiliaryOstCoGatewayAddress = ostCoGateway.address;
 
-    return mosaicConfig;
+    // Progressing on both chains in parallel (with hash lock secret).
+    // Giving the deployer the amount of coins that were originally staked as tokens on origin.
+    await Promise.all([
+      originChain.progressWithSecret(
+        mosaicConfig.auxiliaryOstCoGatewayAddress,
+        originMessageHash,
+        hashLockSecret,
+      ),
+      auxiliaryChain.progressWithSecret(
+        mosaicConfig.auxiliaryOstCoGatewayAddress,
+        originMessageHash,
+        hashLockSecret,
+      ),
+    ]);
+
+    Initialization.writeMosaicConfigToUtilityChainDirectory(
+      mosaicConfig,
+      auxiliaryChain.getChainId(),
+    );
   }
 
   /**

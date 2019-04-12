@@ -42,17 +42,20 @@ export default class OriginChain {
    * Deploys all contracts that are required on origin to create a new auxiliary chain.
    */
   public async deployContracts(
-    mosaicConfig: MosaicConfig,
     auxiliaryStateRootZero: string,
     expectedOstCoGatewayAddress: string,
-  ): Promise<MosaicConfig> {
+  ): Promise<{
+    anchorOrganization: ContractInteract.Organization,
+    anchor: ContractInteract.Anchor,
+    ostGatewayOrganization: ContractInteract.Organization,
+    ostGateway: ContractInteract.EIP20Gateway,
+  }> {
     this.logInfo('deploying contracts on origin');
 
     const anchorOrganization = await this.deployOrganization(
       this.initConfig.originAnchorOrganizationOwner,
       this.initConfig.originAnchorOrganizationAdmin,
     );
-    mosaicConfig.originAnchorOrganizationAddress = anchorOrganization.address;
 
     // Initial state root must be set for block height zero of the auxiliary chain.
     const anchor = await this.deployAnchor(
@@ -61,7 +64,6 @@ export default class OriginChain {
       '0',
       auxiliaryStateRootZero,
     );
-    mosaicConfig.originAnchorAddress = anchor.address;
 
     // Owner of the organization has to be the deployer, as we need to be able to activate the
     // gateway
@@ -69,13 +71,11 @@ export default class OriginChain {
       this.initConfig.originGatewayOrganizationOwner,
       this.initConfig.originTxOptions.from,
     );
-    mosaicConfig.originOstGatewayOrganizationAddress = ostGatewayOrganization.address;
 
     const ostGateway = await this.deployGateway(
       anchor.address,
       ostGatewayOrganization.address,
     );
-    mosaicConfig.originOstGatewayAddress = ostGateway.address;
 
     this.logInfo(
       'activating ost gateway with precalculated ost co-gateway address',
@@ -85,14 +85,19 @@ export default class OriginChain {
 
     this.ostGateway = ostGateway;
 
-    return mosaicConfig;
+    return {
+      anchorOrganization,
+      anchor,
+      ostGatewayOrganization,
+      ostGateway,
+    };
   }
 
   /**
    * Stakes on the origin gateway and returns the details of the stake.
    */
   public async stake(
-    mosaicConfig: MosaicConfig,
+    auxiliaryOriginalDeployer: string,
     hashLockSecret: string,
   ): Promise<{ blockNumber: number, stateRoot: string, messageHash: string, nonce: string }> {
     // First stake on the new gateway.
@@ -117,7 +122,7 @@ export default class OriginChain {
     this.logInfo('staking');
     const messageHash: string = await this.ostGateway.stake(
       this.initConfig.originStakeAmount,
-      mosaicConfig.auxiliaryOriginalDeployer,
+      auxiliaryOriginalDeployer,
       this.initConfig.originStakeGasPrice,
       this.initConfig.originStakeGasLimit,
       nonce,
@@ -145,14 +150,14 @@ export default class OriginChain {
    * Progresses the given stake with the given secret.
    */
   public async progressWithSecret(
-    mosaicConfig: MosaicConfig,
+    auxiliaryOstCoGatewayAddress: string,
     messageHash: string,
     hashLockSecret: string,
   ): Promise<void> {
     this.logInfo('progressing stake with secret');
     const ostGateway = new ContractInteract.EIP20Gateway(
       this.web3,
-      mosaicConfig.auxiliaryOstCoGatewayAddress,
+      auxiliaryOstCoGatewayAddress,
     );
     return ostGateway.progressStake(messageHash, hashLockSecret, this.initConfig.originTxOptions);
   }
