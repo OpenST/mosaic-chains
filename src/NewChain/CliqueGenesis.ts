@@ -32,6 +32,7 @@ export default class CliqueGenesis {
       difficulty: '0x1',
       mixHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
       coinbase: '0x0000000000000000000000000000000000000000',
+      // The deployer and its initial balance are added below.
       alloc: {
         '0000000000000000000000000000000000000000': {
           balance: '0x1'
