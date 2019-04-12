@@ -95,7 +95,7 @@ export default class OriginChain {
     hashLockSecret: string,
   ): Promise<{ blockNumber: number, stateRoot: string, messageHash: string, nonce: string }> {
     // First stake on the new gateway.
-    const nonce = '1';
+    const nonce = await this.ostGateway.getNonce(this.initConfig.originTxOptions.from);
     const hashLockHash = Web3.utils.sha3(hashLockSecret);
 
     // For the OST gateway, the base token and the stake token are the same: OST.
