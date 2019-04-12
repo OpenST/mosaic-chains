@@ -30,11 +30,11 @@ The default directory for mosaic to store chain data is `~/.mosaic`.
 You can specify a different directory with the `--mosaic-dir` option.
 
 Examples:
-* Starts five containers to follow these chains:
+* Starts four containers to follow these chains:
   * `./mosaic start ropsten 1406 1407 1414`
  
-* Stops four containers of these chains:
-  * `./mosaic stop ropsten 1406 1407 1414`
+* Stops three containers of these chains:
+  * `./mosaic stop 1406 1407 1414`
 
 * Uses /external to store the chains data:
   * `./mosaic -d /external start 1406`

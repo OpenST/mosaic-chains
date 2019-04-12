@@ -1,6 +1,7 @@
 {
     "originTxOptions": {
-        "from": "0x7b829edc5d894bdc00a8d1717c90e9f369f41a18"
+        "from": "0x7b829edc5d894bdc00a8d1717c90e9f369f41a18",
+        "gasPrice": 3000000000
     },
     "originBounty": "10",
     "auxiliaryBounty": "10",

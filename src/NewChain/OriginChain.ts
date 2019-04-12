@@ -2,7 +2,6 @@ import { ContractInteract } from '@openst/mosaic.js';
 import Web3 = require('web3');
 import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
-import MosaicConfig from '../Config/MosaicConfig';
 import Contracts from './Contracts';
 import Integer from '../Integer';
 

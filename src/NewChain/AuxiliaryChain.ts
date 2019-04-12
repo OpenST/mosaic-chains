@@ -21,8 +21,8 @@ import Proof from './Proof';
 export default class AuxiliaryChain {
   private web3: Web3;
   private chainDir: string;
-  readonly sealer: string;
-  readonly deployer: string;
+  private sealer: string;
+  private deployer: string;
 
   // The below nonces are more for documentation.
   // However, they are set on the deployment transaction options to enforce failure if the order

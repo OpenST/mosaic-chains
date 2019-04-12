@@ -10,7 +10,7 @@ export default class InitConfig {
   /** The chain ID of the auxiliary chain that is to be created. */
   readonly auxiliaryChainId: string = '';
   /** Required to know the sender account when sending transactions to the origin node. */
-  readonly originTxOptions: { from: string };
+  readonly originTxOptions: { from: string, gasPrice: number };
   /** Bounty to set on the gateway on origin. */
   readonly originBounty: string = '';
   /** Bounty to set on the co-gateway on auxiliary. */
