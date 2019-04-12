@@ -51,9 +51,14 @@ export default class InitConfig {
 
   /**
    * @param initialValues All properties of the initial values will be assigned to this class.
+   * @throws If the configuration based on the initial values is invalid.
    */
   constructor(initialValues: any) {
     Object.assign(this, initialValues);
+
+    if (!this.isValid()) {
+      throw new Error('no valid configuration found');
+    }
   }
 
   /**
@@ -83,7 +88,7 @@ export default class InitConfig {
    * Checks whether the provided InitConfig is complete.
    * @returns True if all values are set, false otherwise.
    */
-  public isValid(): boolean {
+  private isValid(): boolean {
     // Checking for every member that it is not the (initial) empty string if it is a string
     // and that it is not the (initial) zero value if it is a number.
     for (const member in this) {
