@@ -11,26 +11,29 @@ export default class CliqueGenesis {
     const initialGenesis = {
       config: {
         chainId: CliqueGenesis.convertToInt(chainId),
-        homesteadBlock: 1,
-        eip150Block: 2,
+        // Zero to enable the below hard-forks from the start
+        homesteadBlock: 0,
+        eip150Block: 0,
         eip150Hash: '0x0000000000000000000000000000000000000000000000000000000000000000',
-        eip155Block: 3,
-        eip158Block: 3,
-        byzantiumBlock: 4,
-        // constantinopleBlock: 5,
+        eip155Block: 0,
+        eip158Block: 0,
+        byzantiumBlock: 0,
+        // constantinopleBlock: 0,
         clique: {
           period: 3,
           epoch: 30000,
         }
       },
       nonce: '0x0',
-      timestamp: '0x5a71660b',
+      timestamp: CliqueGenesis.getHexTimestamp(),
       // Sealer will be added here:
       extraData: '',
       // Decimal: 10 mio.
       gasLimit: '0x989680',
       difficulty: '0x1',
+      // No mixHash required as this block was not generated using PnW.
       mixHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+      // Coinbase of this very genesis block. No gas fee reward is paid for this genes block.
       coinbase: '0x0000000000000000000000000000000000000000',
       // The deployer and its initial balance are added below.
       alloc: {
@@ -812,10 +815,23 @@ export default class CliqueGenesis {
     deployer = CliqueGenesis.removeLeading0x(deployer);
     sealer = CliqueGenesis.removeLeading0x(sealer);
 
+    // Equals 800 mio. in hex format. Is a given from the original OST EIP20 contract.
     initialGenesis.alloc[deployer] = { balance: '0x295be96e640669720000000' };
     initialGenesis.extraData = this.generateSealerExtraData(sealer);
 
     return initialGenesis;
+  }
+
+  /**
+   * @returns The current unix timestamp in hex format with a leading `0x`.
+   */
+  private static getHexTimestamp(): string {
+    const timestampInMilliseconds = Date.now();
+    // 1000 milliseconds per second:
+    const unixTimestamp = Math.floor(timestampInMilliseconds / 1000);
+    const hexTimestamp = unixTimestamp.toString(16);
+
+    return `0x${hexTimestamp}`;
   }
 
   /**
