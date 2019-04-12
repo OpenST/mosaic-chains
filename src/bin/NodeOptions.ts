@@ -103,10 +103,6 @@ export default class NodeOptions {
   public unlockOrPasswordWithoutTheOther(): boolean {
     const { unlock, password } = this;
 
-    if (unlock === undefined && password === undefined) {
-      return false;
-    }
-
     if (unlock !== '' && password === '') {
       return true;
     }
