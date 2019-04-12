@@ -94,7 +94,7 @@ A simple run would be the following:
 Where:
 
 * `1337` is the new ID of the new chain.
-* `ws://localhost:8746` is the websocket connection to the running and unlocked origin node.
+* `ws://localhost:8746` is the websocket connection to the running origin node with an unlocked account.
 * `./password.txt` is the path to the password file that contains the **two identical passwords.**
 
 ## Adding an existing auxiliary chain
