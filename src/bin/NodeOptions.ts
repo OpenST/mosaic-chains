@@ -1,5 +1,6 @@
 import Logger from '../Logger';
 import Directory from '../Directory';
+import Integer from '../Integer';
 
 // These defaults will be used if the relevant option is not given on the command line.
 const DEFAULT_DATA_DIR = '~/.mosaic'
@@ -54,9 +55,9 @@ export default class NodeOptions {
   public static addCliOptions(command): any {
     command
       .option('-d,--mosaic-dir <dir>', 'a path to a directory where the chain data will be stored', DEFAULT_DATA_DIR)
-      .option('-p,--port <port>', 'the first port to use for forwarding from host to container', NodeOptions.stringToDecimal, DEFAULT_PORT)
-      .option('-r,--rpc-port <port>', 'the first RPC port to use for forwarding from host to container', NodeOptions.stringToDecimal, DEFAULT_RPC_PORT)
-      .option('-w,--ws-port <port>', 'the first WS port to use for forwarding from host to container', NodeOptions.stringToDecimal, DEFAULT_WS_PORT)
+      .option('-p,--port <port>', 'the first port to use for forwarding from host to container', Integer.parseString, DEFAULT_PORT)
+      .option('-r,--rpc-port <port>', 'the first RPC port to use for forwarding from host to container', Integer.parseString, DEFAULT_RPC_PORT)
+      .option('-w,--ws-port <port>', 'the first WS port to use for forwarding from host to container', Integer.parseString, DEFAULT_WS_PORT)
       .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped');
 
     return command;
@@ -115,14 +116,5 @@ export default class NodeOptions {
     }
 
     return false;
-  }
-
-  /**
-   * Converts a given string to a decimal number.
-   * @param string The string to convert.
-   * @returns The parsed decimal.
-   */
-  public static stringToDecimal(string: string): number {
-    return parseInt(string, 10);
   }
 }

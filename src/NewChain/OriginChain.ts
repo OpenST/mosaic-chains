@@ -4,6 +4,7 @@ import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
 import MosaicConfig from '../Config/MosaicConfig';
 import Contracts from './Contracts';
+import Integer from '../Integer';
 
 /**
  * The origin chain when creating a new auxiliary chain.
@@ -100,7 +101,7 @@ export default class OriginChain {
 
     // For the OST gateway, the base token and the stake token are the same: OST.
     const stakePlusBounty: string = (
-      parseInt(this.initConfig.originStakeAmount) + parseInt(this.initConfig.originBounty)
+      Integer.parseString(this.initConfig.originStakeAmount) + Integer.parseString(this.initConfig.originBounty)
     ).toString();
     this.logInfo(
       'approving stake plus bounty on ost',

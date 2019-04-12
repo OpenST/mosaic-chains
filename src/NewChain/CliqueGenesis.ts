@@ -1,4 +1,4 @@
-import Logger from "../Logger";
+import Integer from "../Integer";
 
 /**
  * A genesis file for a new clique PoA chain.
@@ -10,7 +10,7 @@ export default class CliqueGenesis {
   public static create(chainId: string, sealer: string, deployer: string): any {
     const initialGenesis = {
       config: {
-        chainId: CliqueGenesis.convertToInt(chainId),
+        chainId: Integer.parseString(chainId),
         // Zero to enable the below hard-forks from the start
         homesteadBlock: 0,
         eip150Block: 0,
@@ -839,21 +839,6 @@ export default class CliqueGenesis {
    */
   private static generateSealerExtraData(sealer: string): string {
     return `0x0000000000000000000000000000000000000000000000000000000000000000${sealer}0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000`;
-  }
-
-  /**
-   * Convert a given string to a number. Always radix 10.
-   */
-  private static convertToInt(input: string): number {
-    const output = parseInt(input, 10);
-
-    if (isNaN(output)) {
-      const message: string = 'could not convert chain id to integer';
-      Logger.error(message, { input });
-      throw new Error(message);
-    }
-
-    return output;
   }
 
   /**
