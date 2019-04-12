@@ -68,7 +68,7 @@ export default class Initialization {
   private static environmentIsClean(nodeDescription: NodeDescription): boolean {
     const chainDir = path.join(nodeDescription.mosaicDir, nodeDescription.chainId);
     if (fs.existsSync(chainDir)) {
-      Logger.error('chain dir exists; it must be empty to generate a new chain', { chainDir });
+      Logger.error('chain dir exists; it must not exist to generate a new chain', { chainDir });
       return false;
     }
 
