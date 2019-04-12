@@ -24,7 +24,7 @@ export default class Initialization {
    * @param auxiliaryNodeDescription Settings for the new auxiliary container that will run the new
    *     chain.
    */
-  public async initialize(
+  public static async initialize(
     newChainId: string,
     originWebsocket: string,
     auxiliaryNodeDescription: NodeDescription,
@@ -34,7 +34,7 @@ export default class Initialization {
       throw new Error();
     }
 
-    if (!this.environmentIsClean(auxiliaryNodeDescription)) {
+    if (!Initialization.environmentIsClean(auxiliaryNodeDescription)) {
       throw new Error();
     }
 
@@ -54,7 +54,7 @@ export default class Initialization {
     const mosaicConfig = new MosaicConfig();
     mosaicConfig.originChainId = originChainId;
 
-    await this.createAuxiliaryChain(
+    await Initialization.createAuxiliaryChain(
       auxiliaryNodeDescription,
       mosaicConfig,
       originChain,
@@ -66,7 +66,7 @@ export default class Initialization {
   /**
    * Verifies that the current host environment is not blocking initialization of a new chain.
    */
-  private environmentIsClean(nodeDescription: NodeDescription): boolean {
+  private static environmentIsClean(nodeDescription: NodeDescription): boolean {
     const chainDir = path.join(nodeDescription.mosaicDir, nodeDescription.chainId);
     if (fs.existsSync(chainDir)) {
       Logger.error('chain dir exists; it must be empty to generate a new chain', { chainDir });
@@ -79,17 +79,17 @@ export default class Initialization {
   /**
    * Creates a new auxiliary chain from a new genesis with a new container.
    */
-  private async createAuxiliaryChain(
+  private static async createAuxiliaryChain(
     auxiliaryNodeDescription: NodeDescription,
     mosaicConfig: MosaicConfig,
     originChain: OriginChain,
     auxiliaryChain: AuxiliaryChain,
     hashLockSecret: string,
   ): Promise<void> {
-    this.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
+    Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
     mosaicConfig.auxiliaryChainId = auxiliaryNodeDescription.chainId;
 
-    [mosaicConfig, auxiliaryChain] = await this.startAuxiliary(
+    [mosaicConfig, auxiliaryChain] = await Initialization.startAuxiliary(
       mosaicConfig,
       auxiliaryChain,
     );
@@ -110,9 +110,9 @@ export default class Initialization {
       originStateRoot,
       originMessageHash,
       proofData,
-    } = await this.initializeOrigin(mosaicConfig, originChain, auxiliaryChain, hashLockSecret);
+    } = await Initialization.initializeOrigin(mosaicConfig, originChain, auxiliaryChain, hashLockSecret);
 
-    mosaicConfig = await this.finalizeAuxiliary(
+    mosaicConfig = await Initialization.finalizeAuxiliary(
       mosaicConfig,
       auxiliaryChain,
       originBlockNumber,
@@ -127,13 +127,13 @@ export default class Initialization {
       auxiliaryChain.progressWithSecret(mosaicConfig, originMessageHash, hashLockSecret),
     ]);
 
-    this.writeMosaicConfigToUtilityChainDirectory(mosaicConfig, auxiliaryChain.getChainId());
+    Initialization.writeMosaicConfigToUtilityChainDirectory(mosaicConfig, auxiliaryChain.getChainId());
   }
 
   /**
    * Generates new accounts, chain, and starts a running sealer to run the new chain.
    */
-  private async startAuxiliary(
+  private static async startAuxiliary(
     mosaicConfig: MosaicConfig,
     auxiliaryChain: AuxiliaryChain,
   ): Promise<[MosaicConfig, AuxiliaryChain]> {
@@ -148,7 +148,7 @@ export default class Initialization {
    * Stakes and generates the proof for the stake.
    * @returns The proof.
    */
-  private async initializeOrigin(
+  private static async initializeOrigin(
     mosaicConfig: MosaicConfig,
     originChain: OriginChain,
     auxiliaryChain: AuxiliaryChain,
@@ -164,7 +164,7 @@ export default class Initialization {
       stateRoot: originStateRoot,
       messageHash: originMessageHash,
     } = await originChain.stake(mosaicConfig, hashLockSecret);
-    const proofData: Proof = await this.getStakeProof(
+    const proofData: Proof = await Initialization.getStakeProof(
       originChain.getWeb3(),
       auxiliaryChain.getWeb3(),
       mosaicConfig.originOstGatewayAddress,
@@ -185,7 +185,7 @@ export default class Initialization {
    * Executes the last steps before progressing stake and mint.
    * Transfers all base tokens into the OST prime contract and proves the stake on the co-gateway.
    */
-  private async finalizeAuxiliary(
+  private static async finalizeAuxiliary(
     mosaicConfig: MosaicConfig,
     auxiliaryChain: AuxiliaryChain,
     originBlockNumber: number,
@@ -207,7 +207,7 @@ export default class Initialization {
   /**
    * Creates the mosaic data directory if it does not exist.
    */
-  private initializeDataDir(mosaicDir): void {
+  private static initializeDataDir(mosaicDir): void {
     if (!fs.existsSync(mosaicDir)) {
       Logger.info(`${mosaicDir} does not exist; initializing`);
       fs.mkdirSync(mosaicDir);
@@ -217,7 +217,7 @@ export default class Initialization {
   /**
    * Gets the stake proof from the gateway on origin.
    */
-  private getStakeProof(
+  private static getStakeProof(
     originWeb3: Web3,
     auxiliaryWeb3: Web3,
     gatewayAddress: string,
@@ -250,7 +250,7 @@ export default class Initialization {
   /**
    * Takes the mosaic config and writes a JSON file into the related utility chain directory.
    */
-  private writeMosaicConfigToUtilityChainDirectory(
+  private static writeMosaicConfigToUtilityChainDirectory(
     mosaicConfig: MosaicConfig,
     newChainId: string,
   ): void {
