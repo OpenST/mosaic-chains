@@ -111,7 +111,7 @@ export default class AuxiliaryChain {
    */
   public async startSealer(): Promise<void> {
     this.logInfo('starting a sealer node');
-    const bootKey = this.generateBootKey();
+    const bootKeyFile = this.generateBootKey();
 
     const unlockAccounts = [this.sealer, this.deployer];
     this.nodeDescription.unlock = unlockAccounts.join(',');
@@ -121,7 +121,7 @@ export default class AuxiliaryChain {
     const gasPrice = '0';
     // 10 mio. as per `CliqueGenesis.ts`.
     const targetGasLimit = '10000000';
-    node.startSealer(gasPrice, targetGasLimit, bootKey);
+    node.startSealer(gasPrice, targetGasLimit, bootKeyFile);
     // The sealer runs locally on this machine and the port is published to the host from the
     // docker container.
     this.logInfo('waiting 5 seconds for the sealer port to become available');
@@ -400,7 +400,7 @@ export default class AuxiliaryChain {
    */
   private generateBootKey(): string {
     this.logInfo('generating boot key');
-    const bootKey = 'boot.key';
+    const bootKeyFile = 'boot.key';
 
     const args = [
       'run',
@@ -408,11 +408,11 @@ export default class AuxiliaryChain {
       '--volume', `${this.chainDir}:/chain_data`,
       'ethereum/client-go:alltools-v1.8.23',
       'bootnode',
-      '--genkey', `/chain_data/${bootKey}`,
+      '--genkey', `/chain_data/${bootKeyFile}`,
     ];
     Shell.executeDockerCommand(args);
 
-    return bootKey;
+    return bootKeyFile;
   }
 
   /**
