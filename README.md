@@ -56,7 +56,7 @@ Examples:
   
 
 * Creates a new auxiliary chain `1337`:
-  * `./mosaic new 1337 ws://localhost:8746 ./password.txt`
+  * `./mosaic create 1337 ws://localhost:8746 ./password.txt`
 
 ## Creating a new auxiliary chain
 
@@ -82,13 +82,13 @@ Other prerequisites that you need:
 To see the help:
 
 ```
-./mosaic help new
+./mosaic help create
 ```
 
 A simple run would be the following:
 
 ```
-./mosaic 1337 ws://localhost:8746 ./password.txt
+./mosaic create 1337 ws://localhost:8746 ./password.txt
 ```
 
 Where:
