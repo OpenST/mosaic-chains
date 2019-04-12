@@ -26,8 +26,7 @@ mosaic.action(
     nodeDescription.password = Directory.sanitize(passwordFile);
 
     try {
-      const init: Initialization = new Initialization();
-      await init.initialize(
+      await Initialization.initialize(
         newChainId,
         originWebsocket,
         nodeDescription,

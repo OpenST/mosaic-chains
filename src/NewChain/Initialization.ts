@@ -1,4 +1,3 @@
-import { randomBytes } from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import Web3 = require('web3');
@@ -39,7 +38,7 @@ export default class Initialization {
     }
 
     const originWeb3: Web3 = new Web3(originWebsocket);
-    const hashLockSecret: string = Web3.utils.sha3(randomBytes.toString());
+    const hashLockSecret: string = Web3.utils.randomHex(32);
 
     const originChain: OriginChain = new OriginChain(initConfig, originWeb3, newChainId);
     const originChainId: string = await originChain.getChainId();
