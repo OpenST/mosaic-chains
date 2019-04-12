@@ -92,7 +92,7 @@ export default class OriginChain {
    */
   public async stake(
     mosaicConfig: MosaicConfig,
-    hashLockSecret: string
+    hashLockSecret: string,
   ): Promise<{ blockNumber: number, stateRoot: string, messageHash: string }> {
     // First stake on the new gateway.
     const nonce = '1';

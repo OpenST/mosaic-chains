@@ -42,12 +42,12 @@ export default class InitConfig {
   // !! Note that the origin and auxiliary gateway and co-gateway organization admins cannot be
   // !! set when creating the chain. They will be set to the addresses of the accounts that deploy
   // !! the contracts, as it is required to activate the gateway and set the co-gateway on OST prime.
-  public originAnchorOrganizationOwner: string = '';
-  public originAnchorOrganizationAdmin: string = '';
-  public auxiliaryAnchorOrganizationOwner: string = '';
-  public auxiliaryAnchorOrganizationAdmin: string = '';
-  public originGatewayOrganizationOwner: string = '';
-  public auxiliaryCoGatewayAndOstPrimeOrganizationOwner: string = '';
+  readonly originAnchorOrganizationOwner: string = '';
+  readonly originAnchorOrganizationAdmin: string = '';
+  readonly auxiliaryAnchorOrganizationOwner: string = '';
+  readonly auxiliaryAnchorOrganizationAdmin: string = '';
+  readonly originGatewayOrganizationOwner: string = '';
+  readonly auxiliaryCoGatewayAndOstPrimeOrganizationOwner: string = '';
 
   /**
    * @param initialValues All properties of the initial values will be assigned to this class.

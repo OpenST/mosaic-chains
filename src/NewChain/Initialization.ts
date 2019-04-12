@@ -92,7 +92,7 @@ export default class Initialization {
 
     const auxiliaryStateRootZero: string = await auxiliaryChain.getStateRootZero();
     const expectedOstCoGatewayAddress: string = auxiliaryChain.getExpectedOstCoGatewayAddress(
-      mosaicConfig.auxiliaryOriginalDeployer
+      mosaicConfig.auxiliaryOriginalDeployer,
     );
 
     mosaicConfig = await originChain.deployContracts(
@@ -106,7 +106,12 @@ export default class Initialization {
       originStateRoot,
       originMessageHash,
       proofData,
-    } = await Initialization.initializeOrigin(mosaicConfig, originChain, auxiliaryChain, hashLockSecret);
+    } = await Initialization.initializeOrigin(
+      mosaicConfig,
+      originChain,
+      auxiliaryChain,
+      hashLockSecret,
+    );
 
     mosaicConfig = await Initialization.finalizeAuxiliary(
       mosaicConfig,
@@ -123,7 +128,10 @@ export default class Initialization {
       auxiliaryChain.progressWithSecret(mosaicConfig, originMessageHash, hashLockSecret),
     ]);
 
-    Initialization.writeMosaicConfigToUtilityChainDirectory(mosaicConfig, auxiliaryChain.getChainId());
+    Initialization.writeMosaicConfigToUtilityChainDirectory(
+      mosaicConfig,
+      auxiliaryChain.getChainId(),
+    );
   }
 
   /**
@@ -153,7 +161,7 @@ export default class Initialization {
     originBlockNumber: number,
     originStateRoot: string,
     originMessageHash: string,
-    proofData: Proof
+    proofData: Proof,
   }> {
     const {
       blockNumber: originBlockNumber,

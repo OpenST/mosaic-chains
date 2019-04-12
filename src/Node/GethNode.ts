@@ -79,7 +79,7 @@ export default class GethNode extends Node {
 
     if (this.password !== '') {
       args = args.concat([
-        '--volume', `${this.password}:/password.txt`
+        '--volume', `${this.password}:/password.txt`,
       ]);
     }
 

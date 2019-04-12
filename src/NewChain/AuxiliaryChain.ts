@@ -191,7 +191,8 @@ export default class AuxiliaryChain {
       this.initConfig.auxiliaryCoGatewayAndOstPrimeOrganizationOwner,
       this.deployer,
     );
-    mosaicConfig.auxiliaryCoGatewayAndOstPrimeOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
+    mosaicConfig
+      .auxiliaryCoGatewayAndOstPrimeOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
     const ostPrime = await this.deployOstPrime(
       this.initConfig.originOstAddress,
       coGatewayAndOstPrimeOrganization.address,

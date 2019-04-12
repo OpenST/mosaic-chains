@@ -11,7 +11,7 @@ export default class Directory {
   static get projectRoot(): string {
     return path.join(
       __dirname,
-      '..'
+      '..',
     );
   }
 
@@ -32,7 +32,7 @@ export default class Directory {
   static getProjectUtilityChainDir(chainId: string): string {
     return path.join(
       Directory.projectUtilityChainsDir,
-      `utility_chain_${chainId}`
+      `utility_chain_${chainId}`,
     );
   }
 

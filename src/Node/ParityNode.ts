@@ -35,7 +35,7 @@ export default class ParityNode extends Node {
 
     if (this.password !== '') {
       args = args.concat([
-        '--volume', `${this.password}:/home/parity/password.txt`
+        '--volume', `${this.password}:/home/parity/password.txt`,
       ]);
     }
 
