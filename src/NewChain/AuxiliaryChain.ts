@@ -52,14 +52,16 @@ export default class AuxiliaryChain {
    * Generates two new accounts with an ethereum node and adds the addresses to the mosaic config
    * as auxiliaryOriginalSealer and auxiliaryOriginalDeployer. These accounts will be used to run
    * the sealer and deploy the contracts on auxiliary.
+   * @throws If keystore already exists for the chain.
    */
   public generateAccounts(mosaicConfig: MosaicConfig): MosaicConfig {
     if (fs.existsSync(path.join(this.chainDir, 'keystore'))) {
-      this.logWarn(
-        'keystore already exists; removing; has to start with fresh accounts to pre-calculate deployment addresses',
-      );
-      fs.removeSync(path.join(this.chainDir, 'keystore'));
+      const message: string = 'keystore already exists; cannot continue; delete keystore before running command again';
+      this.logError(message);
+
+      throw new Error(message);
     }
+
     this.logInfo('generating auxiliary address for sealer and deployer');
 
     const args = [
@@ -129,15 +131,14 @@ export default class AuxiliaryChain {
   /**
    * @returns The state root at block height zero.
    */
-  public getStateRootZero(): Promise<string> {
-    return this.web3.eth.getBlock(0).then(
-      (block) => {
-        const stateRoot = block.stateRoot;
-        this.logInfo('fetched state root zero', { blockHeight: 0, stateRoot });
+  public async getStateRootZero(): Promise<string> {
+    const blockHeight = 0;
+    const block = await this.web3.eth.getBlock(blockHeight);
+    const stateRoot = block.stateRoot;
 
-        return stateRoot;
-      }
-    );
+    this.logInfo('fetched state root zero', { blockHeight, stateRoot });
+
+    return stateRoot;
   }
 
   /**
