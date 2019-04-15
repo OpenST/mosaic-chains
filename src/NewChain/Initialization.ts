@@ -10,7 +10,6 @@ import AuxiliaryChain from './AuxiliaryChain';
 import NodeDescription from '../Node/NodeDescription';
 import Logger from '../Logger';
 import Proof from './Proof';
-import Directory from '../Directory';
 
 /**
  * Initialization stitches together all classes and steps to create a new auxiliary chain.
@@ -164,10 +163,7 @@ export default class Initialization {
       ),
     ]);
 
-    Initialization.writeMosaicConfigToUtilityChainDirectory(
-      mosaicConfig,
-      auxiliaryChain.getChainId(),
-    );
+    mosaicConfig.writeToUtilityChainDirectory();
   }
 
   /**
@@ -208,24 +204,5 @@ export default class Initialization {
       blockNumber,
       stateRoot,
     };
-  }
-
-  /**
-   * Takes the mosaic config and writes a JSON file into the related utility chain directory.
-   */
-  private static writeMosaicConfigToUtilityChainDirectory(
-    mosaicConfig: MosaicConfig,
-    newChainId: string,
-  ): void {
-    const configPath = path.join(
-      Directory.getProjectUtilityChainDir(newChainId),
-      'config.json',
-    );
-    Logger.info('storing mosaic config', { configPath });
-
-    fs.writeFileSync(
-      configPath,
-      JSON.stringify(mosaicConfig, null, '    '),
-    );
   }
 }
