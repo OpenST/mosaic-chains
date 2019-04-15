@@ -183,7 +183,7 @@ export default class Initialization {
   /**
    * Gets the stake proof from the gateway on origin.
    */
-  private static getStakeProof(
+  private static async getStakeProof(
     originWeb3: Web3,
     auxiliaryWeb3: Web3,
     gatewayAddress: string,
@@ -194,23 +194,20 @@ export default class Initialization {
     // Proof requires the block number as string in hex format with leading `0x`.
     const blockNumberString = `0x${blockNumber.toString(16)}`;
     const proofGenerator = new Utils.ProofGenerator(originWeb3, auxiliaryWeb3);
-    return proofGenerator.getOutboxProof(
+    const proofData = await proofGenerator.getOutboxProof(
       gatewayAddress,
       [messageHash],
       blockNumberString,
-    ).then(
-      (proofData) => {
-        // Converting to match the Proof class. For later checks, the proof also expects the block
-        // number to be a hex string with leading `0x`.
-        return {
-          accountData: proofData.encodedAccountValue,
-          accountProof: proofData.serializedAccountProof,
-          storageProof: proofData.storageProof[0].serializedProof,
-          blockNumber: blockNumberString,
-          stateRoot,
-        };
-      },
     );
+    // Converting to match the Proof class. For later checks, the proof also expects the block
+    // number to be a hex string with leading `0x`.
+    return {
+      accountData: proofData.encodedAccountValue,
+      accountProof: proofData.serializedAccountProof,
+      storageProof: proofData.storageProof[0].serializedProof,
+      blockNumber,
+      stateRoot,
+    };
   }
 
   /**

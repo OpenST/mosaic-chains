@@ -125,10 +125,27 @@ export default class AuxiliaryChain {
   }
 
   /**
-   * 
-   * @param originOstGatewayAddress TODO: document
-   * @param originHeight 
-   * @param originStateRoot 
+   * Deploys all the auxiliary contracts and initializes them by moving all the base coin into OST
+   * prime. Also proves the origin stake.
+   * Deployed contracts:
+   *
+   * * Organization for anchor
+   * * Anchor
+   * * Organization for co-gateway and OST prime
+   * * OST prime
+   * * OST co-gateway with all its libraries:
+   *     * Merkle Patricia proof
+   *     * Message bus
+   *     * Gateway lib
+   *
+   * @param originOstGatewayAddress The address of the origin gateway of this chain.
+   * @param originHeight The origin block height at which the origin stake should be proven.
+   * @param originStateRoot The origin state root at the given block height.
+   * @param stakeMessageNonce The nonce of the stake message that was sent to the gateway on origin.
+   * @param hashLockSecret The secret of the hash lock that was used to generate the hash for the
+   *     lock for the origin stake.
+   * @param proofData The proof data of the origin stake. Will be used to proof the stake against an
+   *     available origin state root on auxiliary.
    */
   public async initializeContracts(
     originOstGatewayAddress: string,
@@ -352,7 +369,7 @@ export default class AuxiliaryChain {
   /**
    * Proves the gateway and the stake intent on the co-gateway.
    */
-  private proveStake(
+  private async proveStake(
     auxiliaryOstCoGatewayAddress: string,
     nonce: string,
     hashLockSecret: string,
@@ -364,26 +381,24 @@ export default class AuxiliaryChain {
       this.web3,
       auxiliaryOstCoGatewayAddress,
     );
-    return ostCoGateway.proveGateway(
-      proofData.blockNumber,
+    await ostCoGateway.proveGateway(
+      proofData.blockNumber.toString(10),
       proofData.accountData,
       proofData.accountProof,
       this.txOptions,
-    ).then(() => {
-      return ostCoGateway
-        .confirmStakeIntent(
-          this.initConfig.originTxOptions.from,
-          nonce,
-          this.deployer,
-          this.initConfig.originStakeAmount,
-          this.initConfig.originStakeGasPrice,
-          this.initConfig.originStakeGasLimit,
-          hashLockHash,
-          proofData.blockNumber,
-          proofData.storageProof,
-          this.txOptions,
-        );
-    });
+    );
+    await ostCoGateway.confirmStakeIntent(
+      this.initConfig.originTxOptions.from,
+      nonce,
+      this.deployer,
+      this.initConfig.originStakeAmount,
+      this.initConfig.originStakeGasPrice,
+      this.initConfig.originStakeGasLimit,
+      hashLockHash,
+      proofData.blockNumber.toString(10),
+      proofData.storageProof,
+      this.txOptions,
+    );
   }
 
   /**

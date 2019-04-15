@@ -72,7 +72,6 @@ You should know what you are doing here.
 6. You want to lock the account again after creating the auxiliary chain has finished (e.g. `./mosaic stop ropsten; ./mosaic start ropsten`).
 7. You may want to delete the password file.
 
-
 Other prerequisites that you need:
 
 * A password file with exactly two lines (followed by a newline) of the **same password.** For now, this is the only way to set up the (temporary) accounts for sealing and deploying on the new auxiliary chain.
@@ -96,6 +95,15 @@ Where:
 * `1337` is the new ID of the new chain.
 * `ws://localhost:8746` is the websocket connection to the running origin node with an unlocked account.
 * `./password.txt` is the path to the password file that contains the **two identical passwords.**
+
+Troubleshooting:
+
+* When starting, you get an error that the connection is not open:
+  * Make sure that the websocket you provide as an argument points to a running origin node and that your machine can connect to it.
+* You get an error that your account is locked on auxiliary:
+  * Make sure that the newly created auxiliary sealer doesn't use any ports that you forward to any running nodes via SSH. You can use the options `--port`, `--rpc-port`, and `--ws-port` with the `create` command to make sure you use different ports on the auxiliary sealer.
+* The EVM reverts without details at the step "stake" (on origin):
+  * Make sure that you set the correct OST address in you init configuration and that your origin account has sufficient funds to pay for the stake amount plus the bounty amount (on origin).
 
 ## Adding an existing auxiliary chain
 

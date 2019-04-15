@@ -32,7 +32,7 @@ mosaic.action(
         nodeDescription,
       );
     } catch (error) {
-      Logger.error('error while executing mosaic new', { error: error.toString() });
+      Logger.error('error while executing mosaic create', { error: error.toString() });
       process.exit(1);
     }
 

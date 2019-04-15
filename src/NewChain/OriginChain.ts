@@ -49,7 +49,7 @@ export default class OriginChain {
     ostGatewayOrganization: ContractInteract.Organization,
     ostGateway: ContractInteract.EIP20Gateway,
   }> {
-    this.logInfo('deploying contracts on origin');
+    this.logInfo('deploying contracts');
 
     const anchorOrganization = await this.deployOrganization(
       this.initConfig.originAnchorOrganizationOwner,
@@ -119,7 +119,7 @@ export default class OriginChain {
     );
 
     this.logInfo('staking');
-    const messageHash: string = await this.ostGateway.stake(
+    const stakeReceipt = await this.ostGateway.stake(
       this.initConfig.originStakeAmount,
       auxiliaryOriginalDeployer,
       this.initConfig.originStakeGasPrice,
@@ -127,11 +127,9 @@ export default class OriginChain {
       nonce,
       hashLockHash,
       this.initConfig.originTxOptions,
-    ).then((stakeReceipt) => {
-      const stakeIntentDeclaredEvent = stakeReceipt.events.StakeIntentDeclared;
-
-      return stakeIntentDeclaredEvent.returnValues._messageHash;
-    });
+    );
+    const stakeIntentDeclaredEvent = stakeReceipt.events.StakeIntentDeclared;
+    const messageHash: string = stakeIntentDeclaredEvent.returnValues._messageHash;
     this.logInfo('staked', { messageHash });
 
     const blockNumber: number = await this.waitBlocks(this.initConfig.originStakeBlocksToWait);
@@ -161,6 +159,11 @@ export default class OriginChain {
     return ostGateway.progressStake(messageHash, hashLockSecret, this.initConfig.originTxOptions);
   }
 
+  /**
+   * Deploys an organization contract.
+   * @param owner Will be the owner address of the deployed organization.
+   * @param admin Will be the admin address of the deployed organization.
+   */
   private deployOrganization(owner: string, admin: string): Promise<ContractInteract.Organization> {
     this.logInfo('deploying organization', { owner, admin });
     return Contracts.deployOrganization(this.web3, this.initConfig.originTxOptions, owner, admin);
@@ -239,17 +242,14 @@ export default class OriginChain {
   }
 
   /**
-   * @returs The state root at the given block height.
+   * @returns The state root at the given block height.
    */
-  private getStateRoot(blockHeight: number): Promise<string> {
-    return this.web3.eth.getBlock(blockHeight).then(
-      (block) => {
-        const stateRoot = block.stateRoot;
-        this.logInfo('fetched state root', { blockHeight, stateRoot });
+  private async getStateRoot(blockHeight: number): Promise<string> {
+    const block = await this.web3.eth.getBlock(blockHeight);
+    const stateRoot = block.stateRoot;
+    this.logInfo('fetched state root', { blockHeight, stateRoot });
 
-        return stateRoot;
-      }
-    );
+    return stateRoot;
   }
 
   /**
