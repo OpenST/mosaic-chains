@@ -48,11 +48,11 @@ Examples:
 * Lists all running mosaic chain containers:
   * `./mosaic list`
   
-  ## Available chains
-  ```
-  1406, 1407 - Testnet auxiliary chains.
-  1414 - Production auxiliary chain.
-  ```
+## Available chains
+```
+1406, 1407 - Testnet auxiliary chains.
+1414 - Production auxiliary chain.
+```
   
 
 ## Creating a new auxiliary chain
