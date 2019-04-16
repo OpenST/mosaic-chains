@@ -4,7 +4,7 @@ You need node and docker installed to run the chains.
 
 Mosaic will automatically identify if you want to run a geth node or a parity node based on the chain id.
 Any string supported by parity as a network option will start a parity node container.
-Any other string it tries to match to one of the available IDs in the `./utility_chains` directory, e.g. `200`.
+Any other string it tries to match to one of the available IDs in the `./utility_chains` directory, e.g. `1406`.
 
 The default ports published with docker on the host are starting from:
 
@@ -30,14 +30,14 @@ The default directory for mosaic to store chain data is `~/.mosaic`.
 You can specify a different directory with the `--mosaic-dir` option.
 
 Examples:
-* Starts three containers to follow these chains:
-  * `./mosaic start 200 ropsten rinkeby`
-
-* Stops two containers of these chains:
-  * `./mosaic stop ropsten 200`
+* Starts five containers to follow these chains:
+  * `./mosaic start ropsten 1406 1407 1414`
+ 
+* Stops four containers of these chains:
+  * `./mosaic stop ropsten 1406 1407 1414`
 
 * Uses /external to store the chains data:
-  * `./mosaic -d /external start 200`
+  * `./mosaic -d /external start 1406`
 
 * Attaches a geth node to the given chain:
   * `./mosaic attach ropsten`
@@ -47,6 +47,13 @@ Examples:
 
 * Lists all running mosaic chain containers:
   * `./mosaic list`
+  
+## Available chains
+```
+1406, 1407 - Testnet auxiliary chains.
+1414 - Production auxiliary chain.
+```
+  
 
 ## Creating a new auxiliary chain
 
