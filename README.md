@@ -31,10 +31,8 @@ You can specify a different directory with the `--mosaic-dir` option.
 
 Examples:
 * Starts five containers to follow these chains:
-  * `./mosaic start ropsten rinkeby 1406 1407 1414`
-  * `1406`, `1407` are testnet auxiliary chains.
-  * `1414` is production auxiliary chain.
-
+  * `./mosaic start ropsten 1406 1407 1414`
+ 
 * Stops four containers of these chains:
   * `./mosaic stop ropsten 1406 1407 1414`
 
@@ -49,6 +47,13 @@ Examples:
 
 * Lists all running mosaic chain containers:
   * `./mosaic list`
+  
+  ## Available chains
+  ```
+  1406, 1407 - Testnet auxiliary chains.
+  1414 - Production auxiliary chain.
+  ```
+  
 
 ## Creating a new auxiliary chain
 
