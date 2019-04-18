@@ -40,10 +40,14 @@ export default class InitConfig {
   /** How many state roots to store in the anchor ring buffer on auxiliary. */
   readonly auxiliaryAnchorBufferSize: string = '';
 
-  // The owners and admins of the organizations.
-  // !! Note that the origin and auxiliary gateway and co-gateway organization admins cannot be
-  // !! set when creating the chain. They will be set to the addresses of the accounts that deploy
-  // !! the contracts, as it is required to activate the gateway and set the co-gateway on OST prime.
+  /**
+   * The owners and admins of the organizations.
+   *
+   * IMPORTANT (applies to all organizations' owners and admins):
+   * Note that the origin and auxiliary gateway and co-gateway organization admins cannot be
+   * set when creating the chain. They will be set to the addresses of the accounts that deploy
+   * the contracts, as it is required to activate the gateway and set the co-gateway on OST prime.
+  */
   readonly originAnchorOrganizationOwner: string = '';
   readonly originAnchorOrganizationAdmin: string = '';
   readonly auxiliaryAnchorOrganizationOwner: string = '';
