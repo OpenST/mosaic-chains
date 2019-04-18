@@ -10,6 +10,7 @@ import AuxiliaryChain from './AuxiliaryChain';
 import NodeDescription from '../Node/NodeDescription';
 import Logger from '../Logger';
 import Proof from './Proof';
+import Directory from '../Directory';
 
 /**
  * Initialization stitches together all classes and steps to create a new auxiliary chain.
@@ -57,6 +58,13 @@ export default class Initialization {
       originChain,
       auxiliaryChain,
       hashLockSecret,
+    );
+
+    Logger.warn(
+      '⚠️ The new sealer is still running at a gas price of zero. If you want to change the gas cost, you need to run a different sealer.',
+    );
+    Logger.warn(
+      `⚠️ The new auxiliary chain requires bootnodes. Add a \`bootnodes\` file to \`${Directory.getProjectUtilityChainDir(newChainId)}\`.`,
     );
   }
 
