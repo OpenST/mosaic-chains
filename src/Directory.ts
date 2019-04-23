@@ -11,7 +11,33 @@ export default class Directory {
   static get projectRoot(): string {
     return path.join(
       __dirname,
-      '..'
+      '..',
+    );
+  }
+
+  /**
+   * @returns The absolute path to the utility chains directory in the project.
+   */
+  static get projectUtilityChainsDir(): string {
+    return path.join(
+      Directory.projectRoot,
+      'utility_chains',
+    );
+  }
+
+  /**
+   * @param chainId The chain id of the chain.
+   * @returns The absolute path to the directory of the given utility chain.
+   * @throws If `chainId` is an empty string.
+   */
+  static getProjectUtilityChainDir(chainId: string): string {
+    if (chainId === '') {
+      throw new Error('a chain id cannot be empty in order to get its directory');
+    }
+
+    return path.join(
+      Directory.projectUtilityChainsDir,
+      `utility_chain_${chainId}`,
     );
   }
 

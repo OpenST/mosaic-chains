@@ -1,11 +1,14 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "es5",
         "module": "commonjs",
         "sourceMap": true,
         "types": [
+            "chai",
+            "fs-extra",
             "node",
-            "mocha"
+            "mocha",
+            "web3"
         ],
         "resolveJsonModule": true
     },

@@ -3,31 +3,62 @@ import * as path from 'path';
 import Node from './Node';
 import Shell from '../Shell';
 import Directory from '../Directory';
-import NodeDescription from './NodeDescription';
 
 /**
  * Represents a geth node that runs in a docker container.
  */
 export default class GethNode extends Node {
   /** A list of bootnodes that are passed to the geth container. */
-  public bootnodes: string;
-
-  constructor(nodeDescription: NodeDescription) {
-    super(nodeDescription);
-
-    this.bootnodes = this.readBootnodes();
-  }
+  private bootnodes: string = '';
 
   /**
    * Starts the container that runs this chain node.
    */
   public start(): void {
     this.initializeDirectories();
-
-    this.logInfo('starting geth container');
-
     super.ensureNetworkExists();
 
+    this.logInfo('starting geth node');
+    const args = this.defaultDockerGethArgs;
+    Shell.executeDockerCommand(args);
+  }
+
+  public startSealer(gasPrice: string, targetGasLimit: string, bootKey: string): void {
+    this.initializeDirectories();
+    super.ensureNetworkExists();
+
+    this.logInfo('starting geth sealer node');
+    let args = this.defaultDockerGethArgs;
+    args = args.concat([
+      '--syncmode', 'full',
+      '--gasprice', gasPrice,
+      '--targetgaslimit', targetGasLimit,
+      '--mine',
+      '--nodekey', `/chain_data/${bootKey}`,
+    ]);
+
+    Shell.executeDockerCommand(args);
+  }
+
+  /**
+   * Read the bootnodes from the utility chain subdirectory.
+   */
+  public readBootnodes(): void {
+    this.logInfo('reading bootnodes from disk');
+    this.bootnodes = fs.readFileSync(
+      path.join(
+        Directory.projectRoot,
+        'utility_chains',
+        `utility_chain_${this.chainId}`,
+        'bootnodes',
+      ),
+      {
+        encoding: 'utf8',
+      }
+    );
+  }
+
+  private get defaultDockerGethArgs(): string[] {
     let args = [
       'run',
     ];
@@ -48,7 +79,7 @@ export default class GethNode extends Node {
 
     if (this.password !== '') {
       args = args.concat([
-        '--volume', `${this.password}:/password.txt`
+        '--volume', `${this.password}:/password.txt`,
       ]);
     }
 
@@ -67,17 +98,27 @@ export default class GethNode extends Node {
       '--wsport', '8546',
       '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
       '--wsorigins', '*',
-      '--bootnodes', this.bootnodes,
     ]);
+
+    if (this.bootnodes !== '') {
+      args = args.concat([
+        '--bootnodes', this.bootnodes,
+      ]);
+    }
 
     if (this.unlock !== '') {
       args = args.concat([
         '--unlock', this.unlock,
+      ]);
+    }
+
+    if (this.password !== '') {
+      args = args.concat([
         '--password', '/password.txt',
       ]);
     }
 
-    Shell.executeDockerCommand(args);
+    return args;
   }
 
   /**
@@ -99,22 +140,5 @@ export default class GethNode extends Node {
         path.join(this.chainDir, 'geth'),
       );
     }
-  }
-
-  /**
-   * Read the bootnodes from the utility chain subdirectory.
-   */
-  private readBootnodes(): string {
-    return fs.readFileSync(
-      path.join(
-        Directory.projectRoot,
-        'utility_chains',
-        `utility_chain_${this.chainId}`,
-        'bootnodes',
-      ),
-      {
-        encoding: 'utf8',
-      }
-    );
   }
 }

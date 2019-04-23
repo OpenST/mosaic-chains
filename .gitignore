@@ -5,6 +5,10 @@
 # Node passwords
 password.txt
 
+# Initialization configs for new chains; keep example
+initialize/*.json
+!initialize/example.json
+
 # Logs
 logs
 npm-debug.log*

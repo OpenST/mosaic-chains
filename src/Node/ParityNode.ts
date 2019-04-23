@@ -12,7 +12,6 @@ export default class ParityNode extends Node {
   public start(): void {
     this.logInfo('starting parity container');
     this.initializeDirectories();
-
     super.ensureNetworkExists();
 
     let args = [
@@ -35,7 +34,7 @@ export default class ParityNode extends Node {
 
     if (this.password !== '') {
       args = args.concat([
-        '--volume', `${this.password}:/home/parity/password.txt`
+        '--volume', `${this.password}:/home/parity/password.txt`,
       ]);
     }
 

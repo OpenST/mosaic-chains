@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import Directory from '../Directory';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import NodeDescription from './NodeDescription';
@@ -48,13 +47,13 @@ export default abstract class Node {
 
   constructor(nodeDescription: NodeDescription) {
     this.chainId = nodeDescription.chainId;
-    this.mosaicDir = Directory.sanitize(nodeDescription.mosaicDir);
+    this.mosaicDir = nodeDescription.mosaicDir;
     this.port = nodeDescription.port;
     this.rpcPort = nodeDescription.rpcPort;
     this.websocketPort = nodeDescription.websocketPort;
     this.keepAfterStop = nodeDescription.keepAfterStop;
     this.unlock = nodeDescription.unlock;
-    this.password = Directory.sanitize(nodeDescription.password);
+    this.password = nodeDescription.password;
 
     this.chainDir = path.join(this.mosaicDir, this.chainId);
     this.containerName = `${Node.prefix}${this.chainId}`;
@@ -96,9 +95,9 @@ export default abstract class Node {
    * Create a docker network if network doesn't exists.
    */
   public ensureNetworkExists(): void {
-    // `\b` in grep is used to match the exact string.
+    // `-w` in grep is used to match the exact string.
     //  Command for creating network only if network doesn't exists.
-    let createNetwork = 'docker network ls | grep \b' + Node.network + '\b || docker network create ' + Node.network;
+    let createNetwork = `docker network ls | grep -w ${Node.network} || docker network create ${Node.network}`;
     Shell.executeInShell(createNetwork);
   }
 

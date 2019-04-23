@@ -30,11 +30,11 @@ The default directory for mosaic to store chain data is `~/.mosaic`.
 You can specify a different directory with the `--mosaic-dir` option.
 
 Examples:
-* Starts five containers to follow these chains:
+* Starts four containers to follow these chains:
   * `./mosaic start ropsten 1406 1407 1414`
  
-* Stops four containers of these chains:
-  * `./mosaic stop ropsten 1406 1407 1414`
+* Stops three containers of these chains:
+  * `./mosaic stop 1406 1407 1414`
 
 * Uses /external to store the chains data:
   * `./mosaic -d /external start 1406`
@@ -55,6 +55,9 @@ Examples:
 ```
   
 
+* Creates a new auxiliary chain `1337`:
+  * `./mosaic create 1337 ws://localhost:8746 ./password.txt`
+
 ## Creating a new auxiliary chain
 
 Creating a new auxiliary chain assumes that you have an unlocked account on a node that is connected to the **origin chain.**
@@ -69,16 +72,50 @@ You should know what you are doing here.
 6. You want to lock the account again after creating the auxiliary chain has finished (e.g. `./mosaic stop ropsten; ./mosaic start ropsten`).
 7. You may want to delete the password file.
 
-## Tests
+Other prerequisites that you need:
 
-Run the tests with `npm test`.
+* A password file with exactly two lines (followed by a newline) of the **same password.** For now, this is the only way to set up the (temporary) accounts for sealing and deploying on the new auxiliary chain.
+* A websocket connection to a node that is connected to an existing origin chain. It has to have an unlocked account with sufficient balance. The account address of the unlocked account must be added to the file in the `initialize` directory (see next bullet point).
+* An initial configuration file in the project's `initialize` directory. The file name has to equal the new chain ID that you want to use. You can copy the example file and fill in your values. If you want to know what the parameters mean, check the [relevant documentation in the code](./src/Config/InitConfig.ts).
 
-<!-- TODO: delete below!
-## Adding a new auxiliary chain
+To see the help:
+
+```
+./mosaic help create
+```
+
+A simple run would be the following:
+
+```
+./mosaic create 1337 ws://localhost:8746 ./password.txt
+```
+
+Where:
+
+* `1337` is the new ID of the new chain.
+* `ws://localhost:8746` is the websocket connection to the running origin node with an unlocked account.
+* `./password.txt` is the path to the password file that contains the **two identical passwords.**
+
+Troubleshooting:
+
+* When starting, you get an error that the connection is not open:
+  * Make sure that the websocket you provide as an argument points to a running origin node and that your machine can connect to it.
+* You get an error that your account is locked on auxiliary:
+  * Make sure that the newly created auxiliary sealer doesn't use any ports that you forward to any running nodes via SSH. You can use the options `--port`, `--rpc-port`, and `--ws-port` with the `create` command to make sure you use different ports on the auxiliary sealer.
+* The EVM reverts without details at the step "stake" (on origin):
+  * Make sure that you set the correct OST address in you init configuration and that your origin account has sufficient funds to pay for the stake amount plus the bounty amount (on origin).
+
+## Adding an existing auxiliary chain
+
+To add an existing chain, you need to know the bootnodes and `genesis.json`.
+If you have those, follow the steps below:
 
 1. Create a new directory `./utility_chains/utility_chain_<id>`.
 2. Add the genesis file as `./utility_chains/utility_chain_<id>/genesis.json`.
 3. Add `<id>` to the `CHAINS` array at the beginning of `build.sh`.
 4. Run `./build.sh` to generate all chain inits.
-5. Add `./utility_chains/utility_chain_<id>/environment.json` and add the relevant data (see other chains for examples).
--->
+5. Add `./utility_chains/utility_chain_<id>/bootnodes` and add the boot nodes (see other chains for examples).
+
+## Tests
+
+Run the tests with `npm test`.
