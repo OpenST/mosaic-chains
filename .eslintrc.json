@@ -15,8 +15,9 @@
     "json"
   ],
   "rules": {
-    "no-underscore-dangle": "off",
+    "@typescript-eslint/indent": ["error", 2],
     "import/no-extraneous-dependencies": "off",
+    "no-underscore-dangle": "off",
     "strict": "off"
   },
   "env": {
@@ -28,5 +29,13 @@
     "artifacts": false,
     "contract": false,
     "assert": false
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   }
 }
+

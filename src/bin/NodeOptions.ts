@@ -3,7 +3,7 @@ import Directory from '../Directory';
 import Integer from '../Integer';
 
 // These defaults will be used if the relevant option is not given on the command line.
-const DEFAULT_MOSAIC_DIR = '~/.mosaic'
+const DEFAULT_MOSAIC_DIR = '~/.mosaic';
 const DEFAULT_PORT = 30303;
 const DEFAULT_RPC_PORT = 8545;
 const DEFAULT_WS_PORT = 8645;
@@ -14,16 +14,22 @@ const DEFAULT_WS_PORT = 8645;
 export default class NodeOptions {
   /** The mosaic directory to use which holds the chains' subdirectories. */
   public mosaicDir: string;
+
   /** The port of the ethereum node that docker publishes on the host. */
   public port: number;
+
   /** The rpc port of the ethereum node that docker publishes on the host. */
   public rpcPort: number;
+
   /** The websocket port of the ethereum node that docker publishes on the host. */
   public websocketPort: number;
+
   /** If set to true, the container will not be deleted when it is stopped. Defaults to false. */
   public keepAfterStop: boolean;
+
   /** A comma-separated list of accounts to unlock when starting the node. */
   public unlock: string;
+
   /**
    * Path to a password file with one line per unlocked account.
    * We have to use a password file when unlocking as we cannot provide the password on the command
@@ -35,13 +41,13 @@ export default class NodeOptions {
    * @param options The options from the command line.
    */
   constructor(options: {
-    mosaicDir: string,
-    port: string,
-    rpcPort: string,
-    websocketPort: string,
-    keepAfterStop: boolean,
-    unlock: string,
-    password: string,
+    mosaicDir: string;
+    port: string;
+    rpcPort: string;
+    websocketPort: string;
+    keepAfterStop: boolean;
+    unlock: string;
+    password: string;
   }) {
     Object.assign(this, options);
   }
@@ -74,7 +80,7 @@ export default class NodeOptions {
       port: options.port || DEFAULT_PORT,
       rpcPort: options.rpcPort || DEFAULT_RPC_PORT,
       websocketPort: options.wsPort || DEFAULT_WS_PORT,
-      keepAfterStop: options.keep ? true : false,
+      keepAfterStop: !!options.keep,
       unlock: options.unlock || '',
       password: options.password || '',
     });

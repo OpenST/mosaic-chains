@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import Web3 = require('web3');
 import { Utils } from '@openst/mosaic.js';
 
 import InitConfig from '../Config/InitConfig';
@@ -11,6 +10,8 @@ import NodeDescription from '../Node/NodeDescription';
 import Logger from '../Logger';
 import Proof from './Proof';
 import Directory from '../Directory';
+
+import Web3 = require('web3');
 
 /**
  * Initialization stitches together all classes and steps to create a new auxiliary chain.

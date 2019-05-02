@@ -54,7 +54,7 @@ export default class GethNode extends Node {
       ),
       {
         encoding: 'utf8',
-      }
+      },
     );
   }
 
