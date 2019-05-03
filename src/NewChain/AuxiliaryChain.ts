@@ -274,12 +274,24 @@ export default class AuxiliaryChain {
     node.startSealer(gasPrice, targetGasLimit, bootKeyFile);
     // The sealer runs locally on this machine and the port is published to the host from the
     // docker container.
-    this.logInfo('waiting 5 seconds for the sealer port to become available');
-    await AuxiliaryChain.sleep(5000);
     // Has to be RPC and not WS. WS connection was closed before deploying the Co-Gateway.
     // Reason unknown. Possibly due to the fact that according to `lsof` node keeps opening new
     // connections.
     this.web3 = new Web3(`http://127.0.0.1:${this.nodeDescription.rpcPort}`);
+    const maxRetries = 5;
+    let noOfRetries;
+    for (noOfRetries = 0; noOfRetries < maxRetries; noOfRetries++) {
+      if (this.web3.eth.net.isListening()) {
+        this.logInfo("Node connected");
+        break;
+      }
+      else {
+        await AuxiliaryChain.sleep(2000);
+      }
+    }
+    if(noOfRetries === maxRetries ){
+      throw new Error(`couldn\'t connect to chain ${this.nodeDescription.chainId} even after max tries`);
+    }
   }
 
   /**
