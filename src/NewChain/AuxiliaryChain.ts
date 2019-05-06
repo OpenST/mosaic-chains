@@ -23,6 +23,7 @@ export default class AuxiliaryChain {
   private chainDir: string;
   private sealer: string;
   private deployer: string;
+  private maxRetries = 5;
 
   // The below nonces are more for documentation.
   // However, they are set on the deployment transaction options to enforce failure if the order
@@ -278,19 +279,26 @@ export default class AuxiliaryChain {
     // Reason unknown. Possibly due to the fact that according to `lsof` node keeps opening new
     // connections.
     this.web3 = new Web3(`http://127.0.0.1:${this.nodeDescription.rpcPort}`);
-    const maxRetries = 5;
+    await this.pollConnection();
+  }
+
+  /**
+   * It polls web3 connection of created chain every 2-secs.
+   * It returns error when connection is not established even after max tries.
+   */
+  private async pollConnection() {
     let noOfRetries;
-    for (noOfRetries = 0; noOfRetries < maxRetries; noOfRetries++) {
+    for (noOfRetries = 0; noOfRetries < this.maxRetries; noOfRetries++) {
       if (this.web3.eth.net.isListening()) {
-        this.logInfo("Node connected");
+        this.logInfo('node connected');
         break;
       }
       else {
         await AuxiliaryChain.sleep(2000);
       }
     }
-    if(noOfRetries === maxRetries ){
-      throw new Error(`couldn\'t connect to chain ${this.nodeDescription.chainId} even after max tries`);
+    if(noOfRetries === this.maxRetries ){
+      throw new Error(`couldn't connect to chain ${this.nodeDescription.chainId} even after ${this.maxRetries} tries`);
     }
   }
 
