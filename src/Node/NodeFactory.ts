@@ -51,11 +51,10 @@ export default class NodeFactory {
   public static create(nodeDescription: NodeDescription): Node {
     if (NodeFactory.officialIdentifiers.includes(nodeDescription.chainId)) {
       return new ParityNode(nodeDescription);
-    } else {
-      const node = new GethNode(nodeDescription);
-      node.readBootnodes();
-
-      return node;
     }
+    const node = new GethNode(nodeDescription);
+    node.readBootnodes();
+
+    return node;
   }
 }

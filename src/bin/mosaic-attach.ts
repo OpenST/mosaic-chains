@@ -24,7 +24,7 @@ mosaic
       // within the same network (see `--network` above).
       // The port is always `8545` as that is always the same port for the nodes running *inside*
       // the containers.
-      `http://${node.getContainerName()}:8545`
+      `http://${node.getContainerName()}:8545`,
     ];
     Shell.executeDockerCommand(args);
   })

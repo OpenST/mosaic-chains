@@ -1,9 +1,9 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import Web3 = require('web3');
 import * as RLP from 'rlp';
 import { ContractInteract } from '@openst/mosaic.js';
 
+import { Tx } from 'web3/eth/types';
 import CliqueGenesis from './CliqueGenesis';
 import Contracts from './Contracts';
 import Shell from '../Shell';
@@ -11,17 +11,21 @@ import Directory from '../Directory';
 import Logger from '../Logger';
 import NodeDescription from '../Node/NodeDescription';
 import GethNode from '../Node/GethNode';
-import { Tx } from 'web3/eth/types';
 import InitConfig from '../Config/InitConfig';
 import Proof from './Proof';
+
+import Web3 = require('web3');
 
 /**
  * The new auxiliary chain that shall be created.
  */
 export default class AuxiliaryChain {
   private web3: Web3;
+
   private chainDir: string;
+
   private sealer: string;
+
   private deployer: string;
 
   // The below nonces are more for documentation.
@@ -29,12 +33,19 @@ export default class AuxiliaryChain {
   // changes or a contract is added or removed.
   // Co-gateway nonce is used when calculating its expected address.
   private anchorOrganizationDeploymentNonce = 0;
+
   private anchorDeploymentNonce = 1;
+
   private coGatewayAndOstPrimeOrganizationDeploymentNonce = 2;
+
   private ostPrimeDeploymentNonce = 3;
+
   private merklePatriciaProofLibraryDeploymentNonce = 4;
+
   private messageBusDeploymentNonce = 5;
+
   private gatewayLibDeploymentNonce = 5;
+
   private coGatewayDeploymentNonce = 7;
 
   /*
@@ -74,7 +85,7 @@ export default class AuxiliaryChain {
    * sealer and a deployer that can deploy contracts. The deployer gets the initial value allocated
    * to it in the genesis file.
    */
-  public async startNewChainSealer(): Promise<{ sealer: string, deployer: string }> {
+  public async startNewChainSealer(): Promise<{ sealer: string; deployer: string }> {
     this.generateAccounts();
     this.generateChain();
     await this.startNewSealer();
@@ -82,7 +93,7 @@ export default class AuxiliaryChain {
     return {
       sealer: this.sealer,
       deployer: this.deployer,
-    }
+    };
   }
 
   /**
@@ -118,7 +129,7 @@ export default class AuxiliaryChain {
     // string leaving us with the remaining 40 characters (20 bytes) that
     // make up the address. Also adding the removed leading `0x` again.
     const expectedOstCoGatewayAddress = this.web3.utils.toChecksumAddress(
-      `0x${nonceHash.substring(26)}`
+      `0x${nonceHash.substring(26)}`,
     );
 
     return expectedOstCoGatewayAddress;
@@ -155,11 +166,11 @@ export default class AuxiliaryChain {
     hashLockSecret: string,
     proofData: Proof,
   ): Promise<{
-    anchorOrganization: ContractInteract.Organization,
-    anchor: ContractInteract.Anchor,
-    coGatewayAndOstPrimeOrganization: ContractInteract.Organization,
-    ostPrime: ContractInteract.OSTPrime,
-    ostCoGateway: ContractInteract.EIP20CoGateway,
+    anchorOrganization: ContractInteract.Organization;
+    anchor: ContractInteract.Anchor;
+    coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
+    ostPrime: ContractInteract.OSTPrime;
+    ostCoGateway: ContractInteract.EIP20CoGateway;
   }> {
     const {
       anchorOrganization,
@@ -203,7 +214,7 @@ export default class AuxiliaryChain {
       this.web3,
       auxiliaryOstCoGatewayAddress,
     );
-    return ostCoGateway.progressMint(messageHash, hashLockSecret, this.txOptions)
+    return ostCoGateway.progressMint(messageHash, hashLockSecret, this.txOptions);
   }
 
   /**
@@ -214,7 +225,7 @@ export default class AuxiliaryChain {
    */
   private generateAccounts(): void {
     if (fs.existsSync(path.join(this.chainDir, 'keystore'))) {
-      const message: string = 'keystore already exists; cannot continue; delete keystore before running command again';
+      const message = 'keystore already exists; cannot continue; delete keystore before running command again';
       this.logError(message);
 
       throw new Error(message);
@@ -301,11 +312,11 @@ export default class AuxiliaryChain {
     originHeight: string,
     originStateRoot: string,
   ): Promise<{
-    anchorOrganization: ContractInteract.Organization,
-    anchor: ContractInteract.Anchor,
-    coGatewayAndOstPrimeOrganization: ContractInteract.Organization,
-    ostPrime: ContractInteract.OSTPrime,
-    ostCoGateway: ContractInteract.EIP20CoGateway,
+    anchorOrganization: ContractInteract.Organization;
+    anchor: ContractInteract.Anchor;
+    coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
+    ostPrime: ContractInteract.OSTPrime;
+    ostCoGateway: ContractInteract.EIP20CoGateway;
   }> {
     this.logInfo('deploying contracts');
     const anchorOrganization = await this.deployOrganization(
@@ -334,7 +345,7 @@ export default class AuxiliaryChain {
       anchor.address,
       coGatewayAndOstPrimeOrganization.address,
       originOstGatewayAddress,
-    )
+    );
 
     this.logInfo('setting co-gateway on ost prime');
     await ostPrime.setCoGateway(ostCoGateway.address, this.txOptions);
@@ -412,7 +423,7 @@ export default class AuxiliaryChain {
       // This can be any arbitrarily high number as the gas price is zero and we do not want the
       // transaction to be limited by the gas allowance.
       gas: '10000000',
-    }
+    };
   }
 
   /**
@@ -444,7 +455,7 @@ export default class AuxiliaryChain {
       'ethereum/client-go:v1.8.23',
       '--datadir', '/chain_data',
       'init',
-      '/chain_data/genesis.json'
+      '/chain_data/genesis.json',
     ];
 
     Shell.executeDockerCommand(args);
@@ -490,7 +501,7 @@ export default class AuxiliaryChain {
     this.logInfo('reading sealer and deployer address from disk');
     const addresses: string[] = this.readAddressesFromKeystore();
     if (addresses.length !== 2) {
-      const message: string = 'did not find exactly two addresses in auxiliary keystore; aborting';
+      const message = 'did not find exactly two addresses in auxiliary keystore; aborting';
       Logger.error(message);
       throw new Error(message);
     }
@@ -556,7 +567,7 @@ export default class AuxiliaryChain {
     this.logInfo('deploying organization', { owner, admin });
     const txOptions: Tx = {
       ...this.txOptions,
-      nonce
+      nonce,
     };
     return Contracts.deployOrganization(this.web3, txOptions, owner, admin);
   }
@@ -572,7 +583,9 @@ export default class AuxiliaryChain {
   ): Promise<ContractInteract.Anchor> {
     this.logInfo(
       'deploying anchor',
-      { originChainId, initialHeight, initialStateRoot, organizationAddress },
+      {
+        originChainId, initialHeight, initialStateRoot, organizationAddress,
+      },
     );
     const txOptions: Tx = {
       ...this.txOptions,
@@ -622,7 +635,9 @@ export default class AuxiliaryChain {
   ): Promise<ContractInteract.OSTPrime> {
     this.logInfo(
       'deploying ost co-gateway',
-      { ostAddress, ostPrimeAddress, anchorAddress, organizationAddress, gatewayAddress },
+      {
+        ostAddress, ostPrimeAddress, anchorAddress, organizationAddress, gatewayAddress,
+      },
     );
     const ostPrime = Contracts.deployOstCoGateway(
       this.web3,

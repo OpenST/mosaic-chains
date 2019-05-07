@@ -37,6 +37,6 @@ mosaic.action(
     }
 
     process.exit(0);
-  }
+  },
 )
   .parse(process.argv);
