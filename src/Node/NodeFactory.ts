@@ -11,25 +11,34 @@ export default class NodeFactory {
    * If a chain id matches any of these, it will build a parity node.
    */
   public static get officialIdentifiers(): string[] {
-    return [
-      'ethereum',
-      'classic',
-      'poacore',
-      'tobalaba',
-      'expanse',
-      'musicoin',
-      'ellaism',
-      'easthub',
-      'social',
-      'mix',
-      'callisto',
-      'morden',
-      'ropsten',
-      'kovan',
-      'poasokol',
-      'testnet',
-      'dev',
-    ];
+    return Object.keys(NodeFactory.chainInfo as string[]);
+  }
+
+  public static get chainInfo(): any {
+    return {
+      'ethereum':'1',
+      'classic':'61',
+      'poacore':'1',
+      'tobalaba':'1',
+      'expanse':'1',
+      'musicoin':'1',
+      'ellaism':'1',
+      'easthub':'1',
+      'social':'1',
+      'mix':'1',
+      'callisto':'1',
+      'morden':'1',
+      'ropsten':'3',
+      'kovan':'42',
+      'poasokol':'1',
+      'testnet':'1',
+      'dev':'1',
+    };
+  }
+
+  public static getChainId(chain:string): string {
+    let chainId = NodeFactory.chainInfo[chain];
+    return chainId ||  chain;
   }
 
   /**

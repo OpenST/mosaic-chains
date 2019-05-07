@@ -3,10 +3,10 @@ import Directory from '../Directory';
 import Integer from '../Integer';
 
 // These defaults will be used if the relevant option is not given on the command line.
-const DEFAULT_MOSAIC_DIR = '~/.mosaic'
-const DEFAULT_PORT = 30303;
-const DEFAULT_RPC_PORT = 8545;
-const DEFAULT_WS_PORT = 8645;
+const DEFAULT_MOSAIC_DIR = '~/.mosaic';
+const DEFAULT_PORT = 30000;
+const DEFAULT_RPC_PORT = 40000;
+const DEFAULT_WS_PORT = 50000;
 
 /**
  * Command line options for running an ethereum node.
@@ -55,9 +55,9 @@ export default class NodeOptions {
   public static addCliOptions(command): any {
     command
       .option('-d,--mosaic-dir <dir>', 'a path to a directory where the chain data will be stored', DEFAULT_MOSAIC_DIR)
-      .option('-p,--port <port>', 'the first port to use for forwarding from host to container', Integer.parseString, DEFAULT_PORT)
-      .option('-r,--rpc-port <port>', 'the first RPC port to use for forwarding from host to container', Integer.parseString, DEFAULT_RPC_PORT)
-      .option('-w,--ws-port <port>', 'the first WS port to use for forwarding from host to container', Integer.parseString, DEFAULT_WS_PORT)
+      .option('-p,--port <port>', 'the first port to use for forwarding from host to container', Integer.parseString)
+      .option('-r,--rpc-port <port>', 'the first RPC port to use for forwarding from host to container', Integer.parseString)
+      .option('-w,--ws-port <port>', 'the first WS port to use for forwarding from host to container', Integer.parseString)
       .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped');
 
     return command;
@@ -71,9 +71,9 @@ export default class NodeOptions {
   public static parseOptions(options): NodeOptions {
     const parsedOptions: NodeOptions = new NodeOptions({
       mosaicDir: options.mosaicDir || DEFAULT_MOSAIC_DIR,
-      port: options.port || DEFAULT_PORT,
-      rpcPort: options.rpcPort || DEFAULT_RPC_PORT,
-      websocketPort: options.wsPort || DEFAULT_WS_PORT,
+      port: options.port,
+      rpcPort: options.rpcPort,
+      websocketPort: options.wsPort,
       keepAfterStop: options.keep ? true : false,
       unlock: options.unlock || '',
       password: options.password || '',
@@ -112,5 +112,17 @@ export default class NodeOptions {
     }
 
     return false;
+  }
+
+  public static getPortForChainId(chainId: string): number {
+    return parseInt(chainId) + DEFAULT_PORT;
+  }
+
+  public static getRpcPortForChainId(chainId: string): number {
+    return parseInt(chainId) + DEFAULT_RPC_PORT;
+  }
+
+  public static getWsPortForChainId(chainId: string): number {
+    return parseInt(chainId) + DEFAULT_WS_PORT;
   }
 }
