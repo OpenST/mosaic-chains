@@ -5,7 +5,7 @@ import { version } from '../../package.json';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
-import Logger from "../Logger";
+import Logger from '../Logger';
 
 let mosaic = commander
   .version(version)

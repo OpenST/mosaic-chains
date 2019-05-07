@@ -16,29 +16,29 @@ export default class NodeFactory {
 
   public static get chainInfo(): any {
     return {
-      'ethereum':'1',
-      'classic':'61',
-      'poacore':'1',
-      'tobalaba':'1',
-      'expanse':'1',
-      'musicoin':'1',
-      'ellaism':'1',
-      'easthub':'1',
-      'social':'1',
-      'mix':'1',
-      'callisto':'1',
-      'morden':'1',
-      'ropsten':'3',
-      'kovan':'42',
-      'poasokol':'1',
-      'testnet':'1',
-      'dev':'1',
+      ethereum: '1',
+      classic: '61',
+      poacore: '1',
+      tobalaba: '1',
+      expanse: '1',
+      musicoin: '1',
+      ellaism: '1',
+      easthub: '1',
+      social: '1',
+      mix: '1',
+      callisto: '1',
+      morden: '1',
+      ropsten: '3',
+      kovan: '42',
+      poasokol: '1',
+      testnet: '1',
+      dev: '1',
     };
   }
 
-  public static getChainId(chain:string): string {
-    let chainId = NodeFactory.chainInfo[chain];
-    return chainId ||  chain;
+  public static getChainId(chain: string): string {
+    const chainId = NodeFactory.chainInfo[chain];
+    return chainId || chain;
   }
 
   /**
