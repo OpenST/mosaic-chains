@@ -61,9 +61,9 @@ export default class NodeOptions {
   public static addCliOptions(command): any {
     command
       .option('-d,--mosaic-dir <dir>', 'a path to a directory where the chain data will be stored', DEFAULT_MOSAIC_DIR)
-      .option('-p,--port <port>', 'the first port to use for forwarding from host to container', Integer.parseString)
-      .option('-r,--rpc-port <port>', 'the first RPC port to use for forwarding from host to container', Integer.parseString)
-      .option('-w,--ws-port <port>', 'the first WS port to use for forwarding from host to container', Integer.parseString)
+      .option('-p,--port <port>', 'the port to use for forwarding from host to container', Integer.parseString)
+      .option('-r,--rpc-port <port>', 'the RPC port to use for forwarding from host to container', Integer.parseString)
+      .option('-w,--ws-port <port>', 'the WS port to use for forwarding from host to container', Integer.parseString)
       .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped');
 
     return command;
