@@ -8,7 +8,7 @@ export default class Directory {
   /**
    * @returns The absolute path to the root of this project.
    */
-  static get projectRoot(): string {
+  public static get projectRoot(): string {
     return path.join(
       __dirname,
       '..',
@@ -18,7 +18,7 @@ export default class Directory {
   /**
    * @returns The absolute path to the utility chains directory in the project.
    */
-  static get projectUtilityChainsDir(): string {
+  public static get projectUtilityChainsDir(): string {
     return path.join(
       Directory.projectRoot,
       'utility_chains',
@@ -30,7 +30,7 @@ export default class Directory {
    * @returns The absolute path to the directory of the given utility chain.
    * @throws If `chainId` is an empty string.
    */
-  static getProjectUtilityChainDir(chainId: string): string {
+  public static getProjectUtilityChainDir(chainId: string): string {
     if (chainId === '') {
       throw new Error('a chain id cannot be empty in order to get its directory');
     }
@@ -47,19 +47,21 @@ export default class Directory {
    * - translates relative paths to absolute paths.
    * @param directory The directory string to sanitize.
    */
-  static sanitize(directory: string): string {
-    if (directory.substr(0, 1) === '~') {
-      directory = path.join(os.homedir(), directory.substr(1));
+  public static sanitize(directory: string): string {
+    let sanitized: string = directory;
+
+    if (sanitized.substr(0, 1) === '~') {
+      sanitized = path.join(os.homedir(), sanitized.substr(1));
     }
 
     // Relative directory name
-    if (directory.substr(0, 1) !== '/') {
-      directory = path.join(
+    if (sanitized.substr(0, 1) !== '/') {
+      sanitized = path.join(
         process.cwd(),
-        directory,
+        sanitized,
       );
     }
 
-    return directory;
+    return sanitized;
   }
 }

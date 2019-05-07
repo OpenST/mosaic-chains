@@ -1,7 +1,8 @@
 import { ContractInteract } from '@openst/mosaic.js';
-import Web3 = require('web3');
-import Logger from '../Logger';
 import { Tx } from 'web3/eth/types';
+import Logger from '../Logger';
+
+import Web3 = require('web3');
 
 /**
  * Contracts contains methods to deploy contracts.
@@ -157,8 +158,8 @@ export default class Contracts {
     web3: Web3,
     txOptions: Tx,
   ): Promise<{
-    gatewayLib: ContractInteract.GatewayLib,
-    messageBus: ContractInteract.MessageBus,
+    gatewayLib: ContractInteract.GatewayLib;
+    messageBus: ContractInteract.MessageBus;
   }> {
     const merklePatriciaProof = await ContractInteract.MerklePatriciaProof.deploy(
       web3,
@@ -184,7 +185,7 @@ export default class Contracts {
     return {
       gatewayLib,
       messageBus,
-    }
+    };
   }
 
   /**

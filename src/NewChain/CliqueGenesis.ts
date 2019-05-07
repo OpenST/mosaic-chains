@@ -1,4 +1,4 @@
-import Integer from "../Integer";
+import Integer from '../Integer';
 
 /**
  * A genesis file for a new clique PoA chain.
@@ -22,7 +22,7 @@ export default class CliqueGenesis {
         clique: {
           period: 3,
           epoch: 30000,
-        }
+        },
       },
       nonce: '0x0',
       timestamp: CliqueGenesis.getHexTimestamp(),
@@ -809,7 +809,7 @@ export default class CliqueGenesis {
       number: '0x0',
       gasUsed: '0x0',
       parentHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
-    }
+    };
 
     // Remove leading `0x` as it should not be present in the genesis addresses.
     deployer = CliqueGenesis.removeLeading0x(deployer);
@@ -852,5 +852,3 @@ export default class CliqueGenesis {
     return input;
   }
 }
-
-
