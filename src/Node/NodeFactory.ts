@@ -14,14 +14,15 @@ export default class NodeFactory {
     return Object.keys(NodeFactory.chainInfo as string[]);
   }
 
+  /**
+   * Mapping of chain name against chain id.
+   */
   public static get chainInfo(): any {
     return {
       ethereum: '1',
       classic: '61',
       poacore: '99',
-      tobalaba: '401697',
       expanse: '2',
-      musicoin: '7762959',
       ellaism: '64',
       easthub: '7',
       social: '28',
@@ -31,14 +32,17 @@ export default class NodeFactory {
       ropsten: '3',
       kovan: '42',
       poasokol: '77',
-      testnet: '1406',
-      dev: '1407',
     };
   }
 
+  /**
+   * Returns the chain id for the given chain name. If the chain name is not
+   * available in `ChainFactory.officialIdentifiers`, then it will return chain as chain id.
+   * @param chain Chain name.
+   * @returns Chain id; based on the given input.
+   */
   public static getChainId(chain: string): string {
-    const chainId = NodeFactory.chainInfo[chain];
-    return chainId || chain;
+    return NodeFactory.chainInfo[chain] || chain;
   }
 
   /**

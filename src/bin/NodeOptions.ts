@@ -1,6 +1,7 @@
 import Logger from '../Logger';
 import Directory from '../Directory';
 import Integer from '../Integer';
+import NodeFactory from "../Node/NodeFactory";
 
 // These defaults will be used if the relevant option is not given on the command line.
 const DEFAULT_MOSAIC_DIR = '~/.mosaic';
@@ -72,14 +73,16 @@ export default class NodeOptions {
   /**
   * Parses the commander options and returns an Options object.
   * @param options Options as they are given by commander.
+  * @param chainId Chain id.
   * @returns The parsed options with defaults for options that are missing from the command line.
   */
-  public static parseOptions(options): NodeOptions {
+  public static parseOptions(options, chainId): NodeOptions {
+    const chainIdNumber = NodeFactory.getChainId(chainId);
     const parsedOptions: NodeOptions = new NodeOptions({
       mosaicDir: options.mosaicDir || DEFAULT_MOSAIC_DIR,
-      port: options.port,
-      rpcPort: options.rpcPort,
-      websocketPort: options.wsPort,
+      port: options.port || Number.parseInt(chainIdNumber) + DEFAULT_PORT,
+      rpcPort: options.rpcPort || Number.parseInt(chainIdNumber) + DEFAULT_RPC_PORT,
+      websocketPort: options.wsPort || Number.parseInt(chainIdNumber) + DEFAULT_WS_PORT,
       keepAfterStop: !!options.keep,
       unlock: options.unlock || '',
       password: options.password || '',
@@ -118,17 +121,5 @@ export default class NodeOptions {
     }
 
     return false;
-  }
-
-  public static getPortForChainId(chainId: string): number {
-    return parseInt(chainId) + DEFAULT_PORT;
-  }
-
-  public static getRpcPortForChainId(chainId: string): number {
-    return parseInt(chainId) + DEFAULT_RPC_PORT;
-  }
-
-  public static getWsPortForChainId(chainId: string): number {
-    return parseInt(chainId) + DEFAULT_WS_PORT;
   }
 }

@@ -16,7 +16,7 @@ mosaic = NodeOptions.addCliOptions(mosaic);
 mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
-  .action((chain: string, options) => {
+  .action((chainId: string, options) => {
     let {
       mosaicDir,
       port,
@@ -25,21 +25,10 @@ mosaic
       keepAfterStop,
       unlock,
       password,
-    } = NodeOptions.parseOptions(options);
-
-    const chainId = NodeFactory.getChainId(chain);
-    if (port === undefined) {
-      port = NodeOptions.getPortForChainId(chainId);
-    }
-    if (rpcPort === undefined) {
-      rpcPort = NodeOptions.getRpcPortForChainId(chainId);
-    }
-    if (websocketPort === undefined) {
-      websocketPort = NodeOptions.getWsPortForChainId(chainId);
-    }
+    } = NodeOptions.parseOptions(options, chainId);
 
     const node: Node = NodeFactory.create({
-      chainId: chain,
+      chainId,
       mosaicDir,
       port,
       rpcPort,
