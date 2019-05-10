@@ -5,7 +5,6 @@ import { version } from '../../package.json';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
-import Logger from '../Logger';
 
 let mosaic = commander
   .version(version)
@@ -17,7 +16,7 @@ mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .action((chainId: string, options) => {
-    let {
+    const {
       mosaicDir,
       port,
       rpcPort,
