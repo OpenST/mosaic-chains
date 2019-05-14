@@ -279,27 +279,76 @@ export default class AuxiliaryChain {
     // Reason unknown. Possibly due to the fact that according to `lsof` node keeps opening new
     // connections.
     this.web3 = new Web3(`http://127.0.0.1:${this.nodeDescription.rpcPort}`);
-    await this.pollConnection();
+    await this.verifyAccountsUnlocking();
   }
 
   /**
-   * It polls web3 connection of created chain every 2-secs.
-   * It returns error when connection is not established even after max tries.
+   * It polls every 4-secs to fetch the list of wallets.
+   * It logs error when connection is not established even after max tries.
    */
-  private async pollConnection() {
+  private async verifyAccountsUnlocking() {
     let noOfRetries;
-    for (noOfRetries = 0; noOfRetries < this.maxRetries; noOfRetries++) {
-      if (this.web3.eth.net.isListening()) {
-        this.logInfo('node connected');
-        break;
+    let unlockStatus;
+    for (noOfRetries = 1; noOfRetries <= this.maxRetries; noOfRetries++) {
+      this.logInfo(`number of tries to fetch unlocked accounts is ${noOfRetries}`);
+      let response;
+      await AuxiliaryChain.sleep(4000);
+      try {
+        response = await this.getUnlockedAccounts();
+        if (response.result.length > 0) {
+          unlockStatus = this.getAccountsStatus(response.result);
+          if (unlockStatus) {
+            this.logInfo('accounts unlocked');
+            break;
+          }
+        }
       }
-      else {
-        await AuxiliaryChain.sleep(2000);
+      catch (err) {
+        this.logError(err);
       }
     }
-    if(noOfRetries === this.maxRetries ){
-      throw new Error(`couldn't connect to chain ${this.nodeDescription.chainId} even after ${this.maxRetries} tries`);
+    if(!unlockStatus) {
+      this.logError('accounts not unlocked');
     }
+  }
+
+  /**
+   * It iterates over accounts to get the status(Locked or Unlocked) of the accounts.
+   */
+  private getAccountsStatus(accounts) {
+    let noOfUnlockedAccounts = 0,
+      lockedAccounts = '';
+    for (let index = 0; index < accounts.length; index++) {
+      if (accounts[index]['status'] === 'Unlocked') {
+        noOfUnlockedAccounts++;
+      }
+    }
+    if (noOfUnlockedAccounts > 0)
+      return (noOfUnlockedAccounts === accounts.length);
+    else
+      return false;
+  }
+
+  /**
+   * It fetches the list of wallets with their status. It is only supported in Geth client.
+   */
+  private getUnlockedAccounts() {
+    return new Promise((resolve, reject) => {
+      this.web3.currentProvider.send({
+          jsonrpc: '2.0',
+          method: 'personal_listWallets',
+          id: new Date().getTime(),
+          params: [],
+        },
+        (err, res?) => {
+          if (res) {
+            resolve(res);
+          }
+          else {
+            reject(err);
+          }
+        });
+    });
   }
 
   /**
