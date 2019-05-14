@@ -20,7 +20,7 @@ mosaic.action(
     passwordFile: string,
     options,
   ) => {
-    const nodeOptions: NodeOptions = NodeOptions.parseOptions(options);
+    const nodeOptions: NodeOptions = NodeOptions.parseOptions(options, newChainId);
     let nodeDescription = new NodeDescription(newChainId);
     nodeDescription = Object.assign(nodeDescription, nodeOptions);
     nodeDescription.password = Directory.sanitize(passwordFile);
@@ -37,6 +37,6 @@ mosaic.action(
     }
 
     process.exit(0);
-  }
+  },
 )
   .parse(process.argv);

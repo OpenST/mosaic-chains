@@ -10,22 +10,31 @@ import NodeDescription from './NodeDescription';
 export default abstract class Node {
   /** The chain id identifies the chain this node should run. For example ropsten or 200. */
   protected chainId: string;
+
   /** The base directory of the mosaic chains that will hold the chains' data in a subdirectory. */
   protected mosaicDir: string;
+
   /** The directory where the chain data is store that this node will use. */
   protected chainDir: string;
+
   /** Docker will publish this port on the host. */
   protected port: number;
+
   /** Docker will publish this RPC port on the host. */
   protected rpcPort: number;
+
   /** Docker will publish this websocket port on the host. */
   protected websocketPort: number;
+
   /** The name of this docker container. */
   protected containerName: string;
+
   /** If set to true, the container is not deleted when stopped. */
   protected keepAfterStop: boolean;
+
   /** A comma separated list of addresses that get unlocked while the process is running. */
   protected unlock: string;
+
   /** The path to the password file to unlock the accounts given in unlock. */
   protected password: string;
 
@@ -97,7 +106,7 @@ export default abstract class Node {
   public ensureNetworkExists(): void {
     // `-w` in grep is used to match the exact string.
     //  Command for creating network only if network doesn't exists.
-    let createNetwork = `docker network ls | grep -w ${Node.network} || docker network create ${Node.network}`;
+    const createNetwork = `docker network ls | grep -w ${Node.network} || docker network create ${Node.network}`;
     Shell.executeInShell(createNetwork);
   }
 

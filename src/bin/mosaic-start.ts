@@ -8,15 +8,15 @@ import NodeOptions from './NodeOptions';
 
 let mosaic = commander
   .version(version)
-  .arguments('<chains...>');
+  .arguments('<chain>');
 
 mosaic = NodeOptions.addCliOptions(mosaic);
 
 mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
-  .action((chainIds: string[], options) => {
-    let {
+  .action((chainId: string, options) => {
+    const {
       mosaicDir,
       port,
       rpcPort,
@@ -24,26 +24,19 @@ mosaic
       keepAfterStop,
       unlock,
       password,
-    } = NodeOptions.parseOptions(options);
+    } = NodeOptions.parseOptions(options, chainId);
 
-    for (const chainId of chainIds) {
-      const node: Node = NodeFactory.create({
-        chainId,
-        mosaicDir,
-        port,
-        rpcPort,
-        websocketPort,
-        keepAfterStop,
-        unlock,
-        password,
-      });
+    const node: Node = NodeFactory.create({
+      chainId,
+      mosaicDir,
+      port,
+      rpcPort,
+      websocketPort,
+      keepAfterStop,
+      unlock,
+      password,
+    });
 
-      node.start();
-
-      // Every additional chain will have all published docker ports increased by one.
-      port += 1;
-      rpcPort += 1;
-      websocketPort += 1;
-    }
+    node.start();
   })
   .parse(process.argv);

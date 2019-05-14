@@ -1,12 +1,14 @@
 import Logger from '../Logger';
 import Directory from '../Directory';
 import Integer from '../Integer';
+import NodeFactory from "../Node/NodeFactory";
+import ChainInfo from '../Node/ChainInfo';
 
 // These defaults will be used if the relevant option is not given on the command line.
-const DEFAULT_MOSAIC_DIR = '~/.mosaic'
-const DEFAULT_PORT = 30303;
-const DEFAULT_RPC_PORT = 8545;
-const DEFAULT_WS_PORT = 8645;
+const DEFAULT_MOSAIC_DIR = '~/.mosaic';
+const DEFAULT_PORT = 30000;
+const DEFAULT_RPC_PORT = 40000;
+const DEFAULT_WS_PORT = 50000;
 
 /**
  * Command line options for running an ethereum node.
@@ -14,16 +16,22 @@ const DEFAULT_WS_PORT = 8645;
 export default class NodeOptions {
   /** The mosaic directory to use which holds the chains' subdirectories. */
   public mosaicDir: string;
+
   /** The port of the ethereum node that docker publishes on the host. */
   public port: number;
+
   /** The rpc port of the ethereum node that docker publishes on the host. */
   public rpcPort: number;
+
   /** The websocket port of the ethereum node that docker publishes on the host. */
   public websocketPort: number;
+
   /** If set to true, the container will not be deleted when it is stopped. Defaults to false. */
   public keepAfterStop: boolean;
+
   /** A comma-separated list of accounts to unlock when starting the node. */
   public unlock: string;
+
   /**
    * Path to a password file with one line per unlocked account.
    * We have to use a password file when unlocking as we cannot provide the password on the command
@@ -35,13 +43,13 @@ export default class NodeOptions {
    * @param options The options from the command line.
    */
   constructor(options: {
-    mosaicDir: string,
-    port: string,
-    rpcPort: string,
-    websocketPort: string,
-    keepAfterStop: boolean,
-    unlock: string,
-    password: string,
+    mosaicDir: string;
+    port: string;
+    rpcPort: string;
+    websocketPort: string;
+    keepAfterStop: boolean;
+    unlock: string;
+    password: string;
   }) {
     Object.assign(this, options);
   }
@@ -55,9 +63,9 @@ export default class NodeOptions {
   public static addCliOptions(command): any {
     command
       .option('-d,--mosaic-dir <dir>', 'a path to a directory where the chain data will be stored', DEFAULT_MOSAIC_DIR)
-      .option('-p,--port <port>', 'the first port to use for forwarding from host to container', Integer.parseString, DEFAULT_PORT)
-      .option('-r,--rpc-port <port>', 'the first RPC port to use for forwarding from host to container', Integer.parseString, DEFAULT_RPC_PORT)
-      .option('-w,--ws-port <port>', 'the first WS port to use for forwarding from host to container', Integer.parseString, DEFAULT_WS_PORT)
+      .option('-p,--port <port>', 'the port to use for forwarding from host to container', Integer.parseString)
+      .option('-r,--rpc-port <port>', 'the RPC port to use for forwarding from host to container', Integer.parseString)
+      .option('-w,--ws-port <port>', 'the WS port to use for forwarding from host to container', Integer.parseString)
       .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped');
 
     return command;
@@ -66,15 +74,17 @@ export default class NodeOptions {
   /**
   * Parses the commander options and returns an Options object.
   * @param options Options as they are given by commander.
+  * @param chainId Chain id.
   * @returns The parsed options with defaults for options that are missing from the command line.
   */
-  public static parseOptions(options): NodeOptions {
+  public static parseOptions(options, chainId): NodeOptions {
+    const chainIdNumber = ChainInfo.getChainId(chainId);
     const parsedOptions: NodeOptions = new NodeOptions({
       mosaicDir: options.mosaicDir || DEFAULT_MOSAIC_DIR,
-      port: options.port || DEFAULT_PORT,
-      rpcPort: options.rpcPort || DEFAULT_RPC_PORT,
-      websocketPort: options.wsPort || DEFAULT_WS_PORT,
-      keepAfterStop: options.keep ? true : false,
+      port: options.port || Number.parseInt(chainIdNumber) + DEFAULT_PORT,
+      rpcPort: options.rpcPort || Number.parseInt(chainIdNumber) + DEFAULT_RPC_PORT,
+      websocketPort: options.wsPort || Number.parseInt(chainIdNumber) + DEFAULT_WS_PORT,
+      keepAfterStop: !!options.keep,
       unlock: options.unlock || '',
       password: options.password || '',
     });

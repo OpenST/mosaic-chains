@@ -1,6 +1,8 @@
 # IDEs
 .idea/
 .vscode/
+*.swp
+tags
 
 # Node passwords
 password.txt

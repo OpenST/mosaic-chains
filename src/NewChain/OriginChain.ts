@@ -1,15 +1,17 @@
 import { ContractInteract } from '@openst/mosaic.js';
-import Web3 = require('web3');
 import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
 import Contracts from './Contracts';
 import Integer from '../Integer';
+
+import Web3 = require('web3');
 
 /**
  * The origin chain when creating a new auxiliary chain.
  */
 export default class OriginChain {
   private chainId: string;
+
   private ostGateway: ContractInteract.EIP20Gateway;
 
   constructor(
@@ -44,10 +46,10 @@ export default class OriginChain {
     auxiliaryStateRootZero: string,
     expectedOstCoGatewayAddress: string,
   ): Promise<{
-    anchorOrganization: ContractInteract.Organization,
-    anchor: ContractInteract.Anchor,
-    ostGatewayOrganization: ContractInteract.Organization,
-    ostGateway: ContractInteract.EIP20Gateway,
+    anchorOrganization: ContractInteract.Organization;
+    anchor: ContractInteract.Anchor;
+    ostGatewayOrganization: ContractInteract.Organization;
+    ostGateway: ContractInteract.EIP20Gateway;
   }> {
     this.logInfo('deploying contracts');
 
@@ -98,7 +100,7 @@ export default class OriginChain {
   public async stake(
     auxiliaryOriginalDeployer: string,
     hashLockSecret: string,
-  ): Promise<{ blockNumber: number, stateRoot: string, messageHash: string, nonce: string }> {
+  ): Promise<{ blockNumber: number; stateRoot: string; messageHash: string; nonce: string }> {
     // First stake on the new gateway.
     const nonce = await this.ostGateway.getNonce(this.initConfig.originTxOptions.from);
     const hashLockHash = Web3.utils.sha3(hashLockSecret);
@@ -140,7 +142,7 @@ export default class OriginChain {
       stateRoot,
       messageHash,
       nonce,
-    }
+    };
   }
 
   /**
@@ -180,7 +182,9 @@ export default class OriginChain {
   ): Promise<ContractInteract.Anchor> {
     this.logInfo(
       'deploying anchor',
-      { remoteChainId, organizationAddress, blockHeight, stateRoot },
+      {
+        remoteChainId, organizationAddress, blockHeight, stateRoot,
+      },
     );
     return Contracts.deployAnchor(
       this.web3,
@@ -200,7 +204,7 @@ export default class OriginChain {
     anchorAddress: string,
     organizationAddress: string,
   ): Promise<ContractInteract.EIP20Gateway> {
-    this.logInfo('deploying ost gateway', { anchorAddress, organizationAddress })
+    this.logInfo('deploying ost gateway', { anchorAddress, organizationAddress });
     return Contracts.deployOstGateway(
       this.web3,
       this.initConfig.originTxOptions,
@@ -224,7 +228,7 @@ export default class OriginChain {
         'data',
         (blockHeader) => {
           const blockNumber = blockHeader.number;
-          numberOfBlocksToWait = numberOfBlocksToWait - 1;
+          numberOfBlocksToWait -= 1;
           this.logInfo('received block header', { blockNumber, numberOfBlocksToWait });
 
           if (numberOfBlocksToWait <= 0) {

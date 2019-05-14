@@ -1,4 +1,4 @@
-import Logger from './Logger'
+import Logger from './Logger';
 
 export default class Integer {
   /**
@@ -8,8 +8,8 @@ export default class Integer {
   public static parseString(input: string): number {
     const output = parseInt(input, 10);
 
-    if (isNaN(output)) {
-      const message: string = 'could not convert chain id to integer';
+    if (Number.isNaN(output)) {
+      const message = 'could not convert chain id to integer';
       Logger.error(message, { input });
       throw new Error(message);
     }

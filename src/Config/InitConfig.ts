@@ -9,19 +9,25 @@ import Directory from '../Directory';
 export default class InitConfig {
   /** The chain ID of the auxiliary chain that is to be created. */
   readonly auxiliaryChainId: string = '';
+
   /** Required to know the sender account when sending transactions to the origin node. */
-  readonly originTxOptions: { from: string, gasPrice: number };
+  readonly originTxOptions: { from: string; gasPrice: number };
+
   /** Bounty to set on the gateway on origin. */
   readonly originBounty: string = '';
+
   /** Bounty to set on the co-gateway on auxiliary. */
   readonly auxiliaryBounty: string = '';
 
   /** For the initial stake, the gas price to set. */
   readonly originStakeGasPrice: string = '';
+
   /** For the initial stake, the gas limit to set. */
   readonly originStakeGasLimit: string = '';
+
   /** The amount of OST to stake to initialize the auxiliary chain with, in Wei. */
   readonly originStakeAmount: string = '';
+
   /**
    * For the initial stake, wait this number of blocks after staking before reading the state root
    * from origin.
@@ -30,13 +36,16 @@ export default class InitConfig {
 
   /** The address of the OST EIP20 token on origin. */
   readonly originOstAddress: string = '';
+
   /** Where to send burned tokens on origin. */
   readonly originBurnerAddress: string = '';
+
   /** Where to send burned tokens on auxiliary. */
   readonly auxiliaryBurnerAddress: string = '';
 
   /** How many state roots to store in the anchor ring buffer on origin. */
   readonly originAnchorBufferSize: string = '';
+
   /** How many state roots to store in the anchor ring buffer on auxiliary. */
   readonly auxiliaryAnchorBufferSize: string = '';
 
@@ -49,10 +58,15 @@ export default class InitConfig {
    * the contracts, as it is required to activate the gateway and set the co-gateway on OST prime.
   */
   readonly originAnchorOrganizationOwner: string = '';
+
   readonly originAnchorOrganizationAdmin: string = '';
+
   readonly auxiliaryAnchorOrganizationOwner: string = '';
+
   readonly auxiliaryAnchorOrganizationAdmin: string = '';
+
   readonly originGatewayOrganizationOwner: string = '';
+
   readonly auxiliaryCoGatewayAndOstPrimeOrganizationOwner: string = '';
 
   /**
@@ -82,7 +96,7 @@ export default class InitConfig {
           `${auxiliaryChainId}.json`,
         ),
         { encoding: 'utf8' },
-      )
+      ),
     );
 
     fileValues.auxiliaryChainId = auxiliaryChainId;
