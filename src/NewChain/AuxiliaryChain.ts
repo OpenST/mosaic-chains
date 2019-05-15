@@ -27,7 +27,8 @@ export default class AuxiliaryChain {
   private sealer: string;
 
   private deployer: string;
-  private maxRetries = 5;
+
+  private maxTriesToUnlockAccounts = 5;
 
   // The below nonces are more for documentation.
   // However, they are set on the deployment transaction options to enforce failure if the order
@@ -297,68 +298,65 @@ export default class AuxiliaryChain {
    * It polls every 4-secs to fetch the list of wallets.
    * It logs error when connection is not established even after max tries.
    */
-  private async verifyAccountsUnlocking() {
-    let noOfRetries;
-    let unlockStatus;
-    for (noOfRetries = 1; noOfRetries <= this.maxRetries; noOfRetries++) {
-      this.logInfo(`number of tries to fetch unlocked accounts is ${noOfRetries}`);
-      let response;
-      await AuxiliaryChain.sleep(4000);
-      try {
-        response = await this.getUnlockedAccounts();
-        if (response.result.length > 0) {
-          unlockStatus = this.getAccountsStatus(response.result);
-          if (unlockStatus) {
-            this.logInfo('accounts unlocked');
-            break;
-          }
-        }
+  private async verifyAccountsUnlocking(): Promise<void> {
+    let totalWaitTimeInSeconds = 0;
+    const timeToWaitInSecs = 4;
+    let unlockStatus: boolean;
+    do {
+      await AuxiliaryChain.sleep(timeToWaitInSecs * 1000);
+      totalWaitTimeInSeconds += timeToWaitInSecs;
+      if (totalWaitTimeInSeconds > (this.maxTriesToUnlockAccounts * timeToWaitInSecs)) {
+        throw new Error('node did not unlock accounts in time');
       }
-      catch (err) {
-        this.logError(err);
-      }
-    }
-    if(!unlockStatus) {
-      this.logError('accounts not unlocked');
-    }
+      unlockStatus = await this.getAccountsStatus(totalWaitTimeInSeconds / timeToWaitInSecs);
+    } while (!unlockStatus);
+    this.logInfo('accounts unlocked successful');
   }
 
   /**
    * It iterates over accounts to get the status(Locked or Unlocked) of the accounts.
    */
-  private getAccountsStatus(accounts) {
-    let noOfUnlockedAccounts = 0,
-      lockedAccounts = '';
-    for (let index = 0; index < accounts.length; index++) {
-      if (accounts[index]['status'] === 'Unlocked') {
-        noOfUnlockedAccounts++;
+  private async getAccountsStatus(noOfTries: number): Promise<boolean> {
+    this.logInfo(`number of tries to fetch unlocked accounts from node is ${noOfTries}`);
+    let noOfUnlockedAccounts = 0;
+    let response;
+    try {
+      response = await this.getWallets();
+    } catch (err) {
+      this.logError(`error from here ${err}`);
+    }
+    if (response) {
+      const accounts = response.result;
+      for (let index = 0; index < accounts.length; index += 1) {
+        if (accounts[index].status === 'Unlocked') {
+          noOfUnlockedAccounts += 1;
+        }
+      }
+      if (noOfUnlockedAccounts > 0) {
+        return (noOfUnlockedAccounts === accounts.length);
       }
     }
-    if (noOfUnlockedAccounts > 0)
-      return (noOfUnlockedAccounts === accounts.length);
-    else
-      return false;
+    return false;
   }
 
   /**
    * It fetches the list of wallets with their status. It is only supported in Geth client.
    */
-  private getUnlockedAccounts() {
+  private getWallets() {
     return new Promise((resolve, reject) => {
       this.web3.currentProvider.send({
-          jsonrpc: '2.0',
-          method: 'personal_listWallets',
-          id: new Date().getTime(),
-          params: [],
-        },
-        (err, res?) => {
-          if (res) {
-            resolve(res);
-          }
-          else {
-            reject(err);
-          }
-        });
+        jsonrpc: '2.0',
+        method: 'personal_listWallets',
+        id: new Date().getTime(),
+        params: [],
+      },
+      (err, res?) => {
+        if (res) {
+          resolve(res);
+        } else {
+          reject(err);
+        }
+      });
     });
   }
 
