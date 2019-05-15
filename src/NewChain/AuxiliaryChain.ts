@@ -28,6 +28,8 @@ export default class AuxiliaryChain {
 
   private deployer: string;
 
+  private maxTriesToUnlockAccounts = 5;
+
   // The below nonces are more for documentation.
   // However, they are set on the deployment transaction options to enforce failure if the order
   // changes or a contract is added or removed.
@@ -285,12 +287,77 @@ export default class AuxiliaryChain {
     node.startSealer(gasPrice, targetGasLimit, bootKeyFile);
     // The sealer runs locally on this machine and the port is published to the host from the
     // docker container.
-    this.logInfo('waiting 5 seconds for the sealer port to become available');
-    await AuxiliaryChain.sleep(5000);
     // Has to be RPC and not WS. WS connection was closed before deploying the Co-Gateway.
     // Reason unknown. Possibly due to the fact that according to `lsof` node keeps opening new
     // connections.
     this.web3 = new Web3(`http://127.0.0.1:${this.nodeDescription.rpcPort}`);
+    await this.verifyAccountsUnlocking();
+  }
+
+  /**
+   * It polls every 4-secs to fetch the list of wallets.
+   * It logs error when connection is not established even after max tries.
+   */
+  private async verifyAccountsUnlocking(): Promise<void> {
+    let totalWaitTimeInSeconds = 0;
+    const timeToWaitInSecs = 4;
+    let unlockStatus: boolean;
+    do {
+      await AuxiliaryChain.sleep(timeToWaitInSecs * 1000);
+      totalWaitTimeInSeconds += timeToWaitInSecs;
+      if (totalWaitTimeInSeconds > (this.maxTriesToUnlockAccounts * timeToWaitInSecs)) {
+        throw new Error('node did not unlock accounts in time');
+      }
+      unlockStatus = await this.getAccountsStatus(totalWaitTimeInSeconds / timeToWaitInSecs);
+    } while (!unlockStatus);
+    this.logInfo('accounts unlocked successful');
+  }
+
+  /**
+   * It iterates over accounts to get the status(Locked or Unlocked) of the accounts.
+   */
+  private async getAccountsStatus(noOfTries: number): Promise<boolean> {
+    this.logInfo(`number of tries to fetch unlocked accounts from node is ${noOfTries}`);
+    let noOfUnlockedAccounts = 0;
+    let response;
+    try {
+      response = await this.getWallets();
+    } catch (err) {
+      this.logError(`error from here ${err}`);
+    }
+    if (response) {
+      const accounts = response.result;
+      for (let index = 0; index < accounts.length; index += 1) {
+        if (accounts[index].status === 'Unlocked') {
+          noOfUnlockedAccounts += 1;
+        }
+      }
+      if (noOfUnlockedAccounts > 0) {
+        return (noOfUnlockedAccounts === accounts.length);
+      }
+    }
+    return false;
+  }
+
+  /**
+   * It fetches the list of wallets with their status. It is only supported in Geth client.
+   */
+  private getWallets() {
+    return new Promise((resolve, reject) => {
+      this.web3.currentProvider.send({
+        jsonrpc: '2.0',
+        method: 'personal_listWallets',
+        id: new Date().getTime(),
+        params: [],
+      },
+      (err, res?) => {
+        if (res) {
+          resolve(res);
+        } else {
+          reject(err);
+        }
+      });
+    });
   }
 
   /**
