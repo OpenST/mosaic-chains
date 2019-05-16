@@ -9,7 +9,7 @@ import NodeDescription from './NodeDescription';
  */
 export default abstract class Node {
   /** The chain id identifies the chain this node should run. For example ropsten or 200. */
-  protected chainId: string;
+  protected chain: string;
 
   /** The base directory of the mosaic chains that will hold the chains' data in a subdirectory. */
   protected mosaicDir: string;
@@ -55,7 +55,7 @@ export default abstract class Node {
   }
 
   constructor(nodeDescription: NodeDescription) {
-    this.chainId = nodeDescription.chainId;
+    this.chain = nodeDescription.chain;
     this.mosaicDir = nodeDescription.mosaicDir;
     this.port = nodeDescription.port;
     this.rpcPort = nodeDescription.rpcPort;
@@ -64,12 +64,12 @@ export default abstract class Node {
     this.unlock = nodeDescription.unlock;
     this.password = nodeDescription.password;
 
-    this.chainDir = path.join(this.mosaicDir, this.chainId);
-    this.containerName = `${Node.prefix}${this.chainId}`;
+    this.chainDir = path.join(this.mosaicDir, this.chain);
+    this.containerName = `${Node.prefix}${this.chain}`;
   }
 
-  public getChainId(): string {
-    return this.chainId;
+  public getChain(): string {
+    return this.chain;
   }
 
   public getMosaicDir(): string {
@@ -143,6 +143,6 @@ export default abstract class Node {
    * @param message The message to log.
    */
   protected logInfo(message: string): void {
-    Logger.info(message, { chain: this.chainId });
+    Logger.info(message, { chain: this.chain });
   }
 }
