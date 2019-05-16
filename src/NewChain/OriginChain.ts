@@ -1,4 +1,4 @@
-import { ContractInteract } from '@openst/mosaic.js';
+import { ContractInteract, Contracts as MosaicContracts } from '@openst/mosaic.js';
 import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
 import Contracts from './Contracts';
@@ -159,6 +159,21 @@ export default class OriginChain {
       auxiliaryOstCoGatewayAddress,
     );
     return ostGateway.progressStake(messageHash, hashLockSecret, this.initConfig.originTxOptions);
+  }
+
+  /**
+   * Resets organization contracts admin address to 0x.
+   *
+   * @param originOrganization Origin chain organization address.
+   */
+  public async resetOrganizationAdmin(
+    originOrganization,
+  ): Promise<void> {
+    this.logInfo('reseting origin chain organization admin.');
+    const contractInstance = new MosaicContracts(this.web3, null);
+    const originTxOptions = { from: this.initConfig.originAnchorOrganizationOwner };
+    return contractInstance.OriginOrganization(originOrganization, originTxOptions )
+           .methods.setAdmin('0x');
   }
 
   /**

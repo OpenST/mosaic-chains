@@ -172,6 +172,11 @@ export default class Initialization {
       ),
     ]);
 
+    await Promise.all([
+      originChain.resetOrganizationAdmin(originAnchorOrganization.address),
+      auxiliaryChain.resetOrganizationAdmin(anchorOrganization.address),
+    ]);
+
     mosaicConfig.writeToUtilityChainDirectory();
   }
 
