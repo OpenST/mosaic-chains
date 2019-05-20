@@ -16,5 +16,5 @@ export default class NodeDescription {
 
   public password: string = '';
 
-  constructor(readonly chainId: string) { }
+  constructor(readonly chain: string) { }
 }

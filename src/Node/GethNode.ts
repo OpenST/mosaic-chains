@@ -49,7 +49,7 @@ export default class GethNode extends Node {
       path.join(
         Directory.projectRoot,
         'utility_chains',
-        `utility_chain_${this.chainId}`,
+        `utility_chain_${this.chain}`,
         'bootnodes',
       ),
       {
@@ -85,7 +85,7 @@ export default class GethNode extends Node {
 
     args = args.concat([
       'ethereum/client-go:v1.8.23',
-      '--networkid', this.chainId,
+      '--networkid', this.chain,
       '--datadir', './chain_data',
       '--port', `${this.port}`,
       '--rpc',
@@ -134,7 +134,7 @@ export default class GethNode extends Node {
         path.join(
           Directory.projectRoot,
           'utility_chains',
-          `utility_chain_${this.chainId}`,
+          `utility_chain_${this.chain}`,
           'geth',
         ),
         path.join(this.chainDir, 'geth'),

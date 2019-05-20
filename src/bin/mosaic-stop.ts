@@ -9,11 +9,11 @@ import Node from '../Node/Node';
 mosaic
   .version(version)
   .arguments('<chains...>')
-  .action((chainIds: string[]) => {
-    for (const chainId of chainIds) {
-      const chain: Node = NodeFactory.create(new NodeDescription(chainId));
+  .action((chains: string[]) => {
+    for (const chain of chains) {
+      const node: Node = NodeFactory.create(new NodeDescription(chain));
 
-      chain.stop();
+      node.stop();
     }
   })
   .parse(process.argv);
