@@ -24,11 +24,17 @@ You can specify a different directory with the `--mosaic-dir` option.
 
 ### Available chains
 
-* Production auxiliary chains:
+Usually, you want to run a combination of at least one origin chain with at least one matching auxiliary chain.
+For example Ethereum mainnet and `1414` or Ropsten and `1406`.
+
+* Auxiliary chains running against Ethereum mainnet:
     * `1414`
-* Testnet auxiliary chains:
+* Testnet auxiliary chains running against Ropsten:
     * `1406`
     * `1407`
+
+The chain id of future auxiliary chains running against Ethereum mainnet will increase by one number each.
+The chain id of future auxiliary chains running against Ropsten will decrease by one number each.
 
 ### Default ports
 
@@ -43,7 +49,7 @@ Examples with different chain IDs:
 
 | Chain | Port | RPC | WS |
 | ---| --- | --- | --- |
-| ropsten (`3`) | `30003` | `40003` | `50003` |
+| Ropsten (`3`) | `30003` | `40003` | `50003` |
 | `200` | `30200` | `40200` | `50200` |
 | `1406` | `31406` | `41406` | `51406` |
 
