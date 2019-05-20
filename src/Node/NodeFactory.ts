@@ -9,7 +9,7 @@ import ChainInfo from './ChainInfo';
  */
 export default class NodeFactory {
   /**
-   * Builds a node based on the `chainId` or `chainName` and returns it.
+   * Builds a node based on the `chain identifier` and returns it.
    * Any chain id that matches `ChainInfo.officialIdentifiers` will return a `ParityNode`.
    * Otherwise, it returns a `GethNode`.
    * @param nodeDescription The parameters of the requested node.

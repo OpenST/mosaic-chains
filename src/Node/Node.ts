@@ -8,7 +8,7 @@ import NodeDescription from './NodeDescription';
  * Represents a chain that is managed by docker.
  */
 export default abstract class Node {
-  /** The chain id identifies the chain this node should run. For example ropsten or 200. */
+  /** The chain identifier identifies the chain this node should run. For example ropsten or 200. */
   protected chain: string;
 
   /** The base directory of the mosaic chains that will hold the chains' data in a subdirectory. */

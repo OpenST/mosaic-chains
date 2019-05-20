@@ -10,10 +10,10 @@ mosaic
   .version(version)
   .arguments('<chains...>')
   .action((chains: string[]) => {
-    for (const currentChain of chains) {
-      const chain: Node = NodeFactory.create(new NodeDescription(currentChain));
+    for (const chain of chains) {
+      const node: Node = NodeFactory.create(new NodeDescription(chain));
 
-      chain.stop();
+      node.stop();
     }
   })
   .parse(process.argv);
