@@ -2,63 +2,61 @@
 
 You need node and docker installed to run the chains.
 
-Mosaic will automatically identify if you want to run a geth node or a parity node based on the chain id.
+Mosaic will automatically identify if you want to run a geth node or a parity node based on the chain id or name.
 Any string supported by parity as a network option will start a parity node container.
-Any other string it tries to match to one of the available IDs in the `./utility_chains` directory, e.g. `1406`.
-
-The default ports published with docker on the host are starting from:
-
-* port: `30303`
-* RPC: `8545`
-* Websocket: `8646`
-
-When you start more than one chain, mosaic will increase all port numbers by 1 for each subsequent chain.
-If you already have containers or other services running at the default host ports for publishing, use the `-port`, `-rpc-port`, and/or `-ws-port` options to start at a different port number.
+Any other string it tries to match to one of the available IDs in the `./utility_chains` directory.
+For example, it would match `1406` to `./utility_chains/utility_chain_1406`.
 
 Stopping a container that was started with mosaic completely removes that container from the host.
 Only the content in the mounted data directory remains.
 If you want to keep the container around, for example to debug in the logs after it was stopped automatically after starting, use the `--keep` option of `./mosaic start`.
 
-⚠️ Nodes started with `mosaic` open *all* available APIs. If necessary, make sure your machine is secured.
+⚠️  Nodes started with `mosaic` open *all* available APIs. If necessary, make sure your machine is secured.
 
 ## Running mosaic
 
-Clone `git clone git@github.com:OpenST/mosaic-chains.git` and install `npm install`.
-Run `./mosaic` to get the help output.
+Clone `git clone git@github.com:OpenST/mosaic-chains.git` and install `npm ci`.
+Run `./mosaic --help` to get the help output.
+You can use the `--help` option with any sub-command to get the relevant help for that sub-command, e.g. `./mosaic start --help`.
 
-The default directory for mosaic to store chain data is `~/.mosaic`.
+The default directory for mosaic to store mosaic chain data is `~/.mosaic`.
 You can specify a different directory with the `--mosaic-dir` option.
 
-Examples:
-* Starts four containers to follow these chains:
-  * `./mosaic start ropsten 1406 1407 1414`
- 
-* Stops three containers of these chains:
-  * `./mosaic stop 1406 1407 1414`
+### Available chains
 
-* Uses /external to store the chains data:
-  * `./mosaic -d /external start 1406`
+Usually, you want to run a combination of at least one origin chain with at least one matching auxiliary chain.
+For example Ethereum mainnet and `1414` or Ropsten and `1406`.
 
-* Attaches a geth node to the given chain:
-  * `./mosaic attach ropsten`
+* Auxiliary chains running against Ethereum mainnet:
+    * `1414`
+* Testnet auxiliary chains running against Ropsten:
+    * `1406`
+    * `1407`
 
-* Follows the logs of a given chain:
-  * `./mosaic logs ropsten`
+The chain id of future auxiliary chains running against Ethereum mainnet will increase by one number each.
+The chain id of future auxiliary chains running against Ropsten will decrease by one number each.
 
-* Lists all running mosaic chain containers:
-  * `./mosaic list`
-  
-## Available chains
-```
-1406, 1407 - Testnet auxiliary chains.
-1414 - Production auxiliary chain.
-```
-  
+### Default ports
 
-* Creates a new auxiliary chain `1337`:
-  * `./mosaic create 1337 ws://localhost:8746 ./password.txt`
+By default, a chain uses the following ports:
+* port: `3<chain-id>`
+* rpc: `4<chain-id>`
+* ws: `5<chain-id>`
+
+Where `<chain-id>` would always be exactly four characters, with leading zeros in case of a shorter chain id.
+
+Examples with different chain IDs:
+
+| Chain | Port | RPC | WS |
+| ---| --- | --- | --- |
+| Ropsten (`3`) | `30003` | `40003` | `50003` |
+| `200` | `30200` | `40200` | `50200` |
+| `1406` | `31406` | `41406` | `51406` |
 
 ## Creating a new auxiliary chain
+
+The command to create a new auxiliary chain is `./mosaic create <new-chain-id> <origin-websocket> <password-file>`.
+See `./mosaic create --help` for more help.
 
 Creating a new auxiliary chain assumes that you have an unlocked account on a node that is connected to the **origin chain.**
 If that is **not** the case, do one or more of the steps below as required.
@@ -81,7 +79,7 @@ Other prerequisites that you need:
 To see the help:
 
 ```
-./mosaic help create
+./mosaic create --help
 ```
 
 A simple run would be the following:

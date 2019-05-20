@@ -38,10 +38,10 @@
     "@typescript-eslint/eslint-plugin": "^1.5.0",
     "@typescript-eslint/parser": "^1.4.2",
     "chai": "^4.2.0",
-    "eslint": "5.10.0",
+    "eslint": "5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-json": "1.4.0",
-    "mocha": "^6.0.2"
+    "mocha": "^6.1.4"
   }
 }
