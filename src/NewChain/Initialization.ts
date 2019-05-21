@@ -178,7 +178,7 @@ export default class Initialization {
     // Resets coGatewayAndOstPrime organization admin address in aux chain as admin is deployer here.
     await Promise.all([
       originChain.resetOrganizationAdmin(ostGatewayOrganization.address, initConfig.originTxOptions.from),
-      auxiliaryChain.resetOrganizationAdmin(coGatewayAndOstPrimeOrganization.address, auxiliaryChain.getDeployer()),
+      auxiliaryChain.resetOrganizationAdmin(coGatewayAndOstPrimeOrganization.address, deployer),
     ]);
 
     mosaicConfig.writeToUtilityChainDirectory();

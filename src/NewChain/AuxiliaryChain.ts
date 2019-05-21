@@ -83,13 +83,6 @@ export default class AuxiliaryChain {
   }
 
   /**
-   * @returns The deployer address.
-   */
-  public getDeployer(): string {
-    return this.deployer;
-  }
-
-  /**
    * Generates a new chain, starts a sealer that runs the chain, and returns the addresses of the
    * sealer and a deployer that can deploy contracts. The deployer gets the initial value allocated
    * to it in the genesis file.
