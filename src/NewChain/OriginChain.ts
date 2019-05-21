@@ -66,7 +66,7 @@ export default class OriginChain {
       auxiliaryStateRootZero,
     );
 
-    // Owner of the organization has to be the deployer, as we need to be able to activate the
+    // Admin of the organization has to be the deployer, as we need to be able to activate the
     // gateway
     const ostGatewayOrganization = await this.deployOrganization(
       this.initConfig.originGatewayOrganizationOwner,

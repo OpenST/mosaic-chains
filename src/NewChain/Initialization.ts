@@ -174,8 +174,8 @@ export default class Initialization {
       ),
     ]);
 
-    // Resets ostGateway organization admin address in origin chain as deployer is admin here.
-    // Resets coGatewayAndOstPrime organization admin address in aux chain as deployer is admin here.
+    // Resets ostGateway organization admin address to 0x in origin chain as deployer is admin here.
+    // Resets coGatewayAndOstPrime organization admin to 0x address in aux chain as deployer is admin here.
     await Promise.all([
       originChain.resetOrganizationAdmin(
         ostGatewayOrganization.address,
