@@ -231,8 +231,9 @@ export default class AuxiliaryChain {
   ): Promise<void> {
     this.logInfo('reseting auxiliary chain organization admin.', { organization, txOptions } );
     const contractInstance = new MosaicContracts(undefined, this.web3);
-    await contractInstance.AuxiliaryOrganization(organization, txOptions )
+    const tx = contractInstance.AuxiliaryOrganization(organization )
           .methods.setAdmin('0x0000000000000000000000000000000000000000');
+    return tx.send(txOptions);
   }
 
   /**

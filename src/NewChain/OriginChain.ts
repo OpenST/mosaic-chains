@@ -173,8 +173,9 @@ export default class OriginChain {
   ): Promise<void> {
     this.logInfo("reseting origin chain organization admin", { organization, txOptions } );
     const contractInstance = new MosaicContracts(this.web3, null);
-    await contractInstance.OriginOrganization(organization, txOptions )
+    const tx = contractInstance.OriginOrganization(organization )
            .methods.setAdmin('0x0000000000000000000000000000000000000000');
+    return tx.send(txOptions);
   }
 
   /**
