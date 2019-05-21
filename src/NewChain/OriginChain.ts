@@ -166,14 +166,16 @@ export default class OriginChain {
    *
    * @param organization Origin chain organization address.
    * @param txOptions Transaction options.
+   *
+   * @returns {Promise} Promise containing transaction receipt.
    */
   public async resetOrganizationAdmin(
     organization,
     txOptions,
-  ): Promise<void> {
+  ): Promise<Object> {
     this.logInfo("reseting origin chain organization admin", { organization, txOptions } );
     const contractInstance = new MosaicContracts(this.web3, null);
-    const tx = contractInstance.OriginOrganization(organization )
+    const tx = contractInstance.OriginOrganization(organization)
            .methods.setAdmin('0x0000000000000000000000000000000000000000');
     return tx.send(txOptions);
   }

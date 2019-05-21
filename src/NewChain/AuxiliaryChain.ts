@@ -224,14 +224,16 @@ export default class AuxiliaryChain {
    *
    * @param organization Auxiliary chain organization address.
    * @param txOptions Transaction options.
+   *
+   * @returns {Promise} Promise containing transaction receipt.
    */
   public async resetOrganizationAdmin(
     organization,
     txOptions,
-  ): Promise<void> {
+  ): Promise<Object> {
     this.logInfo('reseting auxiliary chain organization admin.', { organization, txOptions } );
     const contractInstance = new MosaicContracts(undefined, this.web3);
-    const tx = contractInstance.AuxiliaryOrganization(organization )
+    const tx = contractInstance.AuxiliaryOrganization(organization)
           .methods.setAdmin('0x0000000000000000000000000000000000000000');
     return tx.send(txOptions);
   }
