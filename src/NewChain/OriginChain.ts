@@ -165,16 +165,15 @@ export default class OriginChain {
    * Resets organization contracts admin address to 0x.
    *
    * @param organization Origin chain organization address.
-   * @param owner Origin chain organization owner.
+   * @param from From address which will do the transaction.
    */
   public async resetOrganizationAdmin(
     organization,
-    owner,
+    from,
   ): Promise<void> {
-    this.logInfo("reseting origin chain organization admin", { organization, owner });
+    this.logInfo("reseting origin chain organization admin", { organization, from });
     const contractInstance = new MosaicContracts(this.web3, null);
-    const originTxOptions = { from: owner };
-    const oldAdmin = await contractInstance.OriginOrganization(organization, originTxOptions ).methods.admin().call();
+    const originTxOptions = { from: from };
     await contractInstance.OriginOrganization(organization, originTxOptions )
            .methods.setAdmin('0x0000000000000000000000000000000000000000');
   }

@@ -83,6 +83,13 @@ export default class AuxiliaryChain {
   }
 
   /**
+   * @returns The deployer address.
+   */
+  public getDeployer(): string {
+    return this.deployer;
+  }
+
+  /**
    * Generates a new chain, starts a sealer that runs the chain, and returns the addresses of the
    * sealer and a deployer that can deploy contracts. The deployer gets the initial value allocated
    * to it in the genesis file.
@@ -223,15 +230,15 @@ export default class AuxiliaryChain {
    * Resets organization contracts admin address to 0x.
    *
    * @param organization Auxiliary chain organization address.
-   * @param owner Auxiliary chain organization owner.
+   * @param from From address which will do the transaction.
    */
   public async resetOrganizationAdmin(
     organization,
-    owner,
+    from,
   ): Promise<void> {
     this.logInfo('reseting auxiliary chain organization admin.');
     const contractInstance = new MosaicContracts(undefined, this.web3);
-    const auxiliaryTxOptions = { from: owner };
+    const auxiliaryTxOptions = { from: from };
     await contractInstance.AuxiliaryOrganization(organization, auxiliaryTxOptions )
           .methods.setAdmin('0x0000000000000000000000000000000000000000');
   }
