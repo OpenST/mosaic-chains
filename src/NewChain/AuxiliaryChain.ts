@@ -222,16 +222,18 @@ export default class AuxiliaryChain {
   /**
    * Resets organization contracts admin address to 0x.
    *
-   * @param auxiliaryOrganization Auxiliary chain organization address.
+   * @param organization Auxiliary chain organization address.
+   * @param owner Auxiliary chain organization owner.
    */
   public async resetOrganizationAdmin(
-    auxiliaryOrganization,
+    organization,
+    owner,
   ): Promise<void> {
     this.logInfo('reseting auxiliary chain organization admin.');
     const contractInstance = new MosaicContracts(undefined, this.web3);
-    const auxiliaryTxOptions = { from: this.initConfig.auxiliaryAnchorOrganizationOwner };
-    await contractInstance.AuxiliaryOrganization(auxiliaryOrganization, auxiliaryTxOptions )
-          .methods.setAdmin('0x');
+    const auxiliaryTxOptions = { from: owner };
+    await contractInstance.AuxiliaryOrganization(organization, auxiliaryTxOptions )
+          .methods.setAdmin('0x0000000000000000000000000000000000000000');
   }
 
   /**

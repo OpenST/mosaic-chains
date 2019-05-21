@@ -59,6 +59,7 @@ export default class Initialization {
       originChain,
       auxiliaryChain,
       hashLockSecret,
+      initConfig,
     );
 
     Logger.warn(
@@ -93,6 +94,7 @@ export default class Initialization {
     originChain: OriginChain,
     auxiliaryChain: AuxiliaryChain,
     hashLockSecret: string,
+    initConfig: InitConfig,
   ): Promise<void> {
     Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
     mosaicConfig.auxiliaryChainId = auxiliaryNodeDescription.chainId;
@@ -173,8 +175,10 @@ export default class Initialization {
     ]);
 
     await Promise.all([
-      originChain.resetOrganizationAdmin(originAnchorOrganization.address),
-      auxiliaryChain.resetOrganizationAdmin(anchorOrganization.address),
+      originChain.resetOrganizationAdmin(originAnchorOrganization.address, initConfig.originAnchorOrganizationOwner),
+      originChain.resetOrganizationAdmin(ostGatewayOrganization.address, initConfig.originGatewayOrganizationOwner),
+      auxiliaryChain.resetOrganizationAdmin(anchorOrganization.address, initConfig.auxiliaryAnchorOrganizationOwner),
+      auxiliaryChain.resetOrganizationAdmin(coGatewayAndOstPrimeOrganization.address, initConfig.auxiliaryCoGatewayAndOstPrimeOrganizationOwner),
     ]);
 
     mosaicConfig.writeToUtilityChainDirectory();
