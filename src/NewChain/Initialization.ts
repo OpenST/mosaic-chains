@@ -174,11 +174,17 @@ export default class Initialization {
       ),
     ]);
 
-    // Resets ostGateway organization admin address in origin chain as admin is deployer here.
-    // Resets coGatewayAndOstPrime organization admin address in aux chain as admin is deployer here.
+    // Resets ostGateway organization admin address in origin chain as deployer is admin here.
+    // Resets coGatewayAndOstPrime organization admin address in aux chain as deployer is admin here.
     await Promise.all([
-      originChain.resetOrganizationAdmin(ostGatewayOrganization.address, initConfig.originTxOptions.from),
-      auxiliaryChain.resetOrganizationAdmin(coGatewayAndOstPrimeOrganization.address, deployer),
+      originChain.resetOrganizationAdmin(
+        ostGatewayOrganization.address,
+        { from: initConfig.originTxOptions.from },
+        ),
+      auxiliaryChain.resetOrganizationAdmin(
+        coGatewayAndOstPrimeOrganization.address,
+        { from: deployer },
+        ),
     ]);
 
     mosaicConfig.writeToUtilityChainDirectory();
