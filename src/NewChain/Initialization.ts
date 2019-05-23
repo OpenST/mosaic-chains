@@ -59,7 +59,13 @@ export default class Initialization {
       originChain,
       auxiliaryChain,
       hashLockSecret,
-      initConfig,
+    );
+
+    await Initialization.resetOrganizationAdmins(
+      mosaicConfig,
+      originChain,
+      auxiliaryChain,
+      initConfig.originTxOptions.from,
     );
 
     Logger.warn(
@@ -94,7 +100,6 @@ export default class Initialization {
     originChain: OriginChain,
     auxiliaryChain: AuxiliaryChain,
     hashLockSecret: string,
-    initConfig: InitConfig,
   ): Promise<void> {
     Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
     mosaicConfig.auxiliaryChainId = auxiliaryNodeDescription.chain;
@@ -174,20 +179,36 @@ export default class Initialization {
       ),
     ]);
 
-    // Resets ostGateway organization admin address to 0x in origin chain as deployer is admin here.
-    // Resets coGatewayAndOstPrime organization admin to 0x address in aux chain as deployer is admin here.
+    mosaicConfig.writeToUtilityChainDirectory();
+  }
+
+  /**
+   * Resets ostGateway organization admin address to `address(0)` in origin chain as deployer is admin here.
+   * Resets coGatewayAndOstPrime organization admin to `address(0)` in aux chain as deployer is admin here.
+   *
+   * @param mosaicConfig Object holds the chain ids and addresses of a mosaic chain.
+   * @param {OriginChain} originChain OriginChain instance.
+   * @param {AuxiliaryChain} auxiliaryChain AuxiliaryChain instance.
+   * @param {string} originOstGatewayOrganizationAdmin Gateway organization contract admin.
+   *
+   * @returns {Promise<void>}
+   */
+  private static async resetOrganizationAdmins(
+    mosaicConfig,
+    originChain: OriginChain,
+    auxiliaryChain: AuxiliaryChain,
+    originOrganizationAdmin: string,
+  ): Promise<void> {
     await Promise.all([
       originChain.resetOrganizationAdmin(
-        ostGatewayOrganization.address,
-        { from: initConfig.originTxOptions.from },
-        ),
+        mosaicConfig.originOstGatewayOrganizationAddress,
+        { from: originOrganizationAdmin },
+      ),
       auxiliaryChain.resetOrganizationAdmin(
-        coGatewayAndOstPrimeOrganization.address,
-        { from: deployer },
-        ),
+        mosaicConfig.auxiliaryCoGatewayAndOstPrimeOrganizationAddress,
+        { from: mosaicConfig.auxiliaryOriginalDeployer },
+      ),
     ]);
-
-    mosaicConfig.writeToUtilityChainDirectory();
   }
 
   /**

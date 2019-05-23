@@ -162,7 +162,7 @@ export default class OriginChain {
   }
 
   /**
-   * Resets organization contracts admin address to 0x.
+   * Resets organization contracts admin address to `address(0)`.
    *
    * @param organization Origin chain organization address.
    * @param txOptions Transaction options.
