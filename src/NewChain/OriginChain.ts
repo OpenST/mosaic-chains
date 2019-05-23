@@ -1,4 +1,4 @@
-import { ContractInteract } from '@openst/mosaic.js';
+import { ContractInteract, Contracts as MosaicContracts } from '@openst/mosaic.js';
 import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
 import Contracts from './Contracts';
@@ -66,7 +66,7 @@ export default class OriginChain {
       auxiliaryStateRootZero,
     );
 
-    // Owner of the organization has to be the deployer, as we need to be able to activate the
+    // Admin of the organization has to be the deployer, as we need to be able to activate the
     // gateway
     const ostGatewayOrganization = await this.deployOrganization(
       this.initConfig.originGatewayOrganizationOwner,
@@ -159,6 +159,27 @@ export default class OriginChain {
       auxiliaryOstCoGatewayAddress,
     );
     return ostGateway.progressStake(messageHash, hashLockSecret, this.initConfig.originTxOptions);
+  }
+
+  /**
+   * Resets organization contracts admin address to `address(0)`.
+   *
+   * @param organization Origin chain organization address.
+   * @param txOptions Transaction options.
+   *
+   * @returns {Promise} Promise containing transaction receipt.
+   */
+  public async resetOrganizationAdmin(
+    organization,
+    txOptions,
+  ): Promise<Object> {
+    this.logInfo("reseting origin chain organization admin", { organization, txOptions } );
+    // ContractInteract.Organization doesn't implement setAdmin function in mosaic.js.
+    // That's why MosaicContracts being used here.
+    const contractInstance = new MosaicContracts(this.web3, null);
+    const tx = contractInstance.OriginOrganization(organization)
+           .methods.setAdmin('0x0000000000000000000000000000000000000000');
+    return tx.send(txOptions);
   }
 
   /**

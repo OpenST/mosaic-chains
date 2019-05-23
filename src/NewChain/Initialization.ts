@@ -61,6 +61,13 @@ export default class Initialization {
       hashLockSecret,
     );
 
+    await Initialization.resetOrganizationAdmins(
+      mosaicConfig,
+      originChain,
+      auxiliaryChain,
+      initConfig.originTxOptions.from,
+    );
+
     Logger.warn(
       '⚠️ The new sealer is still running at a gas price of zero. If you want to change the gas cost, you need to run a different sealer.',
     );
@@ -173,6 +180,35 @@ export default class Initialization {
     ]);
 
     mosaicConfig.writeToUtilityChainDirectory();
+  }
+
+  /**
+   * Resets ostGateway organization admin address to `address(0)` in origin chain as deployer is admin here.
+   * Resets coGatewayAndOstPrime organization admin to `address(0)` in aux chain as deployer is admin here.
+   *
+   * @param mosaicConfig Object holds the chain ids and addresses of a mosaic chain.
+   * @param {OriginChain} originChain OriginChain instance.
+   * @param {AuxiliaryChain} auxiliaryChain AuxiliaryChain instance.
+   * @param {string} originOstGatewayOrganizationAdmin Gateway organization contract admin.
+   *
+   * @returns {Promise<void>}
+   */
+  private static async resetOrganizationAdmins(
+    mosaicConfig: MosaicConfig,
+    originChain: OriginChain,
+    auxiliaryChain: AuxiliaryChain,
+    originOrganizationAdmin: string,
+  ): Promise<void> {
+    await Promise.all([
+      originChain.resetOrganizationAdmin(
+        mosaicConfig.originOstGatewayOrganizationAddress,
+        { from: originOrganizationAdmin },
+      ),
+      auxiliaryChain.resetOrganizationAdmin(
+        mosaicConfig.auxiliaryCoGatewayAndOstPrimeOrganizationAddress,
+        { from: mosaicConfig.auxiliaryOriginalDeployer },
+      ),
+    ]);
   }
 
   /**

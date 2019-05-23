@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as RLP from 'rlp';
-import { ContractInteract } from '@openst/mosaic.js';
+import { ContractInteract, Contracts as MosaicContracts } from '@openst/mosaic.js';
 
 import { Tx } from 'web3/eth/types';
 import CliqueGenesis from './CliqueGenesis';
@@ -217,6 +217,27 @@ export default class AuxiliaryChain {
       auxiliaryOstCoGatewayAddress,
     );
     return ostCoGateway.progressMint(messageHash, hashLockSecret, this.txOptions);
+  }
+
+  /**
+   * Resets organization contracts admin address to `address(0)`.
+   *
+   * @param organization Auxiliary chain organization address.
+   * @param txOptions Transaction options.
+   *
+   * @returns {Promise} Promise containing transaction receipt.
+   */
+  public async resetOrganizationAdmin(
+    organization,
+    txOptions,
+  ): Promise<Object> {
+    this.logInfo('reseting auxiliary chain organization admin.', { organization, txOptions } );
+    // ContractInteract.Organization doesn't implement setAdmin function in mosaic.js.
+    // That's why MosaicContracts being used here.
+    const contractInstance = new MosaicContracts(undefined, this.web3);
+    const tx = contractInstance.AuxiliaryOrganization(organization)
+          .methods.setAdmin('0x0000000000000000000000000000000000000000');
+    return tx.send(txOptions);
   }
 
   /**
