@@ -102,6 +102,8 @@ Troubleshooting:
   * Make sure that the newly created auxiliary sealer doesn't use any ports that you forward to any running nodes via SSH. You can use the options `--port`, `--rpc-port`, and `--ws-port` with the `create` command to make sure you use different ports on the auxiliary sealer.
 * The EVM reverts without details at the step "stake" (on origin):
   * Make sure that you set the correct OST address in you init configuration and that your origin account has sufficient funds to pay for the stake amount plus the bounty amount (on origin).
+* Your machine is showing sign of slowness after creation of auxiliary chains:
+  * Too many docker containers could be running while creation of auxiliary chains with different chain ids. Make sure you stop the docker containers of auxiliary chains if it's not being used.  
 
 ## Adding an existing auxiliary chain
 

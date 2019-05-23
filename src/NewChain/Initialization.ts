@@ -194,7 +194,7 @@ export default class Initialization {
    * @returns {Promise<void>}
    */
   private static async resetOrganizationAdmins(
-    mosaicConfig,
+    mosaicConfig: MosaicConfig,
     originChain: OriginChain,
     auxiliaryChain: AuxiliaryChain,
     originOrganizationAdmin: string,
