@@ -10,8 +10,8 @@ import NodeDescription from '../Node/NodeDescription';
 mosaic
   .version(version)
   .arguments('<chain>')
-  .action((chainId: string) => {
-    const node: Node = NodeFactory.create(new NodeDescription(chainId));
+  .action((chain: string) => {
+    const node: Node = NodeFactory.create(new NodeDescription(chain));
 
     const args = [
       'run',

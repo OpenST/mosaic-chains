@@ -74,11 +74,11 @@ export default class NodeOptions {
   /**
   * Parses the commander options and returns an Options object.
   * @param options Options as they are given by commander.
-  * @param chainId Chain id.
+  * @param chain Chain identifier.
   * @returns The parsed options with defaults for options that are missing from the command line.
   */
-  public static parseOptions(options, chainId): NodeOptions {
-    const chainIdNumber = ChainInfo.getChainId(chainId);
+  public static parseOptions(options, chain): NodeOptions {
+    const chainIdNumber = ChainInfo.getChainId(chain);
     const parsedOptions: NodeOptions = new NodeOptions({
       mosaicDir: options.mosaicDir || DEFAULT_MOSAIC_DIR,
       port: options.port || Number.parseInt(chainIdNumber) + DEFAULT_PORT,

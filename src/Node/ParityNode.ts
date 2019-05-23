@@ -53,7 +53,7 @@ export default class ParityNode extends Node {
 
     args = args.concat([
       'parity/parity:v2.3.3',
-      `--chain=${this.chainId}`,
+      `--chain=${this.chain}`,
       '--base-path=/home/parity/.local/share/io.parity.ethereum/',
       `--port=${this.port}`,
       '--jsonrpc-apis=all',

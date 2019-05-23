@@ -74,7 +74,7 @@ export default class Initialization {
    * Verifies that the current host environment is not blocking initialization of a new chain.
    */
   private static environmentIsClean(nodeDescription: NodeDescription): boolean {
-    const chainDir = path.join(nodeDescription.mosaicDir, nodeDescription.chainId);
+    const chainDir = path.join(nodeDescription.mosaicDir, nodeDescription.chain);
     if (fs.existsSync(chainDir)) {
       Logger.error('chain dir exists; it must not exist to generate a new chain', { chainDir });
       return false;
@@ -97,7 +97,7 @@ export default class Initialization {
     initConfig: InitConfig,
   ): Promise<void> {
     Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
-    mosaicConfig.auxiliaryChainId = auxiliaryNodeDescription.chainId;
+    mosaicConfig.auxiliaryChainId = auxiliaryNodeDescription.chain;
 
     const { sealer, deployer } = await auxiliaryChain.startNewChainSealer();
     mosaicConfig.auxiliaryOriginalSealer = sealer;
