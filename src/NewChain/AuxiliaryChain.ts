@@ -232,6 +232,8 @@ export default class AuxiliaryChain {
     txOptions,
   ): Promise<Object> {
     this.logInfo('reseting auxiliary chain organization admin.', { organization, txOptions } );
+    // ContractInteract.Organization doesn't implement setAdmin function in mosaic.js.
+    // That's why MosaicContracts being used here.
     const contractInstance = new MosaicContracts(undefined, this.web3);
     const tx = contractInstance.AuxiliaryOrganization(organization)
           .methods.setAdmin('0x0000000000000000000000000000000000000000');
