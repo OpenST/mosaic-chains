@@ -3,7 +3,6 @@
         "declaration": true,
         "module": "commonjs",
         "outDir": "./lib",
-        "resolveJsonModule": true,
         "sourceMap": true,
         "target": "es5",
         "types": [
@@ -17,8 +16,5 @@
     "include": [
         "index.ts",
         "src/**/*.ts"
-    ],
-    "exclude": [
-        "node_modules"
     ]
 }

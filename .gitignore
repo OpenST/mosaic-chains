@@ -8,7 +8,8 @@ tags
 password.txt
 
 # Packaging output
-lib/
+lib/**
+openst-mosaic-chains-*.tgz
 
 # Initialization configs for new chains; keep example
 initialize/*.json

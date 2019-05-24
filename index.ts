@@ -5,7 +5,7 @@ import NodeDescription from './src/Node/NodeDescription';
 import NodeFactory from './src/Node/NodeFactory';
 import Shell from './src/Shell';
 
-module.exports = {
+export {
   Directory,
   Logger,
   Node,
