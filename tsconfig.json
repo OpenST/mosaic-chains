@@ -1,21 +1,22 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "declaration": true,
         "module": "commonjs",
+        "outDir": "./lib",
+        "resolveJsonModule": true,
         "sourceMap": true,
+        "target": "es5",
         "types": [
             "chai",
             "fs-extra",
             "node",
             "mocha",
             "web3"
-        ],
-        "resolveJsonModule": true
+        ]
     },
     "include": [
-        "src/**/*.ts",
-        "src/bin/mosaic.ts",
-        "src/bin/mosaic-attach.ts"
+        "index.ts",
+        "src/**/*.ts"
     ],
     "exclude": [
         "node_modules"
