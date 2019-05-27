@@ -18,7 +18,6 @@ mosaic.action(
     deployer: string,
   ) => {
 
-      console.log('originWebsocket  ',originWebsocket);
     try {
 
       const originWeb3 = new Web3(originWebsocket);
