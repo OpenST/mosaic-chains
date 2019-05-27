@@ -10,9 +10,9 @@ export default class MosaicConfig {
     public originChain: OriginChain;
     public auxiliaryChains: AuxiliaryChain[];
 
-    constructor(){
-        this.originChain = new OriginChain();
-        this.auxiliaryChains = [];
+    constructor(config: any) {
+        this.originChain = config.originChain || new OriginChain();
+        this.auxiliaryChains = config.auxiliaryChains || [];
     }
 
 
@@ -20,8 +20,11 @@ export default class MosaicConfig {
      * Saves this config to a file in its auxiliary chain directory.
      */
     public writeToMosaicConfigDirectory(): void {
+
+        let mosaicConfigDir = Directory.getProjectMosaicConfigDir();
+        fs.ensureDirSync(mosaicConfigDir);
         const configPath = path.join(
-            Directory.getProjectMosaicConfigDir(),
+            mosaicConfigDir,
             `${this.originChain.chain}.json`,
         );
         Logger.info('storing mosaic config', {configPath});
@@ -30,6 +33,22 @@ export default class MosaicConfig {
             configPath,
             JSON.stringify(this, null, '    '),
         );
+    }
+
+    public static from(chain): MosaicConfig {
+
+        const filePath = path.join(
+            Directory.getProjectMosaicConfigDir(),
+            `${chain}.json`,
+        );
+        if (fs.existsSync(filePath)) {
+            let config = fs.readFileSync(filePath).toString();
+            if (config && config.length > 0) {
+                const jsonObject = JSON.parse(config);
+                return new MosaicConfig(jsonObject);
+            }
+        }
+        return new MosaicConfig({} as MosaicConfig);
     }
 }
 

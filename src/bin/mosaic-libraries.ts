@@ -2,14 +2,12 @@
 
 import * as commander from 'commander';
 
-import { version } from '../../package.json';
 import Logger from '../Logger';
 import OriginChain from "../NewChain/OriginChain";
 import Web3 = require("web3");
 import MosaicConfig from "../Config/MosaicConfigV2";
 
 let mosaic = commander
-  .version(version)
   .arguments('<chain> <origin-websocket> <deployer>');
 mosaic.action(
   async (
@@ -27,7 +25,7 @@ mosaic.action(
         merklePatriciaProof,
       } = await OriginChain.deployLibraries(originWeb3, deployer);
 
-      const mosaicConfig:MosaicConfig = new MosaicConfig();
+      const mosaicConfig:MosaicConfig = MosaicConfig.from(chain);
 
       mosaicConfig.originChain.chain = chain;
       mosaicConfig.originChain.contractAddress.gatewayLibAddress = gatewayLib.address;
