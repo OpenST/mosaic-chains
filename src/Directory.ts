@@ -42,6 +42,16 @@ export default class Directory {
   }
 
   /**
+   * @returns The absolute path to the directory of the mosaic config.
+   */
+  public static getProjectMosaicConfigDir(): string {
+    return path.join(
+        Directory.projectRoot,
+        `mosaic_config`,
+    );
+  }
+
+  /**
    * Sanitizes given directory strings:
    * - replaces `~` at the beginning with the absolute path to the home directory.
    * - translates relative paths to absolute paths.

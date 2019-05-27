@@ -182,6 +182,20 @@ export default class OriginChain {
     return tx.send(txOptions);
   }
 
+
+  /**
+   * This deploys libraries on the origin chain.
+   *
+   * @param web3 Web3 instance points to origin chain
+   * @param deployer Address of the deployer.
+   */
+  public static async deployLibraries(
+      web3: Web3,
+      deployer: string,
+  ) {
+    return await Contracts.deployGatewayLibraries(web3, {from: deployer});
+  }
+
   /**
    * Deploys an organization contract.
    * @param owner Will be the owner address of the deployed organization.

@@ -10,6 +10,12 @@ export default class MosaicConfig {
     public originChain: OriginChain;
     public auxiliaryChains: AuxiliaryChain[];
 
+    constructor(){
+        this.originChain = new OriginChain();
+        this.auxiliaryChains = [];
+    }
+
+
     /**
      * Saves this config to a file in its auxiliary chain directory.
      */
@@ -33,6 +39,11 @@ export default class MosaicConfig {
 class OriginChain {
     public chain: string;
     public contractAddress: OriginLibraries;
+
+    constructor() {
+        this.contractAddress = new OriginLibraries();
+    }
+
 }
 
 /**
@@ -43,6 +54,11 @@ class AuxiliaryChain {
     public bootNodes: string[];
     public genesis: Object;
     public contractAddress: ContractAddresses;
+
+    constructor(){
+        this.bootNodes = [];
+        this.contractAddress = new ContractAddresses();
+    }
 }
 
 /**
@@ -51,6 +67,11 @@ class AuxiliaryChain {
 class ContractAddresses {
     public origin: OriginContract;
     public auxiliary: AuxiliaryContract;
+
+    constructor(){
+        this.origin = new OriginContract();
+        this.auxiliary = new AuxiliaryContract();
+    }
 }
 
 /**
