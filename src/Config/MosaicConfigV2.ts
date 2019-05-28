@@ -51,7 +51,7 @@ class AuxiliaryChain {
 }
 
 /**
- * Hold contract addresses on origin and auxiliary chain specific to a auxiliary chain.
+ * Hold contract addresses on origin and auxiliary chain specific to an auxiliary chain.
  */
 class ContractAddresses {
   public origin: OriginContracts;
