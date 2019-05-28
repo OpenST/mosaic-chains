@@ -9,7 +9,7 @@ import Logger from '../Logger';
 class OriginLibraries {
   public simpleTokenAddress: Address;
 
-  public merklePatricialLibAddress: Address;
+  public merklePatriciaLibAddress: Address;
 
   public gatewayLibAddress: Address;
 
@@ -30,7 +30,7 @@ class OriginChain {
 }
 
 /**
- * Contract addresses on the origin chain specific to an auxiliary chain.
+ * Contract addresses of the origin chain specific to an auxiliary chain.
  */
 class OriginContracts {
   public anchorOrganizationAddress: Address;
@@ -113,10 +113,10 @@ export default class MosaicConfig {
   }
 
   /**
-     * This reads mosaic config from the json file and creates MosaicConfig object.
-     * @param {string} chain Chain Identifier.
-     * @return {MosaicConfig} mosaicConfig Object of the class mosaic config.
-     */
+   * This reads mosaic config from the json file and creates MosaicConfig object.
+   * @param {string} chain Chain Identifier.
+   * @return {MosaicConfig} mosaicConfig Object of the class mosaic config.
+   */
   public static from(chain): MosaicConfig {
     const filePath = path.join(
       Directory.getProjectMosaicConfigDir(),
@@ -133,8 +133,8 @@ export default class MosaicConfig {
   }
 
   /**
-     * Saves this config to a file in its auxiliary chain directory.
-     */
+   * Saves this config to a file in its auxiliary chain directory.
+   */
   public writeToMosaicConfigDirectory(): void {
     const mosaicConfigDir = Directory.getProjectMosaicConfigDir();
     fs.ensureDirSync(mosaicConfigDir);

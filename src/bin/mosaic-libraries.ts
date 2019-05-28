@@ -30,7 +30,7 @@ mosaic.action(
       mosaicConfig.originChain.chain = chain;
       mosaicConfig.originChain.contractAddresses.gatewayLibAddress = gatewayLib.address;
       mosaicConfig.originChain.contractAddresses.messageBusAddress = messageBus.address;
-      mosaicConfig.originChain.contractAddresses.merklePatricialLibAddress = merklePatriciaProof.address;
+      mosaicConfig.originChain.contractAddresses.merklePatriciaLibAddress = merklePatriciaProof.address;
 
       mosaicConfig.writeToMosaicConfigDirectory();
     } catch (error) {
