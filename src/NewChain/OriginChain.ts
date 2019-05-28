@@ -186,14 +186,19 @@ export default class OriginChain {
   /**
    * This deploys libraries on the origin chain.
    *
-   * @param web3 Web3 instance points to origin chain
-   * @param deployer Address of the deployer.
-   */
-  public static async deployLibraries(
+   * @param {Web3} web3 Web3 instance points to origin chain
+   * @param {string} deployer Address of the deployer.
+   * @return {Promise<Object>} mosaicLibraries Contract instance of mosaic libraries.
+    */
+  public static deployLibraries(
       web3: Web3,
       deployer: string,
-  ) {
-    return await Contracts.deployGatewayLibraries(web3, {from: deployer});
+  ): Promise<{
+    gatewayLib: ContractInteract.GatewayLib;
+    messageBus: ContractInteract.MessageBus;
+    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+  }> {
+    return Contracts.deployGatewayLibraries(web3, {from: deployer});
   }
 
   /**

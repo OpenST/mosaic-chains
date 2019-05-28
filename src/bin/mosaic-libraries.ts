@@ -28,9 +28,9 @@ mosaic.action(
       const mosaicConfig:MosaicConfig = MosaicConfig.from(chain);
 
       mosaicConfig.originChain.chain = chain;
-      mosaicConfig.originChain.contractAddress.gatewayLibAddress = gatewayLib.address;
-      mosaicConfig.originChain.contractAddress.messageBusAddress = messageBus.address;
-      mosaicConfig.originChain.contractAddress.merklePatricialLibAddress = merklePatriciaProof.address;
+      mosaicConfig.originChain.contractAddresses.gatewayLibAddress = gatewayLib.address;
+      mosaicConfig.originChain.contractAddresses.messageBusAddress = messageBus.address;
+      mosaicConfig.originChain.contractAddresses.merklePatricialLibAddress = merklePatriciaProof.address;
 
       mosaicConfig.writeToMosaicConfigDirectory();
     } catch (error) {
