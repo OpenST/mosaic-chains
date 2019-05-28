@@ -45,7 +45,7 @@ class OriginContracts {
 }
 
 /**
- * Contract addresses on the auxiliary chain.
+ * Contract addresses deployed on the auxiliary chain.
  */
 class AuxiliaryContracts {
   public ostPrimeAddress: Address;
@@ -66,7 +66,7 @@ class AuxiliaryContracts {
 }
 
 /**
- * Hold contract addresses on origin and auxiliary chain specific to an auxiliary chain.
+ * Hold contract addresses of origin and auxiliary chain specific to an auxiliary chain.
  */
 class ContractAddresses {
   public origin: OriginContracts;
