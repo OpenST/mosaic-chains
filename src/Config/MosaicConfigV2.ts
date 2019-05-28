@@ -1,14 +1,14 @@
 import * as path from "path";
+import * as fs from "fs-extra";
 import Directory from "../Directory";
 import Logger from "../Logger";
-import * as fs from "fs-extra";
 
 /**
  * Holds the config of mosaic chains of a specific origin chain.
  */
 export default class MosaicConfig {
     public originChain: OriginChain;
-    public auxiliaryChains: AuxiliaryChain[];
+    public auxiliaryChains: { [key: string]: AuxiliaryChain };
 
     /**
      * Saves this config to a file in its auxiliary chain directory.
@@ -32,7 +32,7 @@ export default class MosaicConfig {
  */
 class OriginChain {
     public chain: string;
-    public contractAddress: OriginLibraries;
+    public contractAddresses: OriginLibraries;
 }
 
 /**
@@ -42,48 +42,50 @@ class AuxiliaryChain {
     public chainId: string;
     public bootNodes: string[];
     public genesis: Object;
-    public contractAddress: ContractAddresses;
+    public contractAddresses: ContractAddresses;
 }
 
 /**
  * Hold contract addresses on origin and auxiliary chain specific to a auxiliary chain.
  */
 class ContractAddresses {
-    public origin: OriginContract;
-    public auxiliary: AuxiliaryContract;
+    public origin: OriginContracts;
+    public auxiliary: AuxiliaryContracts;
 }
 
 /**
  * Hold contract addresses on origin chain independent of auxiliary chain.
  */
 class OriginLibraries {
-    public simpleTokenAddress: string;
-    public merklePatricialLibAddress: string;
-    public gatewayLibAddress: string;
-    public messageBusAddress: string;
+    public simpleTokenAddress: Address;
+    public merklePatricialLibAddress: Address;
+    public gatewayLibAddress: Address;
+    public messageBusAddress: Address;
 }
 
 /**
  * Contract addresses on the origin chain specific to a auxiliary chain.
  */
-class OriginContract {
-    public anchorOrganizationAddress: string;
-    public anchorAddress: string;
-    public ostGatewayOrganizationAddress: string;
-    public ostEIP20GatewayAddress: string;
-    public ostComposerAddress: string
+class OriginContracts {
+    public anchorOrganizationAddress: Address;
+    public anchorAddress: Address;
+    public ostGatewayOrganizationAddress: Address;
+    public ostEIP20GatewayAddress: Address;
+    public ostComposerAddress: Address
 }
 
 /**
  * Contract addresses on the auxiliary chain.
  */
-class AuxiliaryContract {
-    public ostPrimeAddress: string;
-    public anchorOrganizationAddress: string;
-    public anchorAddress: string;
-    public merklePatriciaLibAddress: string;
-    public gatewayLibAddress: string;
-    public messageBusAddress: string;
-    public ostCoGatewayOrganizationAddress: string;
-    public ostEIP20CogatewayAddress: string;
+class AuxiliaryContracts {
+    public ostPrimeAddress: Address;
+    public anchorOrganizationAddress: Address;
+    public anchorAddress: Address;
+    public merklePatriciaLibAddress: Address;
+    public gatewayLibAddress: Address;
+    public messageBusAddress: Address;
+    public ostCoGatewayOrganizationAddress: Address;
+    public ostEIP20CogatewayAddress: Address;
 }
+
+type Address = string;
