@@ -47,4 +47,4 @@ echo "Accessing as library."
 echo "Cleaning up generated files."
 clean
 
-echo "Successully Passed."
+echo "Successfully Passed."
