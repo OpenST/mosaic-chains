@@ -182,6 +182,25 @@ export default class OriginChain {
     return tx.send(txOptions);
   }
 
+
+  /**
+   * This deploys libraries on the origin chain.
+   *
+   * @param {Web3} web3 Web3 instance points to origin chain
+   * @param {string} deployer Address of the deployer.
+   * @return {Promise<Object>} mosaicLibraries Contract instance of mosaic libraries.
+   */
+  public static deployLibraries(
+    web3: Web3,
+    deployer: string,
+  ): Promise<{
+    gatewayLib: ContractInteract.GatewayLib;
+    messageBus: ContractInteract.MessageBus;
+    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+    }> {
+    return Contracts.deployGatewayLibraries(web3, {from: deployer});
+  }
+
   /**
    * Deploys an organization contract.
    * @param owner Will be the owner address of the deployed organization.

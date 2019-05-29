@@ -12,4 +12,5 @@ mosaic
   .command('logs <chain>', 'follow the logs in the container of the given chain')
   .command('list', 'list all running containers that run a mosaic chain')
   .command('create <new-chain-id> <origin-websocket> <password-file>', 'creates a new auxiliary chain on the given origin chain')
+  .command('libraries <chain> <origin-websocket> <deployer>', 'Deploys libraries on an origin chain')
   .parse(process.argv);

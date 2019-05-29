@@ -154,12 +154,13 @@ export default class Contracts {
   /**
    * Deploys the required gateway libraries and returns them to be set on a gateway or co-gateway.
    */
-  private static async deployGatewayLibraries(
+  public static async deployGatewayLibraries(
     web3: Web3,
     txOptions: Tx,
   ): Promise<{
     gatewayLib: ContractInteract.GatewayLib;
     messageBus: ContractInteract.MessageBus;
+    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
   }> {
     const merklePatriciaProof = await ContractInteract.MerklePatriciaProof.deploy(
       web3,
@@ -185,6 +186,7 @@ export default class Contracts {
     return {
       gatewayLib,
       messageBus,
+      merklePatriciaProof,
     };
   }
 
