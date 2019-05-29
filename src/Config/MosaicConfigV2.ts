@@ -14,6 +14,8 @@ class OriginLibraries {
   public gatewayLibAddress: Address;
 
   public messageBusAddress: Address;
+
+  public ostComposerAddress: Address
 }
 
 /**
@@ -41,7 +43,6 @@ class OriginContracts {
 
   public ostEIP20GatewayAddress: Address;
 
-  public ostComposerAddress: Address
 }
 
 /**
