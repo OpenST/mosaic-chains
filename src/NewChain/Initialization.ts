@@ -52,6 +52,7 @@ export default class Initialization {
 
     const mosaicConfig = MosaicConfig.from(originChainId);
     mosaicConfig.originChain.chain = originChainId;
+    mosaicConfig.originChain.contractAddresses.simpleTokenAddress = initConfig.originOstAddress;
 
     // Actually creating the new chain:
     await Initialization.createAuxiliaryChain(
