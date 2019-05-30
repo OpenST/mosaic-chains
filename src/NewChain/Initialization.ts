@@ -5,7 +5,7 @@ import * as ip from 'ip';
 
 
 import InitConfig from '../Config/InitConfig';
-import MosaicConfig, {AuxiliaryChain} from '../Config/MosaicConfigV2';
+import MosaicConfig, {AuxiliaryChain} from '../Config/MosaicConfig';
 import OriginChainInteract from './OriginChainInteract';
 import AuxiliaryChainInteract from './AuxiliaryChainInteract';
 import NodeDescription from '../Node/NodeDescription';
