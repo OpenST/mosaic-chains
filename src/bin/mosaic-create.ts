@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import * as commander from 'commander';
 
 import { version } from '../../package.json';

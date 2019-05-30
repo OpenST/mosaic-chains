@@ -9,7 +9,7 @@ import Web3 = require('web3');
 /**
  * The origin chain when creating a new auxiliary chain.
  */
-export default class OriginChain {
+export default class OriginChainInteract {
   private chainId: string;
 
   private ostGateway: ContractInteract.EIP20Gateway;

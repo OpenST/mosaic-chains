@@ -6,7 +6,7 @@ import Logger from '../Logger';
 /**
  * Hold contract addresses on origin chain independent of auxiliary chain.
  */
-class OriginLibraries {
+export class OriginLibraries {
   public simpleTokenAddress: Address;
 
   public merklePatriciaLibAddress: Address;
@@ -21,7 +21,7 @@ class OriginLibraries {
 /**
  * Holds origin chain specific config.
  */
-class OriginChain {
+export class OriginChain {
   public chain: string;
 
   public contractAddresses: OriginLibraries;
@@ -34,7 +34,7 @@ class OriginChain {
 /**
  * Contract addresses of the origin chain specific to an auxiliary chain.
  */
-class OriginContracts {
+export class OriginContracts {
   public anchorOrganizationAddress: Address;
 
   public anchorAddress: Address;
@@ -48,7 +48,7 @@ class OriginContracts {
 /**
  * Contract addresses deployed on the auxiliary chain.
  */
-class AuxiliaryContracts {
+export class AuxiliaryContracts {
   public ostPrimeAddress: Address;
 
   public anchorOrganizationAddress: Address;
@@ -69,7 +69,7 @@ class AuxiliaryContracts {
 /**
  * Hold contract addresses of origin and auxiliary chain specific to an auxiliary chain.
  */
-class ContractAddresses {
+export class ContractAddresses {
   public origin: OriginContracts;
 
   public auxiliary: AuxiliaryContracts;
@@ -83,7 +83,7 @@ class ContractAddresses {
 /**
  * Holds config of an auxiliary chain.
  */
-class AuxiliaryChain {
+export class AuxiliaryChain {
   public chainId: string;
 
   public bootNodes: string[];
@@ -98,7 +98,7 @@ class AuxiliaryChain {
   }
 }
 
-type Address = string;
+export type Address = string;
 
 /**
  * Holds the config of mosaic chains of a specific origin chain.
@@ -130,7 +130,7 @@ export default class MosaicConfig {
         return new MosaicConfig(jsonObject);
       }
     }
-    return new MosaicConfig({} as any as MosaicConfig);
+    return new MosaicConfig({} as any);
   }
 
   /**
