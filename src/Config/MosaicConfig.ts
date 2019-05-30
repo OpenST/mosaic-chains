@@ -15,7 +15,7 @@ export class OriginLibraries {
 
   public messageBusAddress: Address;
 
-  public ostComposerAddress: Address
+  public ostComposerAddress: Address;
 }
 
 /**

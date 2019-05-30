@@ -5,7 +5,7 @@ import * as commander from 'commander';
 import Logger from '../Logger';
 import OriginChainInteract from "../NewChain/OriginChainInteract";
 import Web3 = require("web3");
-import MosaicConfig from "../Config/MosaicConfigV2";
+import MosaicConfig from "../Config/MosaicConfig";
 
 let mosaic = commander
   .arguments('<chain> <origin-websocket> <deployer>');
