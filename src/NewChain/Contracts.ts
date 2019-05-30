@@ -69,11 +69,9 @@ export default class Contracts {
     bounty: string,
     organizationAddress: string,
     burnerAddress: string,
-  ): Promise<ContractInteract.EIP20Gateway> {
-    const {
-      gatewayLib,
-      messageBus,
-    } = await Contracts.deployGatewayLibraries(web3, txOptions);
+    messageBusAddress: string,
+    gatewayLibAddress: string,
+): Promise<ContractInteract.EIP20Gateway> {
 
     const ostGateway: ContractInteract.EIP20Gateway = await ContractInteract.EIP20Gateway.deploy(
       web3,
@@ -83,8 +81,8 @@ export default class Contracts {
       bounty,
       organizationAddress,
       burnerAddress,
-      messageBus.address,
-      gatewayLib.address,
+      messageBusAddress,
+      gatewayLibAddress,
       txOptions,
     );
     Contracts.logContractDeployment('ostGateway', ostGateway);

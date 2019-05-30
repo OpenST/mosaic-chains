@@ -5,6 +5,7 @@ import Contracts from './Contracts';
 import Integer from '../Integer';
 
 import Web3 = require('web3');
+import {OriginLibraries} from "../Config/MosaicConfig";
 
 /**
  * The origin chain when creating a new auxiliary chain.
@@ -45,6 +46,7 @@ export default class OriginChainInteract {
   public async deployContracts(
     auxiliaryStateRootZero: string,
     expectedOstCoGatewayAddress: string,
+    originLibraries: OriginLibraries,
   ): Promise<{
     anchorOrganization: ContractInteract.Organization;
     anchor: ContractInteract.Anchor;
@@ -76,6 +78,7 @@ export default class OriginChainInteract {
     const ostGateway = await this.deployGateway(
       anchor.address,
       ostGatewayOrganization.address,
+      originLibraries,
     );
 
     this.logInfo(
@@ -243,6 +246,7 @@ export default class OriginChainInteract {
   private deployGateway(
     anchorAddress: string,
     organizationAddress: string,
+    originLibraries: OriginLibraries,
   ): Promise<ContractInteract.EIP20Gateway> {
     this.logInfo('deploying ost gateway', { anchorAddress, organizationAddress });
     return Contracts.deployOstGateway(
@@ -253,6 +257,8 @@ export default class OriginChainInteract {
       this.initConfig.originBounty,
       organizationAddress,
       this.initConfig.originBurnerAddress,
+      originLibraries.messageBusAddress,
+      originLibraries.gatewayLibAddress,
     );
   }
 

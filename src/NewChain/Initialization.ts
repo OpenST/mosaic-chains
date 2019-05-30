@@ -50,7 +50,7 @@ export default class Initialization {
       auxiliaryNodeDescription,
     );
 
-    const mosaicConfig = new MosaicConfig({} as any);
+    const mosaicConfig = MosaicConfig.from(originChainId);
     mosaicConfig.originChain.chain = originChainId;
 
     // Actually creating the new chain:
@@ -124,16 +124,14 @@ export default class Initialization {
     } = await originChainInteract.deployContracts(
       auxiliaryStateRootZero,
       expectedOstCoGatewayAddress,
+      mosaicConfig.originChain.contractAddresses,
     );
     auxiliaryChain.contractAddresses.origin.anchorOrganizationAddress = originAnchorOrganization.address;
     auxiliaryChain.contractAddresses.origin.anchorAddress = originAnchor.address;
     auxiliaryChain.contractAddresses.origin.ostGatewayOrganizationAddress = ostGatewayOrganization.address;
     auxiliaryChain.contractAddresses.origin.ostEIP20GatewayAddress = ostGateway.address;
     auxiliaryChain.genesis = auxiliaryChainInteract.getGenesis();
-
-
-
-      auxiliaryChain.bootNodes.push(Initialization.getBootNode(auxiliaryChainInteract, auxiliaryNodeDescription.port));
+    auxiliaryChain.bootNodes.push(Initialization.getBootNode(auxiliaryChainInteract, auxiliaryNodeDescription.port));
 
     const {
       blockNumber: originBlockNumber,
@@ -163,7 +161,7 @@ export default class Initialization {
       originStateRoot,
       stakeMessageNonce,
       hashLockSecret,
-        {} as Proof//proofData,
+      proofData,
     );
     auxiliaryChain.contractAddresses.auxiliary.anchorOrganizationAddress = anchorOrganization.address;
     auxiliaryChain.contractAddresses.auxiliary.anchorAddress = anchor.address;

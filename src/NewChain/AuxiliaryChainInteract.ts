@@ -261,7 +261,6 @@ export default class AuxiliaryChainInteract {
     const bootNodeKey = fs.readFileSync(this.bootKeyFilePath).toString();
 
     let bootNode = Shell.executeInShell(`bootnode --nodekeyhex ${bootNodeKey} --writeaddress`);
-    console.log("boot node  ", bootNode.toString());
     return bootNode.toString().trim();
   }
 
