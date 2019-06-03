@@ -4,7 +4,7 @@
   "description": "Mosaic chains is an executable to run and manage mosaic chains.",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint src -c .eslintrc.json --ext ts",
+    "lint": "eslint /Users/abhay/Documents/projects/abhayforks/mosaic-chains/src/NewChain/OriginChainInteract.ts -c .eslintrc.json --ext ts --fix",
     "test": "npm run test:unit && npm run test:smoke",
     "test:unit": "mocha -r ts-node/register tests/**/*.test.ts tests/*.test.ts",
     "test:smoke": "./tests/smoke.sh"
