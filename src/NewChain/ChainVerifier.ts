@@ -14,7 +14,7 @@ export default class ChainVerifier {
 
   private mosaicConfig: MosaicConfig;
 
-  private mosaicContractInstance: MosaicContracts;
+  private mosaicContract: MosaicContracts;
 
   private contractAddresses: ContractAddresses;
 
@@ -35,7 +35,7 @@ export default class ChainVerifier {
     this.originWeb3 = new Web3(originWebSocket);
     this.auxiliaryWeb3 = new Web3(auxiliaryWebSocket);
     this.mosaicConfig = MosaicConfig.from(chainId);
-    this.mosaicContractInstance = new MosaicContracts(this.originWeb3, this.auxiliaryWeb3);
+    this.mosaicContract = new MosaicContracts(this.originWeb3, this.auxiliaryWeb3);
     this.contractAddresses = this.mosaicConfig.auxiliaryChains[this.chainId].contractAddresses;
     this.abiBinProvider = new AbiBinProvider();
   }
@@ -102,7 +102,7 @@ export default class ChainVerifier {
    * @returns {Promise<void>}
    */
   private async verifyGateway(): Promise<void> {
-    const gatewayInstance = this.mosaicContractInstance.EIP20Gateway(
+    const gatewayInstance = this.mosaicContract.EIP20Gateway(
       this.contractAddresses.origin.ostEIP20GatewayAddress,
     );
 
@@ -139,7 +139,7 @@ export default class ChainVerifier {
    * @returns {Promise<void>}
    */
   private async verifyCoGateway(): Promise<void> {
-    const coGatewayInstance = this.mosaicContractInstance.EIP20CoGateway(
+    const coGatewayInstance = this.mosaicContract.EIP20CoGateway(
       this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
     );
     const valueToken = coGatewayInstance.methods.valueToken().call();
@@ -170,7 +170,7 @@ export default class ChainVerifier {
    * @returns {Promise<void>}
    */
   private async verifyOriginAnchor(): Promise<void> {
-    const anchorInstance = this.mosaicContractInstance.OriginAnchor(
+    const anchorInstance = this.mosaicContract.OriginAnchor(
       this.contractAddresses.origin.anchorAddress,
     );
     const coAnchor = await anchorInstance.methods.coAnchor().call();
@@ -193,7 +193,7 @@ export default class ChainVerifier {
    * @returns {Promise<void>}
    */
   private async verifyAuxiliaryAnchor(): Promise<void> {
-    const anchorInstance = this.mosaicContractInstance.AuxiliaryAnchor(
+    const anchorInstance = this.mosaicContract.AuxiliaryAnchor(
       this.contractAddresses.origin.anchorAddress,
     );
     const coAnchor = await anchorInstance.methods.coAnchor().call();
@@ -216,7 +216,7 @@ export default class ChainVerifier {
    * @returns {Promise<void>}
    */
   private async verifyOSTPrime(): Promise<void> {
-    const ostPrimeInstance = this.mosaicContractInstance.OSTPrime(
+    const ostPrimeInstance = this.mosaicContract.OSTPrime(
       this.contractAddresses.auxiliary.ostPrimeAddress,
     );
     const valueToken = await ostPrimeInstance.methods.valueToken().call();
