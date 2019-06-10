@@ -1,0 +1,384 @@
+[
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "MESSAGE_TYPEHASH",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "INBOX_OFFSET",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "OUTBOX_OFFSET",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageBox",
+                "type": "MessageBus.MessageBox storage"
+            },
+            {
+                "name": "_message",
+                "type": "MessageBus.Message storage"
+            }
+        ],
+        "name": "declareMessage",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageBox",
+                "type": "MessageBus.MessageBox storage"
+            },
+            {
+                "name": "_message",
+                "type": "MessageBus.Message storage"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            },
+            {
+                "name": "_messageBoxOffset",
+                "type": "uint8"
+            },
+            {
+                "name": "_storageRoot",
+                "type": "bytes32"
+            }
+        ],
+        "name": "confirmMessage",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageBox",
+                "type": "MessageBus.MessageBox storage"
+            },
+            {
+                "name": "_message",
+                "type": "MessageBus.Message storage"
+            },
+            {
+                "name": "_unlockSecret",
+                "type": "bytes32"
+            }
+        ],
+        "name": "progressOutbox",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageBox",
+                "type": "MessageBus.MessageBox storage"
+            },
+            {
+                "name": "_message",
+                "type": "MessageBus.Message storage"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            },
+            {
+                "name": "_messageBoxOffset",
+                "type": "uint8"
+            },
+            {
+                "name": "_storageRoot",
+                "type": "bytes32"
+            },
+            {
+                "name": "_messageStatus",
+                "type": "MessageBus.MessageStatus"
+            }
+        ],
+        "name": "progressOutboxWithProof",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageBox",
+                "type": "MessageBus.MessageBox storage"
+            },
+            {
+                "name": "_message",
+                "type": "MessageBus.Message storage"
+            },
+            {
+                "name": "_unlockSecret",
+                "type": "bytes32"
+            }
+        ],
+        "name": "progressInbox",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageBox",
+                "type": "MessageBus.MessageBox storage"
+            },
+            {
+                "name": "_message",
+                "type": "MessageBus.Message storage"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            },
+            {
+                "name": "_messageBoxOffset",
+                "type": "uint8"
+            },
+            {
+                "name": "_storageRoot",
+                "type": "bytes32"
+            },
+            {
+                "name": "_messageStatus",
+                "type": "MessageBus.MessageStatus"
+            }
+        ],
+        "name": "progressInboxWithProof",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageBox",
+                "type": "MessageBus.MessageBox storage"
+            },
+            {
+                "name": "_message",
+                "type": "MessageBus.Message storage"
+            }
+        ],
+        "name": "declareRevocationMessage",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageBox",
+                "type": "MessageBus.MessageBox storage"
+            },
+            {
+                "name": "_message",
+                "type": "MessageBus.Message storage"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            },
+            {
+                "name": "_messageBoxOffset",
+                "type": "uint8"
+            },
+            {
+                "name": "_storageRoot",
+                "type": "bytes32"
+            }
+        ],
+        "name": "confirmRevocation",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageBox",
+                "type": "MessageBus.MessageBox storage"
+            },
+            {
+                "name": "_message",
+                "type": "MessageBus.Message storage"
+            },
+            {
+                "name": "_messageBoxOffset",
+                "type": "uint8"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            },
+            {
+                "name": "_storageRoot",
+                "type": "bytes32"
+            },
+            {
+                "name": "_messageStatus",
+                "type": "MessageBus.MessageStatus"
+            }
+        ],
+        "name": "progressOutboxRevocation",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "messageTypehash",
+        "outputs": [
+            {
+                "name": "messageTypehash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_intentHash",
+                "type": "bytes32"
+            },
+            {
+                "name": "_nonce",
+                "type": "uint256"
+            },
+            {
+                "name": "_gasPrice",
+                "type": "uint256"
+            },
+            {
+                "name": "_gasLimit",
+                "type": "uint256"
+            },
+            {
+                "name": "_sender",
+                "type": "address"
+            },
+            {
+                "name": "_hashLock",
+                "type": "bytes32"
+            }
+        ],
+        "name": "messageDigest",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "pure",
+        "type": "function"
+    }
+]

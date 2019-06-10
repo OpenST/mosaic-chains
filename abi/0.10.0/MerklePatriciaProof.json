@@ -1,0 +1,72 @@
+[
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "value",
+                "type": "bytes32"
+            },
+            {
+                "name": "encodedPath",
+                "type": "bytes"
+            },
+            {
+                "name": "rlpParentNodes",
+                "type": "bytes"
+            },
+            {
+                "name": "root",
+                "type": "bytes32"
+            }
+        ],
+        "name": "verify",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "value",
+                "type": "bytes32"
+            },
+            {
+                "name": "not_encodedPath",
+                "type": "bytes"
+            },
+            {
+                "name": "rlpParentNodes",
+                "type": "bytes"
+            },
+            {
+                "name": "root",
+                "type": "bytes32"
+            }
+        ],
+        "name": "verifyDebug",
+        "outputs": [
+            {
+                "name": "res_",
+                "type": "bool"
+            },
+            {
+                "name": "loc_",
+                "type": "uint256"
+            },
+            {
+                "name": "path_debug_",
+                "type": "bytes"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "pure",
+        "type": "function"
+    }
+]

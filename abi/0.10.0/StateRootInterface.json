@@ -1,0 +1,35 @@
+[
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getLatestStateRootBlockHeight",
+        "outputs": [
+            {
+                "name": "height_",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_blockHeight",
+                "type": "uint256"
+            }
+        ],
+        "name": "getStateRoot",
+        "outputs": [
+            {
+                "name": "stateRoot_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

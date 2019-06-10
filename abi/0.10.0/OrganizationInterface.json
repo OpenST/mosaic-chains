@@ -1,0 +1,40 @@
+[
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_organization",
+                "type": "address"
+            }
+        ],
+        "name": "isOrganization",
+        "outputs": [
+            {
+                "name": "isOrganization_",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_worker",
+                "type": "address"
+            }
+        ],
+        "name": "isWorker",
+        "outputs": [
+            {
+                "name": "isWorker_",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

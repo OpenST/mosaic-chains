@@ -1,0 +1,293 @@
+[
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "workers",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "proposedOwner",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "admin",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "name": "_admin",
+                "type": "address"
+            },
+            {
+                "name": "_workers",
+                "type": "address[]"
+            },
+            {
+                "name": "_expirationHeight",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "proposedOwner",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "currentOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferInitiated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "newOwner",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "previousOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferCompleted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "newAdmin",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "previousAdmin",
+                "type": "address"
+            }
+        ],
+        "name": "AdminAddressChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "worker",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "expirationHeight",
+                "type": "uint256"
+            }
+        ],
+        "name": "WorkerSet",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "worker",
+                "type": "address"
+            }
+        ],
+        "name": "WorkerUnset",
+        "type": "event"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_proposedOwner",
+                "type": "address"
+            }
+        ],
+        "name": "initiateOwnershipTransfer",
+        "outputs": [
+            {
+                "name": "success_",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [],
+        "name": "completeOwnershipTransfer",
+        "outputs": [
+            {
+                "name": "success_",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_admin",
+                "type": "address"
+            }
+        ],
+        "name": "setAdmin",
+        "outputs": [
+            {
+                "name": "success_",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_worker",
+                "type": "address"
+            },
+            {
+                "name": "_expirationHeight",
+                "type": "uint256"
+            }
+        ],
+        "name": "setWorker",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_worker",
+                "type": "address"
+            }
+        ],
+        "name": "unsetWorker",
+        "outputs": [
+            {
+                "name": "isUnset_",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_organization",
+                "type": "address"
+            }
+        ],
+        "name": "isOrganization",
+        "outputs": [
+            {
+                "name": "isOrganization_",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_worker",
+                "type": "address"
+            }
+        ],
+        "name": "isWorker",
+        "outputs": [
+            {
+                "name": "isWorker_",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+]
