@@ -1,0 +1,80 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: OSTComposer
+    network: mainnet
+    source:
+      address: "0x96b81E17a64f74fDeABBA5C8eC075b4415F438f4"
+      abi: OSTComposer
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - StakeRequested
+        - StakeRevoked
+        - StakeRejected
+      abis:
+        - name: OSTComposer
+          file: ./abis/OSTComposer.json
+      eventHandlers:
+        - event: StakeRequested(uint256,address,uint256,uint256,uint256,address,address,bytes32)
+          handler: handleStakeRequested
+        - event: StakeRevoked(address,bytes32)
+          handler: handleStakeRevoked
+        - event: StakeRejected(address,bytes32)
+          handler: handleStakeRejected
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: EIP20Gateway
+    network: mainnet
+    source:
+      address: "0x96b81E17a64f74fDeABBA5C8eC075b4415F438f4"
+      abi: EIP20Gateway
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - StakeIntentDeclared
+        - StakeProgressed
+        - RevertStakeIntentDeclared
+        - StakeReverted
+        - RedeemIntentConfirmed
+        - UnstakeProgressed
+        - RevertRedeemIntentConfirmed
+        - RevertRedeemComplete
+        - GatewayProven
+        - BountyChangeInitiated
+        - BountyChangeConfirmed
+      abis:
+        - name: EIP20Gateway
+          file: ./abis/EIP20Gateway.json
+      eventHandlers:
+        - event: StakeIntentDeclared(bytes32,address,uint256,address,uint256)
+          handler: handleStakeIntentDeclared
+        - event: StakeProgressed(bytes32,address,uint256,uint256,bool,bytes32)
+          handler: handleStakeProgressed
+        - event: RevertStakeIntentDeclared(bytes32,address,uint256,uint256)
+          handler: handleRevertStakeIntentDeclared
+        - event: StakeReverted(bytes32,address,uint256,uint256)
+          handler: handleStakeReverted
+        - event: RedeemIntentConfirmed(bytes32,address,uint256,address,uint256,uint256,bytes32)
+          handler: handleRedeemIntentConfirmed
+        - event: UnstakeProgressed(bytes32,address,address,uint256,uint256,uint256,bool,bytes32)
+          handler: handleUnstakeProgressed
+        - event: RevertRedeemIntentConfirmed(bytes32,address,uint256,uint256)
+          handler: handleRevertRedeemIntentConfirmed
+        - event: RevertRedeemComplete(bytes32,address,uint256,uint256)
+          handler: handleRevertRedeemComplete
+        - event: GatewayProven(address,uint256,bytes32,bool)
+          handler: handleGatewayProven
+        - event: BountyChangeInitiated(uint256,uint256,uint256)
+          handler: handleBountyChangeInitiated
+        - event: BountyChangeConfirmed(uint256,uint256)
+          handler: handleBountyChangeConfirmed
+      file: ./src/mapping.ts
+
