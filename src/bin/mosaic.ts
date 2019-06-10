@@ -13,4 +13,5 @@ mosaic
   .command('list', 'list all running containers that run a mosaic chain')
   .command('create <new-chain-id> <origin-websocket> <password-file>', 'creates a new auxiliary chain on the given origin chain')
   .command('libraries <chain> <origin-websocket> <deployer>', 'Deploys libraries on an origin chain')
+  .command('verify-chain <origin-websocket> <auxiliary-websocket> <origin-chain>' + ' <auxiliary-chain-id>', 'Verifies' + ' an' + ' auxiliary' + ' chain.')
   .parse(process.argv);

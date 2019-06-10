@@ -2,6 +2,8 @@ import { Contracts as MosaicContracts, AbiBinProvider } from '@openst/mosaic.js'
 
 import MosaicConfig, { ContractAddresses } from '../Config/MosaicConfig';
 
+import Logger from '../Logger';
+
 import Web3 = require('web3');
 
 /**
@@ -25,18 +27,20 @@ export default class ChainVerifier {
    *
    * @param {string} originWebSocket origin chain web3 endpoint.
    * @param {string} auxiliaryWebSocket auxiliary chain web3 endpoint.
-   * @param {string} chainId auxiliary chain id.
+   * @param {string} originChain Origin chain identifier.
+   * @param {string} auxiliaryChainId Auxiliary chain id.
    */
   public constructor(
     private originWebSocket: string,
     private auxiliaryWebSocket: string,
-    private chainId: string,
+    private originChain: string,
+    private auxiliaryChainId: string,
   ) {
     this.originWeb3 = new Web3(originWebSocket);
     this.auxiliaryWeb3 = new Web3(auxiliaryWebSocket);
-    this.mosaicConfig = MosaicConfig.from(chainId);
+    this.mosaicConfig = MosaicConfig.from(originChain);
     this.mosaicContract = new MosaicContracts(this.originWeb3, this.auxiliaryWeb3);
-    this.contractAddresses = this.mosaicConfig.auxiliaryChains[this.chainId].contractAddresses;
+    this.contractAddresses = this.mosaicConfig.auxiliaryChains[this.auxiliaryChainId].contractAddresses;
     this.abiBinProvider = new AbiBinProvider();
   }
 
@@ -46,12 +50,14 @@ export default class ChainVerifier {
    * @returns {Promise<void>}
    */
   public async verify(): Promise<void> {
-    this.verifyContractsBin();
-    this.verifyGateway();
-    this.verifyCoGateway();
-    this.verifyOriginAnchor();
-    this.verifyAuxiliaryAnchor();
-    this.verifyOSTPrime();
+    Logger.info("Starting chain verification!!!");
+      await this.verifyContractsBin();
+      await this.verifyGateway();
+      await this.verifyCoGateway();
+      await this.verifyOriginAnchor();
+      await this.verifyAuxiliaryAnchor();
+      await this.verifyOSTPrime();
+    Logger.info("Successfully completed chain verification!!!");
   }
 
   /**
@@ -63,6 +69,8 @@ export default class ChainVerifier {
     const deployedGatewayBin = await this.originWeb3.eth.getCode(
       this.contractAddresses.origin.ostEIP20GatewayAddress,
     );
+    console.log("deployedGatewayBin:", deployedGatewayBin);
+    console.log("this.abiBinProvider.getBIN('EIP20Gateway'):", this.abiBinProvider.getBIN('EIP20Gateway'));
     if (deployedGatewayBin !== this.abiBinProvider.getBIN('EIP20Gateway')) {
       throw new Error('ContractsBin: Mismatch of Gateway BIN!!!');
     }
@@ -94,6 +102,7 @@ export default class ChainVerifier {
     if (deployedOstPrimeBin !== this.abiBinProvider.getBIN('OSTPrime')) {
       throw new Error('ContractsBin: Mismatch of OSTPrime BIN!!!');
     }
+    Logger.info("Successfully completed contracts BIN verification!!!");
   }
 
   /**
@@ -110,27 +119,33 @@ export default class ChainVerifier {
     if (isActivated !== true) {
       throw new Error('Gateway: It should be activated!!!');
     }
-    const valueToken = await gatewayInstance.methods.valueToken().call();
-    if (valueToken !== this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress) {
+    const valueToken = await gatewayInstance.methods.token().call();
+    if (this.originWeb3.utils.toChecksumAddress(valueToken) !==
+        this.originWeb3.utils.toChecksumAddress(this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress)) {
       throw new Error('Gateway: Invalid valueToken address!!!');
     }
     const baseToken = await gatewayInstance.methods.baseToken().call();
-    if (baseToken !== this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress) {
+    if (this.originWeb3.utils.toChecksumAddress(baseToken) !==
+      this.originWeb3.utils.toChecksumAddress(this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress)) {
       throw new Error('Gateway: Invalid baseToken address!!!');
     }
     // Verify organization address
     const organization = await gatewayInstance.methods.organization().call();
-    if (organization !== this.contractAddresses.origin.ostGatewayOrganizationAddress) {
+    if (this.originWeb3.utils.toChecksumAddress(organization) !==
+      this.originWeb3.utils.toChecksumAddress(this.contractAddresses.origin.ostGatewayOrganizationAddress)) {
       throw new Error('Gateway: Invalid gateway organization address!!!');
     }
     const remoteGateway = await gatewayInstance.methods.remoteGateway().call();
-    if (remoteGateway !== this.contractAddresses.auxiliary.ostEIP20CogatewayAddress) {
+    if (this.originWeb3.utils.toChecksumAddress(remoteGateway) !==
+      this.originWeb3.utils.toChecksumAddress(this.contractAddresses.auxiliary.ostEIP20CogatewayAddress)) {
       throw new Error('Gateway: Invalid CoGateway address!!!');
     }
     const stateRootProvider = await gatewayInstance.methods.stateRootProvider().call();
-    if (stateRootProvider !== this.contractAddresses.origin.anchorAddress) {
+    if (this.originWeb3.utils.toChecksumAddress(stateRootProvider) !==
+      this.originWeb3.utils.toChecksumAddress(this.contractAddresses.origin.anchorAddress)) {
       throw new Error('Gateway: Invalid stateRootProvider!!!');
     }
+    Logger.info("Successfully completed gateway contract verification!!!");
   }
 
   /**
@@ -142,26 +157,32 @@ export default class ChainVerifier {
     const coGatewayInstance = this.mosaicContract.EIP20CoGateway(
       this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
     );
-    const valueToken = coGatewayInstance.methods.valueToken().call();
-    if (valueToken !== await this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress) {
+    const valueToken = await coGatewayInstance.methods.valueToken().call();
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(valueToken) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress)) {
       throw new Error('CoGateway: Invalid valueToken address!!!');
     }
-    const utilityToken = coGatewayInstance.methods.utilityToken().call();
-    if (utilityToken !== await this.contractAddresses.auxiliary.ostPrimeAddress) {
+    const utilityToken = await coGatewayInstance.methods.utilityToken().call();
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(utilityToken) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.contractAddresses.auxiliary.ostPrimeAddress)) {
       throw new Error('CoGateway: Invalid OSTPrime address!!!');
     }
     const organization = await coGatewayInstance.methods.organization().call();
-    if (organization !== this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress) {
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(organization) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress)) {
       throw new Error('CoGateway: Invalid organization address!!!');
     }
     const remoteGateway = await coGatewayInstance.methods.remoteGateway().call();
-    if (remoteGateway !== this.contractAddresses.origin.ostEIP20GatewayAddress) {
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(remoteGateway) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.contractAddresses.origin.ostEIP20GatewayAddress)) {
       throw new Error('CoGateway: Invalid remoteGateway address!!!');
     }
     const stateRootProvider = await coGatewayInstance.methods.stateRootProvider().call();
-    if (stateRootProvider !== this.contractAddresses.auxiliary.anchorAddress) {
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(stateRootProvider) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.contractAddresses.auxiliary.anchorAddress)) {
       throw new Error('CoGateway: Invalid stateRootProvider!!!');
     }
+    Logger.info("Successfully completed CoGateway contract verification!!!");
   }
 
   /**
@@ -174,17 +195,20 @@ export default class ChainVerifier {
       this.contractAddresses.origin.anchorAddress,
     );
     const coAnchor = await anchorInstance.methods.coAnchor().call();
-    if (coAnchor !== this.contractAddresses.auxiliary.anchorAddress) {
+    if (this.originWeb3.utils.toChecksumAddress(coAnchor) !==
+      this.originWeb3.utils.toChecksumAddress(this.contractAddresses.auxiliary.anchorAddress)) {
       throw new Error('OriginAnchor: Invalid coAnchor address!!!');
     }
     const organization = await anchorInstance.methods.organization().call();
-    if (organization !== this.contractAddresses.origin.anchorOrganizationAddress) {
+    if (this.originWeb3.utils.toChecksumAddress(organization) !==
+      this.originWeb3.utils.toChecksumAddress(this.contractAddresses.origin.anchorOrganizationAddress)) {
       throw new Error('OriginAnchor: Invalid organization address!!!');
     }
-    const remoteChainId = await anchorInstance.methods.remoteChainId().call();
-    if (remoteChainId !== this.chainId) {
+    const remoteChainId = await anchorInstance.methods.getRemoteChainId().call();
+    if (remoteChainId !== this.auxiliaryChainId) {
       throw new Error('OriginAnchor: Invalid remoteChainId!!!');
     }
+    Logger.info("Successfully completed origin Anchor contract verification!!!");
   }
 
   /**
@@ -194,20 +218,23 @@ export default class ChainVerifier {
    */
   private async verifyAuxiliaryAnchor(): Promise<void> {
     const anchorInstance = this.mosaicContract.AuxiliaryAnchor(
-      this.contractAddresses.origin.anchorAddress,
+      this.contractAddresses.auxiliary.anchorAddress,
     );
     const coAnchor = await anchorInstance.methods.coAnchor().call();
-    if (coAnchor !== this.contractAddresses.auxiliary.anchorAddress) {
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(coAnchor) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.contractAddresses.origin.anchorAddress)) {
       throw new Error('AuxiliaryAnchor: Invalid coAnchor address!!!');
     }
     const organization = await anchorInstance.methods.organization().call();
-    if (organization !== this.contractAddresses.auxiliary.anchorOrganizationAddress) {
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(organization) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.contractAddresses.auxiliary.anchorOrganizationAddress)) {
       throw new Error('AuxiliaryAnchor: Invalid organization address!!!');
     }
-    const remoteChainId = await anchorInstance.methods.remoteChainId().call();
+    const remoteChainId = await anchorInstance.methods.getRemoteChainId().call();
     if (remoteChainId !== this.mosaicConfig.originChain.chain) {
       throw new Error('AuxiliaryAnchor: Invalid remoteChainId!!!');
     }
+    Logger.info("Successfully completed auxiliary Anchor contract verification!!!");
   }
 
   /**
@@ -219,8 +246,9 @@ export default class ChainVerifier {
     const ostPrimeInstance = this.mosaicContract.OSTPrime(
       this.contractAddresses.auxiliary.ostPrimeAddress,
     );
-    const valueToken = await ostPrimeInstance.methods.valueToken().call();
-    if (valueToken !== this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress) {
+    const valueToken = await ostPrimeInstance.methods.token().call();
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(valueToken) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress)) {
       throw new Error('OSTPrime: Invalid OSTPrime address!!!');
     }
     const initialized = await ostPrimeInstance.methods.initialized().call();
@@ -228,12 +256,15 @@ export default class ChainVerifier {
       throw new Error('OSTPrime: Invalid initialized value!!!');
     }
     const organization = await ostPrimeInstance.methods.organization().call();
-    if (organization !== this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress) {
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(organization) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress)) {
       throw new Error('OSTPrime: Invalid organization address!!!');
     }
     const coGateway = await ostPrimeInstance.methods.coGateway().call();
-    if (coGateway !== this.contractAddresses.auxiliary.ostEIP20CogatewayAddress) {
+    if (this.auxiliaryWeb3.utils.toChecksumAddress(coGateway) !==
+      this.auxiliaryWeb3.utils.toChecksumAddress(this.contractAddresses.auxiliary.ostEIP20CogatewayAddress)) {
       throw new Error('OSTPrime: Invalid coGateway address!!!');
     }
+    Logger.info("Successfully completed OSTPrime contract verification!!!");
   }
 }
