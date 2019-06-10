@@ -43,12 +43,6 @@ export default class AuxiliaryChainInteract {
 
   private ostPrimeDeploymentNonce = 3;
 
-  private merklePatriciaProofLibraryDeploymentNonce = 4;
-
-  private messageBusDeploymentNonce = 5;
-
-  private gatewayLibDeploymentNonce = 5;
-
   private coGatewayDeploymentNonce = 7;
 
   private _auxiliarySealer: string;
@@ -259,8 +253,9 @@ export default class AuxiliaryChainInteract {
    */
   public getBootNode():string {
     const bootNodeKey = fs.readFileSync(this.bootKeyFilePath).toString();
-
-    let bootNode = Shell.executeInShell(`bootnode --nodekeyhex ${bootNodeKey} --writeaddress`);
+    const command =
+        `docker run -e NODE_KEY=${bootNodeKey} hawyasunaga/ethereum-bootnode /bin/sh -c 'bootnode --nodekeyhex=$NODE_KEY --writeaddress'`;
+    let bootNode = Shell.executeInShell(command);
     return bootNode.toString().trim();
   }
 
@@ -278,16 +273,8 @@ export default class AuxiliaryChainInteract {
   set auxiliaryDeployer(value: string) {
     this._auxiliaryDeployer = value;
   }
-
   /**
-   * Getter for origin sealer.
-   */
-  get auxiliarySealer(): string {
-    return this._auxiliarySealer;
-  }
-
-  /**
-   *
+   * Setter for auxiliary sealer.
    * @param value Sealer address.
    */
   set auxiliarySealer(value: string) {

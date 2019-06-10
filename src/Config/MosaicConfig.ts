@@ -42,7 +42,6 @@ export class OriginContracts {
   public ostGatewayOrganizationAddress: Address;
 
   public ostEIP20GatewayAddress: Address;
-
 }
 
 /**

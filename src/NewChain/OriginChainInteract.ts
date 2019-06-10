@@ -5,7 +5,7 @@ import Contracts from './Contracts';
 import Integer from '../Integer';
 
 import Web3 = require('web3');
-import {OriginLibraries} from "../Config/MosaicConfig";
+import { OriginLibraries } from "../Config/MosaicConfig";
 
 /**
  * The origin chain when creating a new auxiliary chain.
