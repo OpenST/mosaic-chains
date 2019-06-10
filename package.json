@@ -7,7 +7,8 @@
     "lint": "eslint src -c .eslintrc.json --ext ts",
     "test": "npm run test:unit && npm run test:smoke",
     "test:unit": "mocha -r ts-node/register tests/**/*.test.ts tests/*.test.ts",
-    "test:smoke": "./tests/smoke.sh"
+    "test:smoke": "./tests/smoke.sh",
+    "pull-abi": "sh ./tools/abi_downloader/run.sh"
   },
   "repository": {
     "type": "git",
