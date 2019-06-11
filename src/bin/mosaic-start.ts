@@ -18,9 +18,6 @@ mosaic
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-wgn,--withoutGraphNode', 'boolean value which would decide we need to start graph node')
   .action((chain: string, options) => {
-
-    console.log('entring start command');
-
     const {
       mosaicDir,
       port,
@@ -30,9 +27,6 @@ mosaic
       unlock,
       password,
     } = NodeOptions.parseOptions(options, chain);
-
-    console.log('step: 1: ', chain, mosaicDir, port, rpcPort, websocketPort, keepAfterStop, unlock);
-
     const node: Node = NodeFactory.create({
       chain,
       mosaicDir,
@@ -43,19 +37,10 @@ mosaic
       unlock,
       password,
     });
-
-    const nodeRpcPort = rpcPort;
-
-    console.log('step: 2: ', nodeRpcPort);
-
     node.start();
 
-    console.log('step: 3');
-
+    const nodeRpcPort = rpcPort;
     if (!options.withoutGraphNode) {
-
-      console.log('step: 4');
-
       const {
         rpcPort,
         websocketPort,
@@ -64,7 +49,6 @@ mosaic
         postgresPort,
         keepAfterStop,
       } = GraphOptions.parseOptions(options, chain);
-
       const graph = new Graph({
         chain,
         mosaicDir,
@@ -76,10 +60,7 @@ mosaic
         postgresPort,
         keepAfterStop,
       });
-
       graph.start();
-
     }
-
   })
   .parse(process.argv);
