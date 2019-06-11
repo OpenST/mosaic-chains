@@ -1,0 +1,1129 @@
+[
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "proposedBountyUnlockHeight",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_proposedBounty",
+                "type": "uint256"
+            }
+        ],
+        "name": "initiateBountyAmountChange",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_account",
+                "type": "address"
+            }
+        ],
+        "name": "getOutboxActiveProcess",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            },
+            {
+                "name": "status_",
+                "type": "uint8"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_blockHeight",
+                "type": "uint256"
+            },
+            {
+                "name": "_rlpAccount",
+                "type": "bytes"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            }
+        ],
+        "name": "proveGateway",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "organization",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "burner",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "name": "messages",
+        "outputs": [
+            {
+                "name": "intentHash",
+                "type": "bytes32"
+            },
+            {
+                "name": "nonce",
+                "type": "uint256"
+            },
+            {
+                "name": "gasPrice",
+                "type": "uint256"
+            },
+            {
+                "name": "gasLimit",
+                "type": "uint256"
+            },
+            {
+                "name": "sender",
+                "type": "address"
+            },
+            {
+                "name": "hashLock",
+                "type": "bytes32"
+            },
+            {
+                "name": "gasConsumed",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_account",
+                "type": "address"
+            }
+        ],
+        "name": "getNonce",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getInboxMessageStatus",
+        "outputs": [
+            {
+                "name": "status_",
+                "type": "uint8"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "name": "mints",
+        "outputs": [
+            {
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "name": "beneficiary",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "remoteGateway",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "name": "redeems",
+        "outputs": [
+            {
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "name": "beneficiary",
+                "type": "address"
+            },
+            {
+                "name": "bounty",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "BOUNTY_CHANGE_UNLOCK_PERIOD",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "bounty",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "proposedBounty",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_account",
+                "type": "address"
+            }
+        ],
+        "name": "getInboxActiveProcess",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            },
+            {
+                "name": "status_",
+                "type": "uint8"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "utilityToken",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getOutboxMessageStatus",
+        "outputs": [
+            {
+                "name": "status_",
+                "type": "uint8"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "encodedGatewayPath",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "stateRootProvider",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [],
+        "name": "confirmBountyAmountChange",
+        "outputs": [
+            {
+                "name": "changedBountyAmount_",
+                "type": "uint256"
+            },
+            {
+                "name": "previousBountyAmount_",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "valueToken",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_valueToken",
+                "type": "address"
+            },
+            {
+                "name": "_utilityToken",
+                "type": "address"
+            },
+            {
+                "name": "_stateRootProvider",
+                "type": "address"
+            },
+            {
+                "name": "_bounty",
+                "type": "uint256"
+            },
+            {
+                "name": "_organization",
+                "type": "address"
+            },
+            {
+                "name": "_gateway",
+                "type": "address"
+            },
+            {
+                "name": "_burner",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_staker",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_stakerNonce",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_beneficiary",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_amount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_blockHeight",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_hashLock",
+                "type": "bytes32"
+            }
+        ],
+        "name": "StakeIntentConfirmed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_staker",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_beneficiary",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_stakeAmount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_mintedAmount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_rewardAmount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_proofProgress",
+                "type": "bool"
+            },
+            {
+                "indexed": false,
+                "name": "_unlockSecret",
+                "type": "bytes32"
+            }
+        ],
+        "name": "MintProgressed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_staker",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_stakerNonce",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "RevertStakeIntentConfirmed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_staker",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_stakerNonce",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "RevertStakeProgressed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_redeemer",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_redeemerNonce",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_beneficiary",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "RedeemIntentDeclared",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_redeemer",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_redeemerNonce",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_amount",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_proofProgress",
+                "type": "bool"
+            },
+            {
+                "indexed": false,
+                "name": "_unlockSecret",
+                "type": "bytes32"
+            }
+        ],
+        "name": "RedeemProgressed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_redeemer",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_redeemerNonce",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "RevertRedeemDeclared",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_redeemer",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_redeemerNonce",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "RedeemReverted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "_gateway",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_blockHeight",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_storageRoot",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_wasAlreadyProved",
+                "type": "bool"
+            }
+        ],
+        "name": "GatewayProven",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "_currentBounty",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_proposedBounty",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_unlockHeight",
+                "type": "uint256"
+            }
+        ],
+        "name": "BountyChangeInitiated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "_currentBounty",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_changedBounty",
+                "type": "uint256"
+            }
+        ],
+        "name": "BountyChangeConfirmed",
+        "type": "event"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "name": "_unlockSecret",
+                "type": "bytes32"
+            }
+        ],
+        "name": "progressMint",
+        "outputs": [
+            {
+                "name": "beneficiary_",
+                "type": "address"
+            },
+            {
+                "name": "stakeAmount_",
+                "type": "uint256"
+            },
+            {
+                "name": "mintedAmount_",
+                "type": "uint256"
+            },
+            {
+                "name": "rewardAmount_",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            },
+            {
+                "name": "_blockHeight",
+                "type": "uint256"
+            },
+            {
+                "name": "_messageStatus",
+                "type": "uint256"
+            }
+        ],
+        "name": "progressMintWithProof",
+        "outputs": [
+            {
+                "name": "beneficiary_",
+                "type": "address"
+            },
+            {
+                "name": "stakeAmount_",
+                "type": "uint256"
+            },
+            {
+                "name": "mintedAmount_",
+                "type": "uint256"
+            },
+            {
+                "name": "rewardAmount_",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "name": "_blockHeight",
+                "type": "uint256"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            }
+        ],
+        "name": "confirmRevertStakeIntent",
+        "outputs": [
+            {
+                "name": "staker_",
+                "type": "address"
+            },
+            {
+                "name": "stakerNonce_",
+                "type": "uint256"
+            },
+            {
+                "name": "amount_",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "name": "_unlockSecret",
+                "type": "bytes32"
+            }
+        ],
+        "name": "progressRedeem",
+        "outputs": [
+            {
+                "name": "redeemer_",
+                "type": "address"
+            },
+            {
+                "name": "redeemAmount_",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            },
+            {
+                "name": "_blockHeight",
+                "type": "uint256"
+            },
+            {
+                "name": "_messageStatus",
+                "type": "uint256"
+            }
+        ],
+        "name": "progressRedeemWithProof",
+        "outputs": [
+            {
+                "name": "redeemer_",
+                "type": "address"
+            },
+            {
+                "name": "redeemAmount_",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "revertRedeem",
+        "outputs": [
+            {
+                "name": "redeemer_",
+                "type": "address"
+            },
+            {
+                "name": "redeemerNonce_",
+                "type": "uint256"
+            },
+            {
+                "name": "amount_",
+                "type": "uint256"
+            }
+        ],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            },
+            {
+                "name": "_blockHeight",
+                "type": "uint256"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            }
+        ],
+        "name": "progressRevertRedeem",
+        "outputs": [
+            {
+                "name": "redeemer_",
+                "type": "address"
+            },
+            {
+                "name": "redeemerNonce_",
+                "type": "uint256"
+            },
+            {
+                "name": "amount_",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_staker",
+                "type": "address"
+            },
+            {
+                "name": "_stakerNonce",
+                "type": "uint256"
+            },
+            {
+                "name": "_beneficiary",
+                "type": "address"
+            },
+            {
+                "name": "_amount",
+                "type": "uint256"
+            },
+            {
+                "name": "_gasPrice",
+                "type": "uint256"
+            },
+            {
+                "name": "_gasLimit",
+                "type": "uint256"
+            },
+            {
+                "name": "_hashLock",
+                "type": "bytes32"
+            },
+            {
+                "name": "_blockHeight",
+                "type": "uint256"
+            },
+            {
+                "name": "_rlpParentNodes",
+                "type": "bytes"
+            }
+        ],
+        "name": "confirmStakeIntent",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_amount",
+                "type": "uint256"
+            },
+            {
+                "name": "_beneficiary",
+                "type": "address"
+            },
+            {
+                "name": "_gasPrice",
+                "type": "uint256"
+            },
+            {
+                "name": "_gasLimit",
+                "type": "uint256"
+            },
+            {
+                "name": "_nonce",
+                "type": "uint256"
+            },
+            {
+                "name": "_hashLock",
+                "type": "bytes32"
+            }
+        ],
+        "name": "redeem",
+        "outputs": [
+            {
+                "name": "messageHash_",
+                "type": "bytes32"
+            }
+        ],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_messageHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "penalty",
+        "outputs": [
+            {
+                "name": "penalty_",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+]
