@@ -46,8 +46,8 @@ export default class Directory {
    */
   public static getProjectMosaicConfigDir(): string {
     return path.join(
-        Directory.projectRoot,
-        `mosaic_config`,
+      Directory.projectRoot,
+      'mosaic_config',
     );
   }
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import * as commander from 'commander';
-import { version } from '../../package.json';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
@@ -9,7 +8,6 @@ import Graph from "../Graph/Graph";
 import GraphOptions from './GraphOptions';
 
 let mosaic = commander
-  .version(version)
   .arguments('<chain>');
 
 mosaic = NodeOptions.addCliOptions(mosaic);
