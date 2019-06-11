@@ -51,28 +51,37 @@ function try_silent {
     eval $1 1>/dev/null 2>&1 || error "$2"
 }
 
-# Tries a command without outpet. Errors if the command *executes successfully.*
+# Tries a command without output. Errors if the command *executes successfully.*
 function fail_silent {
     eval $1 1>/dev/null 2>&1 && error "$2"
 }
 
-# Sets the global variable `grep_command` with the given chain.
-function set_grep_command {
+# Sets the global variable `grep_command` with the command to check if given chain is running.
+function set_node_grep_command {
     grep_command="./mosaic list | grep mosaic_$1"
 }
 
-# Errors if the given chain is not in the output of `mosaic list`.
-function grep_try {
-    info "Checking that node $1 is listed."
-    set_grep_command $1
-    try_silent "$grep_command" "Node was expected to be running, but is not: $1."
+# Sets the global variable `grep_command` with the command to check if given chain's corresponding graph is running.
+function set_graph_grep_command {
+    grep_command="./mosaic list | grep 'mosaic_graph_$1'"
 }
 
-# Errors if the given chain *is* in the output of `mosaic list`.
+# Errors if the given chain and its graph is not in the output of `mosaic list`.
+function grep_try {
+    info "Checking that node $1 is listed."
+    set_node_grep_command $1
+    try_silent "$grep_command" "Node was expected to be running, but is not: $1."
+    set_graph_grep_command $1
+    try_silent "$grep_command" "Graph was expected to be running, but is not: $1."
+}
+
+# Errors if the given chain or its graph *is* in the output of `mosaic list`.
 function grep_fail {
     info "Checking that node $1 is *not* listed."
-    set_grep_command $1
+    set_node_grep_command $1
     fail_silent "$grep_command" "Node was not expected to be running, but is: $1."
+    set_graph_grep_command $1
+    fail_silent "$grep_command" "Graph was not expected to be running, but is: $1."
 }
 
 # Errors if an RPC connection to the node is not possible. Works only with chain IDs, not names.
