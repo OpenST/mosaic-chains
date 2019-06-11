@@ -54,6 +54,7 @@ Examples with different chain IDs:
 | `1406` | `31406` | `41406` | `51406` |
 
 ## Creating a new auxiliary chain
+If there is no existing mosaic config with the library addresses for the `origin` chain then first run `./mosaic libraries <origin-chain-id> <origin-websocket> <deployer-address>`. This command will create a mosaic config file for the origin chain and stores library addresses of origin chain. Generated mosaic config must be used to create multiple auxiliary chains. Ideally `./mosaic libraries` command should be used once per origin chain. This command assumes that deployer address is unlocked already.
 
 The command to create a new auxiliary chain is `./mosaic create <new-chain-id> <origin-websocket> <password-file>`.
 See `./mosaic create --help` for more help.

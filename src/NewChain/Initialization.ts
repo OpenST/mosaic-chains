@@ -1,11 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Utils } from '@openst/mosaic.js';
+import * as ip from 'ip';
+
 
 import InitConfig from '../Config/InitConfig';
-import MosaicConfig from '../Config/MosaicConfig';
-import OriginChain from './OriginChain';
-import AuxiliaryChain from './AuxiliaryChain';
+import MosaicConfig, { AuxiliaryChain } from '../Config/MosaicConfig';
+import OriginChainInteract from './OriginChainInteract';
+import AuxiliaryChainInteract from './AuxiliaryChainInteract';
 import NodeDescription from '../Node/NodeDescription';
 import Logger from '../Logger';
 import Proof from './Proof';
@@ -39,32 +41,33 @@ export default class Initialization {
     const originWeb3: Web3 = new Web3(originWebsocket);
     const hashLockSecret: string = Web3.utils.randomHex(32);
 
-    const originChain: OriginChain = new OriginChain(initConfig, originWeb3, newChainId);
-    const originChainId: string = await originChain.getChainId();
+    const originChainInteract: OriginChainInteract = new OriginChainInteract(initConfig, originWeb3, newChainId);
+    const originChainId: string = await originChainInteract.getChainId();
 
-    const auxiliaryChain: AuxiliaryChain = new AuxiliaryChain(
+    const auxiliaryChainInteract: AuxiliaryChainInteract = new AuxiliaryChainInteract(
       initConfig,
       newChainId,
       originChainId,
       auxiliaryNodeDescription,
     );
 
-    const mosaicConfig = new MosaicConfig();
-    mosaicConfig.originChainId = originChainId;
+    const mosaicConfig = MosaicConfig.from(originChainId);
+    mosaicConfig.originChain.chain = originChainId;
+    mosaicConfig.originChain.contractAddresses.simpleTokenAddress = initConfig.originOstAddress;
 
     // Actually creating the new chain:
     await Initialization.createAuxiliaryChain(
       auxiliaryNodeDescription,
       mosaicConfig,
-      originChain,
-      auxiliaryChain,
+      originChainInteract,
+      auxiliaryChainInteract,
       hashLockSecret,
     );
 
     await Initialization.resetOrganizationAdmins(
       mosaicConfig,
-      originChain,
-      auxiliaryChain,
+      originChainInteract,
+      auxiliaryChainInteract,
       initConfig.originTxOptions.from,
     );
 
@@ -97,20 +100,22 @@ export default class Initialization {
   private static async createAuxiliaryChain(
     auxiliaryNodeDescription: NodeDescription,
     mosaicConfig: MosaicConfig,
-    originChain: OriginChain,
-    auxiliaryChain: AuxiliaryChain,
+    originChainInteract: OriginChainInteract,
+    auxiliaryChainInteract: AuxiliaryChainInteract,
     hashLockSecret: string,
   ): Promise<void> {
     Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
-    mosaicConfig.auxiliaryChainId = auxiliaryNodeDescription.chain;
+    const auxiliaryChain = new AuxiliaryChain();
+    mosaicConfig.auxiliaryChains[auxiliaryNodeDescription.chain] = auxiliaryChain;
+    auxiliaryChain.chainId = auxiliaryNodeDescription.chain;
 
-    const { sealer, deployer } = await auxiliaryChain.startNewChainSealer();
-    mosaicConfig.auxiliaryOriginalSealer = sealer;
-    mosaicConfig.auxiliaryOriginalDeployer = deployer;
+    const { sealer, deployer } = await auxiliaryChainInteract.startNewChainSealer();
+    auxiliaryChainInteract.auxiliarySealer = sealer;
+    auxiliaryChainInteract.auxiliaryDeployer = deployer;
 
-    const auxiliaryStateRootZero: string = await auxiliaryChain.getStateRootZero();
-    const expectedOstCoGatewayAddress: string = auxiliaryChain.getExpectedOstCoGatewayAddress(
-      mosaicConfig.auxiliaryOriginalDeployer,
+    const auxiliaryStateRootZero: string = await auxiliaryChainInteract.getStateRootZero();
+    const expectedOstCoGatewayAddress: string = auxiliaryChainInteract.getExpectedOstCoGatewayAddress(
+      auxiliaryChainInteract.auxiliaryDeployer,
     );
 
     const {
@@ -118,26 +123,35 @@ export default class Initialization {
       anchor: originAnchor,
       ostGatewayOrganization,
       ostGateway,
-    } = await originChain.deployContracts(
+    } = await originChainInteract.deployContracts(
       auxiliaryStateRootZero,
       expectedOstCoGatewayAddress,
+      mosaicConfig.originChain.contractAddresses,
     );
-    mosaicConfig.originAnchorOrganizationAddress = originAnchorOrganization.address;
-    mosaicConfig.originAnchorAddress = originAnchor.address;
-    mosaicConfig.originOstGatewayOrganizationAddress = ostGatewayOrganization.address;
-    mosaicConfig.originOstGatewayAddress = ostGateway.address;
+    const originContracts = auxiliaryChain.contractAddresses.origin;
+    originContracts.anchorOrganizationAddress = originAnchorOrganization.address;
+    originContracts.anchorAddress = originAnchor.address;
+    originContracts.ostGatewayOrganizationAddress = ostGatewayOrganization.address;
+    originContracts.ostEIP20GatewayAddress = ostGateway.address;
+    auxiliaryChain.genesis = auxiliaryChainInteract.getGenesis();
+    auxiliaryChain.bootNodes.push(
+      Initialization.getBootNode(
+        auxiliaryChainInteract,
+        auxiliaryNodeDescription.port,
+      ),
+    );
 
     const {
       blockNumber: originBlockNumber,
       stateRoot: originStateRoot,
       messageHash: originMessageHash,
       nonce: stakeMessageNonce,
-    } = await originChain.stake(mosaicConfig.auxiliaryOriginalDeployer, hashLockSecret);
+    } = await originChainInteract.stake(auxiliaryChainInteract.auxiliaryDeployer, hashLockSecret);
 
     const proofData: Proof = await Initialization.getStakeProof(
-      originChain.getWeb3(),
-      auxiliaryChain.getWeb3(),
-      mosaicConfig.originOstGatewayAddress,
+      originChainInteract.getWeb3(),
+      auxiliaryChainInteract.getWeb3(),
+      originContracts.ostEIP20GatewayAddress,
       originMessageHash,
       originBlockNumber,
       originStateRoot,
@@ -149,37 +163,43 @@ export default class Initialization {
       coGatewayAndOstPrimeOrganization,
       ostPrime,
       ostCoGateway,
-    } = await auxiliaryChain.initializeContracts(
-      mosaicConfig.originOstGatewayAddress,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
+    } = await auxiliaryChainInteract.initializeContracts(
+      originContracts.ostEIP20GatewayAddress,
       originBlockNumber.toString(10),
       originStateRoot,
       stakeMessageNonce,
       hashLockSecret,
       proofData,
     );
-    mosaicConfig.auxiliaryAnchorOrganizationAddress = anchorOrganization.address;
-    mosaicConfig.auxiliaryAnchorAddress = anchor.address;
-    mosaicConfig
-      .auxiliaryCoGatewayAndOstPrimeOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
-    mosaicConfig.auxiliaryOstPrimeAddress = ostPrime.address;
-    mosaicConfig.auxiliaryOstCoGatewayAddress = ostCoGateway.address;
+    const auxiliaryContracts = auxiliaryChain.contractAddresses.auxiliary;
+
+    auxiliaryContracts.anchorOrganizationAddress = anchorOrganization.address;
+    auxiliaryContracts.anchorAddress = anchor.address;
+    auxiliaryContracts.ostCoGatewayOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
+    auxiliaryContracts.ostPrimeAddress = ostPrime.address;
+    auxiliaryContracts.ostEIP20CogatewayAddress = ostCoGateway.address;
+    auxiliaryContracts.gatewayLibAddress = gatewayLib.address;
+    auxiliaryContracts.messageBusAddress = messageBus.address;
+    auxiliaryContracts.merklePatriciaLibAddress = merklePatriciaProof.address;
 
     // Progressing on both chains in parallel (with hash lock secret).
     // Giving the deployer the amount of coins that were originally staked as tokens on origin.
     await Promise.all([
-      originChain.progressWithSecret(
-        mosaicConfig.auxiliaryOstCoGatewayAddress,
+      originChainInteract.progressWithSecret(
+        auxiliaryContracts.ostEIP20CogatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
-      auxiliaryChain.progressWithSecret(
-        mosaicConfig.auxiliaryOstCoGatewayAddress,
+      auxiliaryChainInteract.progressWithSecret(
+        auxiliaryContracts.ostEIP20CogatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
     ]);
-
-    mosaicConfig.writeToUtilityChainDirectory();
+    mosaicConfig.writeToMosaicConfigDirectory();
   }
 
   /**
@@ -187,26 +207,27 @@ export default class Initialization {
    * Resets coGatewayAndOstPrime organization admin to `address(0)` in aux chain as deployer is admin here.
    *
    * @param mosaicConfig Object holds the chain ids and addresses of a mosaic chain.
-   * @param {OriginChain} originChain OriginChain instance.
-   * @param {AuxiliaryChain} auxiliaryChain AuxiliaryChain instance.
-   * @param {string} originOstGatewayOrganizationAdmin Gateway organization contract admin.
+   * @param {OriginChainInteract} originChainInteract OriginChain instance.
+   * @param {AuxiliaryChainInteract} auxiliaryChainInteract AuxiliaryChain instance.
+   * @param {string} originOrganizationAdmin Gateway organization contract admin.
    *
    * @returns {Promise<void>}
    */
   private static async resetOrganizationAdmins(
     mosaicConfig: MosaicConfig,
-    originChain: OriginChain,
-    auxiliaryChain: AuxiliaryChain,
+    originChainInteract: OriginChainInteract,
+    auxiliaryChainInteract: AuxiliaryChainInteract,
     originOrganizationAdmin: string,
   ): Promise<void> {
+    const auxiliaryChain = mosaicConfig.auxiliaryChains[auxiliaryChainInteract.getChainId()];
     await Promise.all([
-      originChain.resetOrganizationAdmin(
-        mosaicConfig.originOstGatewayOrganizationAddress,
+      originChainInteract.resetOrganizationAdmin(
+        auxiliaryChain.contractAddresses.origin.ostGatewayOrganizationAddress,
         { from: originOrganizationAdmin },
       ),
-      auxiliaryChain.resetOrganizationAdmin(
-        mosaicConfig.auxiliaryCoGatewayAndOstPrimeOrganizationAddress,
-        { from: mosaicConfig.auxiliaryOriginalDeployer },
+      auxiliaryChainInteract.resetOrganizationAdmin(
+        auxiliaryChain.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
+        { from: auxiliaryChainInteract.auxiliaryDeployer },
       ),
     ]);
   }
@@ -249,5 +270,14 @@ export default class Initialization {
       blockNumber,
       stateRoot,
     };
+  }
+
+  /**
+   * This method returns the enode of the current auxiliary chain.
+   * @param auxiliaryChainInteract  Object to interact with auxiliary chain.
+   * @param port Port of boot node.
+   */
+  private static getBootNode(auxiliaryChainInteract: AuxiliaryChainInteract, port: number) {
+    return `enode://${auxiliaryChainInteract.getBootNode()}@${ip.address()}:${port}`;
   }
 }

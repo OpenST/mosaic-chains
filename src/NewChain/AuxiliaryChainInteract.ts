@@ -19,7 +19,7 @@ import Web3 = require('web3');
 /**
  * The new auxiliary chain that shall be created.
  */
-export default class AuxiliaryChain {
+export default class AuxiliaryChainInteract {
   private web3: Web3;
 
   private chainDir: string;
@@ -42,13 +42,13 @@ export default class AuxiliaryChain {
 
   private ostPrimeDeploymentNonce = 3;
 
-  private merklePatriciaProofLibraryDeploymentNonce = 4;
-
-  private messageBusDeploymentNonce = 5;
-
-  private gatewayLibDeploymentNonce = 5;
-
   private coGatewayDeploymentNonce = 7;
+
+  private _auxiliarySealer: string;
+
+  private _auxiliaryDeployer: string;
+
+  private bootKeyFilePath: string;
 
   /*
   Anchor
@@ -104,7 +104,7 @@ export default class AuxiliaryChain {
   public async getStateRootZero(): Promise<string> {
     const blockHeight = 0;
     const block = await this.web3.eth.getBlock(blockHeight);
-    const stateRoot = block.stateRoot;
+    const { stateRoot } = block;
 
     this.logInfo('fetched state root zero', { blockHeight, stateRoot });
 
@@ -168,18 +168,24 @@ export default class AuxiliaryChain {
     hashLockSecret: string,
     proofData: Proof,
   ): Promise<{
-    anchorOrganization: ContractInteract.Organization;
-    anchor: ContractInteract.Anchor;
-    coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
-    ostPrime: ContractInteract.OSTPrime;
-    ostCoGateway: ContractInteract.EIP20CoGateway;
-  }> {
+      anchorOrganization: ContractInteract.Organization;
+      anchor: ContractInteract.Anchor;
+      coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
+      ostPrime: ContractInteract.OSTPrime;
+      ostCoGateway: ContractInteract.EIP20CoGateway;
+      gatewayLib: ContractInteract.GatewayLib;
+      messageBus: ContractInteract.MessageBus;
+      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+    }> {
     const {
       anchorOrganization,
       anchor,
       coGatewayAndOstPrimeOrganization,
       ostPrime,
       ostCoGateway,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
     } = await this.deployContracts(
       originOstGatewayAddress,
       originHeight,
@@ -200,6 +206,9 @@ export default class AuxiliaryChain {
       coGatewayAndOstPrimeOrganization,
       ostPrime,
       ostCoGateway,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
     };
   }
 
@@ -230,14 +239,54 @@ export default class AuxiliaryChain {
   public async resetOrganizationAdmin(
     organization,
     txOptions,
-  ): Promise<Object> {
-    this.logInfo('reseting auxiliary chain organization admin.', { organization, txOptions } );
+  ): Promise<Record<string, any>> {
+    this.logInfo('reseting auxiliary chain organization admin.', { organization, txOptions });
     // ContractInteract.Organization doesn't implement setAdmin function in mosaic.js.
     // That's why MosaicContracts being used here.
     const contractInstance = new MosaicContracts(undefined, this.web3);
     const tx = contractInstance.AuxiliaryOrganization(organization)
-          .methods.setAdmin('0x0000000000000000000000000000000000000000');
+      .methods.setAdmin('0x0000000000000000000000000000000000000000');
     return tx.send(txOptions);
+  }
+
+  /**
+   * This returns genesis of the auxiliary chain.
+   */
+  public getGenesis(): any {
+    return CliqueGenesis.create(this.chainId, this.sealer, this.deployer);
+  }
+
+  /**
+   *  This returns boot node of the auxiliary chain.
+   */
+  public getBootNode(): string {
+    const bootNodeKey = fs.readFileSync(this.bootKeyFilePath).toString();
+    const command = `docker run -e NODE_KEY=${bootNodeKey} hawyasunaga/ethereum-bootnode /bin/sh -c 'bootnode --nodekeyhex=$NODE_KEY --writeaddress'`;
+    const bootNode = Shell.executeInShell(command);
+    return bootNode.toString().trim();
+  }
+
+  /**
+   * Getter for auxiliary deployer.
+   */
+  get auxiliaryDeployer(): string {
+    return this._auxiliaryDeployer;
+  }
+
+  /**
+   * Setter for auxiliary deployer.
+   * @param value Deployer address.
+   */
+  set auxiliaryDeployer(value: string) {
+    this._auxiliaryDeployer = value;
+  }
+
+  /**
+   * Setter for auxiliary sealer.
+   * @param value Sealer address.
+   */
+  set auxiliarySealer(value: string) {
+    this._auxiliarySealer = value;
   }
 
   /**
@@ -324,7 +373,7 @@ export default class AuxiliaryChain {
     const timeToWaitInSecs = 4;
     let unlockStatus: boolean;
     do {
-      await AuxiliaryChain.sleep(timeToWaitInSecs * 1000);
+      await AuxiliaryChainInteract.sleep(timeToWaitInSecs * 1000);
       totalWaitTimeInSeconds += timeToWaitInSecs;
       if (totalWaitTimeInSeconds > (this.maxTriesToUnlockAccounts * timeToWaitInSecs)) {
         throw new Error('node did not unlock accounts in time');
@@ -400,12 +449,15 @@ export default class AuxiliaryChain {
     originHeight: string,
     originStateRoot: string,
   ): Promise<{
-    anchorOrganization: ContractInteract.Organization;
-    anchor: ContractInteract.Anchor;
-    coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
-    ostPrime: ContractInteract.OSTPrime;
-    ostCoGateway: ContractInteract.EIP20CoGateway;
-  }> {
+      anchorOrganization: ContractInteract.Organization;
+      anchor: ContractInteract.Anchor;
+      coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
+      ostPrime: ContractInteract.OSTPrime;
+      ostCoGateway: ContractInteract.EIP20CoGateway;
+      gatewayLib: ContractInteract.GatewayLib;
+      messageBus: ContractInteract.MessageBus;
+      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+    }> {
     this.logInfo('deploying contracts');
     const anchorOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryAnchorOrganizationOwner,
@@ -427,7 +479,12 @@ export default class AuxiliaryChain {
       this.initConfig.originOstAddress,
       coGatewayAndOstPrimeOrganization.address,
     );
-    const ostCoGateway = await this.deployOstCoGateway(
+    const {
+      ostCoGateway,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
+    } = await this.deployOstCoGateway(
       this.initConfig.originOstAddress,
       ostPrime.address,
       anchor.address,
@@ -444,6 +501,9 @@ export default class AuxiliaryChain {
       coGatewayAndOstPrimeOrganization,
       ostPrime,
       ostCoGateway,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
     };
   }
 
@@ -614,6 +674,7 @@ export default class AuxiliaryChain {
     ];
     Shell.executeDockerCommand(args);
 
+    this.bootKeyFilePath = `${this.chainDir}/${bootKeyFile}`;
     return bootKeyFile;
   }
 
@@ -720,14 +781,19 @@ export default class AuxiliaryChain {
     anchorAddress: string,
     organizationAddress: string,
     gatewayAddress: string,
-  ): Promise<ContractInteract.OSTPrime> {
+  ): Promise<{
+      gatewayLib: ContractInteract.GatewayLib;
+      messageBus: ContractInteract.MessageBus;
+      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+      ostCoGateway: ContractInteract.EIP20CoGateway;
+    }> {
     this.logInfo(
       'deploying ost co-gateway',
       {
         ostAddress, ostPrimeAddress, anchorAddress, organizationAddress, gatewayAddress,
       },
     );
-    const ostPrime = Contracts.deployOstCoGateway(
+    const contracts = Contracts.deployOstCoGateway(
       this.web3,
       this.txOptions,
       ostAddress,
@@ -738,7 +804,7 @@ export default class AuxiliaryChain {
       gatewayAddress,
       this.initConfig.auxiliaryBurnerAddress,
     );
-    return ostPrime;
+    return contracts;
   }
 
   /**
