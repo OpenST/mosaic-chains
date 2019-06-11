@@ -86,7 +86,7 @@ export default class ChainVerifier {
       address: this.mosaicConfig.originChain.contractAddresses.gatewayLibAddress,
       name: 'GatewayLib',
     };
-    this.validateLinkedBin(
+    await this.validateLinkedBin(
       this.originWeb3,
       'EIP20Gateway',
       this.contractAddresses.origin.ostEIP20GatewayAddress,
@@ -103,7 +103,7 @@ export default class ChainVerifier {
       address: this.contractAddresses.auxiliary.gatewayLibAddress,
       name: 'GatewayLib',
     };
-    this.validateLinkedBin(
+    await this.validateLinkedBin(
       this.auxiliaryWeb3,
       'EIP20CoGateway',
       this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
@@ -331,7 +331,7 @@ export default class ChainVerifier {
     this.validateExpectedAndDeployedAddress(
       this.auxiliaryWeb3,
       organization,
-      this.contractAddresses.origin.anchorOrganizationAddress,
+      this.contractAddresses.auxiliary.anchorOrganizationAddress,
       'AuxiliaryAnchor: Invalid organization address!!!'
     );
 
@@ -422,7 +422,7 @@ export default class ChainVerifier {
     gatewayLibLinkInfo,
     errMsg) {
     const gatewayLinkedBin = this.abiBinProvider.getLinkedBIN(
-      'EIP20Gateway',
+      contractName,
       messageBusLinkInfo,
       gatewayLibLinkInfo,
     );
