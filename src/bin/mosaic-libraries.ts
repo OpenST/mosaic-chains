@@ -3,11 +3,12 @@
 import * as commander from 'commander';
 
 import Logger from '../Logger';
-import OriginChain from "../NewChain/OriginChain";
-import Web3 = require("web3");
-import MosaicConfig from "../Config/MosaicConfigV2";
+import OriginChainInteract from '../NewChain/OriginChainInteract';
+import MosaicConfig from '../Config/MosaicConfig';
 
-let mosaic = commander
+import Web3 = require('web3');
+
+const mosaic = commander
   .arguments('<chain> <origin-websocket> <deployer>');
 mosaic.action(
   async (
@@ -15,17 +16,15 @@ mosaic.action(
     originWebsocket: string,
     deployer: string,
   ) => {
-
     try {
-
       const originWeb3 = new Web3(originWebsocket);
       const {
         gatewayLib,
         messageBus,
         merklePatriciaProof,
-      } = await OriginChain.deployLibraries(originWeb3, deployer);
+      } = await OriginChainInteract.deployLibraries(originWeb3, deployer);
 
-      const mosaicConfig:MosaicConfig = MosaicConfig.from(chain);
+      const mosaicConfig: MosaicConfig = MosaicConfig.from(chain);
 
       mosaicConfig.originChain.chain = chain;
       mosaicConfig.originChain.contractAddresses.gatewayLibAddress = gatewayLib.address;

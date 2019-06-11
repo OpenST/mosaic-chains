@@ -3,13 +3,14 @@ import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
 import Contracts from './Contracts';
 import Integer from '../Integer';
+import { OriginLibraries } from '../Config/MosaicConfig';
 
 import Web3 = require('web3');
 
 /**
  * The origin chain when creating a new auxiliary chain.
  */
-export default class OriginChain {
+export default class OriginChainInteract {
   private chainId: string;
 
   private ostGateway: ContractInteract.EIP20Gateway;
@@ -45,12 +46,13 @@ export default class OriginChain {
   public async deployContracts(
     auxiliaryStateRootZero: string,
     expectedOstCoGatewayAddress: string,
+    originLibraries: OriginLibraries,
   ): Promise<{
-    anchorOrganization: ContractInteract.Organization;
-    anchor: ContractInteract.Anchor;
-    ostGatewayOrganization: ContractInteract.Organization;
-    ostGateway: ContractInteract.EIP20Gateway;
-  }> {
+      anchorOrganization: ContractInteract.Organization;
+      anchor: ContractInteract.Anchor;
+      ostGatewayOrganization: ContractInteract.Organization;
+      ostGateway: ContractInteract.EIP20Gateway;
+    }> {
     this.logInfo('deploying contracts');
 
     const anchorOrganization = await this.deployOrganization(
@@ -76,6 +78,7 @@ export default class OriginChain {
     const ostGateway = await this.deployGateway(
       anchor.address,
       ostGatewayOrganization.address,
+      originLibraries,
     );
 
     this.logInfo(
@@ -172,13 +175,13 @@ export default class OriginChain {
   public async resetOrganizationAdmin(
     organization,
     txOptions,
-  ): Promise<Object> {
-    this.logInfo("reseting origin chain organization admin", { organization, txOptions } );
+  ): Promise<Record<string, any>> {
+    this.logInfo('reseting origin chain organization admin', { organization, txOptions });
     // ContractInteract.Organization doesn't implement setAdmin function in mosaic.js.
     // That's why MosaicContracts being used here.
     const contractInstance = new MosaicContracts(this.web3, null);
     const tx = contractInstance.OriginOrganization(organization)
-           .methods.setAdmin('0x0000000000000000000000000000000000000000');
+      .methods.setAdmin('0x0000000000000000000000000000000000000000');
     return tx.send(txOptions);
   }
 
@@ -194,11 +197,11 @@ export default class OriginChain {
     web3: Web3,
     deployer: string,
   ): Promise<{
-    gatewayLib: ContractInteract.GatewayLib;
-    messageBus: ContractInteract.MessageBus;
-    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+      gatewayLib: ContractInteract.GatewayLib;
+      messageBus: ContractInteract.MessageBus;
+      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
     }> {
-    return Contracts.deployGatewayLibraries(web3, {from: deployer});
+    return Contracts.deployGatewayLibraries(web3, { from: deployer });
   }
 
   /**
@@ -243,6 +246,7 @@ export default class OriginChain {
   private deployGateway(
     anchorAddress: string,
     organizationAddress: string,
+    originLibraries: OriginLibraries,
   ): Promise<ContractInteract.EIP20Gateway> {
     this.logInfo('deploying ost gateway', { anchorAddress, organizationAddress });
     return Contracts.deployOstGateway(
@@ -253,6 +257,8 @@ export default class OriginChain {
       this.initConfig.originBounty,
       organizationAddress,
       this.initConfig.originBurnerAddress,
+      originLibraries.messageBusAddress,
+      originLibraries.gatewayLibAddress,
     );
   }
 
@@ -290,7 +296,7 @@ export default class OriginChain {
    */
   private async getStateRoot(blockHeight: number): Promise<string> {
     const block = await this.web3.eth.getBlock(blockHeight);
-    const stateRoot = block.stateRoot;
+    const { stateRoot } = block;
     this.logInfo('fetched state root', { blockHeight, stateRoot });
 
     return stateRoot;
