@@ -7,21 +7,21 @@ import ChainVerifier from '../NewChain/ChainVerifier';
 import NodeOptions from './NodeOptions';
 
 let mosaic = commander
-  .arguments('<origin-websocket> <auxiliary-websocket> <origin-chain> <auxiliary-chain-id>');
+  .arguments('<origin-websocket> <auxiliary-websocket> <origin-chain-identifier> <auxiliary-chain-identifier>');
 mosaic = NodeOptions.addCliOptions(mosaic);
 mosaic.action(
   async (
     originWebsocket: string,
     auxiliaryWebsocket: string,
-    originChain: string,
-    auxiliaryChainId: string
+    originChainIdentifier: string,
+    auxiliaryChainIdentifier: string
   ) => {
     try {
       const chainVerifier = new ChainVerifier(
         originWebsocket,
         auxiliaryWebsocket,
-        originChain,
-        auxiliaryChainId,
+        originChainIdentifier,
+        auxiliaryChainIdentifier,
       );
       await chainVerifier.verify();
     } catch (error) {
