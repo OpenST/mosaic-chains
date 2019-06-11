@@ -55,7 +55,7 @@ mosaic
         keepAfterStop,
       } = GraphOptions.parseOptions(options, chain);
 
-      const graphNode = new Graph({
+      const graph = new Graph({
         chain,
         mosaicDir,
         nodeRpcPort,
@@ -67,7 +67,7 @@ mosaic
         keepAfterStop,
       });
 
-      graphNode.start();
+      graph.start();
 
     }
 
