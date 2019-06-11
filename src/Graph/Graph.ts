@@ -100,10 +100,12 @@ export default class Graph {
   public start(): void {
     this.logInfo('attempting to start graph container');
     this.ensureNetworkExists();
-    let args = this.defaultDockerGraphArgs;
-    args.push('up');
-    args.push('--detach');
-    Shell.executeInShell(args.join(' '));
+    let commandParts = this.defaultDockerGraphCommand;
+    commandParts.push('up');
+    commandParts.push('--detach');
+    const command = commandParts.join(' ');
+    this.logInfo(`"start graph container command: ${command}"`);
+    Shell.executeInShell(command);
   }
 
   /**
@@ -111,9 +113,9 @@ export default class Graph {
    */
   public stop(): void {
     this.logInfo('attempting to stop graph container');
-    let args = this.defaultDockerGraphArgs;
-    args.push('down');
-    Shell.executeInShell(args.join(' '));
+    let commandParts = this.defaultDockerGraphCommand;
+    commandParts.push('down');
+    Shell.executeInShell(commandParts.join(' '));
   }
 
   /**
@@ -126,9 +128,8 @@ export default class Graph {
     Shell.executeInShell(createNetwork);
   }
 
-  private get defaultDockerGraphArgs(): string[] {
-
-    let args = [
+  private get defaultDockerGraphCommand(): string[] {
+    return [
       `MOSAIC_GRAPH_RPC_PORT=${this.rpcPort}`,
       `MOSAIC_GRAPH_WS_PORT=${this.websocketPort}`,
       `MOSAIC_GRAPH_RPC_ADMIN_PORT=${this.rpcAdminPort}`,
@@ -141,8 +142,6 @@ export default class Graph {
       `-f ${path.join(Directory.getProjectGraphDir(), 'docker-compose.yml')}`,
       '-p', this.containerName
     ];
-
-    return args;
   }
 
   /**
