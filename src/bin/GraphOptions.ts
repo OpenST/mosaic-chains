@@ -2,7 +2,7 @@ import Integer from '../Integer';
 import ChainInfo from '../Node/ChainInfo';
 
 // These defaults will be used if the relevant option is not given on the command line.
-const DEFAULT_RPC_PORT = 8000;
+const DEFAULT_RPC_PORT = 60000;
 const DEFAULT_WS_PORT = 8101;
 const DEFAULT_RPC_ADMIN_PORT = 8020;
 const DEFAULT_IPFS_PORT = 5001;
