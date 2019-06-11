@@ -18,6 +18,9 @@ mosaic
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-wgn,--withoutGraphNode', 'boolean value which would decide we need to start graph node')
   .action((chain: string, options) => {
+
+    console.log('entring start command');
+
     const {
       mosaicDir,
       port,
