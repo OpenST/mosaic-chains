@@ -1,7 +1,9 @@
-os: osx
+dist: trusty
 language: node_js
 cache: npm
 sudo: required
+services:
+  - docker
 node_js:
   - "11"
 branches:

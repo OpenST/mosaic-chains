@@ -63,7 +63,7 @@ function set_node_grep_command {
 
 # Sets the global variable `grep_command` with the command to check if given chain's corresponding graph is running.
 function set_graph_grep_command {
-    grep_command="./mosaic list | grep 'mosaic_graph_$1'"
+    grep_command="./mosaic list | grep 'mosaic_graph_$1_graph'"
 }
 
 # Errors if the given chain and its graph is not in the output of `mosaic list`.
