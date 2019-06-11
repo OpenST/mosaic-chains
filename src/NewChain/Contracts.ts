@@ -71,8 +71,7 @@ export default class Contracts {
     burnerAddress: string,
     messageBusAddress: string,
     gatewayLibAddress: string,
-): Promise<ContractInteract.EIP20Gateway> {
-
+  ): Promise<ContractInteract.EIP20Gateway> {
     const ostGateway: ContractInteract.EIP20Gateway = await ContractInteract.EIP20Gateway.deploy(
       web3,
       ostAddress,
@@ -156,10 +155,10 @@ export default class Contracts {
     web3: Web3,
     txOptions: Tx,
   ): Promise<{
-    gatewayLib: ContractInteract.GatewayLib;
-    messageBus: ContractInteract.MessageBus;
-    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
-  }> {
+      gatewayLib: ContractInteract.GatewayLib;
+      messageBus: ContractInteract.MessageBus;
+      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+    }> {
     const merklePatriciaProof = await ContractInteract.MerklePatriciaProof.deploy(
       web3,
       txOptions,

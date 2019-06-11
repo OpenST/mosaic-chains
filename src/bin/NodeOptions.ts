@@ -1,7 +1,7 @@
 import Logger from '../Logger';
 import Directory from '../Directory';
 import Integer from '../Integer';
-import NodeFactory from "../Node/NodeFactory";
+import NodeFactory from '../Node/NodeFactory';
 import ChainInfo from '../Node/ChainInfo';
 
 // These defaults will be used if the relevant option is not given on the command line.

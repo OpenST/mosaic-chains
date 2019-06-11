@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {Utils} from '@openst/mosaic.js';
+import { Utils } from '@openst/mosaic.js';
 import * as ip from 'ip';
 
 
@@ -12,6 +12,7 @@ import NodeDescription from '../Node/NodeDescription';
 import Logger from '../Logger';
 import Proof from './Proof';
 import Directory from '../Directory';
+
 import Web3 = require('web3');
 
 /**
@@ -104,7 +105,7 @@ export default class Initialization {
     hashLockSecret: string,
   ): Promise<void> {
     Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
-    let auxiliaryChain = new AuxiliaryChain();
+    const auxiliaryChain = new AuxiliaryChain();
     mosaicConfig.auxiliaryChains[auxiliaryNodeDescription.chain] = auxiliaryChain;
     auxiliaryChain.chainId = auxiliaryNodeDescription.chain;
 
@@ -157,7 +158,7 @@ export default class Initialization {
       ostPrime,
       ostCoGateway,
     } = await auxiliaryChainInteract.initializeContracts(
-        auxiliaryChain.contractAddresses.origin.ostEIP20GatewayAddress,
+      auxiliaryChain.contractAddresses.origin.ostEIP20GatewayAddress,
       originBlockNumber.toString(10),
       originStateRoot,
       stakeMessageNonce,
@@ -174,12 +175,12 @@ export default class Initialization {
     // Giving the deployer the amount of coins that were originally staked as tokens on origin.
     await Promise.all([
       originChainInteract.progressWithSecret(
-          auxiliaryChain.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+        auxiliaryChain.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
       auxiliaryChainInteract.progressWithSecret(
-          auxiliaryChain.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+        auxiliaryChain.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
@@ -204,7 +205,7 @@ export default class Initialization {
     auxiliaryChainInteract: AuxiliaryChainInteract,
     originOrganizationAdmin: string,
   ): Promise<void> {
-    let auxiliaryChain = mosaicConfig.auxiliaryChains[auxiliaryChainInteract.getChainId()];
+    const auxiliaryChain = mosaicConfig.auxiliaryChains[auxiliaryChainInteract.getChainId()];
     await Promise.all([
       originChainInteract.resetOrganizationAdmin(
         auxiliaryChain.contractAddresses.origin.ostGatewayOrganizationAddress,
@@ -262,7 +263,7 @@ export default class Initialization {
    * @param auxiliaryChainInteract  Object to interact with auxiliary chain.
    * @param port Port of boot node.
    */
-  private static getBootNode(auxiliaryChainInteract : AuxiliaryChainInteract, port : number) {
+  private static getBootNode(auxiliaryChainInteract: AuxiliaryChainInteract, port: number) {
     return `enode://${auxiliaryChainInteract.getBootNode()}@${ip.address()}:${port}`;
-    }
+  }
 }
