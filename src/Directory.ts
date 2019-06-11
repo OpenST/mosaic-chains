@@ -52,6 +52,17 @@ export default class Directory {
   }
 
   /**
+   * @returns The absolute path to the directory of the Graph code.
+   */
+  public static getProjectGraphDir(): string {
+    return path.join(
+      Directory.projectRoot,
+      'src',
+      `Graph`,
+    );
+  }
+
+  /**
    * Sanitizes given directory strings:
    * - replaces `~` at the beginning with the absolute path to the home directory.
    * - translates relative paths to absolute paths.
