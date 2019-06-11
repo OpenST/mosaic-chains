@@ -35,15 +35,7 @@ dataSources:
       entities:
         - StakeIntentConfirmed
         - MintProgressed
-        - RevertStakeIntentConfirmed
-        - RevertStakeProgressed
-        - RedeemIntentDeclared
-        - RedeemProgressed
-        - RevertRedeemDeclared
-        - RedeemReverted
         - GatewayProven
-        - BountyChangeInitiated
-        - BountyChangeConfirmed
       abis:
         - name: EIP20CoGateway
           file: ./abis/EIP20CoGateway.json
@@ -52,22 +44,6 @@ dataSources:
           handler: handleStakeIntentConfirmed
         - event: MintProgressed(bytes32,address,address,uint256,uint256,uint256,bool,bytes32)
           handler: handleMintProgressed
-        - event: RevertStakeIntentConfirmed(bytes32,address,uint256,uint256)
-          handler: handleRevertStakeIntentConfirmed
-        - event: RevertStakeProgressed(bytes32,address,uint256,uint256)
-          handler: handleRevertStakeProgressed
-        - event: RedeemIntentDeclared(bytes32,address,uint256,address,uint256)
-          handler: handleRedeemIntentDeclared
-        - event: RedeemProgressed(bytes32,address,uint256,uint256,bool,bytes32)
-          handler: handleRedeemProgressed
-        - event: RevertRedeemDeclared(bytes32,address,uint256,uint256)
-          handler: handleRevertRedeemDeclared
-        - event: RedeemReverted(bytes32,address,uint256,uint256)
-          handler: handleRedeemReverted
         - event: GatewayProven(address,uint256,bytes32,bool)
           handler: handleGatewayProven
-        - event: BountyChangeInitiated(uint256,uint256,uint256)
-          handler: handleBountyChangeInitiated
-        - event: BountyChangeConfirmed(uint256,uint256)
-          handler: handleBountyChangeConfirmed
       file: ./src/mapping.ts
