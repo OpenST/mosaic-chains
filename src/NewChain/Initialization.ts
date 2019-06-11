@@ -128,12 +128,18 @@ export default class Initialization {
       expectedOstCoGatewayAddress,
       mosaicConfig.originChain.contractAddresses,
     );
-    auxiliaryChain.contractAddresses.origin.anchorOrganizationAddress = originAnchorOrganization.address;
-    auxiliaryChain.contractAddresses.origin.anchorAddress = originAnchor.address;
-    auxiliaryChain.contractAddresses.origin.ostGatewayOrganizationAddress = ostGatewayOrganization.address;
-    auxiliaryChain.contractAddresses.origin.ostEIP20GatewayAddress = ostGateway.address;
+    const originContracts = auxiliaryChain.contractAddresses.origin;
+    originContracts.anchorOrganizationAddress = originAnchorOrganization.address;
+    originContracts.anchorAddress = originAnchor.address;
+    originContracts.ostGatewayOrganizationAddress = ostGatewayOrganization.address;
+    originContracts.ostEIP20GatewayAddress = ostGateway.address;
     auxiliaryChain.genesis = auxiliaryChainInteract.getGenesis();
-    auxiliaryChain.bootNodes.push(Initialization.getBootNode(auxiliaryChainInteract, auxiliaryNodeDescription.port));
+    auxiliaryChain.bootNodes.push(
+      Initialization.getBootNode(
+        auxiliaryChainInteract,
+        auxiliaryNodeDescription.port,
+      ),
+    );
 
     const {
       blockNumber: originBlockNumber,
@@ -145,7 +151,7 @@ export default class Initialization {
     const proofData: Proof = await Initialization.getStakeProof(
       originChainInteract.getWeb3(),
       auxiliaryChainInteract.getWeb3(),
-      auxiliaryChain.contractAddresses.origin.ostEIP20GatewayAddress,
+      originContracts.ostEIP20GatewayAddress,
       originMessageHash,
       originBlockNumber,
       originStateRoot,
@@ -157,30 +163,38 @@ export default class Initialization {
       coGatewayAndOstPrimeOrganization,
       ostPrime,
       ostCoGateway,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
     } = await auxiliaryChainInteract.initializeContracts(
-      auxiliaryChain.contractAddresses.origin.ostEIP20GatewayAddress,
+      originContracts.ostEIP20GatewayAddress,
       originBlockNumber.toString(10),
       originStateRoot,
       stakeMessageNonce,
       hashLockSecret,
       proofData,
     );
-    auxiliaryChain.contractAddresses.auxiliary.anchorOrganizationAddress = anchorOrganization.address;
-    auxiliaryChain.contractAddresses.auxiliary.anchorAddress = anchor.address;
-    auxiliaryChain.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
-    auxiliaryChain.contractAddresses.auxiliary.ostPrimeAddress = ostPrime.address;
-    auxiliaryChain.contractAddresses.auxiliary.ostEIP20CogatewayAddress = ostCoGateway.address;
+    const auxiliaryContracts = auxiliaryChain.contractAddresses.auxiliary;
+
+    auxiliaryContracts.anchorOrganizationAddress = anchorOrganization.address;
+    auxiliaryContracts.anchorAddress = anchor.address;
+    auxiliaryContracts.ostCoGatewayOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
+    auxiliaryContracts.ostPrimeAddress = ostPrime.address;
+    auxiliaryContracts.ostEIP20CogatewayAddress = ostCoGateway.address;
+    auxiliaryContracts.gatewayLibAddress = gatewayLib.address;
+    auxiliaryContracts.messageBusAddress = messageBus.address;
+    auxiliaryContracts.merklePatriciaLibAddress = merklePatriciaProof.address;
 
     // Progressing on both chains in parallel (with hash lock secret).
     // Giving the deployer the amount of coins that were originally staked as tokens on origin.
     await Promise.all([
       originChainInteract.progressWithSecret(
-        auxiliaryChain.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+        auxiliaryContracts.ostEIP20CogatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
       auxiliaryChainInteract.progressWithSecret(
-        auxiliaryChain.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+        auxiliaryContracts.ostEIP20CogatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),

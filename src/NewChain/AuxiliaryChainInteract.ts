@@ -173,6 +173,9 @@ export default class AuxiliaryChainInteract {
       coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
       ostPrime: ContractInteract.OSTPrime;
       ostCoGateway: ContractInteract.EIP20CoGateway;
+      gatewayLib: ContractInteract.GatewayLib;
+      messageBus: ContractInteract.MessageBus;
+      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
     }> {
     const {
       anchorOrganization,
@@ -180,6 +183,9 @@ export default class AuxiliaryChainInteract {
       coGatewayAndOstPrimeOrganization,
       ostPrime,
       ostCoGateway,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
     } = await this.deployContracts(
       originOstGatewayAddress,
       originHeight,
@@ -200,6 +206,9 @@ export default class AuxiliaryChainInteract {
       coGatewayAndOstPrimeOrganization,
       ostPrime,
       ostCoGateway,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
     };
   }
 
@@ -445,6 +454,9 @@ export default class AuxiliaryChainInteract {
       coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
       ostPrime: ContractInteract.OSTPrime;
       ostCoGateway: ContractInteract.EIP20CoGateway;
+      gatewayLib: ContractInteract.GatewayLib;
+      messageBus: ContractInteract.MessageBus;
+      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
     }> {
     this.logInfo('deploying contracts');
     const anchorOrganization = await this.deployOrganization(
@@ -467,7 +479,12 @@ export default class AuxiliaryChainInteract {
       this.initConfig.originOstAddress,
       coGatewayAndOstPrimeOrganization.address,
     );
-    const ostCoGateway = await this.deployOstCoGateway(
+    const {
+      ostCoGateway,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
+    } = await this.deployOstCoGateway(
       this.initConfig.originOstAddress,
       ostPrime.address,
       anchor.address,
@@ -484,6 +501,9 @@ export default class AuxiliaryChainInteract {
       coGatewayAndOstPrimeOrganization,
       ostPrime,
       ostCoGateway,
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
     };
   }
 
@@ -761,14 +781,19 @@ export default class AuxiliaryChainInteract {
     anchorAddress: string,
     organizationAddress: string,
     gatewayAddress: string,
-  ): Promise<ContractInteract.OSTPrime> {
+  ): Promise<{
+      gatewayLib: ContractInteract.GatewayLib;
+      messageBus: ContractInteract.MessageBus;
+      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+      ostCoGateway: ContractInteract.EIP20CoGateway;
+    }> {
     this.logInfo(
       'deploying ost co-gateway',
       {
         ostAddress, ostPrimeAddress, anchorAddress, organizationAddress, gatewayAddress,
       },
     );
-    const ostPrime = Contracts.deployOstCoGateway(
+    const contracts = Contracts.deployOstCoGateway(
       this.web3,
       this.txOptions,
       ostAddress,
@@ -779,7 +804,7 @@ export default class AuxiliaryChainInteract {
       gatewayAddress,
       this.initConfig.auxiliaryBurnerAddress,
     );
-    return ostPrime;
+    return contracts;
   }
 
   /**

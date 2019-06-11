@@ -123,10 +123,16 @@ export default class Contracts {
     organizationAddress: string,
     gatewayAddress: string,
     burnerAddress: string,
-  ): Promise<ContractInteract.EIP20CoGateway> {
+  ): Promise< {
+      gatewayLib: ContractInteract.GatewayLib;
+      messageBus: ContractInteract.MessageBus;
+      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+      ostCoGateway: ContractInteract.EIP20CoGateway;
+    }> {
     const {
       gatewayLib,
       messageBus,
+      merklePatriciaProof,
     } = await Contracts.deployGatewayLibraries(web3, txOptions);
 
     const ostCoGateway: ContractInteract.EIP20CoGateway = await ContractInteract.EIP20CoGateway
@@ -143,9 +149,15 @@ export default class Contracts {
         gatewayLib.address,
         txOptions,
       );
+
     Contracts.logContractDeployment('ostCoGateway', ostCoGateway);
 
-    return ostCoGateway;
+    return {
+      gatewayLib,
+      messageBus,
+      merklePatriciaProof,
+      ostCoGateway,
+    };
   }
 
   /**
