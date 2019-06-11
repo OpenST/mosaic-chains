@@ -39,5 +39,4 @@ export default class ChainInfo {
   public static getChainId(chain: string): string {
     return ChainInfo.chainInfo[chain] || chain;
   }
-
 }

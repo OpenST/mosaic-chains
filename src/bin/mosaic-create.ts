@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import * as commander from 'commander';
 
-import { version } from '../../package.json';
 import Logger from '../Logger';
 import Initialization from '../NewChain/Initialization';
 import NodeOptions from './NodeOptions';
@@ -9,7 +8,6 @@ import NodeDescription from '../Node/NodeDescription';
 import Directory from '../Directory';
 
 let mosaic = commander
-  .version(version)
   .arguments('<new-chain-id> <origin-websocket> <password-file>');
 mosaic = NodeOptions.addCliOptions(mosaic);
 mosaic.action(
