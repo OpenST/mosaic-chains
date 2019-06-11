@@ -22,7 +22,7 @@ services:
     ports:
       - '${MOSAIC_GRAPH_IPFS_PORT}:5001'
     volumes:
-      - '${MOSAIC_GRAPH_DATA_FOLDER}/data/ipfs:/data/ipfs'
+      - '${MOSAIC_GRAPH_DATA_FOLDER}/ipfs:/data/ipfs'
   postgres:
     image: postgres
     ports:
@@ -32,4 +32,4 @@ services:
       POSTGRES_PASSWORD: let-me-in
       POSTGRES_DB: graph-node
     volumes:
-      - '${MOSAIC_GRAPH_DATA_FOLDER}/data/postgres:/var/lib/postgresql/data'
+      - '${MOSAIC_GRAPH_DATA_FOLDER}/postgres:/var/lib/postgresql/data'
