@@ -1,5 +1,6 @@
 dist: trusty
 language: node_js
+cache: npm
 sudo: required
 node_js:
   - "11"
@@ -15,6 +16,6 @@ notifications:
 install:
   - npm ci
 script:
-  - npm run test
+  - npm run test:smoke
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
