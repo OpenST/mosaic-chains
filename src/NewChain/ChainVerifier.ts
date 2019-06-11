@@ -78,111 +78,89 @@ export default class ChainVerifier {
    * @returns {Promise<void>}
    */
   private async verifyContractsBin(): Promise<void> {
-    const deployedGatewayBin = await this.originWeb3.eth.getCode(
-      this.contractAddresses.origin.ostEIP20GatewayAddress,
-    );
-
-    const messageBusLinkInfo = {
+    let messageBusLinkInfo = {
       address: this.mosaicConfig.originChain.contractAddresses.messageBusAddress,
       name: 'MessageBus',
     };
-    const gatewayLibLinkInfo = {
+    let gatewayLibLinkInfo = {
       address: this.mosaicConfig.originChain.contractAddresses.gatewayLibAddress,
       name: 'GatewayLib',
     };
-    const gatewayLinkedBin = this.abiBinProvider.getLinkedBIN(
+    this.validateLinkedBin(
+      this.originWeb3,
       'EIP20Gateway',
+      this.contractAddresses.origin.ostEIP20GatewayAddress,
       messageBusLinkInfo,
       gatewayLibLinkInfo,
+      'ContractsBin: Mismatch of gateway BIN!!!'
     );
-    if (gatewayLinkedBin.toLowerCase().indexOf(deployedGatewayBin.slice(2).toLowerCase()) === -1) {
-      throw new Error('ContractsBin: Mismatch of Gateway BIN!!!');
-    }
 
-    const coGatewayLinkedBin = this.abiBinProvider.getLinkedBIN(
+    messageBusLinkInfo = {
+      address: this.contractAddresses.auxiliary.messageBusAddress,
+      name: 'MessageBus',
+    };
+    gatewayLibLinkInfo = {
+      address: this.contractAddresses.auxiliary.gatewayLibAddress,
+      name: 'GatewayLib',
+    };
+    this.validateLinkedBin(
+      this.auxiliaryWeb3,
       'EIP20CoGateway',
+      this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
       messageBusLinkInfo,
       gatewayLibLinkInfo,
+      'ContractsBin: Mismatch of CoGateway BIN!!!',
     );
-    const deployedCoGatewayBin = await this.auxiliaryWeb3.eth.getCode(
-      this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
-    );
-    if (coGatewayLinkedBin.toLowerCase().indexOf(
-      deployedCoGatewayBin.toLowerCase().slice(2),
-    ) === -1
-    ) {
-      throw new Error('ContractsBin: Mismatch of CoGateway BIN!!!');
-    }
 
-    const deployedOriginAnchorBin = await this.originWeb3.eth.getCode(
+    await this.validateBIN(
+      this.originWeb3,
+      'Anchor',
       this.contractAddresses.origin.anchorAddress,
+      'ContractsBin: Mismatch of origin anchor BIN!!!',
     );
-    if (this.abiBinProvider.getBIN('Anchor').toLowerCase().indexOf(
-      deployedOriginAnchorBin.toLowerCase().slice(2),
-    ) === -1
-    ) {
-      throw new Error('ContractsBin: Mismatch of Anchor BIN!!!');
-    }
 
-    const deployedAuxiliaryAnchorBin = await this.auxiliaryWeb3.eth.getCode(
+    await this.validateBIN(
+      this.auxiliaryWeb3,
+      'Anchor',
       this.contractAddresses.auxiliary.anchorAddress,
+      'ContractsBin: Mismatch of auxiliary anchor BIN!!!',
     );
-    if (this.abiBinProvider.getBIN('Anchor').toLowerCase().indexOf(
-      deployedAuxiliaryAnchorBin.toLowerCase().slice(2),
-    ) === -1
-    ) {
-      throw new Error('ContractsBin: Mismatch of Anchor BIN!!!');
-    }
 
-    const deployedOriginAnchorOrganizationBin = await this.originWeb3.eth.getCode(
+    await this.validateBIN(
+      this.originWeb3,
+      'Organization',
       this.contractAddresses.origin.anchorOrganizationAddress,
+      'ContractsBin: Mismatch of origin anchor organization BIN!!!',
     );
-    if (this.abiBinProvider.getBIN('Organization').toLowerCase().indexOf(
-      deployedOriginAnchorOrganizationBin.toLowerCase().slice(2),
-    ) === -1
-    ) {
-      throw new Error('ContractsBin: Mismatch of Organization BIN!!!');
-    }
 
-    const deployedAuxiliaryAnchorOrganizationBin = await this.originWeb3.eth.getCode(
+    await this.validateBIN(
+      this.auxiliaryWeb3,
+      'Organization',
       this.contractAddresses.auxiliary.anchorOrganizationAddress,
+      'ContractsBin: Mismatch of auxiliary anchor organization BIN!!!',
     );
-    if (this.abiBinProvider.getBIN('Organization').toLowerCase().indexOf(
-      deployedAuxiliaryAnchorOrganizationBin.toLowerCase().slice(2),
-    ) === -1
-    ) {
-      throw new Error('ContractsBin: Mismatch of Organization BIN!!!');
-    }
 
-    const deployedOriginOrganizationBin = await this.originWeb3.eth.getCode(
+    await this.validateBIN(
+      this.originWeb3,
+      'Organization',
       this.contractAddresses.origin.ostGatewayOrganizationAddress,
+      'ContractsBin: Mismatch of origin gateway organization BIN!!!',
     );
-    if (this.abiBinProvider.getBIN('Organization').toLowerCase().indexOf(
-      deployedOriginOrganizationBin.toLowerCase().slice(2),
-    ) === -1
-    ) {
-      throw new Error('ContractsBin: Mismatch of Organization BIN!!!');
-    }
 
-    const deployedAuxiliaryOrganizationBin = await this.auxiliaryWeb3.eth.getCode(
+    await this.validateBIN(
+      this.auxiliaryWeb3,
+      'Organization',
       this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
+    'ContractsBin: Mismatch of auxiliary coGateway organization BIN!!!',
     );
-    if (this.abiBinProvider.getBIN('Organization').toLowerCase().indexOf(
-      deployedAuxiliaryOrganizationBin.slice(2).toLowerCase(),
-    ) === -1
-    ) {
-      throw new Error('ContractsBin: Mismatch of Organization BIN!!!');
-    }
 
-    const deployedOstPrimeBin = await this.auxiliaryWeb3.eth.getCode(
+    await this.validateBIN(
+      this.auxiliaryWeb3,
+      'OSTPrime',
       this.contractAddresses.auxiliary.ostPrimeAddress,
+      'ContractsBin: Mismatch of OSTPrime BIN!!!'
     );
-    if (this.abiBinProvider.getBIN('OSTPrime').toLowerCase().indexOf(
-      deployedOstPrimeBin.slice(2).toLowerCase(),
-    ) === -1
-    ) {
-      throw new Error('ContractsBin: Mismatch of OSTPrime BIN!!!');
-    }
+
     Logger.info('Successfully completed contracts BIN verification!!!');
   }
 
@@ -198,48 +176,49 @@ export default class ChainVerifier {
 
     const isActivated = await gatewayInstance.methods.activated().call();
     if (isActivated !== true) {
-      throw new Error('Gateway: It should be activated!!!');
+      this.logAndThrowError("Gateway: It's not activated!!!");
     }
 
     const valueToken = await gatewayInstance.methods.token().call();
-    if (this.originWeb3.utils.toChecksumAddress(valueToken)
-        !== this.originWeb3.utils.toChecksumAddress(
-          this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
-        )) {
-      throw new Error('Gateway: Invalid valueToken address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.originWeb3,
+      valueToken,
+      this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
+      'Gateway: Invalid valueToken address!!!',
+    );
 
     const baseToken = await gatewayInstance.methods.baseToken().call();
-    if (this.originWeb3.utils.toChecksumAddress(baseToken)
-      !== this.originWeb3.utils.toChecksumAddress(
-        this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
-      )) {
-      throw new Error('Gateway: Invalid baseToken address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.originWeb3,
+      baseToken,
+      this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
+      'Gateway: Invalid baseToken address!!!',
+    );
 
     const organization = await gatewayInstance.methods.organization().call();
-    if (this.originWeb3.utils.toChecksumAddress(organization)
-      !== this.originWeb3.utils.toChecksumAddress(
-        this.contractAddresses.origin.ostGatewayOrganizationAddress,
-      )
-    ) {
-      throw new Error('Gateway: Invalid gateway organization address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.originWeb3,
+      organization,
+      this.contractAddresses.origin.ostGatewayOrganizationAddress,
+      'Gateway: Invalid gateway organization address!!!',
+    );
 
     const remoteGateway = await gatewayInstance.methods.remoteGateway().call();
-    if (this.originWeb3.utils.toChecksumAddress(remoteGateway)
-      !== this.originWeb3.utils.toChecksumAddress(
-        this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
-      )
-    ) {
-      throw new Error('Gateway: Invalid CoGateway address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.originWeb3,
+      remoteGateway,
+      this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+      'Gateway: Invalid CoGateway address!!!',
+    );
 
     const stateRootProvider = await gatewayInstance.methods.stateRootProvider().call();
-    if (this.originWeb3.utils.toChecksumAddress(stateRootProvider)
-      !== this.originWeb3.utils.toChecksumAddress(this.contractAddresses.origin.anchorAddress)) {
-      throw new Error('Gateway: Invalid stateRootProvider!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.originWeb3,
+      stateRootProvider,
+      this.contractAddresses.origin.anchorAddress,
+      'Gateway: Invalid stateRootProvider!!!'
+    );
+
     Logger.info('Successfully completed gateway contract verification!!!');
   }
 
@@ -254,49 +233,44 @@ export default class ChainVerifier {
     );
 
     const valueToken = await coGatewayInstance.methods.valueToken().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(valueToken)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(
-        this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
-      )
-    ) {
-      throw new Error('CoGateway: Invalid valueToken address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      valueToken,
+      this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
+      'CoGateway: Invalid valueToken address!!!'
+    );
 
     const utilityToken = await coGatewayInstance.methods.utilityToken().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(utilityToken)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(
-        this.contractAddresses.auxiliary.ostPrimeAddress,
-      )
-    ) {
-      throw new Error('CoGateway: Invalid OSTPrime address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      utilityToken,
+      this.contractAddresses.auxiliary.ostPrimeAddress,
+      'CoGateway: Invalid OSTPrime address!!!'
+    );
 
     const organization = await coGatewayInstance.methods.organization().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(organization)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(
-        this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
-      )
-    ) {
-      throw new Error('CoGateway: Invalid organization address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      organization,
+      this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
+      'CoGateway: Invalid organization address!!!'
+    );
 
     const remoteGateway = await coGatewayInstance.methods.remoteGateway().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(remoteGateway)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(
-        this.contractAddresses.origin.ostEIP20GatewayAddress,
-      )
-    ) {
-      throw new Error('CoGateway: Invalid remoteGateway address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      remoteGateway,
+      this.contractAddresses.origin.ostEIP20GatewayAddress,
+      'CoGateway: Invalid remoteGateway address!!!'
+    );
 
     const stateRootProvider = await coGatewayInstance.methods.stateRootProvider().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(stateRootProvider)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(
-        this.contractAddresses.auxiliary.anchorAddress,
-      )
-    ) {
-      throw new Error('CoGateway: Invalid stateRootProvider!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      stateRootProvider,
+      this.contractAddresses.auxiliary.anchorAddress,
+      'CoGateway: Invalid stateRootProvider!!!'
+    );
 
     Logger.info('Successfully completed CoGateway contract verification!!!');
   }
@@ -312,23 +286,24 @@ export default class ChainVerifier {
     );
 
     const coAnchor = await anchorInstance.methods.coAnchor().call();
-    if (this.originWeb3.utils.toChecksumAddress(coAnchor)
-      !== this.originWeb3.utils.toChecksumAddress(this.contractAddresses.auxiliary.anchorAddress)) {
-      throw new Error('OriginAnchor: Invalid coAnchor address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.originWeb3,
+      coAnchor,
+      this.contractAddresses.auxiliary.anchorAddress,
+    'OriginAnchor: Invalid coAnchor address!!!'
+    );
 
     const organization = await anchorInstance.methods.organization().call();
-    if (this.originWeb3.utils.toChecksumAddress(organization)
-      !== this.originWeb3.utils.toChecksumAddress(
-        this.contractAddresses.origin.anchorOrganizationAddress,
-      )
-    ) {
-      throw new Error('OriginAnchor: Invalid organization address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.originWeb3,
+      organization,
+      this.contractAddresses.origin.anchorOrganizationAddress,
+      'OriginAnchor: Invalid organization address!!!'
+    );
 
     const remoteChainId = await anchorInstance.methods.getRemoteChainId().call();
     if (remoteChainId !== this.auxiliaryChainId) {
-      throw new Error('OriginAnchor: Invalid remoteChainId!!!');
+      this.logAndThrowError('OriginAnchor: Invalid remoteChainId!!!');
     }
 
     Logger.info('Successfully completed origin Anchor contract verification!!!');
@@ -345,23 +320,24 @@ export default class ChainVerifier {
     );
 
     const coAnchor = await anchorInstance.methods.coAnchor().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(coAnchor)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(this.contractAddresses.origin.anchorAddress)) {
-      throw new Error('AuxiliaryAnchor: Invalid coAnchor address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      coAnchor,
+      this.contractAddresses.origin.anchorOrganizationAddress,
+      'AuxiliaryAnchor: Invalid coAnchor address!!!'
+    );
 
     const organization = await anchorInstance.methods.organization().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(organization)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(
-        this.contractAddresses.auxiliary.anchorOrganizationAddress,
-      )
-    ) {
-      throw new Error('AuxiliaryAnchor: Invalid organization address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      organization,
+      this.contractAddresses.origin.anchorOrganizationAddress,
+      'AuxiliaryAnchor: Invalid organization address!!!'
+    );
 
     const remoteChainId = await anchorInstance.methods.getRemoteChainId().call();
     if (remoteChainId !== this.mosaicConfig.originChain.chain) {
-      throw new Error('AuxiliaryAnchor: Invalid remoteChainId!!!');
+      this.logAndThrowError('AuxiliaryAnchor: Invalid remoteChainId!!!');
     }
 
     Logger.info('Successfully completed auxiliary Anchor contract verification!!!');
@@ -378,37 +354,111 @@ export default class ChainVerifier {
     );
 
     const valueToken = await ostPrimeInstance.methods.token().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(valueToken)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(
-        this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
-      )
-    ) {
-      throw new Error('OSTPrime: Invalid OSTPrime address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      valueToken,
+      this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
+      'OSTPrime: Invalid OSTPrime address!!!'
+    );
 
     const initialized = await ostPrimeInstance.methods.initialized().call();
     if (initialized !== true) {
-      throw new Error('OSTPrime: Invalid initialized value!!!');
+      this.logAndThrowError('OSTPrime: Invalid initialized value!!!');
     }
 
     const organization = await ostPrimeInstance.methods.organization().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(organization)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(
-        this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
-      )
-    ) {
-      throw new Error('OSTPrime: Invalid organization address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      organization,
+      this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
+      'OSTPrime: Invalid organization address!!!'
+    );
 
     const coGateway = await ostPrimeInstance.methods.coGateway().call();
-    if (this.auxiliaryWeb3.utils.toChecksumAddress(coGateway)
-      !== this.auxiliaryWeb3.utils.toChecksumAddress(
-        this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
-      )
-    ) {
-      throw new Error('OSTPrime: Invalid coGateway address!!!');
-    }
+    this.validateExpectedAndDeployedAddress(
+      this.auxiliaryWeb3,
+      coGateway,
+      this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+      'OSTPrime: Invalid coGateway address!!!'
+    );
 
     Logger.info('Successfully completed OSTPrime contract verification!!!');
+  }
+
+  /**
+   * Check if deployed bin is valid or not
+   * @param web3 Web3 endpoint.
+   * @param contractName Name of the contract to verify.
+   * @param contractAddress Contract address to verify.
+   * @param errMsg Error message to log and throw.
+   */
+  private async validateBIN(web3, contractName, contractAddress, errMsg) {
+    const deployedBin = await web3.eth.getCode(contractAddress);
+    if (this.abiBinProvider.getBIN(contractName).toLowerCase().indexOf(
+        deployedBin.toLowerCase().slice(2),
+      ) === -1
+    ) {
+      this.logAndThrowError(
+        errMsg,
+        { contractName: contractName, contractAddress: contractAddress}
+        );
+    }
+  }
+
+  /**
+   * Check if deployed bin is valid or not
+   * @param web3 Web3 endpoint.
+   * @param contractName Name of the contract to verify.
+   * @param contractAddress Contract address to verify.
+   * @param messageBusLinkInfo Linked bin info of message bus contract.
+   * @param gatewayLibLinkInfo Linked bin info of gateway lib contract.
+   * @param errMsg Error message to log and throw.
+   */
+  private async validateLinkedBin(
+    web3,
+    contractName,
+    contractAddress,
+    messageBusLinkInfo,
+    gatewayLibLinkInfo,
+    errMsg) {
+    const gatewayLinkedBin = this.abiBinProvider.getLinkedBIN(
+      'EIP20Gateway',
+      messageBusLinkInfo,
+      gatewayLibLinkInfo,
+    );
+    const deployedBin = await web3.eth.getCode(contractAddress);
+    if (gatewayLinkedBin.toLowerCase().indexOf(deployedBin.slice(2).toLowerCase()) === -1) {
+     this.logAndThrowError(errMsg);
+    }
+  }
+
+  /**
+   * Check if deployed bin is valid or not
+   * @param web3 Web3 endpoint.
+   * @param contractName Name of the contract to verify.
+   * @param contractAddress Contract address to verify.
+   * @param errMsg Error message to show.
+   */
+  private validateExpectedAndDeployedAddress(
+    web3,
+    deployedAddress,
+    mosaicConfigAddress,
+    errMsg) {
+
+    if (web3.utils.toChecksumAddress(deployedAddress)
+      !== web3.utils.toChecksumAddress(mosaicConfigAddress)) {
+      this.logAndThrowError(errMsg, {expected: mosaicConfigAddress, deployed: deployedAddress});
+    }
+  }
+
+  /**
+   * Log error and throw message.
+   *
+   * @param errMsg Error message.
+   * @param options Optional data to log.
+   */
+  private logAndThrowError(errMsg, options = {}) {
+    Logger.error(errMsg, options);
+    throw new Error(errMsg);
   }
 }
