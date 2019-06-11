@@ -28,6 +28,8 @@ mosaic
       password,
     } = NodeOptions.parseOptions(options, chain);
 
+    console.log('step: 1: ', chain, mosaicDir, port, rpcPort, websocketPort, keepAfterStop, unlock);
+
     const node: Node = NodeFactory.create({
       chain,
       mosaicDir,
@@ -41,9 +43,16 @@ mosaic
 
     const nodeRpcPort = rpcPort;
 
+    console.log('step: 2: ', nodeRpcPort);
+
     node.start();
 
+    console.log('step: 3');
+
     if (!options.withoutGraphNode) {
+
+      console.log('step: 4');
+
       const {
         rpcPort,
         websocketPort,
