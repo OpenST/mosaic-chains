@@ -1,0 +1,35 @@
+version: '3'
+services:
+  graph-node:
+    image: graphprotocol/graph-node
+    ports:
+      - '${MOSAIC_GRAPH_RPC_PORT}:8000'
+      - '${MOSAIC_GRAPH_WS_PORT}:8001'
+      - '${MOSAIC_GRAPH_RPC_ADMIN_PORT}:8020'
+    depends_on:
+      - ipfs
+      - postgres
+    environment:
+      postgres_host: postgres:5432
+      postgres_user: graph-node
+      postgres_pass: let-me-in
+      postgres_db: graph-node
+      ipfs: 'ipfs:5001'
+      ethereum: 'dev:http://${MOSAIC_GRAPH_NODE_HOST}:${MOSAIC_ETHEREUM_RPC_PORT}'
+      RUST_LOG: info
+  ipfs:
+    image: ipfs/go-ipfs
+    ports:
+      - '${MOSAIC_GRAPH_IPFS_PORT}:5001'
+    volumes:
+      - '${MOSAIC_GRAPH_DATA_FOLDER}/ipfs:/data/ipfs'
+  postgres:
+    image: postgres
+    ports:
+      - '${MOSAIC_GRAPH_POSTGRES_PORT}:5432'
+    environment:
+      POSTGRES_USER: graph-node
+      POSTGRES_PASSWORD: let-me-in
+      POSTGRES_DB: graph-node
+    volumes:
+      - '${MOSAIC_GRAPH_DATA_FOLDER}/postgres:/var/lib/postgresql/data'

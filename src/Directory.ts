@@ -46,8 +46,19 @@ export default class Directory {
    */
   public static getProjectMosaicConfigDir(): string {
     return path.join(
-        os.homedir(),
-        '.mosaic'
+      os.homedir(),
+      '.mosaic',
+    );
+  }
+
+  /**
+   * @returns The absolute path to the directory of the Graph code.
+   */
+  public static getProjectGraphDir(): string {
+    return path.join(
+      Directory.projectRoot,
+      'src',
+      'Graph',
     );
   }
 

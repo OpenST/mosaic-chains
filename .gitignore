@@ -7,6 +7,10 @@ tags
 # Node passwords
 password.txt
 
+# Packaging output
+lib/**
+openst-mosaic-chains-*.tgz
+
 # Initialization configs for new chains; keep example
 initialize/*.json
 !initialize/example.json

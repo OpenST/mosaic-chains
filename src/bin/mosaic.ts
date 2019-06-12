@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 
 import * as mosaic from 'commander';
-import { version, description } from '../../package.json';
 
 mosaic
-  .version(version)
-  .description(description)
   .command('start <chain>', 'start container that runs a given chain')
   .command('stop <chains...>', 'stop the containers that run the given chains')
   .command('attach <chain>', 'attach to the ethereum node of the given chain')

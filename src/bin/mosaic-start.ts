@@ -1,20 +1,23 @@
 #!/usr/bin/env node
 
 import * as commander from 'commander';
-import { version } from '../../package.json';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
+import Graph from '../Graph/Graph';
+import GraphOptions from './GraphOptions';
+import GraphDescription from "../Graph/GraphDescription";
 
 let mosaic = commander
-  .version(version)
   .arguments('<chain>');
 
 mosaic = NodeOptions.addCliOptions(mosaic);
+mosaic = GraphOptions.addCliOptions(mosaic);
 
 mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
+  .option('-wgn,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
   .action((chain: string, options) => {
     const {
       mosaicDir,
@@ -25,7 +28,6 @@ mosaic
       unlock,
       password,
     } = NodeOptions.parseOptions(options, chain);
-
     const node: Node = NodeFactory.create({
       chain,
       mosaicDir,
@@ -36,7 +38,15 @@ mosaic
       unlock,
       password,
     });
-
     node.start();
+
+    if (!options.withoutGraphNode) {
+      const graphDescription: GraphDescription = GraphOptions.parseOptions(options, chain);
+      // reuse params from node start command
+      graphDescription.mosaicDir = mosaicDir;
+      graphDescription.ethereumRpcPort = rpcPort;
+      const graph = new Graph(graphDescription);
+      graph.start();
+    }
   })
   .parse(process.argv);

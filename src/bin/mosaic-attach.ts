@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 
 import * as mosaic from 'commander';
-import { version } from '../../package.json';
 import Shell from '../Shell';
 import Node from '../Node/Node';
 import NodeFactory from '../Node/NodeFactory';
 import NodeDescription from '../Node/NodeDescription';
 
 mosaic
-  .version(version)
   .arguments('<chain>')
   .action((chain: string) => {
     const node: Node = NodeFactory.create(new NodeDescription(chain));
