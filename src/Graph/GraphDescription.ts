@@ -1,11 +1,13 @@
+import Directory from '../Directory';
+
 /**
  * Describes the properties of a graph.
  */
 export default class GraphDescription {
 
-  public mosaicDir: string = '~/.mosaic';
+  public mosaicDir: string = Directory.getProjectMosaicConfigDir();
 
-  public nodeRpcPort: number = 8545;
+  public ethereumRpcPort: number = 8545;
 
   public rpcPort: number = 8000;
 

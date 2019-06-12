@@ -15,7 +15,7 @@ services:
       postgres_pass: let-me-in
       postgres_db: graph-node
       ipfs: 'ipfs:5001'
-      ethereum: 'dev:http://${MOSAIC_GRAPH_NODE_HOST}:${MOSAIC_GRAPH_NODE_RPC_PORT}'
+      ethereum: 'dev:http://${MOSAIC_GRAPH_NODE_HOST}:${MOSAIC_ETHEREUM_RPC_PORT}'
       RUST_LOG: info
   ipfs:
     image: ipfs/go-ipfs

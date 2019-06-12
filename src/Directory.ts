@@ -58,7 +58,7 @@ export default class Directory {
     return path.join(
       Directory.projectRoot,
       'src',
-      `Graph`,
+      'Graph',
     );
   }
 

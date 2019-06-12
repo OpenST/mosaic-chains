@@ -1,9 +1,9 @@
 import * as path from 'path';
+import * as ip from 'ip';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import GraphDescription from './GraphDescription';
 import Directory from '../Directory';
-import * as ip from 'ip';
 
 /**
  * Represents a graph that is managed by docker.
@@ -16,8 +16,8 @@ export default class Graph {
   /** The dir in which data is stored. */
   protected mosaicDir: string;
 
-  /** Docker has published Node WS port at this port on the host. */
-  protected nodeRpcPort: number;
+  /** Docker has published Ethereum WS port at this port on the host. */
+  protected ethereumRpcPort: number;
 
   /** Docker will publish this RPC port on the host. */
   protected rpcPort: number;
@@ -28,17 +28,17 @@ export default class Graph {
   /** Docker will publish this admin JSON-RPC port on the host. */
   protected rpcAdminPort: number;
 
-  /** Docker will publish this IPFC port on the host. */
+  /** Docker will publish this IPFs port on the host. */
   protected ipfsPort: number;
 
   /** Docker will publish this Postgres port on the host. */
   protected postgresPort: number;
 
-  /** The name of this docker container. */
+  /** The name of the docker container which runs graph node. */
   protected containerName: string;
 
   /**
-   * Docker container names will have this prefix.
+   * the prefix used in network & container names.
    * @returns The prefix.
    */
   public static get prefix(): string {
@@ -56,7 +56,7 @@ export default class Graph {
   constructor(graphDescription: GraphDescription) {
     this.chain = graphDescription.chain;
     this.mosaicDir = graphDescription.mosaicDir;
-    this.nodeRpcPort = graphDescription.nodeRpcPort;
+    this.ethereumRpcPort = graphDescription.ethereumRpcPort;
     this.rpcPort = graphDescription.rpcPort;
     this.websocketPort = graphDescription.websocketPort;
     this.rpcAdminPort = graphDescription.rpcAdminPort;
@@ -99,8 +99,8 @@ export default class Graph {
    */
   public start(): void {
     this.logInfo('attempting to start graph container');
-    this.ensureNetworkExists();
-    let commandParts = this.defaultDockerGraphCommand;
+    Graph.ensureNetworkExists();
+    const commandParts = this.defaultDockerGraphCommand;
     commandParts.push('up');
     commandParts.push('--detach');
     const command = commandParts.join(' ');
@@ -113,7 +113,7 @@ export default class Graph {
    */
   public stop(): void {
     this.logInfo('attempting to stop graph container');
-    let commandParts = this.defaultDockerGraphCommand;
+    const commandParts = this.defaultDockerGraphCommand;
     commandParts.push('down');
     Shell.executeInShell(commandParts.join(' '));
   }
@@ -121,7 +121,7 @@ export default class Graph {
   /**
    * Create a docker network if network doesn't exists.
    */
-  private ensureNetworkExists(): void {
+  private static ensureNetworkExists(): void {
     // `-w` in grep is used to match the exact string.
     //  Command for creating network only if network doesn't exists.
     const createNetwork = `docker network ls | grep -w ${Graph.network} || docker network create ${Graph.network}`;
@@ -136,11 +136,11 @@ export default class Graph {
       `MOSAIC_GRAPH_IPFS_PORT=${this.ipfsPort}`,
       `MOSAIC_GRAPH_POSTGRES_PORT=${this.postgresPort}`,
       `MOSAIC_GRAPH_DATA_FOLDER=${path.join(this.mosaicDir, this.chain, 'graph')}`,
-      `MOSAIC_GRAPH_NODE_RPC_PORT=${this.nodeRpcPort}`,
+      `MOSAIC_ETHEREUM_RPC_PORT=${this.ethereumRpcPort}`,
       `MOSAIC_GRAPH_NODE_HOST=${ip.address()}`,
       'docker-compose',
       `-f ${path.join(Directory.getProjectGraphDir(), 'docker-compose.yml')}`,
-      '-p', this.containerName
+      '-p', this.containerName,
     ];
   }
 
