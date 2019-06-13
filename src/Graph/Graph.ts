@@ -11,37 +11,37 @@ import Directory from '../Directory';
 export default class Graph {
 
   /** The chain identifier identifies the chain this node should run. For example ropsten or 200. */
-  protected chain: string;
+  private readonly chain: string;
 
   /** The dir in which data is stored. */
-  protected mosaicDir: string;
+  private readonly mosaicDir: string;
 
   /** Docker has published Ethereum WS port at this port on the host. */
-  protected ethereumRpcPort: number;
+  private readonly ethereumRpcPort: number;
 
   /** Docker will publish this RPC port on the host. */
-  protected rpcPort: number;
+  private readonly rpcPort: number;
 
   /** Docker will publish this websocket port on the host. */
-  protected websocketPort: number;
+  private readonly websocketPort: number;
 
   /** Docker will publish this admin JSON-RPC port on the host. */
-  protected rpcAdminPort: number;
+  private readonly rpcAdminPort: number;
 
   /** Docker will publish this IPFs port on the host. */
-  protected ipfsPort: number;
+  private readonly ipfsPort: number;
 
   /** Docker will publish this Postgres port on the host. */
-  protected postgresPort: number;
+  private readonly postgresPort: number;
 
   /** The name of the docker container which runs graph node. */
-  protected containerName: string;
+  private readonly containerName: string;
 
   /**
    * the prefix used in network & container names.
    * @returns The prefix.
    */
-  public static get prefix(): string {
+  public static get namePrefix(): string {
     return 'mosaic_graph_';
   }
 
@@ -50,7 +50,7 @@ export default class Graph {
    * @returns The network name.
    */
   public static get network(): string {
-    return Graph.prefix;
+    return Graph.namePrefix;
   }
 
   constructor(graphDescription: GraphDescription) {
@@ -63,35 +63,7 @@ export default class Graph {
     this.ipfsPort = graphDescription.ipfsPort;
     this.postgresPort = graphDescription.postgresPort;
 
-    this.containerName = `${Graph.prefix}${this.chain}`;
-  }
-
-  public getChain(): string {
-    return this.chain;
-  }
-
-  public getRpcPort(): number {
-    return this.rpcPort;
-  }
-
-  public getWebsocketPort(): number {
-    return this.websocketPort;
-  }
-
-  public getRpcAdminPort(): number {
-    return this.rpcAdminPort;
-  }
-
-  public getIpfsPort(): number {
-    return this.ipfsPort;
-  }
-
-  public getPostgresPort(): number {
-    return this.postgresPort;
-  }
-
-  public getContainerName(): string {
-    return this.containerName;
+    this.containerName = `${Graph.namePrefix}${this.chain}`;
   }
 
   /**
