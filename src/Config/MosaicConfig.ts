@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 import { Validator } from 'jsonschema';
 import Directory from '../Directory';
 import Logger from '../Logger';
-import InvalidMosaicConfigException from './InvalidMosaicConfigException';
+import { InvalidMosaicConfigException } from '../Exception';
 
 const schema = require('./MosaicConfig.schema.json');
 
@@ -139,10 +139,10 @@ export default class MosaicConfig {
   }
 
   /**
-   * This method validate json object against mosaic config schema. This methods throws a custom exception if validation fails.
+   * This method validate json object against mosaic config schema also throws an exception on failure.
    * @param jsonObject JSON object to be validated against schema.
    */
-  private static validateSchema(jsonObject) {
+  private static validateSchema(jsonObject: any): void {
     const validator = new Validator();
     try {
       validator.validate(jsonObject, schema, { throwError: true });
