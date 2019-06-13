@@ -1,7 +1,12 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
+
+import { Validator } from 'jsonschema';
 import Directory from '../Directory';
 import Logger from '../Logger';
+import { InvalidMosaicConfigException } from '../Exception';
+
+const schema = require('./MosaicConfig.schema.json');
 
 /**
  * Hold contract addresses on origin chain independent of auxiliary chain.
@@ -83,7 +88,7 @@ export class ContractAddresses {
  * Holds config of an auxiliary chain.
  */
 export class AuxiliaryChain {
-  public chainId: string;
+  public chainId: number;
 
   public bootNodes: string[];
 
@@ -126,10 +131,24 @@ export default class MosaicConfig {
       const config = fs.readFileSync(filePath).toString();
       if (config && config.length > 0) {
         const jsonObject = JSON.parse(config);
+        MosaicConfig.validateSchema(jsonObject);
         return new MosaicConfig(jsonObject);
       }
     }
     return new MosaicConfig({} as any);
+  }
+
+  /**
+   * This method validate json object against mosaic config schema also throws an exception on failure.
+   * @param jsonObject JSON object to be validated against schema.
+   */
+  private static validateSchema(jsonObject: any): void {
+    const validator = new Validator();
+    try {
+      validator.validate(jsonObject, schema, { throwError: true });
+    } catch (error) {
+      throw new InvalidMosaicConfigException(error.message);
+    }
   }
 
   /**
