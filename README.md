@@ -106,6 +106,27 @@ Troubleshooting:
 * Your machine is showing sign of slowness because of creation of auxiliary chains:
   * Too many docker containers could be running while creation of auxiliary chains with different chain ids. Make sure you stop the docker containers of auxiliary chains if it's not being used.  
 
+## Chain Verifier
+
+Chain verifier makes sure that newly created chain is being setup correctly.
+
+Pre-requisites
+
+* Origin chain should be up and running.
+* Auxiliary chain should be up and running.
+* MosaicConfig should be populated with contract addresses.
+
+A simple run would be the following:
+
+```
+./mosaic verify-chain origin-websocket auxiliary-websocket originChainIdentifier auxChainIdentifier
+```
+
+* origin-websocket: Origin chain endpoint. Needed for fetching contract state variables deployed on origin chain for verification.
+* auxiliary-websocket: Auxiliary chain endpoint. Needed for fetching contract state variables deployed on auxiliary chain for verification.
+* originChainIdentifier: Origin chain identifier. e.g. chain name or chain id
+* auxChaiIdentifier: Auxiliary chain identifier. e.g. chain id
+
 ## Adding an existing auxiliary chain
 
 To add an existing chain, you need to know the bootnodes and `genesis.json`.
