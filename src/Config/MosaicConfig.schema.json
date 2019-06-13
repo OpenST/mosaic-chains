@@ -193,7 +193,7 @@
           "uniqueItems": true,
           "description": "List of boot nodes to connect to auxiliary chain",
           "contains":{
-            "pattern":"^enode://.*",
+            "pattern":"^enode://.+",
             "type":"string"
           }
         },
