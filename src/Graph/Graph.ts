@@ -16,7 +16,7 @@ export default class Graph {
   /** The dir in which data is stored. */
   protected mosaicDir: string;
 
-  /** Docker has published Ethereum WS port at this port on the host. */
+  /** Docker has published Ethereum RPC port at this port on the host. */
   protected ethereumRpcPort: number;
 
   /** Docker will publish this RPC port on the host. */
@@ -28,7 +28,7 @@ export default class Graph {
   /** Docker will publish this admin JSON-RPC port on the host. */
   protected rpcAdminPort: number;
 
-  /** Docker will publish this IPFs port on the host. */
+  /** Docker will publish this IPFS port on the host. */
   protected ipfsPort: number;
 
   /** Docker will publish this Postgres port on the host. */
