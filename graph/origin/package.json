@@ -1,10 +1,10 @@
 {
-  "name": "ost-composer",
-  "license": "UNLICENSED",
+  "name": "ost-origin-subgraph",
+  "author": "OpenST Ltd.",
+  "license": "LGPL-3.0-only",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ openst/ost-composer",
     "create-local": "graph create --node http://localhost:8020/ openst/ost-composer",
     "remove-local": "graph remove --node http://localhost:8020/ openst/ost-composer",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 openst/ost-composer"

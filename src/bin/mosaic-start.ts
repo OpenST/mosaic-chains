@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
 import * as commander from 'commander';
+import * as fs from 'fs-extra';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
 import Graph from '../Graph/Graph';
 import GraphOptions from './GraphOptions';
 import GraphDescription from "../Graph/GraphDescription";
+import Directory from "../Directory";
 
 let mosaic = commander
   .arguments('<chain>');
@@ -48,5 +50,9 @@ mosaic
       const graph = new Graph(graphDescription);
       graph.start();
     }
+
+    // copy over the mosaic config files for existing chains
+    fs.copySync(Directory.getProjectMosaicConfigDir(), Directory.getDefaultMosaicDataDir());
+
   })
   .parse(process.argv);

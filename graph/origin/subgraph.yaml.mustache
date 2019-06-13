@@ -20,7 +20,7 @@ dataSources:
       eventHandlers:
         - event: StakeRequested(uint256,address,uint256,uint256,uint256,address,address,bytes32)
           handler: handleStakeRequested
-      file: ./src/mapping.ts
+      file: ./src/OSTComposerMapping.ts
 
   - kind: ethereum/contract
     name: EIP20Gateway
@@ -43,5 +43,5 @@ dataSources:
           handler: handleStakeIntentDeclared
         - event: StakeProgressed(bytes32,address,uint256,uint256,bool,bytes32)
           handler: handleStakeProgressed
-      file: ./src/mapping.ts
+      file: ./src/EIP20GatewayMapping.ts
 

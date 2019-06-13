@@ -1,135 +1,39 @@
 import {
-  StakeRequested as StakeRequestedEvent,
-  StakeRevoked as StakeRevokedEvent,
-  StakeRejected as StakeRejectedEvent
-} from "../generated/Contract/OSTComposer"
-import {
-  StakeRequested,
-  StakeRevoked,
-  StakeRejected
-} from "../generated/OSTComposerSchema"
-
-import {
-  StakeIntentDeclared as StakeIntentDeclaredEvent,
-  StakeProgressed as StakeProgressedEvent,
-  RevertStakeIntentDeclared as RevertStakeIntentDeclaredEvent,
-  StakeReverted as StakeRevertedEvent,
-  RedeemIntentConfirmed as RedeemIntentConfirmedEvent,
-  UnstakeProgressed as UnstakeProgressedEvent,
-  RevertRedeemIntentConfirmed as RevertRedeemIntentConfirmedEvent,
-  RevertRedeemComplete as RevertRedeemCompleteEvent,
+  StakeIntentConfirmed as StakeIntentConfirmedEvent,
+  MintProgressed as MintProgressedEvent,
+  RevertStakeIntentConfirmed as RevertStakeIntentConfirmedEvent,
+  RevertStakeProgressed as RevertStakeProgressedEvent,
+  RedeemIntentDeclared as RedeemIntentDeclaredEvent,
+  RedeemProgressed as RedeemProgressedEvent,
+  RevertRedeemDeclared as RevertRedeemDeclaredEvent,
+  RedeemReverted as RedeemRevertedEvent,
   GatewayProven as GatewayProvenEvent,
   BountyChangeInitiated as BountyChangeInitiatedEvent,
-  BountyChangeConfirmed as BountyChangeConfirmedEvent
-} from "../generated/Contract/EIP20Gateway"
+  BountyChangeConfirmed as BountyChangeConfirmedEvent,
+} from '../generated/Contract/EIP20CoGateway';
 import {
-  StakeIntentDeclared,
-  StakeProgressed,
-  RevertStakeIntentDeclared,
-  StakeReverted,
-  RedeemIntentConfirmed,
-  UnstakeProgressed,
-  RevertRedeemIntentConfirmed,
-  RevertRedeemComplete,
+  StakeIntentConfirmed,
+  MintProgressed,
+  RevertStakeIntentConfirmed,
+  RevertStakeProgressed,
+  RedeemIntentDeclared,
+  RedeemProgressed,
+  RevertRedeemDeclared,
+  RedeemReverted,
   GatewayProven,
   BountyChangeInitiated,
-  BountyChangeConfirmed
-} from "../generated/EIP20GatewaySchema"
+  BountyChangeConfirmed,
+} from '../generated/EIP20CoGatewaySchema';
 
-
-export function handleStakeRequested(event: StakeRequestedEvent): void {
-  let entity = new StakeRequested(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.amount = event.params.amount
-  entity.beneficiary = event.params.beneficiary
-  entity.gasPrice = event.params.gasPrice
-  entity.gasLimit = event.params.gasLimit
-  entity.nonce = event.params.nonce
-  entity.staker = event.params.staker
-  entity.gateway = event.params.gateway
-  entity.stakeRequestHash = event.params.stakeRequestHash
-  entity.save()
-}
-
-export function handleStakeRevoked(event: StakeRevokedEvent): void {
-  let entity = new StakeRevoked(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.staker = event.params.staker
-  entity.stakeRequestHash = event.params.stakeRequestHash
-  entity.save()
-}
-
-export function handleStakeRejected(event: StakeRejectedEvent): void {
-  let entity = new StakeRejected(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.staker = event.params.staker
-  entity.stakeRequestHash = event.params.stakeRequestHash
-  entity.save()
-}
-
-export function handleStakeIntentDeclared(
-    event: StakeIntentDeclaredEvent
+export function handleStakeIntentConfirmed(
+    event: StakeIntentConfirmedEvent
 ): void {
-  let entity = new StakeIntentDeclared(
+  let entity = new StakeIntentConfirmed(
       event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
   entity._messageHash = event.params._messageHash
   entity._staker = event.params._staker
   entity._stakerNonce = event.params._stakerNonce
-  entity._beneficiary = event.params._beneficiary
-  entity._amount = event.params._amount
-  entity.save()
-}
-
-export function handleStakeProgressed(event: StakeProgressedEvent): void {
-  let entity = new StakeProgressed(
-      event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity._messageHash = event.params._messageHash
-  entity._staker = event.params._staker
-  entity._stakerNonce = event.params._stakerNonce
-  entity._amount = event.params._amount
-  entity._proofProgress = event.params._proofProgress
-  entity._unlockSecret = event.params._unlockSecret
-  entity.save()
-}
-
-export function handleRevertStakeIntentDeclared(
-    event: RevertStakeIntentDeclaredEvent
-): void {
-  let entity = new RevertStakeIntentDeclared(
-      event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity._messageHash = event.params._messageHash
-  entity._staker = event.params._staker
-  entity._stakerNonce = event.params._stakerNonce
-  entity._amount = event.params._amount
-  entity.save()
-}
-
-export function handleStakeReverted(event: StakeRevertedEvent): void {
-  let entity = new StakeReverted(
-      event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity._messageHash = event.params._messageHash
-  entity._staker = event.params._staker
-  entity._stakerNonce = event.params._stakerNonce
-  entity._amount = event.params._amount
-  entity.save()
-}
-
-export function handleRedeemIntentConfirmed(
-    event: RedeemIntentConfirmedEvent
-): void {
-  let entity = new RedeemIntentConfirmed(
-      event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity._messageHash = event.params._messageHash
-  entity._redeemer = event.params._redeemer
-  entity._redeemerNonce = event.params._redeemerNonce
   entity._beneficiary = event.params._beneficiary
   entity._amount = event.params._amount
   entity._blockHeight = event.params._blockHeight
@@ -137,25 +41,78 @@ export function handleRedeemIntentConfirmed(
   entity.save()
 }
 
-export function handleUnstakeProgressed(event: UnstakeProgressedEvent): void {
-  let entity = new UnstakeProgressed(
+export function handleMintProgressed(event: MintProgressedEvent): void {
+  let entity = new MintProgressed(
       event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
   entity._messageHash = event.params._messageHash
-  entity._redeemer = event.params._redeemer
+  entity._staker = event.params._staker
   entity._beneficiary = event.params._beneficiary
-  entity._redeemAmount = event.params._redeemAmount
-  entity._unstakeAmount = event.params._unstakeAmount
+  entity._stakeAmount = event.params._stakeAmount
+  entity._mintedAmount = event.params._mintedAmount
   entity._rewardAmount = event.params._rewardAmount
   entity._proofProgress = event.params._proofProgress
   entity._unlockSecret = event.params._unlockSecret
   entity.save()
 }
 
-export function handleRevertRedeemIntentConfirmed(
-    event: RevertRedeemIntentConfirmedEvent
+export function handleRevertStakeIntentConfirmed(
+    event: RevertStakeIntentConfirmedEvent
 ): void {
-  let entity = new RevertRedeemIntentConfirmed(
+  let entity = new RevertStakeIntentConfirmed(
+      event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity._messageHash = event.params._messageHash
+  entity._staker = event.params._staker
+  entity._stakerNonce = event.params._stakerNonce
+  entity._amount = event.params._amount
+  entity.save()
+}
+
+export function handleRevertStakeProgressed(
+    event: RevertStakeProgressedEvent
+): void {
+  let entity = new RevertStakeProgressed(
+      event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity._messageHash = event.params._messageHash
+  entity._staker = event.params._staker
+  entity._stakerNonce = event.params._stakerNonce
+  entity._amount = event.params._amount
+  entity.save()
+}
+
+export function handleRedeemIntentDeclared(
+    event: RedeemIntentDeclaredEvent
+): void {
+  let entity = new RedeemIntentDeclared(
+      event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity._messageHash = event.params._messageHash
+  entity._redeemer = event.params._redeemer
+  entity._redeemerNonce = event.params._redeemerNonce
+  entity._beneficiary = event.params._beneficiary
+  entity._amount = event.params._amount
+  entity.save()
+}
+
+export function handleRedeemProgressed(event: RedeemProgressedEvent): void {
+  let entity = new RedeemProgressed(
+      event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity._messageHash = event.params._messageHash
+  entity._redeemer = event.params._redeemer
+  entity._redeemerNonce = event.params._redeemerNonce
+  entity._amount = event.params._amount
+  entity._proofProgress = event.params._proofProgress
+  entity._unlockSecret = event.params._unlockSecret
+  entity.save()
+}
+
+export function handleRevertRedeemDeclared(
+    event: RevertRedeemDeclaredEvent
+): void {
+  let entity = new RevertRedeemDeclared(
       event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
   entity._messageHash = event.params._messageHash
@@ -165,10 +122,8 @@ export function handleRevertRedeemIntentConfirmed(
   entity.save()
 }
 
-export function handleRevertRedeemComplete(
-    event: RevertRedeemCompleteEvent
-): void {
-  let entity = new RevertRedeemComplete(
+export function handleRedeemReverted(event: RedeemRevertedEvent): void {
+  let entity = new RedeemReverted(
       event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
   entity._messageHash = event.params._messageHash
