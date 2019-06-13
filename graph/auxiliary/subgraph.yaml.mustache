@@ -20,7 +20,7 @@ dataSources:
       eventHandlers:
         - event: StateRootAvailable(uint256,bytes32)
           handler: handleStateRootAvailable
-      file: ./src/mapping.ts
+      file: ./src/AnchorMapping.ts
 
   - kind: ethereum/contract
     name: EIP20CoGateway
@@ -46,4 +46,4 @@ dataSources:
           handler: handleMintProgressed
         - event: GatewayProven(address,uint256,bytes32,bool)
           handler: handleGatewayProven
-      file: ./src/mapping.ts
+      file: ./src/EIP20CoGatewayMapping.ts
