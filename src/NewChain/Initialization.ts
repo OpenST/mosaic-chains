@@ -3,7 +3,6 @@ import * as path from 'path';
 import { Utils } from '@openst/mosaic.js';
 import * as ip from 'ip';
 
-
 import InitConfig from '../Config/InitConfig';
 import MosaicConfig, { AuxiliaryChain } from '../Config/MosaicConfig';
 import OriginChainInteract from './OriginChainInteract';
@@ -12,6 +11,7 @@ import NodeDescription from '../Node/NodeDescription';
 import Logger from '../Logger';
 import Proof from './Proof';
 import Directory from '../Directory';
+import Integer from '../Integer';
 
 import Web3 = require('web3');
 
@@ -107,7 +107,7 @@ export default class Initialization {
     Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
     const auxiliaryChain = new AuxiliaryChain();
     mosaicConfig.auxiliaryChains[auxiliaryNodeDescription.chain] = auxiliaryChain;
-    auxiliaryChain.chainId = auxiliaryNodeDescription.chain;
+    auxiliaryChain.chainId = Integer.parseString(auxiliaryNodeDescription.chain);
 
     const { sealer, deployer } = await auxiliaryChainInteract.startNewChainSealer();
     auxiliaryChainInteract.auxiliarySealer = sealer;
