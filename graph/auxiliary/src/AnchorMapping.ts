@@ -2,10 +2,10 @@ import { StateRootAvailable as StateRootAvailableEvent } from '../generated/Cont
 import { StateRootAvailable } from '../generated/AnchorSchema';
 
 export function handleStateRootAvailable(event: StateRootAvailableEvent): void {
-  const entity = new StateRootAvailable(
-    `${event.transaction.hash.toHex()}-${event.logIndex.toString()}`,
-  );
-  entity._blockHeight = event.params._blockHeight;
-  entity._stateRoot = event.params._stateRoot;
-  entity.save();
+  let entity = new StateRootAvailable(
+      event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity._blockHeight = event.params._blockHeight
+  entity._stateRoot = event.params._stateRoot
+  entity.save()
 }
