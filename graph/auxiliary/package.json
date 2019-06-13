@@ -1,6 +1,7 @@
 {
-  "name": "ost-anchor",
-  "license": "UNLICENSED",
+  "name": "ost-auxiliary-subgraph",
+  "author": "OpenST Ltd.",
+  "license": "LGPL-3.0-only",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
