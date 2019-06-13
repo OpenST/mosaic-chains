@@ -124,7 +124,7 @@ export default class MosaicConfig {
    */
   public static from(chain): MosaicConfig {
     const filePath = path.join(
-      Directory.getProjectMosaicConfigDir(),
+      Directory.getDefaultMosaicDataDir(),
       `${chain}.json`,
     );
     if (fs.existsSync(filePath)) {
@@ -155,7 +155,7 @@ export default class MosaicConfig {
    * Saves this config to a file in its auxiliary chain directory.
    */
   public writeToMosaicConfigDirectory(): void {
-    const mosaicConfigDir = Directory.getProjectMosaicConfigDir();
+    const mosaicConfigDir = Directory.getDefaultMosaicDataDir();
     fs.ensureDirSync(mosaicConfigDir);
     const configPath = path.join(
       mosaicConfigDir,

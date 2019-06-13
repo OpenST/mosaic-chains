@@ -5,6 +5,17 @@ import * as os from 'os';
  * Directory provides operations on strings representing directories.
  */
 export default class Directory {
+
+  /**
+   * @returns The absolute path to the directory in which we store mosaic data.
+   */
+  public static getDefaultMosaicDataDir(): string {
+    return path.join(
+      os.homedir(),
+      '.mosaic',
+    );
+  }
+
   /**
    * @returns The absolute path to the root of this project.
    */
@@ -42,12 +53,12 @@ export default class Directory {
   }
 
   /**
-   * @returns The absolute path to the directory of the mosaic config.
+   * @returns The absolute path to the directory of the code base where we keep mosaic config of existing chains.
    */
   public static getProjectMosaicConfigDir(): string {
     return path.join(
-      os.homedir(),
-      '.mosaic',
+      Directory.projectRoot,
+      'mosaic_configs',
     );
   }
 

@@ -1,8 +1,11 @@
+import Directory from '../Directory';
+
 /**
  * Describes the properties of a node.
  */
 export default class NodeDescription {
-  public mosaicDir: string = '~/.mosaic';
+
+  public mosaicDir: string = Directory.getDefaultMosaicDataDir();
 
   public port: number = 30303;
 
