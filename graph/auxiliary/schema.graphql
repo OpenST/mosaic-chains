@@ -1,0 +1,100 @@
+type StateRootAvailable @entity {
+  id: ID!
+  _blockHeight: BigInt! # uint256
+  _stateRoot: Bytes! # bytes32
+}
+
+type StakeIntentConfirmed @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _staker: Bytes! # address
+  _stakerNonce: BigInt! # uint256
+  _beneficiary: Bytes! # address
+  _amount: BigInt! # uint256
+  _blockHeight: BigInt! # uint256
+  _hashLock: Bytes! # bytes32
+}
+
+type MintProgressed @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _staker: Bytes! # address
+  _beneficiary: Bytes! # address
+  _stakeAmount: BigInt! # uint256
+  _mintedAmount: BigInt! # uint256
+  _rewardAmount: BigInt! # uint256
+  _proofProgress: Boolean! # bool
+  _unlockSecret: Bytes! # bytes32
+}
+
+type RevertStakeIntentConfirmed @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _staker: Bytes! # address
+  _stakerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+}
+
+type RevertStakeProgressed @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _staker: Bytes! # address
+  _stakerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+}
+
+type RedeemIntentDeclared @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _redeemer: Bytes! # address
+  _redeemerNonce: BigInt! # uint256
+  _beneficiary: Bytes! # address
+  _amount: BigInt! # uint256
+}
+
+type RedeemProgressed @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _redeemer: Bytes! # address
+  _redeemerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+  _proofProgress: Boolean! # bool
+  _unlockSecret: Bytes! # bytes32
+}
+
+type RevertRedeemDeclared @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _redeemer: Bytes! # address
+  _redeemerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+}
+
+type RedeemReverted @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _redeemer: Bytes! # address
+  _redeemerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+}
+
+type GatewayProven @entity {
+  id: ID!
+  _gateway: Bytes! # address
+  _blockHeight: BigInt! # uint256
+  _storageRoot: Bytes! # bytes32
+  _wasAlreadyProved: Boolean! # bool
+}
+
+type BountyChangeInitiated @entity {
+  id: ID!
+  _currentBounty: BigInt! # uint256
+  _proposedBounty: BigInt! # uint256
+  _unlockHeight: BigInt! # uint256
+}
+
+type BountyChangeConfirmed @entity {
+  id: ID!
+  _currentBounty: BigInt! # uint256
+  _changedBounty: BigInt! # uint256
+}

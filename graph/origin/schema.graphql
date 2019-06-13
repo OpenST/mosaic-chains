@@ -1,0 +1,118 @@
+type StakeRequested @entity {
+  id: ID!
+  amount: BigInt! # uint256
+  beneficiary: Bytes! # address
+  gasPrice: BigInt! # uint256
+  gasLimit: BigInt! # uint256
+  nonce: BigInt! # uint256
+  staker: Bytes! # address
+  gateway: Bytes! # address
+  stakeRequestHash: Bytes! # bytes32
+}
+
+type StakeRevoked @entity {
+  id: ID!
+  staker: Bytes! # address
+  stakeRequestHash: Bytes! # bytes32
+}
+
+type StakeRejected @entity {
+  id: ID!
+  staker: Bytes! # address
+  stakeRequestHash: Bytes! # bytes32
+}
+
+type StakeIntentDeclared @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _staker: Bytes! # address
+  _stakerNonce: BigInt! # uint256
+  _beneficiary: Bytes! # address
+  _amount: BigInt! # uint256
+}
+
+type StakeProgressed @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _staker: Bytes! # address
+  _stakerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+  _proofProgress: Boolean! # bool
+  _unlockSecret: Bytes! # bytes32
+}
+
+type RevertStakeIntentDeclared @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _staker: Bytes! # address
+  _stakerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+}
+
+type StakeReverted @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _staker: Bytes! # address
+  _stakerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+}
+
+type RedeemIntentConfirmed @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _redeemer: Bytes! # address
+  _redeemerNonce: BigInt! # uint256
+  _beneficiary: Bytes! # address
+  _amount: BigInt! # uint256
+  _blockHeight: BigInt! # uint256
+  _hashLock: Bytes! # bytes32
+}
+
+type UnstakeProgressed @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _redeemer: Bytes! # address
+  _beneficiary: Bytes! # address
+  _redeemAmount: BigInt! # uint256
+  _unstakeAmount: BigInt! # uint256
+  _rewardAmount: BigInt! # uint256
+  _proofProgress: Boolean! # bool
+  _unlockSecret: Bytes! # bytes32
+}
+
+type RevertRedeemIntentConfirmed @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _redeemer: Bytes! # address
+  _redeemerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+}
+
+type RevertRedeemComplete @entity {
+  id: ID!
+  _messageHash: Bytes! # bytes32
+  _redeemer: Bytes! # address
+  _redeemerNonce: BigInt! # uint256
+  _amount: BigInt! # uint256
+}
+
+type GatewayProven @entity {
+  id: ID!
+  _gateway: Bytes! # address
+  _blockHeight: BigInt! # uint256
+  _storageRoot: Bytes! # bytes32
+  _wasAlreadyProved: Boolean! # bool
+}
+
+type BountyChangeInitiated @entity {
+  id: ID!
+  _currentBounty: BigInt! # uint256
+  _proposedBounty: BigInt! # uint256
+  _unlockHeight: BigInt! # uint256
+}
+
+type BountyChangeConfirmed @entity {
+  id: ID!
+  _currentBounty: BigInt! # uint256
+  _changedBounty: BigInt! # uint256
+}
