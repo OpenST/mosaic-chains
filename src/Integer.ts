@@ -9,7 +9,7 @@ export default class Integer {
     const output = parseInt(input, 10);
 
     if (Number.isNaN(output)) {
-      const message = 'could not convert chain id to integer';
+      const message = 'could not convert input to integer';
       Logger.error(message, { input });
       throw new Error(message);
     }

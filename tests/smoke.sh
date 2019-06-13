@@ -51,34 +51,49 @@ function try_silent {
     eval $1 1>/dev/null 2>&1 || error "$2"
 }
 
-# Tries a command without outpet. Errors if the command *executes successfully.*
+# Tries a command without output. Errors if the command *executes successfully.*
 function fail_silent {
     eval $1 1>/dev/null 2>&1 && error "$2"
 }
 
-# Sets the global variable `grep_command` with the given chain.
-function set_grep_command {
+# Sets the global variable `grep_command` with the command to check if given chain is running.
+function set_node_grep_command {
     grep_command="./mosaic list | grep mosaic_$1"
 }
 
-# Errors if the given chain is not in the output of `mosaic list`.
-function grep_try {
-    info "Checking that node $1 is listed."
-    set_grep_command $1
-    try_silent "$grep_command" "Node was expected to be running, but is not: $1."
+# Sets the global variable `grep_command` with the command to check if given chain's corresponding graph is running.
+function set_graph_grep_command {
+    grep_command="./mosaic list | grep 'mosaic_graph_$1_graph'"
 }
 
-# Errors if the given chain *is* in the output of `mosaic list`.
+# Errors if the given chain and its graph is not in the output of `mosaic list`.
+function grep_try {
+    info "Checking that node $1 is listed."
+    set_node_grep_command $1
+    try_silent "$grep_command" "Node was expected to be running, but is not: $1."
+    set_graph_grep_command $1
+    try_silent "$grep_command" "Graph was expected to be running, but is not: $1."
+}
+
+# Errors if the given chain or its graph *is* in the output of `mosaic list`.
 function grep_fail {
     info "Checking that node $1 is *not* listed."
-    set_grep_command $1
+    set_node_grep_command $1
     fail_silent "$grep_command" "Node was not expected to be running, but is: $1."
+    set_graph_grep_command $1
+    fail_silent "$grep_command" "Graph was not expected to be running, but is: $1."
 }
 
 # Errors if an RPC connection to the node is not possible. Works only with chain IDs, not names.
-function rpc_try {
+function rpc_node_try {
     info "Checking RPC connection to node $1."
     try_silent "curl -X POST -H \"Content-Type: application/json\" --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_syncing\",\"params\":[],\"id\":1}' 127.0.0.1:4$1" "Could not connect to RPC of node $1."
+}
+
+# Errors if an RPC connection to the graph is not possible. Works only with chain IDs, not names.
+function rpc_graph_try {
+    info "Checking RPC connection to graph $1."
+    try_silent "curl -X GET 127.0.0.1:5$1" "Could not connect to RPC of graph $1."
 }
 
 # Making sure the mosaic command exists (we are in the right directory).
@@ -93,9 +108,14 @@ grep_try 1407
 grep_try ropsten
 
 # Try to RPC call the running nodes.
-rpc_try 1406
-rpc_try 1407
-rpc_try "0003" # Given like this as it is used for the port in `rpc_try`.
+rpc_node_try 1406
+rpc_node_try 1407
+rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
+
+# Try to RPC call the running graphs.
+rpc_graph_try 1406
+rpc_graph_try 1407
+rpc_graph_try "0003" # Given like this as it is used for the port in `rpc_graph_try`.
 
 # Stop and start some nodes and make sure they are or are not running.
 stop_node ropsten
