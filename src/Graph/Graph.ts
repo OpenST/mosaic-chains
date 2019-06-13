@@ -41,7 +41,7 @@ export default class Graph {
    * the prefix used in network & container names.
    * @returns The prefix.
    */
-  public static get prefix(): string {
+  public static get namePrefix(): string {
     return 'mosaic_graph_';
   }
 
@@ -50,7 +50,7 @@ export default class Graph {
    * @returns The network name.
    */
   public static get network(): string {
-    return Graph.prefix;
+    return Graph.namePrefix;
   }
 
   constructor(graphDescription: GraphDescription) {
@@ -63,7 +63,7 @@ export default class Graph {
     this.ipfsPort = graphDescription.ipfsPort;
     this.postgresPort = graphDescription.postgresPort;
 
-    this.containerName = `${Graph.prefix}${this.chain}`;
+    this.containerName = `${Graph.namePrefix}${this.chain}`;
   }
 
   /**
