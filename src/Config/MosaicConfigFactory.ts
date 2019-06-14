@@ -22,7 +22,7 @@ export default class MosaicConfigFactory {
       return new MosaicConfig(MosaicConfigFactory.readConfigFromFile(filePath));
     } else {
       const fileNames: Array<string> = fs.readdirSync(publishMosaicConfigDir);
-      for (let fileName of fileNames) {
+      for (const fileName of fileNames) {
         const filePath = MosaicConfigFactory.readConfigFromFile(path.join(publishMosaicConfigDir, fileName));
         const mosaicConfig: MosaicConfig = new MosaicConfig(filePath);
         if (mosaicConfig.auxiliaryChains.hasOwnProperty(chain)) {
