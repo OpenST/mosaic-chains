@@ -6,6 +6,7 @@ import Logger from '../Logger';
 import OriginChainInteract from '../NewChain/OriginChainInteract';
 import MosaicConfig from '../Config/MosaicConfig';
 import MosaicConfigFactory from '../Config/MosaicConfigFactory';
+import PublishMosaicConfig from "../Config/PublishMosaicConfig";
 
 import Web3 = require('web3');
 
@@ -18,6 +19,10 @@ mosaic.action(
     deployer: string,
   ) => {
     try {
+
+      // Publishes mosaic configs for existing chains
+      PublishMosaicConfig.publish();
+
       const originWeb3 = new Web3(originWebsocket);
       const {
         gatewayLib,

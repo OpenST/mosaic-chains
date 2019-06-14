@@ -3,6 +3,7 @@ import * as path from 'path';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import NodeDescription from './NodeDescription';
+import PublishMosaicConfig from "../Config/PublishMosaicConfig";
 
 /**
  * Represents a chain that is managed by docker.
@@ -129,13 +130,15 @@ export default abstract class Node {
   }
 
   /**
-   * Creates the mosaic data directory if it does not exist.
+   * 1. Creates the mosaic data directory if it does not exist.
+   * 2. Publishes mosaic configs for existing chains
    */
   protected initializeDataDir(): void {
     if (!fs.existsSync(this.mosaicDir)) {
       this.logInfo(`${this.mosaicDir} does not exist; initializing`);
       fs.mkdirSync(this.mosaicDir);
     }
+    PublishMosaicConfig.publish();
   }
 
   /**
