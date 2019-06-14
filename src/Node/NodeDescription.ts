@@ -5,7 +5,7 @@ import Directory from '../Directory';
  */
 export default class NodeDescription {
 
-  public mosaicDir: string = Directory.getDefaultMosaicDataDir();
+  public mosaicDir: string = Directory.getDefaultMosaicDataDir;
 
   public port: number = 30303;
 

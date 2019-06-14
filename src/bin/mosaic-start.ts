@@ -52,7 +52,7 @@ mosaic
     }
 
     // copy over the mosaic config files for existing chains
-    fs.copySync(Directory.getProjectMosaicConfigDir(), Directory.getDefaultMosaicDataDir());
+    fs.copySync(Directory.getProjectMosaicConfigDir, Directory.getPublishMosaicConfigDir);
 
   })
   .parse(process.argv);

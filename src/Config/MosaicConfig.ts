@@ -118,31 +118,10 @@ export default class MosaicConfig {
   }
 
   /**
-   * This reads mosaic config from the json file and creates MosaicConfig object.
-   * @param {string} chain Chain Identifier.
-   * @return {MosaicConfig} mosaicConfig Object of the class mosaic config.
-   */
-  public static from(chain): MosaicConfig {
-    const filePath = path.join(
-      Directory.getDefaultMosaicDataDir(),
-      `${chain}.json`,
-    );
-    if (fs.existsSync(filePath)) {
-      const config = fs.readFileSync(filePath).toString();
-      if (config && config.length > 0) {
-        const jsonObject = JSON.parse(config);
-        MosaicConfig.validateSchema(jsonObject);
-        return new MosaicConfig(jsonObject);
-      }
-    }
-    return new MosaicConfig({} as any);
-  }
-
-  /**
    * This method validate json object against mosaic config schema also throws an exception on failure.
    * @param jsonObject JSON object to be validated against schema.
    */
-  private static validateSchema(jsonObject: any): void {
+  public static validateSchema(jsonObject: any): void {
     const validator = new Validator();
     try {
       validator.validate(jsonObject, schema, { throwError: true });
@@ -155,7 +134,7 @@ export default class MosaicConfig {
    * Saves this config to a file in its auxiliary chain directory.
    */
   public writeToMosaicConfigDirectory(): void {
-    const mosaicConfigDir = Directory.getDefaultMosaicDataDir();
+    const mosaicConfigDir = Directory.getPublishMosaicConfigDir;
     fs.ensureDirSync(mosaicConfigDir);
     const configPath = path.join(
       mosaicConfigDir,

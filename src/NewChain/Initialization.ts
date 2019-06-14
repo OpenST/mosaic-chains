@@ -5,6 +5,7 @@ import * as ip from 'ip';
 
 import InitConfig from '../Config/InitConfig';
 import MosaicConfig, { AuxiliaryChain } from '../Config/MosaicConfig';
+import MosaicConfigFactory from '../Config/MosaicConfigFactory';
 import OriginChainInteract from './OriginChainInteract';
 import AuxiliaryChainInteract from './AuxiliaryChainInteract';
 import NodeDescription from '../Node/NodeDescription';
@@ -51,7 +52,7 @@ export default class Initialization {
       auxiliaryNodeDescription,
     );
 
-    const mosaicConfig = MosaicConfig.from(originChainId);
+    const mosaicConfig = MosaicConfigFactory.from(originChainId);
     mosaicConfig.originChain.chain = originChainId;
     mosaicConfig.originChain.contractAddresses.simpleTokenAddress = initConfig.originOstAddress;
 
