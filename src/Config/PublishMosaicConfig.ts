@@ -12,6 +12,7 @@ export default class PublishMosaicConfig {
    */
   public static publish(): void {
     const publishMosaicConfigDir = Directory.getPublishMosaicConfigDir;
+    fs.ensureDirSync(publishMosaicConfigDir);
     const publishedFileNames: Array<string> = fs.readdirSync(publishMosaicConfigDir);
     const publishedFileNamesMap = {};
     for (const publishedFileName of publishedFileNames) {
