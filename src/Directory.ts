@@ -84,6 +84,16 @@ export default class Directory {
   }
 
   /**
+   * @returns The absolute path to the directory where we copy code temporarily to deploy graph.
+   */
+  public static get getTempGraphInstallationDir(): string {
+    return path.join(
+      Directory.getDefaultMosaicDataDir,
+      'temp-graph-deploy'
+    );
+  }
+
+  /**
    * Sanitizes given directory strings:
    * - replaces `~` at the beginning with the absolute path to the home directory.
    * - translates relative paths to absolute paths.
