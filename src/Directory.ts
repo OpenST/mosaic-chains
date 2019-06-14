@@ -9,10 +9,20 @@ export default class Directory {
   /**
    * @returns The absolute path to the directory in which we store mosaic data.
    */
-  public static getDefaultMosaicDataDir(): string {
+  public static get getDefaultMosaicDataDir(): string {
     return path.join(
       os.homedir(),
       '.mosaic',
+    );
+  }
+
+  /**
+   * @returns The absolute path to the directory in which we publish mosaic configs.
+   */
+  public static get getPublishMosaicConfigDir(): string {
+    return path.join(
+      Directory.getDefaultMosaicDataDir,
+      'configs',
     );
   }
 
@@ -55,7 +65,7 @@ export default class Directory {
   /**
    * @returns The absolute path to the directory of the code base where we keep mosaic config of existing chains.
    */
-  public static getProjectMosaicConfigDir(): string {
+  public static get getProjectMosaicConfigDir(): string {
     return path.join(
       Directory.projectRoot,
       'mosaic_configs',

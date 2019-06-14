@@ -2,6 +2,8 @@ import { Contracts as MosaicContracts, AbiBinProvider } from '@openst/mosaic.js'
 
 import MosaicConfig, { ContractAddresses } from '../Config/MosaicConfig';
 
+import MosaicConfigFactory from '../Config/MosaicConfigFactory';
+
 import Logger from '../Logger';
 
 import Web3 = require('web3');
@@ -44,7 +46,7 @@ export default class ChainVerifier {
     this.auxiliaryWeb3 = new Web3(auxiliaryWebSocket);
     this.originChainIdentifier = originChainIdentifier;
     this.auxiliaryChainId = auxiliaryChainId;
-    this.mosaicConfig = MosaicConfig.from(this.originChainIdentifier);
+    this.mosaicConfig = MosaicConfigFactory.from(this.originChainIdentifier);
     this.mosaicContract = new MosaicContracts(this.originWeb3, this.auxiliaryWeb3);
     this.contractAddresses = this.mosaicConfig.auxiliaryChains[this.auxiliaryChainId]
       .contractAddresses;
