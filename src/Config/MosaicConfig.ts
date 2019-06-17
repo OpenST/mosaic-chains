@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 import { Validator } from 'jsonschema';
 import Directory from '../Directory';
 import Logger from '../Logger';
-import { InvalidMosaicConfigException } from '../Exception';
+import {InvalidMosaicConfigException, MissingMosaicConfigException} from '../Exception';
 
 const schema = require('./MosaicConfig.schema.json');
 
@@ -112,21 +112,39 @@ export default class MosaicConfig {
 
   public auxiliaryChains: { [key: string]: AuxiliaryChain };
 
-  public constructor(config: any) {
+  private constructor(config: any) {
     this.originChain = config.originChain || new OriginChain();
     this.auxiliaryChains = config.auxiliaryChains || {};
   }
 
   /**
-   * This method validate json object against mosaic config schema also throws an exception on failure.
-   * @param jsonObject JSON object to be validated against schema.
+   * @param {string} chain identifier
+   * @return {MosaicConfig}
    */
-  public static validateSchema(jsonObject: any): void {
-    const validator = new Validator();
-    try {
-      validator.validate(jsonObject, schema, { throwError: true });
-    } catch (error) {
-      throw new InvalidMosaicConfigException(error.message);
+  public static fromChain(chain: string): MosaicConfig {
+    const publishMosaicConfigDir = Directory.getPublishMosaicConfigDir;
+    const filePath = path.join(
+      publishMosaicConfigDir,
+      `${chain}.json`,
+    );
+    if (fs.existsSync(filePath)) {
+      const configObject = MosaicConfig.readConfigFromFile(filePath);
+      return new MosaicConfig(configObject);
+    } else {
+      return new MosaicConfig({} as any);
+    }
+  }
+
+  /**
+   * @param {string} filePath absolute path
+   * @return {MosaicConfig}
+   */
+  public static fromFile(filePath: string): MosaicConfig {
+    if (fs.existsSync(filePath)) {
+      const configObject = MosaicConfig.readConfigFromFile(filePath);
+      return new MosaicConfig(configObject);
+    } else {
+      throw new MissingMosaicConfigException(`Missing config file at path: ${filePath}`);
     }
   }
 
@@ -141,10 +159,37 @@ export default class MosaicConfig {
       `${this.originChain.chain}.json`,
     );
     Logger.info('storing mosaic config', { configPath });
-
     fs.writeFileSync(
       configPath,
       JSON.stringify(this, null, '    '),
     );
   }
+
+  /**
+   * read config from file, validate it and return as JSON object
+   * @param {string} filePath
+   * @return {object}
+   */
+  private static readConfigFromFile(filePath: string): object {
+    const configString = fs.readFileSync(filePath).toString();
+    if (configString && configString.length > 0) {
+      const configObject = JSON.parse(configString);
+      MosaicConfig.validateSchema(configObject);
+      return configObject;
+    }
+  }
+
+  /**
+   * This method validate json object against mosaic config schema also throws an exception on failure.
+   * @param jsonObject JSON object to be validated against schema.
+   */
+  private static validateSchema(jsonObject: any): void {
+    const validator = new Validator();
+    try {
+      validator.validate(jsonObject, schema, { throwError: true });
+    } catch (error) {
+      throw new InvalidMosaicConfigException(error.message);
+    }
+  }
+
 }

@@ -5,7 +5,6 @@ import * as commander from 'commander';
 import Logger from '../Logger';
 import OriginChainInteract from '../NewChain/OriginChainInteract';
 import MosaicConfig from '../Config/MosaicConfig';
-import MosaicConfigFactory from '../Config/MosaicConfigFactory';
 import PublishMosaicConfig from "../Config/PublishMosaicConfig";
 
 import Web3 = require('web3');
@@ -30,7 +29,7 @@ mosaic.action(
         merklePatriciaProof,
       } = await OriginChainInteract.deployLibraries(originWeb3, deployer);
 
-      const mosaicConfig: MosaicConfig = MosaicConfigFactory.from(chain);
+      const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
 
       mosaicConfig.originChain.chain = chain;
       mosaicConfig.originChain.contractAddresses.gatewayLibAddress = gatewayLib.address;

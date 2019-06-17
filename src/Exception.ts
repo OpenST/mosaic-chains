@@ -5,3 +5,11 @@ export class InvalidMosaicConfigException extends Error {
     this.message = message;
   }
 }
+
+export class MissingMosaicConfigException extends Error {
+  public constructor(message: string) {
+    super(message);
+    this.name = 'MissingMosaicConfigException';
+    this.message = message;
+  }
+}
