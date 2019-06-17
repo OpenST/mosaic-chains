@@ -21,16 +21,8 @@ export default class MosaicConfigFactory {
     if (fs.existsSync(filePath)) {
       return new MosaicConfig(MosaicConfigFactory.readConfigFromFile(filePath));
     } else {
-      const fileNames: Array<string> = fs.readdirSync(publishMosaicConfigDir);
-      for (const fileName of fileNames) {
-        const filePath = MosaicConfigFactory.readConfigFromFile(path.join(publishMosaicConfigDir, fileName));
-        const mosaicConfig: MosaicConfig = new MosaicConfig(filePath);
-        if (mosaicConfig.auxiliaryChains.hasOwnProperty(chain)) {
-          return mosaicConfig;
-        }
-      }
+      return new MosaicConfig({} as any);
     }
-    return new MosaicConfig({} as any);
   }
 
   /**
@@ -38,7 +30,7 @@ export default class MosaicConfigFactory {
    * @param {string} filePath
    * @return {object}
    */
-  private static readConfigFromFile(filePath: string): object {
+  public static readConfigFromFile(filePath: string): object {
     const configString = fs.readFileSync(filePath).toString();
     if (configString && configString.length > 0) {
       const configObject = JSON.parse(configString);
