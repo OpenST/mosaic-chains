@@ -10,7 +10,7 @@ export default class PublishMosaicConfig {
   /**
    * copy over all the non existent files to publish folder
    */
-  public static publish(): void {
+  public static tryPublish(): void {
     const publishMosaicConfigDir = Directory.getPublishMosaicConfigDir;
     fs.ensureDirSync(publishMosaicConfigDir);
     const publishedFileNames: Array<string> = fs.readdirSync(publishMosaicConfigDir);
