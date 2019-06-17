@@ -141,4 +141,3 @@ grep_try ropsten
 
 # When done, stop all nodes.
 stop_nodes
-
