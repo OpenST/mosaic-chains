@@ -5,7 +5,6 @@ import Logger from '../Logger';
 import Shell from '../Shell';
 import Directory from '../Directory';
 import MosaicConfig from "../Config/MosaicConfig";
-import MosaicConfigFactory from "../Config/MosaicConfigFactory";
 
 /**
  * Represents a graph that is managed by docker.
@@ -180,7 +179,7 @@ export default class DeploySubGraph {
    * returns values for all template variables which need to be replaced in subgraph.yaml for origin subGraphType
    */
   private originChainTemplateVariables(): object {
-    const mosaicConfig: MosaicConfig = MosaicConfigFactory.from(this.auxiliaryChain);
+    const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.auxiliaryChain);
     return {
       "projectRoot": Directory.projectRoot,
       "ostComposerAddress": mosaicConfig.originChain.contractAddresses.ostComposerAddress,
@@ -192,7 +191,7 @@ export default class DeploySubGraph {
    * returns values for all template variables which need to be replaced in subgraph.yaml for auxiliary subGraphType
    */
   private auxiliaryChainTemplateVariables(): object {
-    const mosaicConfig: MosaicConfig = MosaicConfigFactory.from(this.auxiliaryChain);
+    const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.auxiliaryChain);
     const auxiliaryContractAddresses = mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.auxiliary;
     return {
       "projectRoot": Directory.projectRoot,

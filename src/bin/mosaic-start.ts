@@ -8,7 +8,6 @@ import Graph from '../Graph/Graph';
 import GraphOptions from './GraphOptions';
 import GraphDescription from "../Graph/GraphDescription";
 import MosaicConfig from "../Config/MosaicConfig";
-import MosaicConfigFactory from "../Config/MosaicConfigFactory";
 import DeploySubGraph from "../Graph/DeploySubGraph";
 import Logger from '../Logger';
 
@@ -61,7 +60,7 @@ mosaic
             return new Promise(resolve => setTimeout(resolve, 10000));
           })
           .then(function () {
-            const mosaicConfig: MosaicConfig = MosaicConfigFactory.from(chain);
+            const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
             if (mosaicConfig.auxiliaryChains.hasOwnProperty(chain)) {
               const subGraphType = DeploySubGraph.auxiliarySubGraphType;
               Logger.info(`Starting Sub Graph Deployment for originChain: ${options.origin} auxiliaryChain: ${chain} subGraphType: ${subGraphType}`);
