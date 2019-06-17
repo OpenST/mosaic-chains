@@ -273,7 +273,6 @@ export default class ChainVerifier {
       this.contractAddresses.auxiliary.anchorAddress,
       'CoGateway: Invalid stateRootProvider!!!'
     );
-
     Logger.info('Successfully completed CoGateway contract verification!!!');
   }
 
@@ -327,7 +326,7 @@ export default class ChainVerifier {
     this.validateDeployedAddress(
       this.auxiliaryWeb3,
       coAnchor,
-      this.contractAddresses.origin.anchorOrganizationAddress,
+      this.contractAddresses.origin.anchorAddress,
       'AuxiliaryAnchor: Invalid coAnchor address!!!'
     );
 
