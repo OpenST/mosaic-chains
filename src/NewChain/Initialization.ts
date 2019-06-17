@@ -34,7 +34,7 @@ export default class Initialization {
   ) {
 
     // Publishes mosaic configs for existing chains
-    PublishMosaicConfig.publish();
+    PublishMosaicConfig.tryPublish();
 
     // Preparing environment and objects before actually creating the new chain:
     const initConfig: InitConfig = InitConfig.createFromFile(newChainId);

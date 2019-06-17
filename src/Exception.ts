@@ -6,10 +6,10 @@ export class InvalidMosaicConfigException extends Error {
   }
 }
 
-export class MissingMosaicConfigException extends Error {
+export class MosaicConfigNotFoundException extends Error {
   public constructor(message: string) {
     super(message);
-    this.name = 'MissingMosaicConfigException';
+    this.name = 'MosaicConfigNotFoundException';
     this.message = message;
   }
 }

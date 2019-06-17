@@ -138,7 +138,7 @@ export default abstract class Node {
       this.logInfo(`${this.mosaicDir} does not exist; initializing`);
       fs.mkdirSync(this.mosaicDir);
     }
-    PublishMosaicConfig.publish();
+    PublishMosaicConfig.tryPublish();
   }
 
   /**
