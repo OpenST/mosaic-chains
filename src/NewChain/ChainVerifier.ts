@@ -44,7 +44,7 @@ export default class ChainVerifier {
     this.auxiliaryWeb3 = new Web3(auxiliaryWebSocket);
     this.originChainIdentifier = originChainIdentifier;
     this.auxiliaryChainId = auxiliaryChainId;
-    this.mosaicConfig = MosaicConfig.from(this.originChainIdentifier);
+    this.mosaicConfig = MosaicConfig.fromChain(this.originChainIdentifier);
     this.mosaicContract = new MosaicContracts(this.originWeb3, this.auxiliaryWeb3);
     this.contractAddresses = this.mosaicConfig.auxiliaryChains[this.auxiliaryChainId]
       .contractAddresses;

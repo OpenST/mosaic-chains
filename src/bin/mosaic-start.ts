@@ -48,5 +48,6 @@ mosaic
       const graph = new Graph(graphDescription);
       graph.start();
     }
+
   })
   .parse(process.argv);

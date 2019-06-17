@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 import { Validator } from 'jsonschema';
 import Directory from '../Directory';
 import Logger from '../Logger';
-import { InvalidMosaicConfigException } from '../Exception';
+import {InvalidMosaicConfigException, MosaicConfigNotFoundException } from '../Exception';
 
 const schema = require('./MosaicConfig.schema.json');
 
@@ -112,30 +112,73 @@ export default class MosaicConfig {
 
   public auxiliaryChains: { [key: string]: AuxiliaryChain };
 
-  public constructor(config: any) {
+  private constructor(config: any) {
     this.originChain = config.originChain || new OriginChain();
     this.auxiliaryChains = config.auxiliaryChains || {};
   }
 
   /**
-   * This reads mosaic config from the json file and creates MosaicConfig object.
-   * @param {string} chain Chain Identifier.
-   * @return {MosaicConfig} mosaicConfig Object of the class mosaic config.
+   * @param {string} chain identifier
+   * @return {MosaicConfig}
    */
-  public static from(chain): MosaicConfig {
+  public static fromChain(chain: string): MosaicConfig {
+    const publishMosaicConfigDir = Directory.getPublishMosaicConfigDir;
     const filePath = path.join(
-      Directory.getProjectMosaicConfigDir(),
+      publishMosaicConfigDir,
       `${chain}.json`,
     );
     if (fs.existsSync(filePath)) {
-      const config = fs.readFileSync(filePath).toString();
-      if (config && config.length > 0) {
-        const jsonObject = JSON.parse(config);
-        MosaicConfig.validateSchema(jsonObject);
-        return new MosaicConfig(jsonObject);
-      }
+      const configObject = MosaicConfig.readConfigFromFile(filePath);
+      return new MosaicConfig(configObject);
+    } else {
+      return new MosaicConfig({} as any);
     }
-    return new MosaicConfig({} as any);
+  }
+
+  /**
+   * @param {string} filePath absolute path
+   * @return {MosaicConfig}
+   */
+  public static fromFile(filePath: string): MosaicConfig {
+    if (fs.existsSync(filePath)) {
+      const configObject = MosaicConfig.readConfigFromFile(filePath);
+      return new MosaicConfig(configObject);
+    } else {
+      throw new MosaicConfigNotFoundException(`Missing config file at path: ${filePath}`);
+    }
+  }
+
+  /**
+   * Saves this config to a file in its auxiliary chain directory.
+   */
+  public writeToMosaicConfigDirectory(): void {
+    const mosaicConfigDir = Directory.getPublishMosaicConfigDir;
+    fs.ensureDirSync(mosaicConfigDir);
+    const configPath = path.join(
+      mosaicConfigDir,
+      `${this.originChain.chain}.json`,
+    );
+    Logger.info('storing mosaic config', { configPath });
+    fs.writeFileSync(
+      configPath,
+      JSON.stringify(this, null, '    '),
+    );
+  }
+
+  /**
+   * read config from file, validate it and return as JSON object
+   * @param {string} filePath
+   * @return {object}
+   */
+  private static readConfigFromFile(filePath: string): object {
+    const configString = fs.readFileSync(filePath).toString();
+    if (configString && configString.length > 0) {
+      const configObject = JSON.parse(configString);
+      MosaicConfig.validateSchema(configObject);
+      return configObject;
+    } else {
+      throw new InvalidMosaicConfigException(`blank config file found at: ${filePath}`);
+    }
   }
 
   /**
@@ -151,21 +194,4 @@ export default class MosaicConfig {
     }
   }
 
-  /**
-   * Saves this config to a file in its auxiliary chain directory.
-   */
-  public writeToMosaicConfigDirectory(): void {
-    const mosaicConfigDir = Directory.getProjectMosaicConfigDir();
-    fs.ensureDirSync(mosaicConfigDir);
-    const configPath = path.join(
-      mosaicConfigDir,
-      `${this.originChain.chain}.json`,
-    );
-    Logger.info('storing mosaic config', { configPath });
-
-    fs.writeFileSync(
-      configPath,
-      JSON.stringify(this, null, '    '),
-    );
-  }
 }

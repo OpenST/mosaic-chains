@@ -1,11 +1,10 @@
 import Logger from '../Logger';
 import Directory from '../Directory';
 import Integer from '../Integer';
-import NodeFactory from '../Node/NodeFactory';
 import ChainInfo from '../Node/ChainInfo';
 
 // These defaults will be used if the relevant option is not given on the command line.
-const DEFAULT_MOSAIC_DIR = '~/.mosaic';
+const DEFAULT_MOSAIC_DIR = Directory.getDefaultMosaicDataDir;
 const DEFAULT_PORT = 30000;
 const DEFAULT_RPC_PORT = 40000;
 const DEFAULT_WS_PORT = 50000;

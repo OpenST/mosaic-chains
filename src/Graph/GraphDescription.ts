@@ -5,7 +5,7 @@ import Directory from '../Directory';
  */
 export default class GraphDescription {
 
-  public mosaicDir: string = Directory.getProjectMosaicConfigDir();
+  public mosaicDir: string = Directory.getDefaultMosaicDataDir;
 
   public ethereumRpcPort: number = 8545;
 

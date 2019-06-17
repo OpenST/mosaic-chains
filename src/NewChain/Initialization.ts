@@ -5,6 +5,7 @@ import * as ip from 'ip';
 
 import InitConfig from '../Config/InitConfig';
 import MosaicConfig, { AuxiliaryChain } from '../Config/MosaicConfig';
+import PublishMosaicConfig from "../Config/PublishMosaicConfig";
 import OriginChainInteract from './OriginChainInteract';
 import AuxiliaryChainInteract from './AuxiliaryChainInteract';
 import NodeDescription from '../Node/NodeDescription';
@@ -31,6 +32,10 @@ export default class Initialization {
     originWebsocket: string,
     auxiliaryNodeDescription: NodeDescription,
   ) {
+
+    // Publishes mosaic configs for existing chains
+    PublishMosaicConfig.tryPublish();
+
     // Preparing environment and objects before actually creating the new chain:
     const initConfig: InitConfig = InitConfig.createFromFile(newChainId);
 
@@ -51,7 +56,7 @@ export default class Initialization {
       auxiliaryNodeDescription,
     );
 
-    const mosaicConfig = MosaicConfig.from(originChainId);
+    const mosaicConfig = MosaicConfig.fromChain(originChainId);
     mosaicConfig.originChain.chain = originChainId;
     mosaicConfig.originChain.contractAddresses.simpleTokenAddress = initConfig.originOstAddress;
 
