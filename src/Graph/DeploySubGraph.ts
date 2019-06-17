@@ -179,7 +179,7 @@ export default class DeploySubGraph {
    * returns values for all template variables which need to be replaced in subgraph.yaml for origin subGraphType
    */
   private originChainTemplateVariables(): object {
-    const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.auxiliaryChain);
+    const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.originChain);
     return {
       "projectRoot": Directory.projectRoot,
       "ostComposerAddress": mosaicConfig.originChain.contractAddresses.ostComposerAddress,
@@ -191,7 +191,7 @@ export default class DeploySubGraph {
    * returns values for all template variables which need to be replaced in subgraph.yaml for auxiliary subGraphType
    */
   private auxiliaryChainTemplateVariables(): object {
-    const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.auxiliaryChain);
+    const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.originChain);
     const auxiliaryContractAddresses = mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.auxiliary;
     return {
       "projectRoot": Directory.projectRoot,
