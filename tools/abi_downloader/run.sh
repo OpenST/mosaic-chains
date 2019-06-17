@@ -8,4 +8,4 @@ read -p "Enter mosaic contracts version [default=$default_version] " version
 mosaic_contract_package=${package}$"@"${version}
 echo ${mosaic_contract_package}
 npm install ${mosaic_contract_package} --no-save
-ts-node tools/abi_downloader/index.js ${version}
+ts-node tools/abi_downloader/index.ts ${version}

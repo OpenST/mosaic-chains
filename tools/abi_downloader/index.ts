@@ -17,10 +17,12 @@ const allowedABIs = [
 ];
 
 function writeToFile(name, abi, contractVersion): void {
+  const patchVersionIndex = contractVersion.lastIndexOf('.');
+  const majorMinorVersion = contractVersion.slice(0, patchVersionIndex);
   const directory = path.join(
     Directory.projectRoot,
     abiFolder,
-    contractVersion,
+    majorMinorVersion,
   );
   fs.ensureDirSync(directory);
   const filePath = path.join(
