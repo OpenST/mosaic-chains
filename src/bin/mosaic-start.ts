@@ -21,7 +21,7 @@ mosaic = NodeOptions.addCliOptions(mosaic);
 mosaic = GraphOptions.addCliOptions(mosaic);
 
 mosaic
-  .option('-o,--origin', 'identifier for origin chain. To be passes while starting auxiliary chain')
+  .option('-o,--origin <string>', 'identifier for origin chain. To be passed while starting auxiliary chain')
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-wgn,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
@@ -48,7 +48,6 @@ mosaic
     node.start();
 
     if (!options.withoutGraphNode) {
-
       const deploySubGraphs = function (graphDescription) {
         const waitForWebsocketPort = waitPort({ port: graphDescription.websocketPort, output: 'silent' });
         const waitForRpcAdminPort = waitPort({ port: graphDescription.rpcAdminPort, output: 'silent' });

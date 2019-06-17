@@ -63,7 +63,6 @@ export default class DeploySubGraph {
    * create local instance and deploy graph.
    */
   public start(): object {
-    console.log(this.getSubGraphProjectDir());
     // if subGraphProjectDir we would assume sub graph deployment was already complete
     if (fs.pathExistsSync(this.getSubGraphProjectDir())) {return}
     this.copyCodeToTempDir();
