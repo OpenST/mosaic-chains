@@ -98,7 +98,7 @@ function rpc_node_try {
 
 function rpc_origin_sub_graph_try {
     info "Checking RPC connection to origin sub graph for $2 chain on node for $1."
-    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/origin-verifier.ts $1 $2 6$3" "Origin sub graph was expected to be deployed, but wasn't."
+    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/origin-verifier.ts $1 $2 6$3" "Origin sub graph for $2 was expected to be deployed on $1, but wasn't."
 }
 
 function rpc_auxiliary_sub_graph_try {
