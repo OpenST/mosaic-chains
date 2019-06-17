@@ -16,8 +16,6 @@ mosaic.action(
     auxiliaryChainIdentifier: string,
     graphWsPort: string
   ) => {
-    // start origin chain
-    Shell.executeInShell(`./mosaic start ${originChainIdentifier}`);
 
     const subGraphName = `mosaic/origin-${auxiliaryChainIdentifier}`;
     const wsEndPoint = `ws://127.0.0.1:${graphWsPort}/subgraphs/name/${subGraphName}`;
