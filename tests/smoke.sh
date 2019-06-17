@@ -96,10 +96,14 @@ function rpc_node_try {
     try_silent "curl -X POST -H \"Content-Type: application/json\" --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_syncing\",\"params\":[],\"id\":1}' 127.0.0.1:4$1" "Could not connect to RPC of node $1."
 }
 
-# Errors if an RPC connection to the graph is not possible. Works only with chain IDs, not names.
-function rpc_graph_try {
-    info "Checking RPC connection to graph $1."
-    try_silent "curl -X GET 127.0.0.1:5$1" "Could not connect to RPC of graph $1."
+function rpc_origin_sub_graph_try {
+    info "Checking RPC connection to origin sub graph for $2 chain on node for $1."
+    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/origin-verifier.ts $1 $2 6$3" "Origin sub graph was expected to be deployed, but wasn't."
+}
+
+function rpc_auxiliary_sub_graph_try {
+    info "Checking RPC connection to auxiliary sub graph for $1 chain on node."
+    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/auxiliary-verifier.ts $1 6$1" "Auxiliary sub graph was expected to be deployed, but wasn't."
 }
 
 # Making sure the mosaic command exists (we are in the right directory).
@@ -118,10 +122,11 @@ rpc_node_try 1406
 rpc_node_try 1407
 rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
 
-# Try to RPC call the running graphs.
-rpc_graph_try 1406
-rpc_graph_try 1407
-rpc_graph_try "0003" # Given like this as it is used for the port in `rpc_graph_try`.
+rpc_origin_sub_graph_try ropsten 1406 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
+rpc_origin_sub_graph_try ropsten 1407 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
+
+rpc_auxiliary_sub_graph_try 1406
+rpc_auxiliary_sub_graph_try 1407
 
 # Stop and start some nodes and make sure they are or are not running.
 stop_node ropsten

@@ -58,6 +58,8 @@
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-json": "1.4.0",
-    "mocha": "^6.1.4"
+    "mocha": "^6.1.4",
+    "subscriptions-transport-ws": "0.9.16",
+    "ws": "7.0.0"
   }
 }
