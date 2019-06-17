@@ -170,9 +170,9 @@ export default class DeploySubGraph {
    */
   private get subGraphName(): string {
     if (this.subGraphType === DeploySubGraph.originSubGraphType) {
-      return `mosaic/auxiliary-${this.auxiliaryChain}`;
+      return `mosaic/origin-${this.auxiliaryChain}`;
     } else if (this.subGraphType === DeploySubGraph.auxiliarySubGraphType) {
-      return `mosaic/origin-${this.originChain}`;
+      return `mosaic/auxiliary-${this.auxiliaryChain}`;
     }
   }
 
@@ -182,6 +182,7 @@ export default class DeploySubGraph {
   private originChainTemplateVariables(): object {
     const mosaicConfig: MosaicConfig = MosaicConfigFactory.from(this.auxiliaryChain);
     return {
+      "projectRoot": Directory.projectRoot,
       "ostComposerAddress": mosaicConfig.originChain.contractAddresses.ostComposerAddress,
       "eip20GatewayAddress": mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.ostEIP20GatewayAddress
     };
@@ -194,6 +195,7 @@ export default class DeploySubGraph {
     const mosaicConfig: MosaicConfig = MosaicConfigFactory.from(this.auxiliaryChain);
     const auxiliaryContractAddresses = mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.auxiliary;
     return {
+      "projectRoot": Directory.projectRoot,
       "anchorAddress": auxiliaryContractAddresses.anchorAddress,
       "eip20CoGatewayAddress": auxiliaryContractAddresses.ostEIP20CogatewayAddress
     };

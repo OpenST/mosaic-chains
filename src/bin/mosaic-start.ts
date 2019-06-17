@@ -58,7 +58,7 @@ mosaic
           waitForPostgresPort, waitForIpfsPort])
           .then(function () {
             // even after the ports are available the nodes need a bit of time to get online
-            return new Promise(resolve => setTimeout(resolve, 5000));
+            return new Promise(resolve => setTimeout(resolve, 10000));
           })
           .then(function () {
             const mosaicConfig: MosaicConfig = MosaicConfigFactory.from(chain);
