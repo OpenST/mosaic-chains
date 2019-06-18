@@ -28,9 +28,6 @@ export default class DeploySubGraph {
   /** The endpoint to be used for calling methods over IPFS */
   private readonly ipfsPort: number;
 
-  /** The directory in which we would keep auto generated graph related code temporarily. */
-  private readonly tempGraphInstallationDir: string;
-
   /**
    * enum defining origin sub graph type.
    * @returns The prefix.
@@ -47,6 +44,15 @@ export default class DeploySubGraph {
     return 'auxiliary';
   }
 
+  /**
+   * Constructor.
+   * @param {string} originChain
+   * @param {string} auxiliaryChain
+   * @param {string} subGraphType
+   * @param {string} mosaicDir
+   * @param {number} adminRpcPort
+   * @param {number} ipfsPort
+   */
   constructor(
     originChain: string,
     auxiliaryChain: string,
@@ -61,15 +67,18 @@ export default class DeploySubGraph {
     this.subGraphType = subGraphType;
     this.adminRpcPort = adminRpcPort;
     this.ipfsPort = ipfsPort;
-    this.tempGraphInstallationDir = Directory.getTempGraphInstallationDir;
   }
 
   /**
-   * create local instance and deploy graph.
+   * Create local instance and deploy graph.
+   * @return {object}
    */
   public start(): object {
-    // if subGraphProjectDir we would assume sub graph deployment was already complete
-    if (fs.pathExistsSync(this.getSubGraphProjectDir())) { return; }
+    if (fs.pathExistsSync(this.getSubGraphProjectDir)) {
+      // if subGraphProjectDir we would assume sub graph deployment was already complete
+      this.logInfo(`Sub graph already exists. Skipping deployment`);
+      return;
+    }
     this.copyCodeToTempDir();
     this.installNodeModules();
     this.writeSubGraphConfigFile();
@@ -87,20 +96,40 @@ export default class DeploySubGraph {
   }
 
   /**
-   *
+   * Directory in which we would persist code which was used for sub graph deployment.
    * @return {string}
    */
-  private getSubGraphProjectDir(): string {
+  private get getSubGraphProjectDir(): string {
+    return path.join(
+      this.mosaicDir,
+      this.getSubGraphProjectDirSuffix
+    );
+  }
+
+  /**
+   * Directory in which we would keep auto generated graph related code temporarily.
+   * @return {string}
+   */
+  private get getTempGraphInstallationDir(): string {
+    return path.join(
+      Directory.getTempGraphInstallationDir,
+      this.getSubGraphProjectDirSuffix
+    );
+  }
+
+  /**
+   * Suffix which is used to predict sub graph related folders
+   * @return {string}
+   */
+  private get getSubGraphProjectDirSuffix(): string {
     if (this.subGraphType === DeploySubGraph.originSubGraphType) {
       return path.join(
-        this.mosaicDir,
         this.originChain,
         'subgraph',
         this.auxiliaryChain,
       );
     } else if (this.subGraphType === DeploySubGraph.auxiliarySubGraphType) {
       return path.join(
-        this.mosaicDir,
         this.auxiliaryChain,
         'subgraph',
       );
@@ -108,31 +137,31 @@ export default class DeploySubGraph {
   }
 
   /**
-   * copy auto generated code to a temp dir.
+   * Copy auto generated code to a temp dir.
    */
   private copyCodeToTempDir(): void {
     this.logInfo('copying auto generated graph code to temp directory');
-    fs.ensureDirSync(this.tempGraphInstallationDir);
+    fs.ensureDirSync(this.getTempGraphInstallationDir);
     fs.copySync(
       path.join(
         Directory.projectRoot,
         'graph',
         this.subGraphType,
       ),
-      this.tempGraphInstallationDir,
+      this.getTempGraphInstallationDir,
     );
   }
 
   /**
-   * install node modules.
+   * Install node modules.
    */
   private installNodeModules(): void {
     this.logInfo('installing node modules');
-    Shell.executeInShell(`cd ${this.tempGraphInstallationDir} && npm install`);
+    Shell.executeInShell(`cd ${this.getTempGraphInstallationDir} && npm install`);
   }
 
   /**
-   * create local sub graph. This would fail if sub graph was already registered.
+   * Create local sub graph. This would fail if sub graph was already registered.
    */
   private createLocal(): object {
     this.logInfo('attempting to create local graph');
@@ -147,19 +176,19 @@ export default class DeploySubGraph {
   }
 
   /**
-   * copy auto generated code to a temp dir.
+   * Copy auto generated code to a temp dir.
    */
   private writeSubGraphConfigFile(): void {
     this.logInfo('writing subgraph.yaml');
-    const fileContentBuffer = fs.readFileSync(path.join(this.tempGraphInstallationDir, 'subgraph.yaml.mustache'));
+    const fileContentBuffer = fs.readFileSync(path.join(this.getTempGraphInstallationDir, 'subgraph.yaml.mustache'));
     fs.writeFileSync(
-      path.join(this.tempGraphInstallationDir, 'subgraph.yaml'),
+      path.join(this.getTempGraphInstallationDir, 'subgraph.yaml'),
       mustache.render(fileContentBuffer.toString(), this.templateVariables()),
     );
   }
 
   /**
-   * returns values for all template variables which need to be replaced in subgraph.yaml
+   * Returns values for all template variables which need to be replaced in subgraph.yaml.
    */
   private templateVariables(): object {
     if (this.subGraphType === DeploySubGraph.originSubGraphType) {
@@ -182,7 +211,7 @@ export default class DeploySubGraph {
   }
 
   /**
-   * returns values for all template variables which need to be replaced in subgraph.yaml for origin subGraphType
+   * Returns values for all template variables which need to be replaced in subgraph.yaml for origin subGraphType
    */
   private originChainTemplateVariables(): object {
     const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.originChain);
@@ -194,7 +223,7 @@ export default class DeploySubGraph {
   }
 
   /**
-   * returns values for all template variables which need to be replaced in subgraph.yaml for auxiliary subGraphType
+   * Returns values for all template variables which need to be replaced in subgraph.yaml for auxiliary subGraphType
    */
   private auxiliaryChainTemplateVariables(): object {
     const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.originChain);
@@ -207,7 +236,7 @@ export default class DeploySubGraph {
   }
 
   /**
-   * create local instance and deploy sub graph.
+   * Create local instance and deploy sub graph.
    */
   private deployLocal(): object {
     this.logInfo('attempting to deploy local graph');
@@ -226,30 +255,30 @@ export default class DeploySubGraph {
   }
 
   /**
-   * Execute graph command
+   * Execute graph command.
    * @param {string} commandSuffix
    */
   private executeGraphCommand(commandSuffix: string): void {
-    Shell.executeInShell(`cd ${this.tempGraphInstallationDir} && ./node_modules/.bin/graph ${commandSuffix}`);
+    Shell.executeInShell(`cd ${this.getTempGraphInstallationDir} && ./node_modules/.bin/graph ${commandSuffix}`);
   }
 
   /**
-   * create local instance and deploy graph.
+   * Create local instance and deploy graph.
    */
   private deleteCodeFromTempDir(): void {
     this.logInfo('deleting auto generated code from temp directory');
-    fs.removeSync(this.tempGraphInstallationDir);
+    fs.removeSync(this.getTempGraphInstallationDir);
   }
 
   /**
-   * persist auto generated code.
+   * Persist auto generated code.
    */
   private copyToSubGraphProjectDir(): void {
     this.logInfo('persisting auto generated graph code');
-    const subGraphProjectDir = this.getSubGraphProjectDir();
+    const subGraphProjectDir = this.getSubGraphProjectDir;
     fs.ensureDirSync(subGraphProjectDir);
     fs.copySync(
-      this.tempGraphInstallationDir,
+      this.getTempGraphInstallationDir,
       subGraphProjectDir,
     );
   }

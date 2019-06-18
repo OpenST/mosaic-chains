@@ -88,7 +88,7 @@ export default class Directory {
   public static get getTempGraphInstallationDir(): string {
     return path.join(
       Directory.getDefaultMosaicDataDir,
-      'temp-graph-deploy',
+      'temp',
     );
   }
 

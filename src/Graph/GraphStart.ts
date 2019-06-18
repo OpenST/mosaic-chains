@@ -29,6 +29,8 @@ export default class GraphStart {
     this.graphDescription = graphDescription;
     this.originChain = originChain;
     this.auxiliaryChain = auxiliaryChain;
+
+    this.deploySubGraphs = this.deploySubGraphs.bind(this);
   }
 
   /**
@@ -47,7 +49,6 @@ export default class GraphStart {
    * @return {Promise<any>}
    */
   private deploySubGraphs(): Promise<any> {
-    const oThis = this;
     const waitForWebsocketPort = waitPort({ port: this.graphDescription.websocketPort, output: 'silent' });
     const waitForRpcAdminPort = waitPort({ port: this.graphDescription.rpcAdminPort, output: 'silent' });
     const waitForRpcPort = waitPort({ port: this.graphDescription.rpcPort, output: 'silent' });
@@ -60,10 +61,10 @@ export default class GraphStart {
         // even after the ports are available the nodes need a bit of time to get online
         new Promise(resolve => setTimeout(resolve, 10000)))
       .then(() => {
-        if (oThis.auxiliaryChain) {
-          return oThis.deployAuxiliarySubGraph();
+        if (this.auxiliaryChain) {
+          return this.deployAuxiliarySubGraph();
         } else {
-          return oThis.deployOriginSubGraphs();
+          return this.deployOriginSubGraphs();
         }
       });
   }
