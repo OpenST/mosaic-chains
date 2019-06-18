@@ -122,8 +122,8 @@ rpc_node_try 1406
 rpc_node_try 1407
 rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
 
-rpc_origin_sub_graph_try ropsten 1406 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
-rpc_origin_sub_graph_try ropsten 1407 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
+rpc_origin_sub_graph_try 1406 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
+rpc_origin_sub_graph_try 1407 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
 
 rpc_auxiliary_sub_graph_try 1406
 rpc_auxiliary_sub_graph_try 1407

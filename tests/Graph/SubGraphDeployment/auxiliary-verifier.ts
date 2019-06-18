@@ -4,7 +4,6 @@ import * as commander from 'commander';
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import WebSocket = require('ws');
 
-import Shell from "../../../src/Shell";
 import Logger from "../../../src/Logger";
 
 let mosaic = commander

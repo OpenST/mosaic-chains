@@ -4,15 +4,13 @@ import * as commander from 'commander';
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import WebSocket = require('ws');
 
-import Shell from "../../../src/Shell";
 import Logger from "../../../src/Logger";
 
 let mosaic = commander
-  .arguments('<origin-chain-identifier> <auxiliary-chain-identifier> <graph-ws-port>');
+  .arguments('<auxiliary-chain-identifier> <graph-ws-port>');
 
 mosaic.action(
   async (
-    originChainIdentifier: string,
     auxiliaryChainIdentifier: string,
     graphWsPort: string
   ) => {
