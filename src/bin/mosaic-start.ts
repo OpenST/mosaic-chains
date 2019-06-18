@@ -4,14 +4,9 @@ import * as commander from 'commander';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
-import Graph from '../Graph/Graph';
 import GraphOptions from './GraphOptions';
 import GraphDescription from "../Graph/GraphDescription";
-import MosaicConfig from "../Config/MosaicConfig";
-import DeploySubGraph from "../Graph/DeploySubGraph";
-import Logger from '../Logger';
-
-const waitPort = require('wait-port');
+import GraphStart from "../Graph/GraphStart";
 
 let mosaic = commander
   .arguments('<chain>');
@@ -52,66 +47,17 @@ mosaic
       // reuse params from node start command
       graphDescription.mosaicDir = mosaicDir;
       graphDescription.ethereumRpcPort = rpcPort;
-      const graph = new Graph(graphDescription);
-      graph.start();
 
-      const deploySubGraphs = function (graphDescription) {
+      let graphStart;
 
-        const waitForWebsocketPort = waitPort({ port: graphDescription.websocketPort, output: 'silent' });
-        const waitForRpcAdminPort = waitPort({ port: graphDescription.rpcAdminPort, output: 'silent' });
-        const waitForRpcPort = waitPort({ port: graphDescription.rpcPort, output: 'silent' });
-        const waitForPostgresPort = waitPort({ port: graphDescription.postgresPort, output: 'silent' });
-        const waitForIpfsPort = waitPort({ port: graphDescription.ipfsPort, output: 'silent' });
+      // options.origin passed only in case of starting an auxiliary chain
+      if (options.origin) {
+        graphStart = new GraphStart(graphDescription, options.origin, chain);
+      } else {
+        graphStart = new GraphStart(graphDescription, chain, null);
+      }
 
-        return Promise.all([waitForWebsocketPort, waitForRpcAdminPort, waitForRpcPort,
-          waitForPostgresPort, waitForIpfsPort])
-          .then(function () {
-            // even after the ports are available the nodes need a bit of time to get online
-            return new Promise(resolve => setTimeout(resolve, 10000));
-          })
-          .then(function () {
-            if (options.origin) {
-              deployAuxiliarySubGraphs();
-            } else {
-              deployOriginSubGraphs();
-            }
-          });
-
-      };
-
-      const deployOriginSubGraphs = function() {
-        // while starting origin chain, deploy sub graphs with SubGraphType=origin for all auxiliary chains
-        const subGraphType = DeploySubGraph.originSubGraphType;
-        const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
-        for (const auxiliaryChain of Object.keys(mosaicConfig.auxiliaryChains)) {
-          Logger.info(`Starting Sub Graph Deployment for originChain: ${chain} auxiliaryChain: ${auxiliaryChain} subGraphType: ${subGraphType}`);
-          const deploySubGraph = new DeploySubGraph(
-            chain,
-            auxiliaryChain,
-            subGraphType,
-            graphDescription.mosaicDir,
-            graphDescription.rpcAdminPort,
-            graphDescription.ipfsPort
-          );
-          deploySubGraph.start();
-        }
-      };
-
-      const deployAuxiliarySubGraphs = function() {
-        const subGraphType = DeploySubGraph.auxiliarySubGraphType;
-        Logger.info(`Starting Sub Graph Deployment for originChain: ${options.origin} auxiliaryChain: ${chain} subGraphType: ${subGraphType}`);
-        const deploySubGraph = new DeploySubGraph(
-          options.origin,
-          chain,
-          subGraphType,
-          graphDescription.mosaicDir,
-          graphDescription.rpcAdminPort,
-          graphDescription.ipfsPort
-        );
-        deploySubGraph.start();
-      };
-
-      deploySubGraphs(graphDescription);
+      return graphStart.start();
 
     }
 
