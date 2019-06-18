@@ -10,7 +10,6 @@ import Logger from "../Logger";
  * Has logic to start graph node and deploy sub graphs (if required)
  */
 export default class GraphStart {
-
   /** This chain identifier identifies the origin chain. For example ropsten. */
   private readonly originChain: string;
 
@@ -37,12 +36,10 @@ export default class GraphStart {
    * @return {Promise<any>}
    */
   public start(): Promise<any> {
-
     const graph = new Graph(this.graphDescription);
     graph.start();
 
     return this.deploySubGraphs();
-
   }
 
   /**
@@ -50,7 +47,6 @@ export default class GraphStart {
    * @return {Promise<any>}
    */
   private deploySubGraphs(): Promise<any> {
-
     const oThis = this;
     const waitForWebsocketPort = waitPort({ port: this.graphDescription.websocketPort, output: 'silent' });
     const waitForRpcAdminPort = waitPort({ port: this.graphDescription.rpcAdminPort, output: 'silent' });
@@ -60,11 +56,10 @@ export default class GraphStart {
 
     return Promise.all([waitForWebsocketPort, waitForRpcAdminPort, waitForRpcPort,
       waitForPostgresPort, waitForIpfsPort])
-      .then(function () {
+      .then(() =>
         // even after the ports are available the nodes need a bit of time to get online
-        return new Promise(resolve => setTimeout(resolve, 10000));
-      })
-      .then(function () {
+        new Promise(resolve => setTimeout(resolve, 10000)))
+      .then(() => {
         if (oThis.auxiliaryChain) {
           return oThis.deployAuxiliarySubGraph();
         } else {
@@ -88,7 +83,7 @@ export default class GraphStart {
         subGraphType,
         this.graphDescription.mosaicDir,
         this.graphDescription.rpcAdminPort,
-        this.graphDescription.ipfsPort
+        this.graphDescription.ipfsPort,
       );
       deploySubGraph.start();
     }
@@ -107,9 +102,8 @@ export default class GraphStart {
       subGraphType,
       this.graphDescription.mosaicDir,
       this.graphDescription.rpcAdminPort,
-      this.graphDescription.ipfsPort
+      this.graphDescription.ipfsPort,
     );
     deploySubGraph.start();
   }
-
 }

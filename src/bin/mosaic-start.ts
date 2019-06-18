@@ -5,8 +5,8 @@ import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
 import GraphOptions from './GraphOptions';
-import GraphDescription from "../Graph/GraphDescription";
-import GraphStart from "../Graph/GraphStart";
+import GraphDescription from '../Graph/GraphDescription';
+import GraphStart from '../Graph/GraphStart';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -42,7 +42,6 @@ mosaic
     node.start();
 
     if (!options.withoutGraphNode) {
-
       const graphDescription: GraphDescription = GraphOptions.parseOptions(options, chain);
       // reuse params from node start command
       graphDescription.mosaicDir = mosaicDir;
@@ -58,8 +57,6 @@ mosaic
       }
 
       return graphStart.start();
-
     }
-
   })
   .parse(process.argv);

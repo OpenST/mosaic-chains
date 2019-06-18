@@ -16,6 +16,5 @@ mosaic
       const graph: Graph = new Graph(new GraphDescription(chain));
       graph.stop();
     }
-
   })
   .parse(process.argv);

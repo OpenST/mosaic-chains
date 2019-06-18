@@ -4,7 +4,6 @@ import Directory from '../Directory';
  * Describes the properties of a graph.
  */
 export default class GraphDescription {
-
   public mosaicDir: string = Directory.getDefaultMosaicDataDir;
 
   public ethereumRpcPort: number = 8545;

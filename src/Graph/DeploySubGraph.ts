@@ -4,13 +4,12 @@ import * as mustache from 'mustache';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import Directory from '../Directory';
-import MosaicConfig from "../Config/MosaicConfig";
+import MosaicConfig from '../Config/MosaicConfig';
 
 /**
  * Represents a graph that is managed by docker.
  */
 export default class DeploySubGraph {
-
   /** The chain identifier identifies the origin chain. For example ropsten. */
   private readonly originChain: string;
 
@@ -63,7 +62,7 @@ export default class DeploySubGraph {
    */
   public start(): object {
     // if subGraphProjectDir we would assume sub graph deployment was already complete
-    if (fs.pathExistsSync(this.getSubGraphProjectDir())) {return}
+    if (fs.pathExistsSync(this.getSubGraphProjectDir())) { return; }
     this.copyCodeToTempDir();
     this.installNodeModules();
     this.writeSubGraphConfigFile();
@@ -90,13 +89,13 @@ export default class DeploySubGraph {
         this.mosaicDir,
         this.originChain,
         'subgraph',
-        this.auxiliaryChain
+        this.auxiliaryChain,
       );
     } else if (this.subGraphType === DeploySubGraph.auxiliarySubGraphType) {
       return path.join(
         this.mosaicDir,
         this.auxiliaryChain,
-        'subgraph'
+        'subgraph',
       );
     }
   }
@@ -111,9 +110,9 @@ export default class DeploySubGraph {
       path.join(
         Directory.projectRoot,
         'graph',
-        this.subGraphType
+        this.subGraphType,
       ),
-      this.tempGraphInstallationDir
+      this.tempGraphInstallationDir,
     );
   }
 
@@ -132,11 +131,11 @@ export default class DeploySubGraph {
     this.logInfo('attempting to create local graph');
     try {
       this.executeGraphCommand(`create --node http://localhost:${this.adminRpcPort}/ ${this.subGraphName}`);
-      return {success: true};
+      return { success: true };
     } catch (ex) {
-      const message = ex.message;
+      const { message } = ex;
       this.logInfo(`create local graph failed with: ${message}`);
-      return {success: false, message: message};
+      return { success: false, message };
     }
   }
 
@@ -181,9 +180,9 @@ export default class DeploySubGraph {
   private originChainTemplateVariables(): object {
     const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.originChain);
     return {
-      "projectRoot": Directory.projectRoot,
-      "ostComposerAddress": mosaicConfig.originChain.contractAddresses.ostComposerAddress,
-      "eip20GatewayAddress": mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.ostEIP20GatewayAddress
+      projectRoot: Directory.projectRoot,
+      ostComposerAddress: mosaicConfig.originChain.contractAddresses.ostComposerAddress,
+      eip20GatewayAddress: mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.ostEIP20GatewayAddress,
     };
   }
 
@@ -194,9 +193,9 @@ export default class DeploySubGraph {
     const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.originChain);
     const auxiliaryContractAddresses = mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.auxiliary;
     return {
-      "projectRoot": Directory.projectRoot,
-      "anchorAddress": auxiliaryContractAddresses.anchorAddress,
-      "eip20CoGatewayAddress": auxiliaryContractAddresses.ostEIP20CogatewayAddress
+      projectRoot: Directory.projectRoot,
+      anchorAddress: auxiliaryContractAddresses.anchorAddress,
+      eip20CoGatewayAddress: auxiliaryContractAddresses.ostEIP20CogatewayAddress,
     };
   }
 
@@ -207,13 +206,13 @@ export default class DeploySubGraph {
     this.logInfo('attempting to deploy local graph');
     try {
       this.executeGraphCommand(`deploy --node http://localhost:${this.adminRpcPort}/ --ipfs http://localhost:${this.ipfsPort} ${this.subGraphName}`);
-      return {success: true};
+      return { success: true };
     } catch (ex) {
-      const message = ex.message;
+      const { message } = ex;
       this.logInfo(`deploy local graph failed with: ${message}`);
       this.logInfo('removing local graph');
       this.executeGraphCommand(`remove --node http://localhost:${this.adminRpcPort}/ ${this.subGraphName}`);
-      return {success: false, message: message};
+      return { success: false, message };
     }
   }
 
@@ -242,7 +241,7 @@ export default class DeploySubGraph {
     fs.ensureDirSync(subGraphProjectDir);
     fs.copySync(
       this.tempGraphInstallationDir,
-      subGraphProjectDir
+      subGraphProjectDir,
     );
   }
 
@@ -253,5 +252,4 @@ export default class DeploySubGraph {
   private logInfo(message: string): void {
     Logger.info(message, { auxiliaryChain: this.auxiliaryChain, subGraphType: this.subGraphType });
   }
-
 }

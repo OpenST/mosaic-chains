@@ -1,6 +1,6 @@
 import Integer from '../Integer';
 import ChainInfo from '../Node/ChainInfo';
-import GraphDescription from "../Graph/GraphDescription";
+import GraphDescription from '../Graph/GraphDescription';
 
 // These defaults will be used if the relevant option is not given on the command line.
 const DEFAULT_RPC_PORT = 10000;
@@ -13,7 +13,6 @@ const DEFAULT_POSTGRES_PORT = 5432;
  * Command line options for running an graph node.
  */
 export default class GraphOptions {
-
   /**
    * @param options The options from the command line.
    */
@@ -61,5 +60,4 @@ export default class GraphOptions {
     graphDescription.keepAfterStop = !!options.keep;
     return graphDescription;
   }
-
 }
