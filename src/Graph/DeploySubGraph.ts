@@ -47,7 +47,8 @@ export default class DeploySubGraph {
     return 'auxiliary';
   }
 
-  constructor(originChain: string, auxiliaryChain: string, subGraphType: string, mosaicDir: string, adminRpcPort: number, ipfsPort: number) {
+  constructor(originChain: string, auxiliaryChain: string, subGraphType: string, mosaicDir: string,
+              adminRpcPort: number, ipfsPort: number) {
     this.originChain = originChain;
     this.auxiliaryChain = auxiliaryChain;
     this.mosaicDir = mosaicDir;
@@ -205,7 +206,9 @@ export default class DeploySubGraph {
   private deployLocal(): object {
     this.logInfo('attempting to deploy local graph');
     try {
-      this.executeGraphCommand(`deploy --node http://localhost:${this.adminRpcPort}/ --ipfs http://localhost:${this.ipfsPort} ${this.subGraphName}`);
+      this.executeGraphCommand(
+        `deploy --node http://localhost:${this.adminRpcPort}/ --ipfs http://localhost:${this.ipfsPort} ${this.subGraphName}`
+      );
       return { success: true };
     } catch (ex) {
       const { message } = ex;
