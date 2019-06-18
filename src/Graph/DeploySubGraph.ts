@@ -47,8 +47,14 @@ export default class DeploySubGraph {
     return 'auxiliary';
   }
 
-  constructor(originChain: string, auxiliaryChain: string, subGraphType: string, mosaicDir: string,
-              adminRpcPort: number, ipfsPort: number) {
+  constructor(
+    originChain: string,
+    auxiliaryChain: string,
+    subGraphType: string,
+    mosaicDir: string,
+    adminRpcPort: number,
+    ipfsPort: number
+  ) {
     this.originChain = originChain;
     this.auxiliaryChain = auxiliaryChain;
     this.mosaicDir = mosaicDir;
