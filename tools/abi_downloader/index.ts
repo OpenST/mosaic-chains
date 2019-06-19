@@ -16,11 +16,30 @@ const allowedABIs = [
   'EIP20CoGateway',
 ];
 
-function writeToFile(name, abi, contractVersion): void {
+/**
+ * This method removes patch contractVersion from the contractVersion if any.
+ * @param contractVersion Version of contract.
+ */
+function getMajorMinorVersion(contractVersion: string): string {
+  // Check if patch version exists.
+  if (contractVersion.split('.').length > 2) {
+    const patchVersionIndex = contractVersion.lastIndexOf('.');
+    return contractVersion.slice(0, patchVersionIndex);
+  }
+  return contractVersion;
+}
+
+/**
+ * This method write abi to files.
+ * @param name Name of the contract.
+ * @param abi Contract ABI.
+ * @param contractVersion Version of contract.
+ */
+function writeToFile(name: string, abi: object, contractVersion: string): void {
   const directory = path.join(
     Directory.projectRoot,
     abiFolder,
-    contractVersion,
+    getMajorMinorVersion(contractVersion),
   );
   fs.ensureDirSync(directory);
   const filePath = path.join(
