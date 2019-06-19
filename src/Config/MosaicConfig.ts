@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 import { Validator } from 'jsonschema';
 import Directory from '../Directory';
 import Logger from '../Logger';
-import {InvalidMosaicConfigException, MosaicConfigNotFoundException } from '../Exception';
+import { InvalidMosaicConfigException, MosaicConfigNotFoundException } from '../Exception';
 
 const schema = require('./MosaicConfig.schema.json');
 
@@ -193,5 +193,4 @@ export default class MosaicConfig {
       throw new InvalidMosaicConfigException(error.message);
     }
   }
-
 }

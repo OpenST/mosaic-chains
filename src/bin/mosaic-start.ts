@@ -4,9 +4,9 @@ import * as commander from 'commander';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
-import Graph from '../Graph/Graph';
 import GraphOptions from './GraphOptions';
-import GraphDescription from "../Graph/GraphDescription";
+import GraphDescription from '../Graph/GraphDescription';
+import GraphStart from '../Graph/GraphStart';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -15,6 +15,7 @@ mosaic = NodeOptions.addCliOptions(mosaic);
 mosaic = GraphOptions.addCliOptions(mosaic);
 
 mosaic
+  .option('-o,--origin <string>', 'identifier for origin chain. To be passed while starting auxiliary chain')
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-wgn,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
@@ -45,9 +46,17 @@ mosaic
       // reuse params from node start command
       graphDescription.mosaicDir = mosaicDir;
       graphDescription.ethereumRpcPort = rpcPort;
-      const graph = new Graph(graphDescription);
-      graph.start();
-    }
 
+      let graphStart;
+
+      // options.origin passed only in case of starting an auxiliary chain
+      if (options.origin) {
+        graphStart = new GraphStart(graphDescription, options.origin, chain);
+      } else {
+        graphStart = new GraphStart(graphDescription, chain, null);
+      }
+
+      return graphStart.start();
+    }
   })
   .parse(process.argv);

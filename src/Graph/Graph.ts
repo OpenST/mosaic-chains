@@ -9,7 +9,6 @@ import Directory from '../Directory';
  * Represents a graph that is managed by docker.
  */
 export default class Graph {
-
   /** The chain identifier identifies the chain this node should run. For example ropsten or 200. */
   private readonly chain: string;
 
@@ -123,5 +122,4 @@ export default class Graph {
   private logInfo(message: string): void {
     Logger.info(message, { chain: this.chain });
   }
-
 }

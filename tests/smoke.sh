@@ -18,10 +18,16 @@ function error {
     exit 1
 }
 
-# Starts a single node.
-function start_node {
+# Starts a single origin node.
+function start_origin_node {
     info "Starting node $1."
     try_silent "./mosaic start $1" "Could not start node $1."
+}
+
+# Starts a single auxiliary node.
+function start_auxiliary_node {
+    info "Starting node $1."
+    try_silent "./mosaic start $1 --origin ropsten" "Could not start node $1."
 }
 
 # Stops a single node.
@@ -33,9 +39,9 @@ function stop_node {
 # Starts all nodes for the test.
 function start_nodes {
     info "Starting all nodes."
-    start_node 1406
-    start_node 1407
-    start_node ropsten
+    start_auxiliary_node 1406
+    start_auxiliary_node 1407
+    start_origin_node ropsten
 }
 
 # Stops all nodes for the test.
@@ -48,7 +54,7 @@ function stop_nodes {
 
 # Tries a command without output. Errors if the command does not execute successfully.
 function try_silent {
-    eval $1 1>/dev/null 2>&1 || error "$2"
+    eval $1 2>&1 || error "$2"
 }
 
 # Tries a command without output. Errors if the command *executes successfully.*
@@ -90,10 +96,14 @@ function rpc_node_try {
     try_silent "curl -X POST -H \"Content-Type: application/json\" --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_syncing\",\"params\":[],\"id\":1}' 127.0.0.1:4$1" "Could not connect to RPC of node $1."
 }
 
-# Errors if an RPC connection to the graph is not possible. Works only with chain IDs, not names.
-function rpc_graph_try {
-    info "Checking RPC connection to graph $1."
-    try_silent "curl -X GET 127.0.0.1:5$1" "Could not connect to RPC of graph $1."
+function rpc_origin_sub_graph_try {
+    info "Checking RPC connection to origin sub graph for $2 chain on node for $1."
+    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/origin-verifier.ts $1 6$2" "Origin sub graph for $2 was expected to be deployed on $1, but wasn't."
+}
+
+function rpc_auxiliary_sub_graph_try {
+    info "Checking RPC connection to auxiliary sub graph for $1 chain on node."
+    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/auxiliary-verifier.ts $1 6$1" "Auxiliary sub graph was expected to be deployed, but wasn't."
 }
 
 # Making sure the mosaic command exists (we are in the right directory).
@@ -112,10 +122,11 @@ rpc_node_try 1406
 rpc_node_try 1407
 rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
 
-# Try to RPC call the running graphs.
-rpc_graph_try 1406
-rpc_graph_try 1407
-rpc_graph_try "0003" # Given like this as it is used for the port in `rpc_graph_try`.
+rpc_origin_sub_graph_try 1406 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
+rpc_origin_sub_graph_try 1407 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
+
+rpc_auxiliary_sub_graph_try 1406
+rpc_auxiliary_sub_graph_try 1407
 
 # Stop and start some nodes and make sure they are or are not running.
 stop_node ropsten
@@ -125,14 +136,13 @@ stop_node 1407
 grep_fail 1407
 grep_try 1406
 
-start_node 1407
+start_auxiliary_node 1407
 grep_try 1407
 grep_try 1406
 grep_fail ropsten
 
-start_node ropsten
+start_origin_node ropsten
 grep_try ropsten
 
 # When done, stop all nodes.
 stop_nodes
-

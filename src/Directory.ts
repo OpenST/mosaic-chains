@@ -5,7 +5,6 @@ import * as os from 'os';
  * Directory provides operations on strings representing directories.
  */
 export default class Directory {
-
   /**
    * @returns The absolute path to the directory in which we store mosaic data.
    */
@@ -80,6 +79,16 @@ export default class Directory {
       Directory.projectRoot,
       'src',
       'Graph',
+    );
+  }
+
+  /**
+   * @returns The absolute path to the directory where we copy code temporarily to deploy graph.
+   */
+  public static get getTempGraphInstallationDir(): string {
+    return path.join(
+      Directory.getDefaultMosaicDataDir,
+      'temp',
     );
   }
 
