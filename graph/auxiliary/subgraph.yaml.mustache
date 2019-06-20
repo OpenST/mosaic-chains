@@ -16,7 +16,7 @@ dataSources:
         - StateRootAvailable
       abis:
         - name: Anchor
-          file: "{{{projectRoot}}}/abi/0.10.0/Anchor.json"
+          file: "{{{projectRoot}}}/abi/0.10/Anchor.json"
       eventHandlers:
         - event: StateRootAvailable(uint256,bytes32)
           handler: handleStateRootAvailable
@@ -38,7 +38,7 @@ dataSources:
         - GatewayProven
       abis:
         - name: EIP20CoGateway
-          file: "{{{projectRoot}}}/abi/0.10.0/EIP20CoGateway.json"
+          file: "{{{projectRoot}}}/abi/0.10/EIP20CoGateway.json"
       eventHandlers:
         - event: StakeIntentConfirmed(bytes32,address,uint256,address,uint256,uint256,bytes32)
           handler: handleStakeIntentConfirmed

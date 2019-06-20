@@ -1,32 +1,27 @@
 import * as path from 'path';
-import * as fs from 'fs-extra';
 import * as mustache from 'mustache';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import Directory from '../Directory';
 import MosaicConfig from '../Config/MosaicConfig';
+import GraphDescription from './GraphDescription';
+import FileSystem from '../FileSystem ';
 
 /**
- * Represents a graph that is managed by docker.
+ * Represents a sub graph.
  */
-export default class DeploySubGraph {
+export default class SubGraph {
   /** The chain identifier identifies the origin chain. For example ropsten. */
   private readonly originChain: string;
 
   /** The chain identifier identifies the aux chain. For example 1407. */
   private readonly auxiliaryChain: string;
 
-  /** The mosaic directory to use which holds the chains' subdirectories. */
-  private readonly mosaicDir: string;
-
   /** To be used to determine which code is deployed. For example origin/auxiliary */
   private readonly subGraphType: string;
 
-  /** The endpoint to be used for calling Admin methods over RPC */
-  private readonly adminRpcPort: number;
-
-  /** The endpoint to be used for calling methods over IPFS */
-  private readonly ipfsPort: number;
+  /** Graph description to be used for this sub graph */
+  private readonly graphDescription: GraphDescription;
 
   /**
    * enum defining origin sub graph type.
@@ -49,46 +44,40 @@ export default class DeploySubGraph {
    * @param {string} originChain
    * @param {string} auxiliaryChain
    * @param {string} subGraphType
-   * @param {string} mosaicDir
-   * @param {number} adminRpcPort
-   * @param {number} ipfsPort
+   * @param {GraphDescription} graphDescription
    */
   constructor(
     originChain: string,
     auxiliaryChain: string,
     subGraphType: string,
-    mosaicDir: string,
-    adminRpcPort: number,
-    ipfsPort: number
+    graphDescription: GraphDescription,
   ) {
     this.originChain = originChain;
     this.auxiliaryChain = auxiliaryChain;
-    this.mosaicDir = mosaicDir;
     this.subGraphType = subGraphType;
-    this.adminRpcPort = adminRpcPort;
-    this.ipfsPort = ipfsPort;
+    this.graphDescription = graphDescription;
   }
 
   /**
    * Create local instance and deploy graph.
-   * @return {object}
+   * @return {{success: boolean; message: string}}
    */
-  public start(): object {
-    if (fs.pathExistsSync(this.getSubGraphProjectDir)) {
+  public deploy(): {success: boolean; message: string} {
+    if (FileSystem.pathExistsSync(this.getSubGraphProjectDir)) {
       // if subGraphProjectDir we would assume sub graph deployment was already complete
-      this.logInfo(`Sub graph already exists. Skipping deployment`);
-      return;
+      this.logInfo('Sub graph already exists. Skipping deployment');
+      return { success: true, message: 'Sub graph already exists. Skipping deployment' };
     }
     this.copyCodeToTempDir();
     this.installNodeModules();
     this.writeSubGraphConfigFile();
-    const createLocalResponse: object = this.createLocal();
-    if (!createLocalResponse['success']) {
+    const createLocalResponse = this.createLocal();
+    if (!createLocalResponse.success) {
       this.deleteCodeFromTempDir();
       return createLocalResponse;
     }
     const deployLocalResponse = this.deployLocal();
-    if (deployLocalResponse['success']) {
+    if (deployLocalResponse.success) {
       this.copyToSubGraphProjectDir();
     }
     this.deleteCodeFromTempDir();
@@ -101,8 +90,8 @@ export default class DeploySubGraph {
    */
   private get getSubGraphProjectDir(): string {
     return path.join(
-      this.mosaicDir,
-      this.getSubGraphProjectDirSuffix
+      this.graphDescription.mosaicDir,
+      this.getSubGraphProjectDirSuffix,
     );
   }
 
@@ -113,27 +102,19 @@ export default class DeploySubGraph {
   private get getTempGraphInstallationDir(): string {
     return path.join(
       Directory.getTempGraphInstallationDir,
-      this.getSubGraphProjectDirSuffix
+      this.getSubGraphProjectDirSuffix,
     );
   }
 
   /**
-   * Suffix which is used to predict sub graph related folders
+   * Suffix which is used to predict sub graph related folders.
    * @return {string}
    */
   private get getSubGraphProjectDirSuffix(): string {
-    if (this.subGraphType === DeploySubGraph.originSubGraphType) {
-      return path.join(
-        this.originChain,
-        'subgraph',
-        this.auxiliaryChain,
-      );
-    } else if (this.subGraphType === DeploySubGraph.auxiliarySubGraphType) {
-      return path.join(
-        this.auxiliaryChain,
-        'subgraph',
-      );
+    if (this.subGraphType === SubGraph.originSubGraphType) {
+      return Directory.getOriginSubGraphProjectDirSuffix(this.originChain, this.auxiliaryChain);
     }
+    return Directory.getAuxiliarySubGraphProjectDirSuffix(this.auxiliaryChain);
   }
 
   /**
@@ -141,13 +122,9 @@ export default class DeploySubGraph {
    */
   private copyCodeToTempDir(): void {
     this.logInfo('copying auto generated graph code to temp directory');
-    fs.ensureDirSync(this.getTempGraphInstallationDir);
-    fs.copySync(
-      path.join(
-        Directory.projectRoot,
-        'graph',
-        this.subGraphType,
-      ),
+    FileSystem.ensureDirSync(this.getTempGraphInstallationDir);
+    FileSystem.copySync(
+      Directory.getProjectAutoGenGraphDir(this.subGraphType),
       this.getTempGraphInstallationDir,
     );
   }
@@ -162,14 +139,15 @@ export default class DeploySubGraph {
 
   /**
    * Create local sub graph. This would fail if sub graph was already registered.
+   * @return {{success: boolean; message: string}}
    */
-  private createLocal(): object {
+  private createLocal(): {success: boolean; message: string} {
     this.logInfo('attempting to create local graph');
     try {
-      this.executeGraphCommand(`create --node http://localhost:${this.adminRpcPort}/ ${this.subGraphName}`);
-      return { success: true };
+      this.executeGraphCommand(`create --node http://localhost:${this.graphDescription.rpcAdminPort}/ ${this.name}`);
+      return { success: true, message: '' };
     } catch (ex) {
-      const { message } = ex;
+      const message = this.extractMessageFromError(ex);
       this.logInfo(`create local graph failed with: ${message}`);
       return { success: false, message };
     }
@@ -180,8 +158,8 @@ export default class DeploySubGraph {
    */
   private writeSubGraphConfigFile(): void {
     this.logInfo('writing subgraph.yaml');
-    const fileContentBuffer = fs.readFileSync(path.join(this.getTempGraphInstallationDir, 'subgraph.yaml.mustache'));
-    fs.writeFileSync(
+    const fileContentBuffer = FileSystem.readFileSync(path.join(this.getTempGraphInstallationDir, 'subgraph.yaml.mustache'));
+    FileSystem.writeFileSync(
       path.join(this.getTempGraphInstallationDir, 'subgraph.yaml'),
       mustache.render(fileContentBuffer.toString(), this.templateVariables()),
     );
@@ -191,23 +169,21 @@ export default class DeploySubGraph {
    * Returns values for all template variables which need to be replaced in subgraph.yaml.
    */
   private templateVariables(): object {
-    if (this.subGraphType === DeploySubGraph.originSubGraphType) {
+    if (this.subGraphType === SubGraph.originSubGraphType) {
       return this.originChainTemplateVariables();
-    } else if (this.subGraphType === DeploySubGraph.auxiliarySubGraphType) {
-      return this.auxiliaryChainTemplateVariables();
     }
+    return this.auxiliaryChainTemplateVariables();
   }
 
   /**
    * the name of sub graph.
    * @returns The prefix.
    */
-  private get subGraphName(): string {
-    if (this.subGraphType === DeploySubGraph.originSubGraphType) {
+  private get name(): string {
+    if (this.subGraphType === SubGraph.originSubGraphType) {
       return `mosaic/origin-${this.auxiliaryChain}`;
-    } else if (this.subGraphType === DeploySubGraph.auxiliarySubGraphType) {
-      return `mosaic/auxiliary-${this.auxiliaryChain}`;
     }
+    return `mosaic/auxiliary-${this.auxiliaryChain}`;
   }
 
   /**
@@ -237,19 +213,20 @@ export default class DeploySubGraph {
 
   /**
    * Create local instance and deploy sub graph.
+   * @return {{success: boolean; message: string}}
    */
-  private deployLocal(): object {
+  private deployLocal(): {success: boolean; message: string} {
     this.logInfo('attempting to deploy local graph');
     try {
       this.executeGraphCommand(
-        `deploy --node http://localhost:${this.adminRpcPort}/ --ipfs http://localhost:${this.ipfsPort} ${this.subGraphName}`
+        `deploy --node http://localhost:${this.graphDescription.rpcAdminPort}/ --ipfs http://localhost:${this.graphDescription.ipfsPort} ${this.name}`,
       );
-      return { success: true };
+      return { success: true, message: '' };
     } catch (ex) {
-      const { message } = ex;
+      const message = this.extractMessageFromError(ex);
       this.logInfo(`deploy local graph failed with: ${message}`);
       this.logInfo('removing local graph');
-      this.executeGraphCommand(`remove --node http://localhost:${this.adminRpcPort}/ ${this.subGraphName}`);
+      this.executeGraphCommand(`remove --node http://localhost:${this.graphDescription.rpcAdminPort}/ ${this.name}`);
       return { success: false, message };
     }
   }
@@ -267,7 +244,7 @@ export default class DeploySubGraph {
    */
   private deleteCodeFromTempDir(): void {
     this.logInfo('deleting auto generated code from temp directory');
-    fs.removeSync(this.getTempGraphInstallationDir);
+    FileSystem.removeSync(this.getTempGraphInstallationDir);
   }
 
   /**
@@ -276,11 +253,27 @@ export default class DeploySubGraph {
   private copyToSubGraphProjectDir(): void {
     this.logInfo('persisting auto generated graph code');
     const subGraphProjectDir = this.getSubGraphProjectDir;
-    fs.ensureDirSync(subGraphProjectDir);
-    fs.copySync(
+    FileSystem.ensureDirSync(subGraphProjectDir);
+    FileSystem.copySync(
       this.getTempGraphInstallationDir,
       subGraphProjectDir,
     );
+  }
+
+  /**
+   * Extract message from error object.
+   * @param {Error} error
+   * @return {string}
+   */
+  private extractMessageFromError(error: Error): string {
+    const jsonErrorObject = JSON.parse(JSON.stringify(error));
+    if (jsonErrorObject.stderr.data.length > 0) {
+      return Buffer.from(jsonErrorObject.stderr.data).toString();
+    }
+    if (jsonErrorObject.stdout.data.length > 0) {
+      return Buffer.from(jsonErrorObject.stdout.data).toString();
+    }
+    return 'Something went wrong';
   }
 
   /**

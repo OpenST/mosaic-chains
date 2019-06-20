@@ -16,7 +16,7 @@ dataSources:
         - StakeRequested
       abis:
         - name: OSTComposer
-          file: "{{{projectRoot}}}/abi/0.10.0/OSTComposer.json"
+          file: "{{{projectRoot}}}/abi/0.10/OSTComposer.json"
       eventHandlers:
         - event: StakeRequested(uint256,address,uint256,uint256,uint256,address,address,bytes32)
           handler: handleStakeRequested
@@ -37,7 +37,7 @@ dataSources:
         - StakeProgressed
       abis:
         - name: EIP20Gateway
-          file: "{{{projectRoot}}}/abi/0.10.0/EIP20Gateway.json"
+          file: "{{{projectRoot}}}/abi/0.10/EIP20Gateway.json"
       eventHandlers:
         - event: StakeIntentDeclared(bytes32,address,uint256,address,uint256)
           handler: handleStakeIntentDeclared

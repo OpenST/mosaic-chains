@@ -97,8 +97,8 @@ function rpc_node_try {
 }
 
 function rpc_origin_sub_graph_try {
-    info "Checking RPC connection to origin sub graph for $2 chain on node for $1."
-    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/origin-verifier.ts $1 6$2" "Origin sub graph for $2 was expected to be deployed on $1, but wasn't."
+    info "Checking RPC connection to origin sub graph at port $2 on node for $1."
+    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/origin-verifier.ts $1 $2" "Origin sub graph at port $2 was expected to be deployed on $1, but wasn't."
 }
 
 function rpc_auxiliary_sub_graph_try {
@@ -122,8 +122,8 @@ rpc_node_try 1406
 rpc_node_try 1407
 rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
 
-rpc_origin_sub_graph_try 1406 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
-rpc_origin_sub_graph_try 1407 '0003' # Given like this as it is used for the port in `rpc_origin_sub_graph_try`.
+rpc_origin_sub_graph_try 1406 60003
+rpc_origin_sub_graph_try 1407 60003
 
 rpc_auxiliary_sub_graph_try 1406
 rpc_auxiliary_sub_graph_try 1407

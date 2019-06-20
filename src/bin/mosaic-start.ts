@@ -6,7 +6,8 @@ import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
 import GraphOptions from './GraphOptions';
 import GraphDescription from '../Graph/GraphDescription';
-import GraphStart from '../Graph/GraphStart';
+import SubGraphDeployer from '../Graph/SubGraphDeployer';
+import Graph from '../Graph/Graph';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -47,16 +48,16 @@ mosaic
       graphDescription.mosaicDir = mosaicDir;
       graphDescription.ethereumRpcPort = rpcPort;
 
-      let graphStart;
-
-      // options.origin passed only in case of starting an auxiliary chain
-      if (options.origin) {
-        graphStart = new GraphStart(graphDescription, options.origin, chain);
-      } else {
-        graphStart = new GraphStart(graphDescription, chain, null);
-      }
-
-      return graphStart.start();
+      new Graph(graphDescription).start().then(() => {
+        let subGraphDeployer;
+        // options.origin passed only in case of starting an auxiliary chain
+        if (options.origin) {
+          subGraphDeployer = new SubGraphDeployer(graphDescription, options.origin, chain);
+        } else {
+          subGraphDeployer = new SubGraphDeployer(graphDescription, chain, null);
+        }
+        return subGraphDeployer.deploy();
+      });
     }
   })
   .parse(process.argv);

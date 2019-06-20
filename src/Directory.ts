@@ -83,6 +83,43 @@ export default class Directory {
   }
 
   /**
+   * @param {string} subGraphType
+   * @returns The absolute path to the directory of the auto generated Graph code.
+   */
+  public static getProjectAutoGenGraphDir(subGraphType: string): string {
+    return path.join(
+      Directory.projectRoot,
+      'graph',
+      subGraphType,
+    );
+  }
+
+  /**
+   *
+   * @param {string} originChain
+   * @param {string} auxiliaryChain
+   * @return {string}
+   */
+  public static getOriginSubGraphProjectDirSuffix(originChain: string, auxiliaryChain: string): string {
+    return path.join(
+      originChain,
+      'subgraph',
+      auxiliaryChain,
+    );
+  }
+
+  /**
+   * @param {string} auxiliaryChain
+   * @return {string}
+   */
+  public static getAuxiliarySubGraphProjectDirSuffix(auxiliaryChain: string): string {
+    return path.join(
+      auxiliaryChain,
+      'subgraph',
+    );
+  }
+
+  /**
    * @returns The absolute path to the directory where we copy code temporarily to deploy graph.
    */
   public static get getTempGraphInstallationDir(): string {
