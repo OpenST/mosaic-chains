@@ -3,7 +3,7 @@ import * as path from 'path';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import NodeDescription from './NodeDescription';
-import PublishMosaicConfig from "../Config/PublishMosaicConfig";
+import PublishMosaicConfig from '../Config/PublishMosaicConfig';
 
 /**
  * Represents a chain that is managed by docker.

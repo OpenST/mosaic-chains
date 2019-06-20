@@ -37,7 +37,7 @@ echo "Installing openst-mosaic-chains npm package into newly created project."
 npm install openst-mosaic-chains-*.tgz || exit 1
 
 echo "Accessing as binary."
-./node_modules/.bin/mosaic start 1407 || exit 1
+./node_modules/.bin/mosaic start 1407 --origin ropsten || exit 1
 ./node_modules/.bin/mosaic list || exit 1
 ./node_modules/.bin/mosaic stop 1407 || exit 1
 

@@ -5,7 +5,6 @@ import * as os from 'os';
  * Directory provides operations on strings representing directories.
  */
 export default class Directory {
-
   /**
    * @returns The absolute path to the directory in which we store mosaic data.
    */
@@ -80,6 +79,53 @@ export default class Directory {
       Directory.projectRoot,
       'src',
       'Graph',
+    );
+  }
+
+  /**
+   * @param {string} subGraphType
+   * @returns The absolute path to the directory of the auto generated Graph code.
+   */
+  public static getProjectAutoGenGraphDir(subGraphType: string): string {
+    return path.join(
+      Directory.projectRoot,
+      'graph',
+      subGraphType,
+    );
+  }
+
+  /**
+   *
+   * @param {string} originChain
+   * @param {string} auxiliaryChain
+   * @return {string}
+   */
+  public static getOriginSubGraphProjectDirSuffix(originChain: string, auxiliaryChain: string): string {
+    return path.join(
+      originChain,
+      'subgraph',
+      auxiliaryChain,
+    );
+  }
+
+  /**
+   * @param {string} auxiliaryChain
+   * @return {string}
+   */
+  public static getAuxiliarySubGraphProjectDirSuffix(auxiliaryChain: string): string {
+    return path.join(
+      auxiliaryChain,
+      'subgraph',
+    );
+  }
+
+  /**
+   * @returns The absolute path to the directory where we copy code temporarily to deploy graph.
+   */
+  public static get getTempGraphInstallationDir(): string {
+    return path.join(
+      Directory.getDefaultMosaicDataDir,
+      'temp',
     );
   }
 

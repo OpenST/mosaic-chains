@@ -5,11 +5,12 @@ import Shell from '../Shell';
 import GraphDescription from './GraphDescription';
 import Directory from '../Directory';
 
+const waitPort = require('wait-port');
+
 /**
  * Represents a graph that is managed by docker.
  */
 export default class Graph {
-
   /** The chain identifier identifies the chain this node should run. For example ropsten or 200. */
   private readonly chain: string;
 
@@ -69,7 +70,7 @@ export default class Graph {
   /**
    * Starts the docker container that runs this graph.
    */
-  public start(): void {
+  public start(): Promise<void> {
     this.logInfo('attempting to start graph container');
     Graph.ensureNetworkExists();
     const commandParts = this.defaultDockerGraphCommand;
@@ -78,6 +79,7 @@ export default class Graph {
     const command = commandParts.join(' ');
     this.logInfo(`"start graph container command: ${command}"`);
     Shell.executeInShell(command);
+    return this.waitForNodeToBeAccessible();
   }
 
   /**
@@ -117,11 +119,33 @@ export default class Graph {
   }
 
   /**
+   * Returns a promise which resolves when node becomes accessible.
+   * @return {Promise<>}
+   */
+  private waitForNodeToBeAccessible(): Promise<any> {
+    const waitForWebsocketPort = waitPort({ port: this.websocketPort, output: 'silent' });
+    const waitForRpcAdminPort = waitPort({ port: this.rpcAdminPort, output: 'silent' });
+    const waitForRpcPort = waitPort({ port: this.rpcPort, output: 'silent' });
+    const waitForPostgresPort = waitPort({ port: this.postgresPort, output: 'silent' });
+    const waitForIpfsPort = waitPort({ port: this.ipfsPort, output: 'silent' });
+    // wait for all graph related ports to be available for use
+    return Promise.all([
+      waitForWebsocketPort,
+      waitForRpcAdminPort,
+      waitForRpcPort,
+      waitForPostgresPort,
+      waitForIpfsPort,
+    ]).then(() => new Promise((resolve, reject) => {
+      // even after the ports are available the nodes need a bit of time to get online
+      setTimeout(resolve, 10000);
+    }));
+  }
+
+  /**
    * Logs the given message as `info`. Adds the chain id to the metadata of the log message.
    * @param message The message to log.
    */
   private logInfo(message: string): void {
     Logger.info(message, { chain: this.chain });
   }
-
 }

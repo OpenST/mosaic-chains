@@ -14,7 +14,7 @@ mosaic.action(
     originWebsocket: string,
     auxiliaryWebsocket: string,
     originChainIdentifier: string,
-    auxiliaryChainIdentifier: string
+    auxiliaryChainIdentifier: string,
   ) => {
     try {
       const chainVerifier = new ChainVerifier(
@@ -25,7 +25,7 @@ mosaic.action(
       );
       await chainVerifier.verify();
     } catch (error) {
-      Logger.error('error while executing mosaic chain verification', { error: error.toString()});
+      Logger.error('error while executing mosaic chain verification', { error: error.toString() });
       process.exit(1);
     }
 

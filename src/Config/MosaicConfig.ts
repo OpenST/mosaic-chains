@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 import { Validator } from 'jsonschema';
 import Directory from '../Directory';
 import Logger from '../Logger';
-import {InvalidMosaicConfigException, MosaicConfigNotFoundException } from '../Exception';
+import { InvalidMosaicConfigException, MosaicConfigNotFoundException } from '../Exception';
 
 const schema = require('./MosaicConfig.schema.json');
 
@@ -130,9 +130,8 @@ export default class MosaicConfig {
     if (fs.existsSync(filePath)) {
       const configObject = MosaicConfig.readConfigFromFile(filePath);
       return new MosaicConfig(configObject);
-    } else {
-      return new MosaicConfig({} as any);
     }
+    return new MosaicConfig({} as any);
   }
 
   /**
@@ -143,9 +142,8 @@ export default class MosaicConfig {
     if (fs.existsSync(filePath)) {
       const configObject = MosaicConfig.readConfigFromFile(filePath);
       return new MosaicConfig(configObject);
-    } else {
-      throw new MosaicConfigNotFoundException(`Missing config file at path: ${filePath}`);
     }
+    throw new MosaicConfigNotFoundException(`Missing config file at path: ${filePath}`);
   }
 
   /**
@@ -176,9 +174,8 @@ export default class MosaicConfig {
       const configObject = JSON.parse(configString);
       MosaicConfig.validateSchema(configObject);
       return configObject;
-    } else {
-      throw new InvalidMosaicConfigException(`blank config file found at: ${filePath}`);
     }
+    throw new InvalidMosaicConfigException(`blank config file found at: ${filePath}`);
   }
 
   /**
@@ -193,5 +190,4 @@ export default class MosaicConfig {
       throw new InvalidMosaicConfigException(error.message);
     }
   }
-
 }
