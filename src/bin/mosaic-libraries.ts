@@ -19,7 +19,7 @@ mosaic.action(
   ) => {
     try {
       // Publishes mosaic configs for existing chains
-      PublishMosaicConfig.tryPublish();
+      PublishMosaicConfig.tryPublish(chain);
 
       const originWeb3 = new Web3(originWebsocket);
       const {

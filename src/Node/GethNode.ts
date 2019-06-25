@@ -48,8 +48,9 @@ export default class GethNode extends Node {
     this.bootnodes = fs.readFileSync(
       path.join(
         Directory.projectRoot,
-        'utility_chains',
-        `utility_chain_${this.chain}`,
+        'chains',
+        this.originChain,
+        this.chain,
         'bootnodes',
       ),
       {
@@ -133,8 +134,9 @@ export default class GethNode extends Node {
       fs.copySync(
         path.join(
           Directory.projectRoot,
-          'utility_chains',
-          `utility_chain_${this.chain}`,
+          'chains',
+          this.originChain,
+          this.chain,
           'geth',
         ),
         path.join(this.chainDir, 'geth'),

@@ -1,6 +1,6 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
 import Directory from '../Directory';
+import FileSystem from '../FileSystem ';
 
 /**
  * Publish Mosaic Config.
@@ -9,23 +9,31 @@ export default class PublishMosaicConfig {
   /**
    * copy over all the non existent files to publish folder
    */
-  public static tryPublish(): void {
-    const publishMosaicConfigDir = Directory.getPublishMosaicConfigDir;
-    fs.ensureDirSync(publishMosaicConfigDir);
-    const publishedFileNames: string[] = fs.readdirSync(publishMosaicConfigDir);
-    const publishedFileNamesMap = {};
-    for (const publishedFileName of publishedFileNames) {
-      publishedFileNamesMap[publishedFileName] = 1;
-    }
-    const projectMosaicConfigDir = Directory.getProjectMosaicConfigDir;
-    const toBePublishedFileNames: string[] = fs.readdirSync(projectMosaicConfigDir);
-    for (const toBePublishedFileName of toBePublishedFileNames) {
-      if (!publishedFileNamesMap.hasOwnProperty(toBePublishedFileName)) {
-        fs.copySync(
-          path.join(projectMosaicConfigDir, toBePublishedFileName),
-          path.join(publishMosaicConfigDir, toBePublishedFileName),
-        );
-      }
+  public static tryPublish(originChain: string): void {
+
+    const configHomePath = path.join(
+      Directory.getDefaultMosaicDataDir,
+      originChain,
+    );
+
+    FileSystem.ensureDirSync(configHomePath);
+
+    const mosaicConfig = path.join(
+      configHomePath,
+      'mosaic.json',
+    );
+
+    if (FileSystem.existsSync(mosaicConfig) === false) {
+      const projectConfig = path.join(
+        Directory.projectRoot,
+        originChain,
+        'mosaic.json',
+      );
+
+      FileSystem.copySync(
+        mosaicConfig,
+        projectConfig,
+      );
     }
   }
 }

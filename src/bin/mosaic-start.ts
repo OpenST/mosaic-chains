@@ -16,7 +16,6 @@ mosaic = NodeOptions.addCliOptions(mosaic);
 mosaic = GraphOptions.addCliOptions(mosaic);
 
 mosaic
-  .option('-o,--origin <string>', 'identifier for origin chain. To be passed while starting auxiliary chain')
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-wgn,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
@@ -29,6 +28,7 @@ mosaic
       keepAfterStop,
       unlock,
       password,
+      originChain,
     } = NodeOptions.parseOptions(options, chain);
     const node: Node = NodeFactory.create({
       chain,
@@ -39,6 +39,7 @@ mosaic
       keepAfterStop,
       unlock,
       password,
+      originChain,
     });
     node.start();
 

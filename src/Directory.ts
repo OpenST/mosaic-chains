@@ -16,16 +16,6 @@ export default class Directory {
   }
 
   /**
-   * @returns The absolute path to the directory in which we publish mosaic configs.
-   */
-  public static get getPublishMosaicConfigDir(): string {
-    return path.join(
-      Directory.getDefaultMosaicDataDir,
-      'configs',
-    );
-  }
-
-  /**
    * @returns The absolute path to the root of this project.
    */
   public static get projectRoot(): string {
@@ -36,38 +26,27 @@ export default class Directory {
   }
 
   /**
-   * @returns The absolute path to the utility chains directory in the project.
-   */
-  public static get projectUtilityChainsDir(): string {
-    return path.join(
-      Directory.projectRoot,
-      'utility_chains',
-    );
-  }
-
-  /**
-   * @param chainId The chain id of the chain.
+   * @param originChain The origin chain identifier.
+   * @param auxiliaryChainId The auxiliary chain id of the chain.
    * @returns The absolute path to the directory of the given utility chain.
-   * @throws If `chainId` is an empty string.
+   * @throws If `auxiliaryChainId` or `originChain` is an empty string.
    */
-  public static getProjectUtilityChainDir(chainId: string): string {
-    if (chainId === '') {
-      throw new Error('a chain id cannot be empty in order to get its directory');
+  public static getProjectUtilityChainDir(
+    originChain: string,
+    auxiliaryChainId: string,
+  ): string {
+    if (originChain === '') {
+      throw new Error('origin chain identifier cannot be empty in order to get its directory');
+    }
+    if (auxiliaryChainId === '') {
+      throw new Error('auxiliary chain id cannot be empty in order to get its directory');
     }
 
     return path.join(
-      Directory.projectUtilityChainsDir,
-      `utility_chain_${chainId}`,
-    );
-  }
-
-  /**
-   * @returns The absolute path to the directory of the code base where we keep mosaic config of existing chains.
-   */
-  public static get getProjectMosaicConfigDir(): string {
-    return path.join(
       Directory.projectRoot,
-      'mosaic_configs',
+      'chains',
+      originChain,
+      auxiliaryChainId,
     );
   }
 
@@ -100,9 +79,13 @@ export default class Directory {
    * @param {string} auxiliaryChain
    * @return {string}
    */
-  public static getOriginSubGraphProjectDirSuffix(originChain: string, auxiliaryChain: string): string {
+  public static getOriginSubGraphProjectDirSuffix(
+    originChain: string,
+    auxiliaryChain: string,
+  ): string {
     return path.join(
       originChain,
+      'origin',
       'subgraph',
       auxiliaryChain,
     );

@@ -121,11 +121,11 @@ export default class MosaicConfig {
    * @param {string} chain identifier
    * @return {MosaicConfig}
    */
-  public static fromChain(chain: string): MosaicConfig {
-    const publishMosaicConfigDir = Directory.getPublishMosaicConfigDir;
+  public static fromChain(originChain: string): MosaicConfig {
     const filePath = path.join(
-      publishMosaicConfigDir,
-      `${chain}.json`,
+      Directory.getDefaultMosaicDataDir,
+      originChain,
+      'mosaic.json',
     );
     if (fs.existsSync(filePath)) {
       const configObject = MosaicConfig.readConfigFromFile(filePath);
@@ -150,11 +150,15 @@ export default class MosaicConfig {
    * Saves this config to a file in its auxiliary chain directory.
    */
   public writeToMosaicConfigDirectory(): void {
-    const mosaicConfigDir = Directory.getPublishMosaicConfigDir;
+    const mosaicConfigDir = path.join(
+      Directory.getDefaultMosaicDataDir,
+      this.originChain.chain,
+    );
+
     fs.ensureDirSync(mosaicConfigDir);
     const configPath = path.join(
       mosaicConfigDir,
-      `${this.originChain.chain}.json`,
+      'mosaic.json',
     );
     Logger.info('storing mosaic config', { configPath });
     fs.writeFileSync(

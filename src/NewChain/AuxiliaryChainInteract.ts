@@ -65,7 +65,7 @@ export default class AuxiliaryChainInteract {
     private originChainId: string,
     private nodeDescription: NodeDescription,
   ) {
-    this.chainDir = path.join(nodeDescription.mosaicDir, this.chainId);
+    this.chainDir = path.join(nodeDescription.mosaicDir, originChainId, this.chainId);
   }
 
   /**
@@ -614,7 +614,7 @@ export default class AuxiliaryChainInteract {
    * to connect.
    */
   private copyStateToChainsDir(): void {
-    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.chainId));
+    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.originChainId, this.chainId));
 
     this.copy('geth');
     this.copy('genesis.json');
@@ -626,7 +626,7 @@ export default class AuxiliaryChainInteract {
   private copy(file: string): void {
     const source: string = path.join(this.chainDir, file);
     const destination: string = path.join(
-      Directory.getProjectUtilityChainDir(this.chainId),
+      Directory.getProjectUtilityChainDir(this.originChainId, this.chainId),
       file,
     );
     this.logInfo('copying chains state to utility chains directory', { source, destination });

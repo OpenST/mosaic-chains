@@ -32,9 +32,6 @@ export default class Initialization {
     originWebsocket: string,
     auxiliaryNodeDescription: NodeDescription,
   ) {
-    // Publishes mosaic configs for existing chains
-    PublishMosaicConfig.tryPublish();
-
     // Preparing environment and objects before actually creating the new chain:
     const initConfig: InitConfig = InitConfig.createFromFile(newChainId);
 
@@ -54,6 +51,9 @@ export default class Initialization {
       originChainId,
       auxiliaryNodeDescription,
     );
+
+    // Publishes mosaic configs for existing chains
+    PublishMosaicConfig.tryPublish(originChainId);
 
     const mosaicConfig = MosaicConfig.fromChain(originChainId);
     mosaicConfig.originChain.chain = originChainId;
@@ -79,7 +79,7 @@ export default class Initialization {
       '⚠️ The new sealer is still running at a gas price of zero. If you want to change the gas cost, you need to run a different sealer.',
     );
     Logger.warn(
-      `⚠️ The new auxiliary chain requires bootnodes. Add a \`bootnodes\` file to \`${Directory.getProjectUtilityChainDir(newChainId)}\`.`,
+      `⚠️ The new auxiliary chain requires bootnodes. Add a \`bootnodes\` file to \`${Directory.getProjectUtilityChainDir(originChainId, newChainId)}\`.`,
     );
   }
 
