@@ -2,6 +2,10 @@ type StateRootAvailable @entity {
   id: ID!
   _blockHeight: BigInt! # uint256
   _stateRoot: Bytes! # bytes32
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type StakeIntentConfirmed @entity {
@@ -13,6 +17,10 @@ type StakeIntentConfirmed @entity {
   _amount: BigInt! # uint256
   _blockHeight: BigInt! # uint256
   _hashLock: Bytes! # bytes32
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type MintProgressed @entity {
@@ -25,6 +33,10 @@ type MintProgressed @entity {
   _rewardAmount: BigInt! # uint256
   _proofProgress: Boolean! # bool
   _unlockSecret: Bytes! # bytes32
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type RevertStakeIntentConfirmed @entity {
@@ -33,6 +45,10 @@ type RevertStakeIntentConfirmed @entity {
   _staker: Bytes! # address
   _stakerNonce: BigInt! # uint256
   _amount: BigInt! # uint256
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type RevertStakeProgressed @entity {
@@ -41,6 +57,10 @@ type RevertStakeProgressed @entity {
   _staker: Bytes! # address
   _stakerNonce: BigInt! # uint256
   _amount: BigInt! # uint256
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type RedeemIntentDeclared @entity {
@@ -50,6 +70,10 @@ type RedeemIntentDeclared @entity {
   _redeemerNonce: BigInt! # uint256
   _beneficiary: Bytes! # address
   _amount: BigInt! # uint256
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type RedeemProgressed @entity {
@@ -60,6 +84,10 @@ type RedeemProgressed @entity {
   _amount: BigInt! # uint256
   _proofProgress: Boolean! # bool
   _unlockSecret: Bytes! # bytes32
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type RevertRedeemDeclared @entity {
@@ -68,6 +96,10 @@ type RevertRedeemDeclared @entity {
   _redeemer: Bytes! # address
   _redeemerNonce: BigInt! # uint256
   _amount: BigInt! # uint256
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type RedeemReverted @entity {
@@ -76,6 +108,10 @@ type RedeemReverted @entity {
   _redeemer: Bytes! # address
   _redeemerNonce: BigInt! # uint256
   _amount: BigInt! # uint256
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type GatewayProven @entity {
@@ -84,6 +120,10 @@ type GatewayProven @entity {
   _blockHeight: BigInt! # uint256
   _storageRoot: Bytes! # bytes32
   _wasAlreadyProved: Boolean! # bool
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type BountyChangeInitiated @entity {
@@ -91,10 +131,18 @@ type BountyChangeInitiated @entity {
   _currentBounty: BigInt! # uint256
   _proposedBounty: BigInt! # uint256
   _unlockHeight: BigInt! # uint256
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type BountyChangeConfirmed @entity {
   id: ID!
   _currentBounty: BigInt! # uint256
   _changedBounty: BigInt! # uint256
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
