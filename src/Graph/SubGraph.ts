@@ -114,7 +114,7 @@ export default class SubGraph {
     if (this.subGraphType === SubGraph.originSubGraphType) {
       return Directory.getOriginSubGraphProjectDirSuffix(this.originChain, this.auxiliaryChain);
     }
-    return Directory.getAuxiliarySubGraphProjectDirSuffix(this.auxiliaryChain);
+    return Directory.getAuxiliarySubGraphProjectDirSuffix(this.originChain, this.auxiliaryChain);
   }
 
   /**

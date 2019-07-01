@@ -18,6 +18,10 @@ mosaic.action(
     options,
   ) => {
     const nodeOptions: NodeOptions = NodeOptions.parseOptions(options, newChainId);
+    if (nodeOptions.originChain === '') {
+      Logger.error('Unknown origin, please provide --origin');
+      process.exit(1);
+    }
     let nodeDescription = new NodeDescription(newChainId);
     nodeDescription = Object.assign(nodeDescription, nodeOptions);
     nodeDescription.password = Directory.sanitize(passwordFile);

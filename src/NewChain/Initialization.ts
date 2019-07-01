@@ -48,14 +48,14 @@ export default class Initialization {
     const auxiliaryChainInteract: AuxiliaryChainInteract = new AuxiliaryChainInteract(
       initConfig,
       newChainId,
-      originChainId,
+      auxiliaryNodeDescription.originChain,
       auxiliaryNodeDescription,
     );
 
     // Publishes mosaic configs for existing chains
-    PublishMosaicConfig.tryPublish(originChainId);
+    PublishMosaicConfig.tryPublish(auxiliaryNodeDescription.originChain);
 
-    const mosaicConfig = MosaicConfig.fromChain(originChainId);
+    const mosaicConfig = MosaicConfig.fromChain(auxiliaryNodeDescription.originChain);
     mosaicConfig.originChain.chain = originChainId;
     mosaicConfig.originChain.contractAddresses.simpleTokenAddress = initConfig.originOstAddress;
 

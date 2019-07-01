@@ -92,13 +92,19 @@ export default class Directory {
   }
 
   /**
+   * @param {string} originChain
    * @param {string} auxiliaryChain
    * @return {string}
    */
-  public static getAuxiliarySubGraphProjectDirSuffix(auxiliaryChain: string): string {
+  public static getAuxiliarySubGraphProjectDirSuffix(
+    originChain: string,
+    auxiliaryChain: string,
+  ): string {
     return path.join(
+      originChain,
       auxiliaryChain,
       'subgraph',
+      auxiliaryChain,
     );
   }
 

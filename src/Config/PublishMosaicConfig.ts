@@ -10,30 +10,32 @@ export default class PublishMosaicConfig {
    * copy over all the non existent files to publish folder
    */
   public static tryPublish(originChain: string): void {
-
-    const configHomePath = path.join(
-      Directory.getDefaultMosaicDataDir,
+    const projectConfig = path.join(
+      Directory.projectRoot,
+      'chains',
       originChain,
-    );
-
-    FileSystem.ensureDirSync(configHomePath);
-
-    const mosaicConfig = path.join(
-      configHomePath,
       'mosaic.json',
     );
 
-    if (FileSystem.existsSync(mosaicConfig) === false) {
-      const projectConfig = path.join(
-        Directory.projectRoot,
+    if (FileSystem.existsSync(projectConfig) === true) {
+      const configHomePath = path.join(
+        Directory.getDefaultMosaicDataDir,
         originChain,
+      );
+
+      FileSystem.ensureDirSync(configHomePath);
+
+      const mosaicConfig = path.join(
+        configHomePath,
         'mosaic.json',
       );
 
-      FileSystem.copySync(
-        mosaicConfig,
-        projectConfig,
-      );
+      if (FileSystem.existsSync(mosaicConfig) === false) {
+        FileSystem.copySync(
+          projectConfig,
+          mosaicConfig,
+        );
+      }
     }
   }
 }

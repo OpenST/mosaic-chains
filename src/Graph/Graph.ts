@@ -38,6 +38,9 @@ export default class Graph {
   /** The name of the docker container which runs graph node. */
   private readonly containerName: string;
 
+  /** The origin chain where the mosaic config is located. */
+  private readonly originChain?: string;
+
   /**
    * the prefix used in network & container names.
    * @returns The prefix.
@@ -63,6 +66,7 @@ export default class Graph {
     this.rpcAdminPort = graphDescription.rpcAdminPort;
     this.ipfsPort = graphDescription.ipfsPort;
     this.postgresPort = graphDescription.postgresPort;
+    this.originChain = graphDescription.originChain;
 
     this.containerName = `${Graph.namePrefix}${this.chain}`;
   }
@@ -109,13 +113,24 @@ export default class Graph {
       `MOSAIC_GRAPH_RPC_ADMIN_PORT=${this.rpcAdminPort}`,
       `MOSAIC_GRAPH_IPFS_PORT=${this.ipfsPort}`,
       `MOSAIC_GRAPH_POSTGRES_PORT=${this.postgresPort}`,
-      `MOSAIC_GRAPH_DATA_FOLDER=${path.join(this.mosaicDir, this.chain, 'graph')}`,
+      `MOSAIC_GRAPH_DATA_FOLDER=${this.getMosaicGraphDataFolder()}`,
       `MOSAIC_ETHEREUM_RPC_PORT=${this.ethereumRpcPort}`,
       `MOSAIC_GRAPH_NODE_HOST=${ip.address()}`,
       'docker-compose',
       `-f ${path.join(Directory.getProjectGraphDir(), 'docker-compose.yml')}`,
       '-p', this.containerName,
     ];
+  }
+
+  /**
+   * Returns the graph data folder.
+   * @return {string}
+   */
+  private getMosaicGraphDataFolder(): string {
+    if (this.originChain) {
+      return path.join(this.mosaicDir, this.originChain, this.chain, 'graph');
+    }
+    return path.join(this.mosaicDir, this.chain, 'origin', 'graph');
   }
 
   /**

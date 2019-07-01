@@ -26,8 +26,10 @@ describe('ChainFactory.build()', () => {
     ];
 
     for (const id of ids) {
-      const chain: Node = NodeFactory.create(new NodeDescription(id));
-      assert.instanceOf(chain, GethNode);
+      const nodeDescription = new NodeDescription(id);
+      nodeDescription.originChain = 'ropsten';
+      const node: Node = NodeFactory.create(nodeDescription);
+      assert.instanceOf(node, GethNode);
     }
   });
 });

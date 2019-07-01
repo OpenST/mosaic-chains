@@ -48,11 +48,11 @@ export default class OriginChainInteract {
     expectedOstCoGatewayAddress: string,
     originLibraries: OriginLibraries,
   ): Promise<{
-      anchorOrganization: ContractInteract.Organization;
-      anchor: ContractInteract.Anchor;
-      ostGatewayOrganization: ContractInteract.Organization;
-      ostGateway: ContractInteract.EIP20Gateway;
-    }> {
+    anchorOrganization: ContractInteract.Organization;
+    anchor: ContractInteract.Anchor;
+    ostGatewayOrganization: ContractInteract.Organization;
+    ostGateway: ContractInteract.EIP20Gateway;
+  }> {
     this.logInfo('deploying contracts');
 
     const anchorOrganization = await this.deployOrganization(
@@ -197,10 +197,10 @@ export default class OriginChainInteract {
     web3: Web3,
     deployer: string,
   ): Promise<{
-      gatewayLib: ContractInteract.GatewayLib;
-      messageBus: ContractInteract.MessageBus;
-      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
-    }> {
+    gatewayLib: ContractInteract.GatewayLib;
+    messageBus: ContractInteract.MessageBus;
+    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+  }> {
     return Contracts.deployGatewayLibraries(web3, { from: deployer });
   }
 

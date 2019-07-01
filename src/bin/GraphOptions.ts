@@ -58,6 +58,7 @@ export default class GraphOptions {
     graphDescription.ipfsPort = options.graphIpfsPort || Integer.parseString(chainIdNumber) + DEFAULT_IPFS_PORT;
     graphDescription.postgresPort = options.graphPostgresPort || Integer.parseString(chainIdNumber) + DEFAULT_POSTGRES_PORT;
     graphDescription.keepAfterStop = !!options.keep;
+    graphDescription.originChain = options.origin;
     return graphDescription;
   }
 }

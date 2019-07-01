@@ -74,11 +74,10 @@ export default abstract class Node {
 
     if (this.originChain === '') {
       this.chainDir = path.join(this.mosaicDir, this.chain, 'origin');
-      this.containerName = `${Node.prefix}${this.chain}`;
     } else {
       this.chainDir = path.join(this.mosaicDir, this.originChain, this.chain);
-      this.containerName = `${Node.prefix}${this.originChain}_${this.chain}`;
     }
+    this.containerName = `${Node.prefix}${this.chain}`;
   }
 
   public getChain(): string {
@@ -150,7 +149,10 @@ export default abstract class Node {
       this.logInfo(`${this.mosaicDir} does not exist; initializing`);
       fs.mkdirSync(this.mosaicDir);
     }
-    PublishMosaicConfig.tryPublish(this.originChain);
+
+    // If the `this.originChain` is not present, then `this.chain` is the
+    // origin chain itself.
+    PublishMosaicConfig.tryPublish(this.originChain || this.chain);
   }
 
   /**

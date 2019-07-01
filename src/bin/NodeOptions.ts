@@ -93,7 +93,7 @@ export default class NodeOptions {
       keepAfterStop: !!options.keep,
       unlock: options.unlock || '',
       password: options.password || '',
-      originChain: options.originChain || '',
+      originChain: options.origin || '',
     });
 
     parsedOptions.mosaicDir = Directory.sanitize(parsedOptions.mosaicDir);
