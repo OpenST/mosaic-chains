@@ -6,11 +6,9 @@ Mosaic will automatically identify if you want to run a geth node or a parity no
 Any string supported by parity as a network option will start a parity node container.
 Any other string it tries to match to one of the available IDs in the `./chains` directory.
 
-The command to start a chain is `./mosac start <chain_id> --origin <origin_chain>`
+The command to start a chain is `./mosac start <chain_id>`
 
-if `--origin` is not provided then `chain_id` itself is the origin chain.
-
-if `--origin` is provided then `chain_id` is auxiliary chain id.
+if option `--origin <origin_chain>` is not provided then `chain_id` itself is the origin chain identifier, otherwise `chain_id` is auxiliary chain id.
 
 Example:
 ```bash
@@ -21,7 +19,9 @@ Example:
 ./mosac start 1406 --origin ropsten
 ```
 
-Start command will also start the graph node and deploy the sub graph for the given chain.
+Start command will also start the graph node by default and deploy the sub graph for the given chain.
+The Graph is a decentralized protocol for indexing and querying data from blockchains, which makes it possible to query for data that is difficult or impossible to do directly.
+To start chain without graph node use option `--withoutGraphNode` 
 
 Stopping a container that was started with mosaic completely removes that container from the host.
 Only the content in the mounted data directory remains.
