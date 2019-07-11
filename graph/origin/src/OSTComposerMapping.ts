@@ -21,6 +21,10 @@ export function handleStakeRequested(event: StakeRequestedEvent): void {
   entity.staker = event.params.staker
   entity.gateway = event.params.gateway
   entity.stakeRequestHash = event.params.stakeRequestHash
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -30,6 +34,10 @@ export function handleStakeRevoked(event: StakeRevokedEvent): void {
   )
   entity.staker = event.params.staker
   entity.stakeRequestHash = event.params.stakeRequestHash
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -39,5 +47,9 @@ export function handleStakeRejected(event: StakeRejectedEvent): void {
   )
   entity.staker = event.params.staker
   entity.stakeRequestHash = event.params.stakeRequestHash
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
