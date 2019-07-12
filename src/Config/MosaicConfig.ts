@@ -118,8 +118,8 @@ export default class MosaicConfig {
   }
 
   /**
-   * @param {string} originChain chain identifier
-   * @return {MosaicConfig}
+   * @param originChain chain identifier
+   * @return mosaic config
    */
   public static fromChain(originChain: string): MosaicConfig {
     const filePath = path.join(

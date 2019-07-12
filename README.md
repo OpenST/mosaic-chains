@@ -4,7 +4,7 @@ You need node and docker installed to run the chains.
 
 Mosaic will automatically identify if you want to run a geth node or a parity node based on the chain id or name.
 Any string supported by parity as a network option will start a parity node container.
-Any other string it tries to match to one of the available IDs in the `./chains` directory.
+Any other string it tries to match to one of the available IDs in the `./chains` directory and starts the geth node.
 
 The command to start a chain is `./mosac start <chain_id>`
 
