@@ -40,6 +40,12 @@ export default abstract class Node {
   protected password: string;
 
   /**
+   * Identifier for origin chain.
+   * This needs to be passed if auxiliary chain needs to be started.
+   */
+  public originChain: string;
+
+  /**
    * Docker container names will have this prefix.
    * @returns The prefix.
    */
@@ -64,8 +70,13 @@ export default abstract class Node {
     this.keepAfterStop = nodeDescription.keepAfterStop;
     this.unlock = nodeDescription.unlock;
     this.password = nodeDescription.password;
+    this.originChain = nodeDescription.originChain;
 
-    this.chainDir = path.join(this.mosaicDir, this.chain);
+    if (this.originChain === '') {
+      this.chainDir = path.join(this.mosaicDir, this.chain, 'origin');
+    } else {
+      this.chainDir = path.join(this.mosaicDir, this.originChain, this.chain);
+    }
     this.containerName = `${Node.prefix}${this.chain}`;
   }
 
@@ -138,7 +149,10 @@ export default abstract class Node {
       this.logInfo(`${this.mosaicDir} does not exist; initializing`);
       fs.mkdirSync(this.mosaicDir);
     }
-    PublishMosaicConfig.tryPublish();
+
+    // If the `this.originChain` is not present, then `this.chain` is the
+    // origin chain itself.
+    PublishMosaicConfig.tryPublish(this.originChain || this.chain);
   }
 
   /**

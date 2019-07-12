@@ -65,7 +65,7 @@ export default class AuxiliaryChainInteract {
     private originChainId: string,
     private nodeDescription: NodeDescription,
   ) {
-    this.chainDir = path.join(nodeDescription.mosaicDir, this.chainId);
+    this.chainDir = path.join(nodeDescription.mosaicDir, originChainId, this.chainId);
   }
 
   /**
@@ -168,15 +168,15 @@ export default class AuxiliaryChainInteract {
     hashLockSecret: string,
     proofData: Proof,
   ): Promise<{
-      anchorOrganization: ContractInteract.Organization;
-      anchor: ContractInteract.Anchor;
-      coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
-      ostPrime: ContractInteract.OSTPrime;
-      ostCoGateway: ContractInteract.EIP20CoGateway;
-      gatewayLib: ContractInteract.GatewayLib;
-      messageBus: ContractInteract.MessageBus;
-      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
-    }> {
+    anchorOrganization: ContractInteract.Organization;
+    anchor: ContractInteract.Anchor;
+    coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
+    ostPrime: ContractInteract.OSTPrime;
+    ostCoGateway: ContractInteract.EIP20CoGateway;
+    gatewayLib: ContractInteract.GatewayLib;
+    messageBus: ContractInteract.MessageBus;
+    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+  }> {
     const {
       anchorOrganization,
       anchor,
@@ -449,15 +449,15 @@ export default class AuxiliaryChainInteract {
     originHeight: string,
     originStateRoot: string,
   ): Promise<{
-      anchorOrganization: ContractInteract.Organization;
-      anchor: ContractInteract.Anchor;
-      coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
-      ostPrime: ContractInteract.OSTPrime;
-      ostCoGateway: ContractInteract.EIP20CoGateway;
-      gatewayLib: ContractInteract.GatewayLib;
-      messageBus: ContractInteract.MessageBus;
-      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
-    }> {
+    anchorOrganization: ContractInteract.Organization;
+    anchor: ContractInteract.Anchor;
+    coGatewayAndOstPrimeOrganization: ContractInteract.Organization;
+    ostPrime: ContractInteract.OSTPrime;
+    ostCoGateway: ContractInteract.EIP20CoGateway;
+    gatewayLib: ContractInteract.GatewayLib;
+    messageBus: ContractInteract.MessageBus;
+    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+  }> {
     this.logInfo('deploying contracts');
     const anchorOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryAnchorOrganizationOwner,
@@ -614,7 +614,7 @@ export default class AuxiliaryChainInteract {
    * to connect.
    */
   private copyStateToChainsDir(): void {
-    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.chainId));
+    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.originChainId, this.chainId));
 
     this.copy('geth');
     this.copy('genesis.json');
@@ -626,7 +626,7 @@ export default class AuxiliaryChainInteract {
   private copy(file: string): void {
     const source: string = path.join(this.chainDir, file);
     const destination: string = path.join(
-      Directory.getProjectUtilityChainDir(this.chainId),
+      Directory.getProjectUtilityChainDir(this.originChainId, this.chainId),
       file,
     );
     this.logInfo('copying chains state to utility chains directory', { source, destination });
@@ -782,11 +782,11 @@ export default class AuxiliaryChainInteract {
     organizationAddress: string,
     gatewayAddress: string,
   ): Promise<{
-      gatewayLib: ContractInteract.GatewayLib;
-      messageBus: ContractInteract.MessageBus;
-      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
-      ostCoGateway: ContractInteract.EIP20CoGateway;
-    }> {
+    gatewayLib: ContractInteract.GatewayLib;
+    messageBus: ContractInteract.MessageBus;
+    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+    ostCoGateway: ContractInteract.EIP20CoGateway;
+  }> {
     this.logInfo(
       'deploying ost co-gateway',
       {

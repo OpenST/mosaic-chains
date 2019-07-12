@@ -39,6 +39,12 @@ export default class NodeOptions {
   public password: string;
 
   /**
+   * Identifier for origin chain.
+   * This needs to be passed if auxiliary chain needs to be started.
+   */
+  public originChain: string;
+
+  /**
    * @param options The options from the command line.
    */
   constructor(options: {
@@ -49,6 +55,7 @@ export default class NodeOptions {
     keepAfterStop: boolean;
     unlock: string;
     password: string;
+    originChain: string;
   }) {
     Object.assign(this, options);
   }
@@ -61,12 +68,12 @@ export default class NodeOptions {
    */
   public static addCliOptions(command): any {
     command
+      .option('-o,--origin <string>', 'identifier for origin chain. To be passed while starting auxiliary chain')
       .option('-d,--mosaic-dir <dir>', 'a path to a directory where the chain data will be stored', DEFAULT_MOSAIC_DIR)
       .option('-p,--port <port>', 'the port to use for forwarding from host to container', Integer.parseString)
       .option('-r,--rpc-port <port>', 'the RPC port to use for forwarding from host to container', Integer.parseString)
       .option('-w,--ws-port <port>', 'the WS port to use for forwarding from host to container', Integer.parseString)
       .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped');
-
     return command;
   }
 
@@ -86,6 +93,7 @@ export default class NodeOptions {
       keepAfterStop: !!options.keep,
       unlock: options.unlock || '',
       password: options.password || '',
+      originChain: options.origin || '',
     });
 
     parsedOptions.mosaicDir = Directory.sanitize(parsedOptions.mosaicDir);

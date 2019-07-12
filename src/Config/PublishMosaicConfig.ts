@@ -1,29 +1,41 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
 import Directory from '../Directory';
+import FileSystem from '../FileSystem ';
 
 /**
  * Publish Mosaic Config.
  */
 export default class PublishMosaicConfig {
   /**
-   * copy over all the non existent files to publish folder
+   * Copies the contents from chains/<originChain> directory to mosaic home
+   * directory if it does not exists. This is called from all mosaic commands,
+   * to ensure that the required files exists in the mosaic home directory.
    */
-  public static tryPublish(): void {
-    const publishMosaicConfigDir = Directory.getPublishMosaicConfigDir;
-    fs.ensureDirSync(publishMosaicConfigDir);
-    const publishedFileNames: string[] = fs.readdirSync(publishMosaicConfigDir);
-    const publishedFileNamesMap = {};
-    for (const publishedFileName of publishedFileNames) {
-      publishedFileNamesMap[publishedFileName] = 1;
-    }
-    const projectMosaicConfigDir = Directory.getProjectMosaicConfigDir;
-    const toBePublishedFileNames: string[] = fs.readdirSync(projectMosaicConfigDir);
-    for (const toBePublishedFileName of toBePublishedFileNames) {
-      if (!publishedFileNamesMap.hasOwnProperty(toBePublishedFileName)) {
-        fs.copySync(
-          path.join(projectMosaicConfigDir, toBePublishedFileName),
-          path.join(publishMosaicConfigDir, toBePublishedFileName),
+  public static tryPublish(originChain: string): void {
+    const projectConfig = path.join(
+      Directory.projectRoot,
+      'chains',
+      originChain,
+      Directory.getMosaicFileName(),
+    );
+
+    if (FileSystem.existsSync(projectConfig)) {
+      const configHomePath = path.join(
+        Directory.getDefaultMosaicDataDir,
+        originChain,
+      );
+
+      FileSystem.ensureDirSync(configHomePath);
+
+      const mosaicConfig = path.join(
+        configHomePath,
+        Directory.getMosaicFileName(),
+      );
+
+      if (!FileSystem.existsSync(mosaicConfig)) {
+        FileSystem.copySync(
+          projectConfig,
+          mosaicConfig,
         );
       }
     }

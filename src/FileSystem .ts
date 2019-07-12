@@ -56,4 +56,17 @@ export default class FileSystem {
   public static writeFileSync(path: string, content: Buffer) {
     return fs.writeFileSync(path, content);
   }
+
+  /**
+   * Check if the file exists in the filesystem.
+   * @param {string} path
+   * @return boolean `true` if exists, otherwise false.
+   */
+  public static existsSync(path: string): boolean {
+    try {
+      return fs.existsSync(path);
+    } catch (err) {
+      return false;
+    }
+  }
 }

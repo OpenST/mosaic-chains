@@ -4,8 +4,24 @@ You need node and docker installed to run the chains.
 
 Mosaic will automatically identify if you want to run a geth node or a parity node based on the chain id or name.
 Any string supported by parity as a network option will start a parity node container.
-Any other string it tries to match to one of the available IDs in the `./utility_chains` directory.
-For example, it would match `1406` to `./utility_chains/utility_chain_1406`.
+Any other string it tries to match to one of the available IDs in the `./chains` directory and starts the geth node.
+
+The command to start a chain is `./mosac start <chain_id>`
+
+if option `--origin <origin_chain>` is not provided then `chain_id` itself is the origin chain identifier, otherwise `chain_id` is auxiliary chain id.
+
+Example:
+```bash
+# start orign chain.
+./mosaic start ropsten
+
+# start auxiliary chain.   
+./mosac start 1406 --origin ropsten
+```
+
+Start command will also start a graph node by default and deploy a sub graph for the given chain.
+The Graph is a decentralized protocol for indexing and querying data from blockchains, which makes it possible to query for data that is difficult or impossible to do directly.
+To start chain without graph node use option `--withoutGraphNode` 
 
 Stopping a container that was started with mosaic completely removes that container from the host.
 Only the content in the mounted data directory remains.
@@ -56,7 +72,7 @@ Examples with different chain IDs:
 ## Creating a new auxiliary chain
 If there is no existing mosaic config with the library addresses for the `origin` chain then first run `./mosaic libraries <origin-chain-id> <origin-websocket> <deployer-address>`. This command will create a mosaic config file for the origin chain and stores library addresses of origin chain. Generated mosaic config must be used to create multiple auxiliary chains. Ideally `./mosaic libraries` command should be used once per origin chain. This command assumes that deployer address is unlocked already.
 
-The command to create a new auxiliary chain is `./mosaic create <new-chain-id> <origin-websocket> <password-file>`.
+The command to create a new auxiliary chain is `./mosaic create <new-chain-id> <origin-websocket> <password-file> --origin <origin_chain>`.
 See `./mosaic create --help` for more help.
 
 Creating a new auxiliary chain assumes that you have an unlocked account on a node that is connected to the **origin chain.**
@@ -86,7 +102,7 @@ To see the help:
 A simple run would be the following:
 
 ```
-./mosaic create 1337 ws://localhost:8746 ./password.txt
+./mosaic create 1337 ws://localhost:8746 ./password.txt --origin ropsten
 ```
 
 Where:
@@ -94,6 +110,7 @@ Where:
 * `1337` is the new ID of the new chain.
 * `ws://localhost:8746` is the websocket connection to the running origin node with an unlocked account.
 * `./password.txt` is the path to the password file that contains the **two identical passwords.**
+* `ropsten` is the origin chain.
 
 Troubleshooting:
 
@@ -132,11 +149,11 @@ A simple run would be the following:
 To add an existing chain, you need to know the bootnodes and `genesis.json`.
 If you have those, follow the steps below:
 
-1. Create a new directory `./utility_chains/utility_chain_<id>`.
-2. Add the genesis file as `./utility_chains/utility_chain_<id>/genesis.json`.
-3. Add `<id>` to the `CHAINS` array at the beginning of `build.sh`.
+1. Create a new directory `./chains/<origin_chain>/<chain_id>`.
+2. Add the genesis file as `./chains/<origin_chain>/<chain_id>/genesis.json`.
+3. Add `<chain_id>` to the `CHAINS` array at the beginning of `build.sh`.
 4. Run `./build.sh` to generate all chain inits.
-5. Add `./utility_chains/utility_chain_<id>/bootnodes` and add the boot nodes (see other chains for examples).
+5. Add `./chains/<origin_chain>/<chain_id>/bootnodes` and add the boot nodes (see other chains for examples).
 
 ## Tests
 

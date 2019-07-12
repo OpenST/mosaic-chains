@@ -124,11 +124,11 @@ export default class Contracts {
     gatewayAddress: string,
     burnerAddress: string,
   ): Promise< {
-      gatewayLib: ContractInteract.GatewayLib;
-      messageBus: ContractInteract.MessageBus;
-      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
-      ostCoGateway: ContractInteract.EIP20CoGateway;
-    }> {
+    gatewayLib: ContractInteract.GatewayLib;
+    messageBus: ContractInteract.MessageBus;
+    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+    ostCoGateway: ContractInteract.EIP20CoGateway;
+  }> {
     const {
       gatewayLib,
       messageBus,
@@ -167,10 +167,10 @@ export default class Contracts {
     web3: Web3,
     txOptions: Tx,
   ): Promise<{
-      gatewayLib: ContractInteract.GatewayLib;
-      messageBus: ContractInteract.MessageBus;
-      merklePatriciaProof: ContractInteract.MerklePatriciaProof;
-    }> {
+    gatewayLib: ContractInteract.GatewayLib;
+    messageBus: ContractInteract.MessageBus;
+    merklePatriciaProof: ContractInteract.MerklePatriciaProof;
+  }> {
     const merklePatriciaProof = await ContractInteract.MerklePatriciaProof.deploy(
       web3,
       txOptions,

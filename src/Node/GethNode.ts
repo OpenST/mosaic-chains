@@ -44,18 +44,25 @@ export default class GethNode extends Node {
    * Read the bootnodes from the utility chain subdirectory.
    */
   public readBootnodes(): void {
-    this.logInfo('reading bootnodes from disk');
-    this.bootnodes = fs.readFileSync(
-      path.join(
-        Directory.projectRoot,
-        'utility_chains',
-        `utility_chain_${this.chain}`,
-        'bootnodes',
-      ),
-      {
-        encoding: 'utf8',
-      },
-    );
+    // Added try catch, because this is called even in case of mosaic stop.
+    // This is needed only while mosaic start.
+    try {
+      this.logInfo('reading bootnodes from disk');
+      this.bootnodes = fs.readFileSync(
+        path.join(
+          Directory.projectRoot,
+          'chains',
+          this.originChain,
+          this.chain,
+          'bootnodes',
+        ),
+        {
+          encoding: 'utf8',
+        },
+      );
+    } catch (e) {
+      this.logInfo('Boot nodes not present');
+    }
   }
 
   private get defaultDockerGethArgs(): string[] {
@@ -133,8 +140,9 @@ export default class GethNode extends Node {
       fs.copySync(
         path.join(
           Directory.projectRoot,
-          'utility_chains',
-          `utility_chain_${this.chain}`,
+          'chains',
+          this.originChain,
+          this.chain,
           'geth',
         ),
         path.join(this.chainDir, 'geth'),

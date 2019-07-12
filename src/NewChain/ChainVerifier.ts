@@ -92,7 +92,7 @@ export default class ChainVerifier {
       this.contractAddresses.origin.ostEIP20GatewayAddress,
       messageBusLinkInfo,
       gatewayLibLinkInfo,
-      'ContractsBin: Mismatch of gateway BIN!!!'
+      'ContractsBin: Mismatch of gateway BIN!!!',
     );
 
     messageBusLinkInfo = {
@@ -151,14 +151,14 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       'Organization',
       this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
-    'ContractsBin: Mismatch of auxiliary coGateway organization BIN!!!',
+      'ContractsBin: Mismatch of auxiliary coGateway organization BIN!!!',
     );
 
     await this.validateBIN(
       this.auxiliaryWeb3,
       'OSTPrime',
       this.contractAddresses.auxiliary.ostPrimeAddress,
-      'ContractsBin: Mismatch of OSTPrime BIN!!!'
+      'ContractsBin: Mismatch of OSTPrime BIN!!!',
     );
 
     Logger.info('Successfully completed contracts BIN verification!!!');
@@ -218,7 +218,7 @@ export default class ChainVerifier {
       this.originWeb3,
       stateRootProvider,
       this.contractAddresses.origin.anchorAddress,
-      'Gateway: Invalid stateRootProvider!!!'
+      'Gateway: Invalid stateRootProvider!!!',
     );
 
     Logger.info('Successfully completed gateway contract verification!!!');
@@ -239,7 +239,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       valueToken,
       this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
-      'CoGateway: Invalid valueToken address!!!'
+      'CoGateway: Invalid valueToken address!!!',
     );
 
     const utilityToken = await coGatewayInstance.methods.utilityToken().call();
@@ -247,7 +247,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       utilityToken,
       this.contractAddresses.auxiliary.ostPrimeAddress,
-      'CoGateway: Invalid OSTPrime address!!!'
+      'CoGateway: Invalid OSTPrime address!!!',
     );
 
     const organization = await coGatewayInstance.methods.organization().call();
@@ -255,7 +255,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       organization,
       this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
-      'CoGateway: Invalid organization address!!!'
+      'CoGateway: Invalid organization address!!!',
     );
 
     const remoteGateway = await coGatewayInstance.methods.remoteGateway().call();
@@ -263,7 +263,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       remoteGateway,
       this.contractAddresses.origin.ostEIP20GatewayAddress,
-      'CoGateway: Invalid remoteGateway address!!!'
+      'CoGateway: Invalid remoteGateway address!!!',
     );
 
     const stateRootProvider = await coGatewayInstance.methods.stateRootProvider().call();
@@ -271,7 +271,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       stateRootProvider,
       this.contractAddresses.auxiliary.anchorAddress,
-      'CoGateway: Invalid stateRootProvider!!!'
+      'CoGateway: Invalid stateRootProvider!!!',
     );
     Logger.info('Successfully completed CoGateway contract verification!!!');
   }
@@ -291,7 +291,7 @@ export default class ChainVerifier {
       this.originWeb3,
       coAnchor,
       this.contractAddresses.auxiliary.anchorAddress,
-    'OriginAnchor: Invalid coAnchor address!!!'
+      'OriginAnchor: Invalid coAnchor address!!!',
     );
 
     const organization = await anchorInstance.methods.organization().call();
@@ -299,7 +299,7 @@ export default class ChainVerifier {
       this.originWeb3,
       organization,
       this.contractAddresses.origin.anchorOrganizationAddress,
-      'OriginAnchor: Invalid organization address!!!'
+      'OriginAnchor: Invalid organization address!!!',
     );
 
     const remoteChainId = await anchorInstance.methods.getRemoteChainId().call();
@@ -327,7 +327,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       coAnchor,
       this.contractAddresses.origin.anchorAddress,
-      'AuxiliaryAnchor: Invalid coAnchor address!!!'
+      'AuxiliaryAnchor: Invalid coAnchor address!!!',
     );
 
     const organization = await anchorInstance.methods.organization().call();
@@ -335,7 +335,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       organization,
       this.contractAddresses.auxiliary.anchorOrganizationAddress,
-      'AuxiliaryAnchor: Invalid organization address!!!'
+      'AuxiliaryAnchor: Invalid organization address!!!',
     );
 
     const remoteChainId = await anchorInstance.methods.getRemoteChainId().call();
@@ -363,7 +363,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       valueToken,
       this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
-      'OSTPrime: Invalid OSTPrime address!!!'
+      'OSTPrime: Invalid OSTPrime address!!!',
     );
 
     const initialized = await ostPrimeInstance.methods.initialized().call();
@@ -378,7 +378,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       organization,
       this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
-      'OSTPrime: Invalid organization address!!!'
+      'OSTPrime: Invalid organization address!!!',
     );
 
     const coGateway = await ostPrimeInstance.methods.coGateway().call();
@@ -386,7 +386,7 @@ export default class ChainVerifier {
       this.auxiliaryWeb3,
       coGateway,
       this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
-      'OSTPrime: Invalid coGateway address!!!'
+      'OSTPrime: Invalid coGateway address!!!',
     );
 
     Logger.info('Successfully completed OSTPrime contract verification!!!');
@@ -402,10 +402,10 @@ export default class ChainVerifier {
   private async validateBIN(web3, contractName, contractAddress, errMsg) {
     const deployedBin = await web3.eth.getCode(contractAddress);
     if (this.abiBinProvider.getBIN(contractName).toLowerCase().indexOf(
-        deployedBin.toLowerCase().slice(2),
-      ) === -1
+      deployedBin.toLowerCase().slice(2),
+    ) === -1
     ) {
-      Logger.error(errMsg, { contractName: contractName, contractAddress: contractAddress});
+      Logger.error(errMsg, { contractName, contractAddress });
       throw new Error(errMsg);
     }
   }
@@ -425,7 +425,8 @@ export default class ChainVerifier {
     contractAddress,
     messageBusLinkInfo,
     gatewayLibLinkInfo,
-    errMsg) {
+    errMsg,
+  ) {
     const gatewayLinkedBin = this.abiBinProvider.getLinkedBIN(
       contractName,
       messageBusLinkInfo,
@@ -449,8 +450,8 @@ export default class ChainVerifier {
     web3,
     deployedAddress,
     mosaicConfigAddress,
-    errMsg) {
-
+    errMsg,
+  ) {
     if (web3.utils.toChecksumAddress(deployedAddress)
       !== web3.utils.toChecksumAddress(mosaicConfigAddress)) {
       Logger.error(errMsg, { expected: mosaicConfigAddress, deployed: deployedAddress });
