@@ -6,9 +6,6 @@ services:
   - docker
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
-  - TEST_SUITE="test:unit"
-  - TEST_SUITE="test:smoke"
-  - TEST_SUITE="test:package"
 before_install:
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -29,6 +26,6 @@ notifications:
 install:
   - npm ci
 script:
-  - npm run ${TEST_SUITE}
+  - npm run test
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
