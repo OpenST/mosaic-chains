@@ -32,7 +32,7 @@ export default class PublishMosaicConfig {
         Directory.getMosaicFileName(),
       );
 
-      if (FileSystem.existsSync(mosaicConfig) === false) {
+      if (!FileSystem.existsSync(mosaicConfig)) {
         FileSystem.copySync(
           projectConfig,
           mosaicConfig,
