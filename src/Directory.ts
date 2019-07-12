@@ -93,8 +93,8 @@ export default class Directory {
   }
 
   /**
-   * @param  originChain Origin chain.
-   * @param  auxiliaryChain auxiliary chain id.
+   * @param originChain Origin chain.
+   * @param auxiliaryChain auxiliary chain id.
    * @return path
    */
   public static getAuxiliarySubGraphProjectDirSuffix(
