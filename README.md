@@ -19,7 +19,7 @@ Example:
 ./mosac start 1406 --origin ropsten
 ```
 
-Start command will also start the graph node by default and deploy the sub graph for the given chain.
+Start command will also start a graph node by default and deploy a sub graph for the given chain.
 The Graph is a decentralized protocol for indexing and querying data from blockchains, which makes it possible to query for data that is difficult or impossible to do directly.
 To start chain without graph node use option `--withoutGraphNode` 
 
@@ -72,7 +72,7 @@ Examples with different chain IDs:
 ## Creating a new auxiliary chain
 If there is no existing mosaic config with the library addresses for the `origin` chain then first run `./mosaic libraries <origin-chain-id> <origin-websocket> <deployer-address>`. This command will create a mosaic config file for the origin chain and stores library addresses of origin chain. Generated mosaic config must be used to create multiple auxiliary chains. Ideally `./mosaic libraries` command should be used once per origin chain. This command assumes that deployer address is unlocked already.
 
-The command to create a new auxiliary chain is `./mosaic create <new-chain-id> <origin-websocket> <password-file> --origin <origin_chain_id>`.
+The command to create a new auxiliary chain is `./mosaic create <new-chain-id> <origin-websocket> <password-file> --origin <origin_chain>`.
 See `./mosaic create --help` for more help.
 
 Creating a new auxiliary chain assumes that you have an unlocked account on a node that is connected to the **origin chain.**

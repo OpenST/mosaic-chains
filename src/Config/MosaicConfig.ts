@@ -118,14 +118,14 @@ export default class MosaicConfig {
   }
 
   /**
-   * @param {string} chain identifier
+   * @param {string} originChain chain identifier
    * @return {MosaicConfig}
    */
   public static fromChain(originChain: string): MosaicConfig {
     const filePath = path.join(
       Directory.getDefaultMosaicDataDir,
       originChain,
-      'mosaic.json',
+      Directory.getMosaicFileName(),
     );
     if (fs.existsSync(filePath)) {
       const configObject = MosaicConfig.readConfigFromFile(filePath);
@@ -158,7 +158,7 @@ export default class MosaicConfig {
     fs.ensureDirSync(mosaicConfigDir);
     const configPath = path.join(
       mosaicConfigDir,
-      'mosaic.json',
+      Directory.getMosaicFileName(),
     );
     Logger.info('storing mosaic config', { configPath });
     fs.writeFileSync(

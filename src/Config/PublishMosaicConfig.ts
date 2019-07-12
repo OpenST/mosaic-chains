@@ -7,17 +7,19 @@ import FileSystem from '../FileSystem ';
  */
 export default class PublishMosaicConfig {
   /**
-   * copy over all the non existent files to publish folder
+   * Copies the contents from chains/<originChain> directory to mosaic home
+   * directory if it does not exists. This is called from all mosaic commands,
+   * to ensure that the required files exists in the mosaic home directory.
    */
   public static tryPublish(originChain: string): void {
     const projectConfig = path.join(
       Directory.projectRoot,
       'chains',
       originChain,
-      'mosaic.json',
+      Directory.getMosaicFileName(),
     );
 
-    if (FileSystem.existsSync(projectConfig) === true) {
+    if (FileSystem.existsSync(projectConfig)) {
       const configHomePath = path.join(
         Directory.getDefaultMosaicDataDir,
         originChain,
@@ -27,10 +29,10 @@ export default class PublishMosaicConfig {
 
       const mosaicConfig = path.join(
         configHomePath,
-        'mosaic.json',
+        Directory.getMosaicFileName(),
       );
 
-      if (FileSystem.existsSync(mosaicConfig) === false) {
+      if (FileSystem.existsSync(mosaicConfig)) {
         FileSystem.copySync(
           projectConfig,
           mosaicConfig,

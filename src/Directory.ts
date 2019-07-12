@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as os from 'os';
 
+const MOSAIC_CONFIG_FILE = 'mosaic.json';
 /**
  * Directory provides operations on strings representing directories.
  */
@@ -35,11 +36,11 @@ export default class Directory {
     originChain: string,
     auxiliaryChainId: string,
   ): string {
-    if (originChain === '') {
-      throw new Error('origin chain identifier cannot be empty in order to get its directory');
+    if (originChain === undefined || originChain.length === 0) {
+      throw new Error('Origin chain identifier cannot be empty in order to get its directory');
     }
-    if (auxiliaryChainId === '') {
-      throw new Error('auxiliary chain id cannot be empty in order to get its directory');
+    if (auxiliaryChainId === undefined || auxiliaryChainId.length === 0) {
+      throw new Error('Auxiliary chain id cannot be empty in order to get its directory');
     }
 
     return path.join(
@@ -92,9 +93,9 @@ export default class Directory {
   }
 
   /**
-   * @param {string} originChain
-   * @param {string} auxiliaryChain
-   * @return {string}
+   * @param  originChain Origin chain.
+   * @param  auxiliaryChain auxiliary chain id.
+   * @return path
    */
   public static getAuxiliarySubGraphProjectDirSuffix(
     originChain: string,
@@ -140,5 +141,12 @@ export default class Directory {
     }
 
     return sanitized;
+  }
+
+  /**
+   * Returns the mosaic json file name.
+   */
+  public static getMosaicFileName(): string {
+    return MOSAIC_CONFIG_FILE;
   }
 }
