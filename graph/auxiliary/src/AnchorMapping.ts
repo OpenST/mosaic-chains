@@ -7,5 +7,9 @@ export function handleStateRootAvailable(event: StateRootAvailableEvent): void {
   )
   entity._blockHeight = event.params._blockHeight
   entity._stateRoot = event.params._stateRoot
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
