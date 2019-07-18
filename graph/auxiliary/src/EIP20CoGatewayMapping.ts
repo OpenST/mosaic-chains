@@ -38,6 +38,10 @@ export function handleStakeIntentConfirmed(
   entity._amount = event.params._amount
   entity._blockHeight = event.params._blockHeight
   entity._hashLock = event.params._hashLock
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -53,6 +57,10 @@ export function handleMintProgressed(event: MintProgressedEvent): void {
   entity._rewardAmount = event.params._rewardAmount
   entity._proofProgress = event.params._proofProgress
   entity._unlockSecret = event.params._unlockSecret
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -66,6 +74,10 @@ export function handleRevertStakeIntentConfirmed(
   entity._staker = event.params._staker
   entity._stakerNonce = event.params._stakerNonce
   entity._amount = event.params._amount
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -79,6 +91,10 @@ export function handleRevertStakeProgressed(
   entity._staker = event.params._staker
   entity._stakerNonce = event.params._stakerNonce
   entity._amount = event.params._amount
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -93,6 +109,10 @@ export function handleRedeemIntentDeclared(
   entity._redeemerNonce = event.params._redeemerNonce
   entity._beneficiary = event.params._beneficiary
   entity._amount = event.params._amount
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -106,6 +126,10 @@ export function handleRedeemProgressed(event: RedeemProgressedEvent): void {
   entity._amount = event.params._amount
   entity._proofProgress = event.params._proofProgress
   entity._unlockSecret = event.params._unlockSecret
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -119,6 +143,10 @@ export function handleRevertRedeemDeclared(
   entity._redeemer = event.params._redeemer
   entity._redeemerNonce = event.params._redeemerNonce
   entity._amount = event.params._amount
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -130,6 +158,10 @@ export function handleRedeemReverted(event: RedeemRevertedEvent): void {
   entity._redeemer = event.params._redeemer
   entity._redeemerNonce = event.params._redeemerNonce
   entity._amount = event.params._amount
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -141,6 +173,10 @@ export function handleGatewayProven(event: GatewayProvenEvent): void {
   entity._blockHeight = event.params._blockHeight
   entity._storageRoot = event.params._storageRoot
   entity._wasAlreadyProved = event.params._wasAlreadyProved
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -153,6 +189,10 @@ export function handleBountyChangeInitiated(
   entity._currentBounty = event.params._currentBounty
   entity._proposedBounty = event.params._proposedBounty
   entity._unlockHeight = event.params._unlockHeight
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -164,5 +204,9 @@ export function handleBountyChangeConfirmed(
   )
   entity._currentBounty = event.params._currentBounty
   entity._changedBounty = event.params._changedBounty
+  entity.blockNumber = event.block.number
+  entity.blockHash = event.block.hash
+  entity.contractAddress = event.address
+  entity.uts = event.block.timestamp
   entity.save()
 }
