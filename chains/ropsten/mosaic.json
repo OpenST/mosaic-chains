@@ -7,7 +7,7 @@
       "simpleTokenAddress": "0xae96d2acd01ab795e5942591100f9f23adbe2a2e",
       "ostComposerAddress": "0x63c6aceef557e7f07549ea848ea0c3cf7609aa55"
     },
-    "chain": "3"
+    "chain": "ropsten"
   },
   "auxiliaryChains": {
     "1406": {
