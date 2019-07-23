@@ -10,32 +10,8 @@
     "name": "stakeRequests",
     "outputs": [
       {
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "name": "beneficiary",
-        "type": "address"
-      },
-      {
-        "name": "gasPrice",
-        "type": "uint256"
-      },
-      {
-        "name": "gasLimit",
-        "type": "uint256"
-      },
-      {
-        "name": "nonce",
-        "type": "uint256"
-      },
-      {
-        "name": "staker",
-        "type": "address"
-      },
-      {
-        "name": "gateway",
-        "type": "address"
+        "name": "",
+        "type": "bool"
       }
     ],
     "payable": false,
@@ -100,25 +76,6 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "activeStakeRequestCount",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
     "inputs": [],
     "name": "STAKEREQUEST_INTENT_TYPEHASH",
     "outputs": [
@@ -173,6 +130,11 @@
       {
         "indexed": true,
         "name": "staker",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stakerProxy",
         "type": "address"
       },
       {
@@ -266,8 +228,32 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_stakeRequestHash",
-        "type": "bytes32"
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "name": "_beneficiary",
+        "type": "address"
+      },
+      {
+        "name": "_gasPrice",
+        "type": "uint256"
+      },
+      {
+        "name": "_gasLimit",
+        "type": "uint256"
+      },
+      {
+        "name": "_nonce",
+        "type": "uint256"
+      },
+      {
+        "name": "_staker",
+        "type": "address"
+      },
+      {
+        "name": "_gateway",
+        "type": "address"
       },
       {
         "name": "_hashLock",
@@ -289,8 +275,28 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_stakeRequestHash",
-        "type": "bytes32"
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "name": "_beneficiary",
+        "type": "address"
+      },
+      {
+        "name": "_gasPrice",
+        "type": "uint256"
+      },
+      {
+        "name": "_gasLimit",
+        "type": "uint256"
+      },
+      {
+        "name": "_nonce",
+        "type": "uint256"
+      },
+      {
+        "name": "_gateway",
+        "type": "address"
       }
     ],
     "name": "revokeStakeRequest",
@@ -303,8 +309,32 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_stakeRequestHash",
-        "type": "bytes32"
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "name": "_beneficiary",
+        "type": "address"
+      },
+      {
+        "name": "_gasPrice",
+        "type": "uint256"
+      },
+      {
+        "name": "_gasLimit",
+        "type": "uint256"
+      },
+      {
+        "name": "_nonce",
+        "type": "uint256"
+      },
+      {
+        "name": "_staker",
+        "type": "address"
+      },
+      {
+        "name": "_gateway",
+        "type": "address"
       }
     ],
     "name": "rejectStakeRequest",
@@ -315,13 +345,8 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "removeStakerProxy",
+    "inputs": [],
+    "name": "destructStakerProxy",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",

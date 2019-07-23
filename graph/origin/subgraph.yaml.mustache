@@ -18,7 +18,7 @@ dataSources:
         - name: OSTComposer
           file: "{{{projectRoot}}}/abi/0.10/OSTComposer.json"
       eventHandlers:
-        - event: StakeRequested(uint256,address,uint256,uint256,uint256,address,address,bytes32)
+        - event: StakeRequested(uint256,address,uint256,uint256,uint256,address,address,address,bytes32)
           handler: handleStakeRequested
       file: ./src/OSTComposerMapping.ts
 
