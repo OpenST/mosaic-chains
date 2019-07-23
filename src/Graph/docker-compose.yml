@@ -17,6 +17,7 @@ services:
       ipfs: 'ipfs:5001'
       ethereum: 'dev:http://${MOSAIC_GRAPH_NODE_HOST}:${MOSAIC_ETHEREUM_RPC_PORT}'
       RUST_LOG: info
+      GRAPH_LOG: info
   ipfs:
     image: ipfs/go-ipfs
     ports:

@@ -19,6 +19,7 @@ export function handleStakeRequested(event: StakeRequestedEvent): void {
   entity.gasLimit = event.params.gasLimit
   entity.nonce = event.params.nonce
   entity.staker = event.params.staker
+  entity.stakerProxy = event.params.stakerProxy
   entity.gateway = event.params.gateway
   entity.stakeRequestHash = event.params.stakeRequestHash
   entity.blockNumber = event.block.number
