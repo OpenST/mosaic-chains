@@ -5,7 +5,7 @@
       "messageBusAddress": "0x19e9c9a9e5f53c060387567835b534dbad0b8d02",
       "merklePatriciaLibAddress": "0x17b27fe03befcac0712b13df7ff242d8f994fed5",
       "simpleTokenAddress": "0xae96d2acd01ab795e5942591100f9f23adbe2a2e",
-      "ostComposerAddress": "0x63c6aceef557e7f07549ea848ea0c3cf7609aa55"
+      "ostComposerAddress": "0x4a633b3375a5b9eaa6ddc226ebe2ac832b557746"
     },
     "chain": "ropsten"
   },
