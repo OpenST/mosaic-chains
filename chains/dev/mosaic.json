@@ -1,7 +1,10 @@
 {
   "originChain": {
     "contractAddresses": {
-      "simpleTokenAddress": "0x9AC77F4c0ca4D0F2142D7a77175cf4F1295fb2d8",
+      "gatewayLibAddress": "0xC0996cF47c33c138b45e9E043F180a5653a752a0",
+      "messageBusAddress": "0xf8238D9850F2a47f1411Cb7F5F5F3279A72b7f7a",
+      "merklePatriciaLibAddress": "0x196bAE5d66c496a9e2C0D011965F9960b964396B",
+      "simpleTokenAddress": "0x9AC77F4c0ca4D0F2142D7a77175cf4F1295fb2d8"
     },
     "chain": "dev"
   }
