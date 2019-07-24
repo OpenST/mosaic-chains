@@ -27,6 +27,7 @@ export default class ChainInfo {
       ropsten: '3',
       kovan: '42',
       poasokol: '77',
+      dev: '1515',
     };
   }
 

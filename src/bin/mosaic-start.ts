@@ -29,6 +29,7 @@ mosaic
       unlock,
       password,
       originChain,
+      chainId,
     } = NodeOptions.parseOptions(options, chain);
     const node: Node = NodeFactory.create({
       chain,
@@ -40,6 +41,7 @@ mosaic
       unlock,
       password,
       originChain,
+      chainId,
     });
     node.start();
 

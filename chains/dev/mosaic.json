@@ -1,0 +1,122 @@
+{
+  "originChain": {
+    "contractAddresses": {
+      "gatewayLibAddress": "0x2fdbe39dcc46f9c8c973e30349f388b4490d50e0",
+      "messageBusAddress": "0x19e9c9a9e5f53c060387567835b534dbad0b8d02",
+      "merklePatriciaLibAddress": "0x17b27fe03befcac0712b13df7ff242d8f994fed5",
+      "simpleTokenAddress": "0xae96d2acd01ab795e5942591100f9f23adbe2a2e",
+      "ostComposerAddress": "0x63c6aceef557e7f07549ea848ea0c3cf7609aa55"
+    },
+    "chain": "ropsten"
+  },
+  "auxiliaryChains": {
+    "1406": {
+      "bootNodes": [
+        "enode://edaed9d130c1d4580a17ecf572500c2f30ef4bfc0fbee3764a1a23a837b8ee10a3698051c5339473132343e69729b243f565873b233031467599a17e08252de0@99.80.80.138:30301"
+      ],
+      "contractAddresses": {
+        "origin": {
+          "anchorOrganizationAddress": "0xd8cca90afe0a15a0d372540e2104d6098bdee9af",
+          "anchorAddress": "0xe322ed07e235a6501bd017ae9ea059b12723c55c",
+          "ostGatewayOrganizationAddress": "0x7c8ebf6da810261eb8ec9fbec989aa9c79200c07",
+          "ostEIP20GatewayAddress": "0x04df90efbedf393361cdf498234af818da14f562"
+        },
+        "auxiliary": {
+          "anchorOrganizationAddress": "0x29050903e7e2612743f9d6234c553d2b96ca9683",
+          "anchorAddress": "0x959cc0a11176584d90fd77cf189b73345792e7f2",
+          "ostCoGatewayOrganizationAddress": "0xdff949b45ab91b7bc413bfef17aa9f5766b516f2",
+          "ostPrimeAddress": "0x495b17dda2cd0406290af54e9ae978b381006809",
+          "ostEIP20CogatewayAddress": "0x02cffaa1e06c28021fff6b36d9e418a97b3de2fc",
+          "gatewayLibAddress": "0xcf02a1d6053b53559a7c8060a74e1286a0b7c244",
+          "messageBusAddress": "0xa482ff75b6a87ba9b669e0636867964b9c2f7950",
+          "merklePatriciaLibAddress": "0x8346e47aa6bf292d26ad7d08cb6b09afe7e8d4f9"
+        }
+      },
+      "chainId": 1406,
+      "genesis": {
+        "config": {
+          "chainId": 1406,
+          "homesteadBlock": 1,
+          "eip150Block": 2,
+          "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "eip155Block": 3,
+          "eip158Block": 3,
+          "byzantiumBlock": 4,
+          "clique": {
+            "period": 3,
+            "epoch": 30000
+          }
+        },
+        "nonce": "0x0",
+        "timestamp": "0x5a71660b",
+        "extraData": "0x7574696c69747920636861696e000000000000000000000000000000000000002a3217c2A5818C117a0E1A84A133262F9e1513Bc0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "gasLimit": "0x989680",
+        "difficulty": "0x1",
+        "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "coinbase": "0x0000000000000000000000000000000000000000",
+        "alloc": {
+          "537f8cdc8c706650f497bcb1eee2fc8ceedc19bf": {
+            "balance": "0x295be96e640669720000000"
+          }
+        },
+        "number": "0x0",
+        "gasUsed": "0x0",
+        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    "1407": {
+      "bootNodes": [
+        "enode://e60ff2d4ed05213b8ae32ca00fd7a0252d7fe8fea48911043c3ea3db8749130014e952ee22f5600e649eb8e25fbffb64e4e1f7feb915fd2d7d518b86973c24af@99.80.85.164:30301"
+      ],
+      "contractAddresses": {
+        "origin": {
+          "anchorOrganizationAddress": "0xd8cca90afe0a15a0d372540e2104d6098bdee9af",
+          "anchorAddress": "0x972d3e5e8fba4689add411cd8ebe27e6d060d531",
+          "ostGatewayOrganizationAddress": "0x7c8ebf6da810261eb8ec9fbec989aa9c79200c07",
+          "ostEIP20GatewayAddress": "0x31c8870c76390c5eb0d425799b5bd214a2600438"
+        },
+        "auxiliary": {
+          "anchorOrganizationAddress": "0xe7d62158b4905a76d26ed93a254582ee6d84d5a7",
+          "anchorAddress": "0xde1d126e4deb499bd7f64ff59fe8f9415be50ef8",
+          "ostCoGatewayOrganizationAddress": "0x610fb96852f0d854b0633aba0073d18246bc94d5",
+          "ostPrimeAddress": "0x66ca08a32548593ea1860e3995b81e4354f3b1b1",
+          "ostEIP20CogatewayAddress": "0xf690624171fe06d02d2f4250bff17fe3b682ebd1",
+          "gatewayLibAddress": "0x033e8675db854ba05b08b5e076a48e3eedeb0b54",
+          "messageBusAddress": "0xd3b63c070ef226ef6dba0abf2ea223b04766efcc",
+          "merklePatriciaLibAddress": "0x233e3af4b022a58d25a03fff52c3e5925c289cc7"
+        }
+      },
+      "chainId": 1407,
+      "genesis": {
+        "config": {
+          "chainId": 1407,
+          "homesteadBlock": 1,
+          "eip150Block": 2,
+          "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "eip155Block": 3,
+          "eip158Block": 3,
+          "byzantiumBlock": 4,
+          "clique": {
+            "period": 3,
+            "epoch": 30000
+          }
+        },
+        "nonce": "0x0",
+        "timestamp": "0x5a71660b",
+        "extraData": "0x7574696c69747920636861696e00000000000000000000000000000000000000d3E8E61c23f9302CB0FdA62bc7696064990A17080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "gasLimit": "0x989680",
+        "difficulty": "0x1",
+        "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "coinbase": "0x0000000000000000000000000000000000000000",
+        "alloc": {
+          "537f8cdc8c706650f497bcb1eee2fc8ceedc19bf": {
+            "balance": "0x295be96e640669720000000"
+          }
+        },
+        "number": "0x0",
+        "gasUsed": "0x0",
+        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

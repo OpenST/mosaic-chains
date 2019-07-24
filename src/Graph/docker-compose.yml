@@ -1,7 +1,7 @@
 version: '3'
 services:
   graph-node:
-    image: graphprotocol/graph-node:v0.13.2
+    image: graphprotocol/graph-node
     ports:
       - '${MOSAIC_GRAPH_RPC_PORT}:8000'
       - '${MOSAIC_GRAPH_WS_PORT}:8001'
@@ -18,13 +18,13 @@ services:
       ethereum: 'dev:http://${MOSAIC_GRAPH_NODE_HOST}:${MOSAIC_ETHEREUM_RPC_PORT}'
       RUST_LOG: info
   ipfs:
-    image: ipfs/go-ipfs:v0.4.22-rc1
+    image: ipfs/go-ipfs
     ports:
       - '${MOSAIC_GRAPH_IPFS_PORT}:5001'
     volumes:
       - '${MOSAIC_GRAPH_DATA_FOLDER}/ipfs:/data/ipfs'
   postgres:
-    image: postgres:alpine
+    image: postgres
     ports:
       - '${MOSAIC_GRAPH_POSTGRES_PORT}:5432'
     environment:

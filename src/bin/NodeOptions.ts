@@ -44,6 +44,8 @@ export default class NodeOptions {
    */
   public originChain: string;
 
+  public chainId: string;
+
   /**
    * @param options The options from the command line.
    */
@@ -56,6 +58,7 @@ export default class NodeOptions {
     unlock: string;
     password: string;
     originChain: string;
+    chainId: string;
   }) {
     Object.assign(this, options);
   }
@@ -94,6 +97,7 @@ export default class NodeOptions {
       unlock: options.unlock || '',
       password: options.password || '',
       originChain: options.origin || '',
+      chainId: chainIdNumber,
     });
 
     parsedOptions.mosaicDir = Directory.sanitize(parsedOptions.mosaicDir);

@@ -1,4 +1,3 @@
-import * as path from 'path';
 import Directory from '../Directory';
 import FileSystem from '../FileSystem ';
 
@@ -12,30 +11,19 @@ export default class PublishMosaicConfig {
    * to ensure that the required files exists in the mosaic home directory.
    */
   public static tryPublish(originChain: string): void {
-    const projectConfig = path.join(
-      Directory.projectRoot,
-      'chains',
-      originChain,
-      Directory.getMosaicFileName(),
-    );
+    const projectMosaicConfigPath = Directory.getProjectMosaicConfigPath(originChain);
 
-    if (FileSystem.existsSync(projectConfig)) {
-      const configHomePath = path.join(
-        Directory.getDefaultMosaicDataDir,
-        originChain,
-      );
+    if (FileSystem.existsSync(projectMosaicConfigPath)) {
+      const mosaicConfigHomePath = Directory.getMosaicConfigHomePath(originChain);
+      FileSystem.ensureDirSync(mosaicConfigHomePath);
 
-      FileSystem.ensureDirSync(configHomePath);
-
-      const mosaicConfig = path.join(
-        configHomePath,
-        Directory.getMosaicFileName(),
-      );
+      const mosaicConfig = Directory.getMosaicConfigPath(originChain);
 
       if (!FileSystem.existsSync(mosaicConfig)) {
+        const projectMosaicConfigHomePath = Directory.getProjectMosaicConfigHomePath(originChain);
         FileSystem.copySync(
-          projectConfig,
-          mosaicConfig,
+          projectMosaicConfigHomePath,
+          mosaicConfigHomePath,
         );
       }
     }

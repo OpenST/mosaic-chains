@@ -149,4 +149,57 @@ export default class Directory {
   public static getMosaicFileName(): string {
     return MOSAIC_CONFIG_FILE;
   }
+
+  /**
+   * Mosaic config file path located in the project.
+   * @param originChain The origin chain identifier.
+   * @returns Mosaic config file path.
+   */
+  public static getProjectMosaicConfigPath(originChain: string): string {
+    const projectMosaicConfigPathConfig = path.join(
+      Directory.getProjectMosaicConfigHomePath(originChain),
+      Directory.getMosaicFileName(),
+    );
+    return projectMosaicConfigPathConfig;
+  }
+
+  /**
+   * Mosaic config home directory located in the project.
+   * @param originChain The origin chain identifier.
+   * @returns Mosaic config home directory path.
+   */
+  public static getProjectMosaicConfigHomePath(originChain: string): string {
+    const projectMosaicConfigHome = path.join(
+      Directory.projectRoot,
+      'chains',
+      originChain,
+    );
+    return projectMosaicConfigHome;
+  }
+
+  /**
+   * Mosaic config file path located in the mosaic home directory.
+   * @param originChain The origin chain identifier.
+   * @returns Mosaic config file path.
+   */
+  public static getMosaicConfigPath(originChain: string): string {
+    const mosaicConfigPath = path.join(
+      Directory.getMosaicConfigHomePath(originChain),
+      Directory.getMosaicFileName(),
+    );
+    return mosaicConfigPath;
+  }
+
+  /**
+   * Mosaic config home directory.
+   * @param originChain The origin chain identifier.
+   * @returns Mosaic config home directory path.
+   */
+  public static getMosaicConfigHomePath(originChain: string): string {
+    const mosaicConfigPath = path.join(
+      Directory.getDefaultMosaicDataDir,
+      originChain,
+    );
+    return mosaicConfigPath;
+  }
 }

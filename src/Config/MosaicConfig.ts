@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as fs from 'fs-extra';
 
 import { Validator } from 'jsonschema';
@@ -122,11 +121,7 @@ export default class MosaicConfig {
    * @return mosaic config
    */
   public static fromChain(originChain: string): MosaicConfig {
-    const filePath = path.join(
-      Directory.getDefaultMosaicDataDir,
-      originChain,
-      Directory.getMosaicFileName(),
-    );
+    const filePath = Directory.getMosaicConfigPath(originChain);
     if (fs.existsSync(filePath)) {
       const configObject = MosaicConfig.readConfigFromFile(filePath);
       return new MosaicConfig(configObject);
@@ -150,16 +145,10 @@ export default class MosaicConfig {
    * Saves this config to a file in its auxiliary chain directory.
    */
   public writeToMosaicConfigDirectory(): void {
-    const mosaicConfigDir = path.join(
-      Directory.getDefaultMosaicDataDir,
-      this.originChain.chain,
-    );
+    const mosaicConfigDir = Directory.getMosaicConfigHomePath(this.originChain.chain);
 
     fs.ensureDirSync(mosaicConfigDir);
-    const configPath = path.join(
-      mosaicConfigDir,
-      Directory.getMosaicFileName(),
-    );
+    const configPath = Directory.getMosaicConfigPath(this.originChain.chain);
     Logger.info('storing mosaic config', { configPath });
     fs.writeFileSync(
       configPath,

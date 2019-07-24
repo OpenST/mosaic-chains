@@ -3,6 +3,7 @@ import GethNode from './GethNode';
 import ParityNode from './ParityNode';
 import NodeDescription from './NodeDescription';
 import ChainInfo from './ChainInfo';
+import DevGethNode from './DevGethNode';
 
 /**
  * Builds node based on the given chain id.
@@ -16,12 +17,14 @@ export default class NodeFactory {
    * @returns The node; based of the given input.
    */
   public static create(nodeDescription: NodeDescription): Node {
+    if (nodeDescription.chain === 'dev') {
+      return new DevGethNode(nodeDescription);
+    }
     if (ChainInfo.officialIdentifiers.includes(nodeDescription.chain)) {
       return new ParityNode(nodeDescription);
     }
     const node = new GethNode(nodeDescription);
     node.readBootnodes();
-
     return node;
   }
 }

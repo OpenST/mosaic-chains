@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import * as path from 'path';
 import Logger from '../Logger';
 import Shell from '../Shell';
@@ -45,6 +45,7 @@ export default abstract class Node {
    */
   public originChain: string;
 
+  public chainId: string;
   /**
    * Docker container names will have this prefix.
    * @returns The prefix.
@@ -63,6 +64,7 @@ export default abstract class Node {
 
   constructor(nodeDescription: NodeDescription) {
     this.chain = nodeDescription.chain;
+    this.chainId = nodeDescription.chainId;
     this.mosaicDir = nodeDescription.mosaicDir;
     this.port = nodeDescription.port;
     this.rpcPort = nodeDescription.rpcPort;
@@ -147,7 +149,7 @@ export default abstract class Node {
   protected initializeDataDir(): void {
     if (!fs.existsSync(this.mosaicDir)) {
       this.logInfo(`${this.mosaicDir} does not exist; initializing`);
-      fs.mkdirSync(this.mosaicDir);
+      fs.mkdirSync(this.mosaicDir, { recursive: true });
     }
 
     // If the `this.originChain` is not present, then `this.chain` is the
