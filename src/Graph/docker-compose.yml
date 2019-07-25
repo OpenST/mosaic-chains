@@ -18,7 +18,7 @@ services:
       ethereum: 'dev:http://${MOSAIC_GRAPH_NODE_HOST}:${MOSAIC_ETHEREUM_RPC_PORT}'
       RUST_LOG: info
       GRAPH_LOG: info
-      ETHEREUM_POLLING_INTERVAL: 7500
+      ETHEREUM_POLLING_INTERVAL: 3000
   ipfs:
     image: ipfs/go-ipfs
     ports:
