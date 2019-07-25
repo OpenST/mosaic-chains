@@ -31,9 +31,9 @@ mosaic.action(
       const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
 
       mosaicConfig.originChain.chain = chain;
-      mosaicConfig.originChain.contractAddresses.gatewayLibAddress = gatewayLib.address;
-      mosaicConfig.originChain.contractAddresses.messageBusAddress = messageBus.address;
-      mosaicConfig.originChain.contractAddresses.merklePatriciaLibAddress = merklePatriciaProof.address;
+      mosaicConfig.originChain.contractAddresses.gatewayLibAddress = Web3.utils.toChecksumAddress(gatewayLib.address);
+      mosaicConfig.originChain.contractAddresses.messageBusAddress = Web3.utils.toChecksumAddress(messageBus.address);
+      mosaicConfig.originChain.contractAddresses.merklePatriciaLibAddress = Web3.utils.toChecksumAddress(merklePatriciaProof.address);
 
       mosaicConfig.writeToMosaicConfigDirectory();
     } catch (error) {

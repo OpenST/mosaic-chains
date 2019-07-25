@@ -132,10 +132,10 @@ export default class Initialization {
       mosaicConfig.originChain.contractAddresses,
     );
     const originContracts = auxiliaryChain.contractAddresses.origin;
-    originContracts.anchorOrganizationAddress = originAnchorOrganization.address;
-    originContracts.anchorAddress = originAnchor.address;
-    originContracts.ostGatewayOrganizationAddress = ostGatewayOrganization.address;
-    originContracts.ostEIP20GatewayAddress = ostGateway.address;
+    originContracts.anchorOrganizationAddress = Web3.utils.toChecksumAddress(originAnchorOrganization.address);
+    originContracts.anchorAddress = Web3.utils.toChecksumAddress(originAnchor.address);
+    originContracts.ostGatewayOrganizationAddress = Web3.utils.toChecksumAddress(ostGatewayOrganization.address);
+    originContracts.ostEIP20GatewayAddress = Web3.utils.toChecksumAddress(ostGateway.address);
     auxiliaryChain.genesis = auxiliaryChainInteract.getGenesis();
     auxiliaryChain.bootNodes.push(
       Initialization.getBootNode(
@@ -179,14 +179,14 @@ export default class Initialization {
     );
     const auxiliaryContracts = auxiliaryChain.contractAddresses.auxiliary;
 
-    auxiliaryContracts.anchorOrganizationAddress = anchorOrganization.address;
-    auxiliaryContracts.anchorAddress = anchor.address;
-    auxiliaryContracts.ostCoGatewayOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
-    auxiliaryContracts.ostPrimeAddress = ostPrime.address;
-    auxiliaryContracts.ostEIP20CogatewayAddress = ostCoGateway.address;
-    auxiliaryContracts.gatewayLibAddress = gatewayLib.address;
-    auxiliaryContracts.messageBusAddress = messageBus.address;
-    auxiliaryContracts.merklePatriciaLibAddress = merklePatriciaProof.address;
+    auxiliaryContracts.anchorOrganizationAddress = Web3.utils.toChecksumAddress(anchorOrganization.address);
+    auxiliaryContracts.anchorAddress = Web3.utils.toChecksumAddress(anchor.address);
+    auxiliaryContracts.ostCoGatewayOrganizationAddress = Web3.utils.toChecksumAddress(coGatewayAndOstPrimeOrganization.address);
+    auxiliaryContracts.ostPrimeAddress = Web3.utils.toChecksumAddress(ostPrime.address);
+    auxiliaryContracts.ostEIP20CogatewayAddress = Web3.utils.toChecksumAddress(ostCoGateway.address);
+    auxiliaryContracts.gatewayLibAddress = Web3.utils.toChecksumAddress(gatewayLib.address);
+    auxiliaryContracts.messageBusAddress = Web3.utils.toChecksumAddress(messageBus.address);
+    auxiliaryContracts.merklePatriciaLibAddress = Web3.utils.toChecksumAddress(merklePatriciaProof.address);
 
     // Progressing on both chains in parallel (with hash lock secret).
     // Giving the deployer the amount of coins that were originally staked as tokens on origin.
