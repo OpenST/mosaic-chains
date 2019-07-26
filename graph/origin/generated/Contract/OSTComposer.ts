@@ -51,12 +51,16 @@ export class StakeRequested__Params {
     return this._event.parameters[5].value.toAddress();
   }
 
-  get gateway(): Address {
+  get stakerProxy(): Address {
     return this._event.parameters[6].value.toAddress();
   }
 
+  get gateway(): Address {
+    return this._event.parameters[7].value.toAddress();
+  }
+
   get stakeRequestHash(): Bytes {
-    return this._event.parameters[7].value.toBytes();
+    return this._event.parameters[8].value.toBytes();
   }
 }
 

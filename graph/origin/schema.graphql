@@ -7,6 +7,7 @@ type StakeRequested @entity {
   nonce: BigInt! # uint256
   staker: Bytes! # address
   gateway: Bytes! # address
+  stakerProxy: Bytes! # address
   stakeRequestHash: Bytes! # bytes32
   blockNumber: BigInt! # uint256
   blockHash: Bytes! # bytes32

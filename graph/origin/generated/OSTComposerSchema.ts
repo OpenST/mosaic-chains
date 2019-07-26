@@ -96,6 +96,15 @@ export class StakeRequested extends Entity {
     this.set("staker", Value.fromBytes(value));
   }
 
+  get stakerProxy(): Bytes {
+    let value = this.get("stakerProxy");
+    return value.toBytes();
+  }
+
+  set stakerProxy(value: Bytes) {
+    this.set("stakerProxy", Value.fromBytes(value));
+  }
+
   get gateway(): Bytes {
     let value = this.get("gateway");
     return value.toBytes();
