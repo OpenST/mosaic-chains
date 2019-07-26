@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Utils as mosaicUtils } from '@openst/mosaic.js';
+import { Utils as MosaicUtils } from '@openst/mosaic.js';
 import * as ip from 'ip';
 
 import InitConfig from '../Config/InitConfig';
@@ -13,7 +13,7 @@ import Logger from '../Logger';
 import Proof from './Proof';
 import Directory from '../Directory';
 import Integer from '../Integer';
-import { Utils } from '../Utils';
+import Utils from '../Utils';
 
 import Web3 = require('web3');
 
@@ -259,7 +259,7 @@ export default class Initialization {
   ): Promise<Proof> {
     // Proof requires the block number as string in hex format with leading `0x`.
     const blockNumberString = `0x${blockNumber.toString(16)}`;
-    const proofGenerator = new mosaicUtils.ProofGenerator(originWeb3, auxiliaryWeb3);
+    const proofGenerator = new MosaicUtils.ProofGenerator(originWeb3, auxiliaryWeb3);
     const proofData = await proofGenerator.getOutboxProof(
       gatewayAddress,
       [messageHash],

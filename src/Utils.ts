@@ -1,6 +1,9 @@
 import Web3 = require('web3');
 
-export class Utils {
+/**
+ * It contains utility methods.
+ */
+export default class Utils {
 
   /**
    * It provides checksum address using web3.
