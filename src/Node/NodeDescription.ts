@@ -22,5 +22,8 @@ export default class NodeDescription {
 
   public chainId: string = '';
 
-  constructor(readonly chain: string) { }
+  public originChainId?: string = '';
+
+  constructor(readonly chain: string) {}
+
 }

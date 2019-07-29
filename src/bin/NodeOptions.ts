@@ -59,6 +59,7 @@ export default class NodeOptions {
     password: string;
     originChain: string;
     chainId: string;
+    originChainId: string;
   }) {
     Object.assign(this, options);
   }
@@ -98,6 +99,7 @@ export default class NodeOptions {
       password: options.password || '',
       originChain: options.origin || '',
       chainId: chainIdNumber,
+      originChainId: ChainInfo.getChainId(options.origin),
     });
 
     parsedOptions.mosaicDir = Directory.sanitize(parsedOptions.mosaicDir);

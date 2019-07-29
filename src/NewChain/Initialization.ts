@@ -48,7 +48,6 @@ export default class Initialization {
     const auxiliaryChainInteract: AuxiliaryChainInteract = new AuxiliaryChainInteract(
       initConfig,
       newChainId,
-      auxiliaryNodeDescription.originChain,
       auxiliaryNodeDescription,
     );
 
@@ -56,7 +55,7 @@ export default class Initialization {
     PublishMosaicConfig.tryPublish(auxiliaryNodeDescription.originChain);
 
     const mosaicConfig = MosaicConfig.fromChain(auxiliaryNodeDescription.originChain);
-    mosaicConfig.originChain.chain = originChainId;
+    mosaicConfig.originChain.chain = auxiliaryNodeDescription.originChain;
     mosaicConfig.originChain.contractAddresses.simpleTokenAddress = initConfig.originOstAddress;
 
     // Actually creating the new chain:

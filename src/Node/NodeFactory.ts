@@ -17,7 +17,7 @@ export default class NodeFactory {
    * @returns The node; based of the given input.
    */
   public static create(nodeDescription: NodeDescription): Node {
-    if (nodeDescription.chain === 'dev') {
+    if (nodeDescription.chain === 'dev' || nodeDescription.originChain === 'dev') {
       return new DevGethNode(nodeDescription);
     }
     if (ChainInfo.officialIdentifiers.includes(nodeDescription.chain)) {
