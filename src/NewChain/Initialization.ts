@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Utils } from '@openst/mosaic.js';
+import { Utils as MosaicUtils } from '@openst/mosaic.js';
 import * as ip from 'ip';
 
 import InitConfig from '../Config/InitConfig';
@@ -13,6 +13,7 @@ import Logger from '../Logger';
 import Proof from './Proof';
 import Directory from '../Directory';
 import Integer from '../Integer';
+import Utils from '../Utils';
 
 import Web3 = require('web3');
 
@@ -133,10 +134,10 @@ export default class Initialization {
       mosaicConfig.originChain.contractAddresses,
     );
     const originContracts = auxiliaryChain.contractAddresses.origin;
-    originContracts.anchorOrganizationAddress = originAnchorOrganization.address;
-    originContracts.anchorAddress = originAnchor.address;
-    originContracts.ostGatewayOrganizationAddress = ostGatewayOrganization.address;
-    originContracts.ostEIP20GatewayAddress = ostGateway.address;
+    originContracts.anchorOrganizationAddress = Utils.toChecksumAddress(originAnchorOrganization.address);
+    originContracts.anchorAddress = Utils.toChecksumAddress(originAnchor.address);
+    originContracts.ostGatewayOrganizationAddress = Utils.toChecksumAddress(ostGatewayOrganization.address);
+    originContracts.ostEIP20GatewayAddress = Utils.toChecksumAddress(ostGateway.address);
     auxiliaryChain.genesis = auxiliaryChainInteract.getGenesis();
     auxiliaryChain.bootNodes.push(
       Initialization.getBootNode(
@@ -180,14 +181,14 @@ export default class Initialization {
     );
     const auxiliaryContracts = auxiliaryChain.contractAddresses.auxiliary;
 
-    auxiliaryContracts.anchorOrganizationAddress = anchorOrganization.address;
-    auxiliaryContracts.anchorAddress = anchor.address;
-    auxiliaryContracts.ostCoGatewayOrganizationAddress = coGatewayAndOstPrimeOrganization.address;
-    auxiliaryContracts.ostPrimeAddress = ostPrime.address;
-    auxiliaryContracts.ostEIP20CogatewayAddress = ostCoGateway.address;
-    auxiliaryContracts.gatewayLibAddress = gatewayLib.address;
-    auxiliaryContracts.messageBusAddress = messageBus.address;
-    auxiliaryContracts.merklePatriciaLibAddress = merklePatriciaProof.address;
+    auxiliaryContracts.anchorOrganizationAddress = Utils.toChecksumAddress(anchorOrganization.address);
+    auxiliaryContracts.anchorAddress = Utils.toChecksumAddress(anchor.address);
+    auxiliaryContracts.ostCoGatewayOrganizationAddress = Utils.toChecksumAddress(coGatewayAndOstPrimeOrganization.address);
+    auxiliaryContracts.ostPrimeAddress = Utils.toChecksumAddress(ostPrime.address);
+    auxiliaryContracts.ostEIP20CogatewayAddress = Utils.toChecksumAddress(ostCoGateway.address);
+    auxiliaryContracts.gatewayLibAddress = Utils.toChecksumAddress(gatewayLib.address);
+    auxiliaryContracts.messageBusAddress = Utils.toChecksumAddress(messageBus.address);
+    auxiliaryContracts.merklePatriciaLibAddress = Utils.toChecksumAddress(merklePatriciaProof.address);
 
     // Progressing on both chains in parallel (with hash lock secret).
     // Giving the deployer the amount of coins that were originally staked as tokens on origin.
@@ -259,7 +260,7 @@ export default class Initialization {
   ): Promise<Proof> {
     // Proof requires the block number as string in hex format with leading `0x`.
     const blockNumberString = `0x${blockNumber.toString(16)}`;
-    const proofGenerator = new Utils.ProofGenerator(originWeb3, auxiliaryWeb3);
+    const proofGenerator = new MosaicUtils.ProofGenerator(originWeb3, auxiliaryWeb3);
     const proofData = await proofGenerator.getOutboxProof(
       gatewayAddress,
       [messageHash],

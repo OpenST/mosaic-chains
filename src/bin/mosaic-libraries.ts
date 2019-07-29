@@ -6,6 +6,7 @@ import Logger from '../Logger';
 import OriginChainInteract from '../NewChain/OriginChainInteract';
 import MosaicConfig from '../Config/MosaicConfig';
 import PublishMosaicConfig from '../Config/PublishMosaicConfig';
+import Utils from '../Utils';
 
 import Web3 = require('web3');
 
@@ -31,9 +32,15 @@ mosaic.action(
       const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
 
       mosaicConfig.originChain.chain = chain;
-      mosaicConfig.originChain.contractAddresses.gatewayLibAddress = gatewayLib.address;
-      mosaicConfig.originChain.contractAddresses.messageBusAddress = messageBus.address;
-      mosaicConfig.originChain.contractAddresses.merklePatriciaLibAddress = merklePatriciaProof.address;
+      mosaicConfig.originChain.contractAddresses.gatewayLibAddress = Utils.toChecksumAddress(
+        gatewayLib.address,
+      );
+      mosaicConfig.originChain.contractAddresses.messageBusAddress = Utils.toChecksumAddress(
+        messageBus.address,
+      );
+      mosaicConfig.originChain.contractAddresses.merklePatriciaLibAddress = Utils.toChecksumAddress(
+        merklePatriciaProof.address,
+      );
 
       mosaicConfig.writeToMosaicConfigDirectory();
     } catch (error) {
