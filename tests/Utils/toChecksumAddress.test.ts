@@ -16,7 +16,7 @@ describe('Utils.toChecksumAddress()', () => {
     assert.strictEqual(
       actualAddress,
       address,
-      'Addresses are different'
+      'Addresses are different',
     );
 
     SpyAssert.assert(web3Spy, 1, [[address]]);
