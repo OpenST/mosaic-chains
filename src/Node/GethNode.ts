@@ -3,6 +3,7 @@ import * as path from 'path';
 import Node from './Node';
 import Shell from '../Shell';
 import Directory from '../Directory';
+import ChainInfo from "./ChainInfo";
 
 /**
  * Represents a geth node that runs in a docker container.
@@ -92,7 +93,6 @@ export default class GethNode extends Node {
 
     args = args.concat([
       'ethereum/client-go:v1.8.23',
-      '--networkid', this.chain,
       '--datadir', './chain_data',
       '--port', `${this.port}`,
       '--rpc',
@@ -106,6 +106,7 @@ export default class GethNode extends Node {
       '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
       '--wsorigins', '*',
     ]);
+    args = args.concat(ChainInfo.gethOptions(this.chain));
 
     if (this.bootnodes !== '') {
       args = args.concat([
@@ -124,7 +125,7 @@ export default class GethNode extends Node {
         '--password', '/password.txt',
       ]);
     }
-
+    console.log('args :- ',args);
     return args;
   }
 
