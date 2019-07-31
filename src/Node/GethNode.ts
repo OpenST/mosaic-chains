@@ -137,10 +137,9 @@ export default class GethNode extends Node {
 
     if (!fs.existsSync(this.chainDir)) {
       this.logInfo(`${this.chainDir} does not exist; initializing`);
-      fs.mkdirSync(this.chainDir);
+      fs.mkdirSync(this.chainDir,{ recursive: true });
 
-      // Starting origin chains.
-      if(this.originChain != ''){
+      if(this.originChain.trim().length !== 0) {
       fs.copySync(
         path.join(
           Directory.projectRoot,
