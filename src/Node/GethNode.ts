@@ -125,7 +125,7 @@ export default class GethNode extends Node {
         '--password', '/password.txt',
       ]);
     }
-    console.log('args :- ',args);
+
     return args;
   }
 
@@ -138,6 +138,9 @@ export default class GethNode extends Node {
     if (!fs.existsSync(this.chainDir)) {
       this.logInfo(`${this.chainDir} does not exist; initializing`);
       fs.mkdirSync(this.chainDir);
+
+      // Starting origin chains.
+      if(this.originChain != ''){
       fs.copySync(
         path.join(
           Directory.projectRoot,
@@ -148,6 +151,7 @@ export default class GethNode extends Node {
         ),
         path.join(this.chainDir, 'geth'),
       );
+      }
     }
   }
 }
