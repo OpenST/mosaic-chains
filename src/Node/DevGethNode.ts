@@ -30,6 +30,7 @@ export default class DevGethNode extends GethNode {
     addressesToUnlock = `${addressesToUnlock},${sealerAddress}`;
 
     args = args.concat([
+      '--rpccorsdomain', '*',
       '--minerthreads', '1',
       '--mine',
       '--etherbase',
