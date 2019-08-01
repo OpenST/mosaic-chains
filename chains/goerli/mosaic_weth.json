@@ -1,10 +1,10 @@
 {
   "originChain": {
     "contractAddresses": {
-      "gatewayLibAddress": "0xDefDcd2A595D651449560C5086153cd2C5b99f54",
-      "messageBusAddress": "0x9c50aD270A2CA1D897326B0880b3f639c3b0acef",
-      "merklePatriciaLibAddress": "0x168803cA6d5D466eA7005627bfd6EAf0b5B164B0",
-      "simpleTokenAddress": "0xd426b22f3960d01189a3d548b45a7202489ff4de",
+      "gatewayLibAddress": "0x0f08341505C01b7bc05C95A99aB7427eD4C3195F",
+      "messageBusAddress": "0xcaB4728ea030A04A183928884a6dcD83857d96Ba",
+      "merklePatriciaLibAddress": "0x83aA52516805Ff323CA1033a12c6bF133d9AC17e",
+      "simpleTokenAddress": "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
       "ostComposerAddress": "0xeaa192d486ac5243886a28001e27a68cae5fde4b"
     },
     "chain": "goerli"
@@ -18,18 +18,18 @@
         "origin": {
           "anchorOrganizationAddress": "0x3653968c38FA8c59CA22C95f2202505BFaA64F09",
           "anchorAddress": "0x4fDF26dc9a99D11FfB39a2d88a7E39E49544602a",
-          "ostGatewayOrganizationAddress": "0x18F5aF462C093007a9e3Ed2CF69d04F318C63BDC",
-          "ostEIP20GatewayAddress": "0xe11e76C1ecA13Ae4ABA871EabDf37C24b8e1928B"
+          "ostGatewayOrganizationAddress": "0x77DDDB66b12b2279A83D61fF443F1d8D16352C59",
+          "ostEIP20GatewayAddress": "0x6649c6FF3629aE875b91B6C1551139c9feaA2514"
         },
         "auxiliary": {
           "anchorOrganizationAddress": "0xd9A951F51e725FDaA4Bc15C181635A608BD0dB2D",
           "anchorAddress": "0x2Bbe4DFb364e76dA987Ac5754bB87b476cC6D80B",
-          "ostCoGatewayOrganizationAddress": "0xaf38F15c23555b302Fc0855F9558240649709252",
-          "ostPrimeAddress": "0x3b588816D166A7aac3A68B0769B0E0168A6797a3",
-          "ostEIP20CogatewayAddress": "0x5efaE177C9f37E6DA82e807530EA550AA5F0AFdd",
-          "gatewayLibAddress": "0xA1434c1A5Cd97410ca69ed65b2Bc820a1f0d3940",
-          "messageBusAddress": "0x799772D93ff3e552f8A84F71550de7a9B6332f3e",
-          "merklePatriciaLibAddress": "0x1c9b9287B1a774C1FBa0bf5d73709077460A87Aa"
+          "ostCoGatewayOrganizationAddress": "0x47Ef953C4372457754d3471Ca2BB1b5d6AD8F245",
+          "ostPrimeAddress": "0xBB5676d85d28DA039F982C07E4217fB0FDB2c2ef",
+          "ostEIP20CogatewayAddress": "0x962e1404D6957d8fF56F8fE79a3fC2B670C3d578",
+          "gatewayLibAddress": "0xa718f65c96a177d8967E8f6D67A7872b26771495",
+          "messageBusAddress": "0x8F3578462BaF62e48Ad02820f4b7cd9788B200B6",
+          "merklePatriciaLibAddress": "0x4473FBF3390e49e79b27D229b9BF230DAD78414e"
         }
       },
       "chainId": 1405,
