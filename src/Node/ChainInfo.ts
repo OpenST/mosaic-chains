@@ -26,6 +26,7 @@ export default class ChainInfo {
       morden: '62',
       ropsten: '3',
       kovan: '42',
+      goerli: '5',
       poasokol: '77',
       dev: '1515',
     };
