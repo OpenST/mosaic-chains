@@ -1,7 +1,7 @@
 version: '3'
 services:
   graph-node:
-    image: graphprotocol/graph-node
+    image: graphprotocol/graph-node:v0.13.2
     ports:
       - '${MOSAIC_GRAPH_RPC_PORT}:8000'
       - '${MOSAIC_GRAPH_WS_PORT}:8001'
@@ -20,13 +20,13 @@ services:
       GRAPH_LOG: info
       ETHEREUM_POLLING_INTERVAL: 3000
   ipfs:
-    image: ipfs/go-ipfs
+    image: ipfs/go-ipfs:v0.4.22-rc1
     ports:
       - '${MOSAIC_GRAPH_IPFS_PORT}:5001'
     volumes:
       - '${MOSAIC_GRAPH_DATA_FOLDER}/ipfs:/data/ipfs'
   postgres:
-    image: postgres
+    image: postgres:alpine
     ports:
       - '${MOSAIC_GRAPH_POSTGRES_PORT}:5432'
     environment:
