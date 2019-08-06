@@ -45,6 +45,12 @@ export default class NodeOptions {
   public originChain: string;
 
   /**
+   * If true then eth, net, web3, network, debug, txpool, admin, personal api's are enabled.
+   * Otherwise only eth api is enabled.
+   */
+  public debug: boolean;
+
+  /**
    * @param options The options from the command line.
    */
   constructor(options: {
@@ -56,6 +62,7 @@ export default class NodeOptions {
     unlock: string;
     password: string;
     originChain: string;
+    debug: string;
   }) {
     Object.assign(this, options);
   }
@@ -94,6 +101,7 @@ export default class NodeOptions {
       unlock: options.unlock || '',
       password: options.password || '',
       originChain: options.origin || '',
+      debug: options.debug || '',
     });
 
     parsedOptions.mosaicDir = Directory.sanitize(parsedOptions.mosaicDir);

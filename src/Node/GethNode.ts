@@ -98,14 +98,24 @@ export default class GethNode extends Node {
       '--rpc',
       '--rpcaddr', '0.0.0.0',
       '--rpcvhosts', '*',
-      '--rpcapi', 'eth,net,web3,network,debug,txpool,admin,personal',
       '--rpcport', '8545',
       '--ws',
       '--wsaddr', '0.0.0.0',
       '--wsport', '8546',
-      '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
       '--wsorigins', '*',
     ]);
+
+    if(this.debug) {
+      args = args.concat([
+        '--rpcapi', 'eth,net,web3,network,debug,txpool,admin,personal',
+        '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
+      ]);
+    } else {
+      args = args.concat([
+        '--rpcapi', 'eth',
+        '--wsapi', 'eth',
+      ]);
+    }
 
     if (this.bootnodes !== '') {
       args = args.concat([

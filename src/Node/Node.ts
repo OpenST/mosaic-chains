@@ -46,6 +46,12 @@ export default abstract class Node {
   public originChain: string;
 
   /**
+   * If true then eth, net, web3, network, debug, txpool, admin, personal api's are enabled.
+   * Otherwise only eth api is enabled.
+   */
+  public debug: boolean;
+
+  /**
    * Docker container names will have this prefix.
    * @returns The prefix.
    */
@@ -71,6 +77,7 @@ export default abstract class Node {
     this.unlock = nodeDescription.unlock;
     this.password = nodeDescription.password;
     this.originChain = nodeDescription.originChain;
+    this.debug = nodeDescription.debug;
 
     if (this.originChain === '') {
       this.chainDir = path.join(this.mosaicDir, this.chain, 'origin');

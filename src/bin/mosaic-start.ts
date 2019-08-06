@@ -19,6 +19,7 @@ mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
+  .option('-d,--debug','boolean flag determining whether chain to be started in debug mode; if not provided then chain starts with only eth api enabled for ws and rpc')
   .action((chain: string, options) => {
     const {
       mosaicDir,
@@ -29,6 +30,7 @@ mosaic
       unlock,
       password,
       originChain,
+      debug,
     } = NodeOptions.parseOptions(options, chain);
     const node: Node = NodeFactory.create({
       chain,
@@ -40,6 +42,7 @@ mosaic
       unlock,
       password,
       originChain,
+      debug,
     });
     node.start();
 
