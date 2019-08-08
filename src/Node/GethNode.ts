@@ -112,8 +112,8 @@ export default class GethNode extends Node {
       ]);
     } else {
       args = args.concat([
-        '--rpcapi', 'eth',
-        '--wsapi', 'eth',
+        '--rpcapi', 'eth,net',
+        '--wsapi', 'eth,net',
       ]);
     }
 
