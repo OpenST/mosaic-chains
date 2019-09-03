@@ -43,5 +43,9 @@ dataSources:
           handler: handleStakeIntentDeclared
         - event: StakeProgressed(bytes32,address,uint256,uint256,bool,bytes32)
           handler: handleStakeProgressed
+        - event: RedeemIntentConfirmed(bytes32,address,uint256,address,uint256,uint256,bytes32)
+          handler: handleRedeemIntentConfirmed
+        - event: UnstakeProgressed(bytes32,address,address,uint256,uint256,uint256,bool,bytes32)
+          handler: handleUnstakeProgressed
       file: ./src/EIP20GatewayMapping.ts
 
