@@ -46,4 +46,8 @@ dataSources:
           handler: handleMintProgressed
         - event: GatewayProven(address,uint256,bytes32,bool)
           handler: handleGatewayProven
+        - event: RedeemIntentDeclared(bytes32,address,uint256,address,uint256)
+          handler: handleRedeemIntentDeclared
+        - event: RedeemProgressed(bytes32,address,uint256,uint256,bool,bytes32)
+          handler: handleRedeemProgressed
       file: ./src/EIP20CoGatewayMapping.ts
