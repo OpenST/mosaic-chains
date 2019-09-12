@@ -11,4 +11,5 @@ mosaic
   .command('create <new-chain-id> <origin-websocket> <password-file>', 'creates a new auxiliary chain on the given origin chain')
   .command('libraries <chain> <origin-websocket> <deployer>', 'Deploys libraries on an origin chain')
   .command('verify-chain <origin-websocket> <auxiliary-websocket> <origin-chain-identifier> <auxiliary-chain-identifier>', 'Verifies an auxiliary chain.')
+  .command('stake-pool <chain> <origin-websocket> <deployer> <organizationOwner> <organizationAdmin>', 'Deploys stake pool contract.')
   .parse(process.argv);

@@ -1,5 +1,7 @@
 import { ContractInteract } from '@openst/mosaic.js';
+import { contracts } from '@openst/mosaic-contracts';
 import { Tx } from 'web3/eth/types';
+import Contract from 'web3/eth/contract';
 import Logger from '../Logger';
 
 import Web3 = require('web3');
@@ -197,6 +199,41 @@ export default class Contracts {
       messageBus,
       merklePatriciaProof,
     };
+  }
+
+  /**
+   * This method deploys OST composer and it's organization.
+   *
+   * @param web3 Instance of Web3.
+   * @param ostComposerOrganizationOwner Address of owner of OSTComposer organization.
+   * @param ostComposerOrganizationAdmin Address of admin of OSTComposer organization.
+   * @param txOptions Transaction options.
+   */
+  public static async setupOSTComposer(
+    web3: Web3,
+    ostComposerOrganizationOwner: string,
+    ostComposerOrganizationAdmin: string,
+    txOptions: Tx,
+  ): Promise<Contract> {
+    const organization = await this.deployOrganization(
+      web3,
+      txOptions,
+      ostComposerOrganizationOwner,
+      ostComposerOrganizationAdmin,
+    );
+    const { abi } = contracts.OSTComposer;
+    const { bin } = contracts.OSTComposer;
+
+    const contract = new web3.eth.Contract(abi);
+    const rawDeployTransaction = contract.deploy({
+      data: bin,
+      arguments: [organization.address],
+    });
+    const deployTxOptions = {
+      ...txOptions,
+      gas: (await rawDeployTransaction.estimateGas()),
+    };
+    return rawDeployTransaction.send(deployTxOptions);
   }
 
   /**
