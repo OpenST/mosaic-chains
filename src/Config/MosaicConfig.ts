@@ -124,12 +124,12 @@ export default class MosaicConfig {
    * @return mosaic config
    */
   public static fromChain(originChain: string): MosaicConfig {
-    const filePath = path.join(
-      Directory.getDefaultMosaicDataDir,
-      originChain,
-      Directory.getMosaicFileName(),
-    );
-    if (fs.existsSync(filePath)) {
+    if (MosaicConfig.exists(originChain)) {
+      const filePath = path.join(
+        Directory.getDefaultMosaicDataDir,
+        originChain,
+        Directory.getMosaicFileName(),
+      );
       const configObject = MosaicConfig.readConfigFromFile(filePath);
       return new MosaicConfig(configObject);
     }
@@ -146,6 +146,19 @@ export default class MosaicConfig {
       return new MosaicConfig(configObject);
     }
     throw new MosaicConfigNotFoundException(`Missing config file at path: ${filePath}`);
+  }
+
+  /**
+   * Checks if mosaic config exists for a origin chain.
+   * @param originChain chain identifier.
+   */
+  public static exists(originChain: string): boolean {
+    const filePath = path.join(
+      Directory.getDefaultMosaicDataDir,
+      originChain,
+      Directory.getMosaicFileName(),
+    );
+    return fs.existsSync(filePath);
   }
 
   /**

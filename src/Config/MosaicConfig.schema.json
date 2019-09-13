@@ -155,9 +155,7 @@
       "required": [
         "gatewayLibAddress",
         "merklePatriciaLibAddress",
-        "messageBusAddress",
-        "simpleTokenAddress",
-        "ostComposerAddress"
+        "messageBusAddress"
       ],
       "title": "OriginChainContractAddresses",
       "description": "Contract addresses on origin chain"
