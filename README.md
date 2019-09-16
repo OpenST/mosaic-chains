@@ -53,7 +53,7 @@ The chain id of future auxiliary chains running against Ethereum mainnet will in
 The chain id of future auxiliary chains running against Ropsten will decrease by one number each.
 
 ## Dev chains
-For development, you can use the dev chains. This chains have the initial contract deployed. 
+For development, you can use the dev chains. These chains have the initial chain setup contracts deployed. 
 
 Example:
 ```bash
@@ -61,7 +61,7 @@ Example:
 ./mosaic start origin
 
 # start auxiliary chain.   
-./mosac start auxiliary
+./mosaic start auxiliary
 ```
 
 ### Default ports

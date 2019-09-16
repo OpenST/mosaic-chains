@@ -31,18 +31,70 @@ export default class ChainInfo {
   }
 
   /**
+   * Mapping of origin dev chain name against chain id.
+   */
+  public static get devOriginChainInfo(): any {
+    return {
+      origin: '1515', // 1515 is the dev origin chain id
+      dev: '1515',
+    };
+  }
+
+  /**
+   * Mapping of auxiliary dev chain name against chain id.
+   */
+  public static get devAuxiliaryChainInfo(): any {
+    return {
+      auxiliary: '1000', // 1000 is the dev auxiliary chain id
+    };
+  }
+
+  /**
+   * Mapping of auxiliary dev chain name against chain id.
+   */
+  public static get devChainInfo(): any {
+    let devChains = {};
+    devChains = Object.assign(devChains, ChainInfo.devOriginChainInfo);
+    devChains = Object.assign(devChains, ChainInfo.devAuxiliaryChainInfo);
+    return devChains;
+  }
+
+  /**
    * Returns the chain id for the given chain name. If the chain name is not
    * available in `ChainInfo.chainInfo`, then it will return chain as chain id.
    * @param chain Chain name or chain id.
    * @returns Chain id; based on the given input.
    */
   public static getChainId(chain: string): string {
-    if (chain === 'origin' || chain === 'dev') {
-      return '1515';
-    }
-    if (chain === 'auxiliary') {
-      return '1000';
+    // Check if the chain is dev chains.
+    const chainId = ChainInfo.devChainInfo[chain];
+    if (chainId) {
+      return chainId;
     }
     return ChainInfo.chainInfo[chain] || chain;
+  }
+
+  /**
+   * Check if the give chain is a dev chain.
+   * @param chain Chain name.
+   */
+  public static isDevChain(chain: string): boolean {
+    return (ChainInfo.devChainInfo[chain] !== undefined);
+  }
+
+  /**
+   * Check if the give chain is origin dev chain.
+   * @param chain Chain name.
+   */
+  public static isDevOriginChain(chain: string): boolean {
+    return (ChainInfo.devOriginChainInfo[chain] !== undefined);
+  }
+
+  /**
+   * Check if the give chain is auxiliary dev chain.
+   * @param chain Chain name.
+   */
+  public static isDevAuxiliaryChain(chain: string): boolean {
+    return (ChainInfo.devAuxiliaryChainInfo[chain] !== undefined);
   }
 }

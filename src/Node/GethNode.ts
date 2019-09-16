@@ -3,6 +3,7 @@ import * as path from 'path';
 import Node from './Node';
 import Shell from '../Shell';
 import Directory from '../Directory';
+import ChainInfo from './ChainInfo';
 
 const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains';
 /**
@@ -143,18 +144,22 @@ export default class GethNode extends Node {
   private devGethArgs(chain): string[] {
     let args = this.getDefaultDockerArgs();
     let volume = '';
+    let devChainCommandParam = '';
 
-    if (chain === 'dev' || chain === 'origin') {
+    const isDevOriginChain = ChainInfo.isDevOriginChain(chain);
+    if (isDevOriginChain) {
       volume = `${this.chainDir}:/origin_volume`;
+      devChainCommandParam = 'origin';
     } else {
       volume = `${this.chainDir}:/auxiliary_volume`;
+      devChainCommandParam = 'auxiliary';
     }
     args = args.concat([
       '--volume', volume,
     ]);
     args = args.concat([
       DEV_CHAIN_DOCKER,
-      chain === 'dev' || chain === 'origin' ? 'origin' : 'auxiliary',
+      devChainCommandParam,
     ]);
 
     return args;
