@@ -4,7 +4,7 @@ import Node from './Node';
 import Shell from '../Shell';
 import Directory from '../Directory';
 
-const DEV_CHAIN_DOCKER = 'deepeshkn/test_docker_image';
+const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains';
 /**
  * Represents a geth node that runs in a docker container.
  */
