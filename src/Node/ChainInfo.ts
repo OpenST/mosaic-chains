@@ -37,6 +37,12 @@ export default class ChainInfo {
    * @returns Chain id; based on the given input.
    */
   public static getChainId(chain: string): string {
+    if (chain === 'origin' || chain === 'dev') {
+      return '1515';
+    }
+    if (chain === 'auxiliary') {
+      return '1000';
+    }
     return ChainInfo.chainInfo[chain] || chain;
   }
 }
