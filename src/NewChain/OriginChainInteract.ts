@@ -3,10 +3,10 @@ import Contract from 'web3/eth/contract';
 import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
 import Contracts from './Contracts';
-import Integer from '../Integer';
 import { OriginLibraries } from '../Config/MosaicConfig';
 
 import Web3 = require('web3');
+import BN = require('bn.js');
 
 /**
  * The origin chain when creating a new auxiliary chain.
@@ -111,8 +111,8 @@ export default class OriginChainInteract {
 
     // For the OST gateway, the base token and the stake token are the same: OST.
     const stakePlusBounty: string = (
-      Integer.parseString(this.initConfig.originStakeAmount) + Integer.parseString(this.initConfig.originBounty)
-    ).toString();
+      new BN(this.initConfig.originStakeAmount).add(new BN(this.initConfig.originBounty))
+    ).toString(10);
     this.logInfo(
       'approving stake plus bounty on ost',
       { spender: this.ostGateway.address, amount: stakePlusBounty },
@@ -138,7 +138,9 @@ export default class OriginChainInteract {
     const messageHash: string = stakeIntentDeclaredEvent.returnValues._messageHash;
     this.logInfo('staked', { messageHash });
 
-    const blockNumber: number = await this.waitBlocks(this.initConfig.originStakeBlocksToWait);
+    // fetch current block number from node.
+    const currentBlockNumber = await this.web3.eth.getBlockNumber();
+    const blockNumber: number = await this.waitBlocks(currentBlockNumber);
     const stateRoot: string = await this.getStateRoot(blockNumber);
 
     return {
@@ -266,32 +268,31 @@ export default class OriginChainInteract {
   /**
    * @returns A promise that resolves once the given number of new block headers have been received.
    */
-  private waitBlocks(numberOfBlocksToWait: number): Promise<number> {
-    this.logInfo('waiting for blocks', { numberOfBlocksToWait });
-    return new Promise((resolve, reject) => {
-      // Forcing type to `any` as the web3 types are wrongly returning a Promise.
-      const blockHeaderSubscription: any = this.web3.eth.subscribe('newBlockHeaders');
-      blockHeaderSubscription.on(
-        'data',
-        (blockHeader) => {
-          const blockNumber = blockHeader.number;
-          numberOfBlocksToWait -= 1;
-          this.logInfo('received block header', { blockNumber, numberOfBlocksToWait });
-
-          if (numberOfBlocksToWait <= 0) {
-            blockHeaderSubscription.unsubscribe();
-            resolve(blockNumber);
-          }
-        },
-      );
-
-      blockHeaderSubscription.on(
-        'error',
-        error => reject(error),
-      );
-    });
+  private async waitBlocks(currentBlockNumber: number): Promise<number> {
+    const { originStakeBlocksToWait } = this.initConfig;
+    const { web3 } = this;
+    return new Promise((async (onResolve, onReject) => {
+      while (true) {
+        await new Promise((async (onResolve, onReject) => {
+          setTimeout(async () => {
+            Logger.debug('waiting for new blocks.');
+            onResolve();
+          }, 3000);
+        }));
+        const blockNumber = await web3.eth.getBlockNumber();
+        const achievedBlockWait = blockNumber - currentBlockNumber;
+        // if originStakeBlocksToWait has been mined after currentBlockNumber break
+        if (achievedBlockWait >= originStakeBlocksToWait) {
+          onResolve(blockNumber);
+          break;
+        } else {
+          Logger.debug(`desired BlocksToWait of ${originStakeBlocksToWait}
+         has not been achieved. achievedBlockWait: ${achievedBlockWait}`);
+        }
+      }
+    }));
   }
-  
+
   /**
    * Setup StakerPool(OST Composer contract)
    * @param web3 Origin web3 instance.

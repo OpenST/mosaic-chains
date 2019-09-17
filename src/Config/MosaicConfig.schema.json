@@ -53,6 +53,10 @@
         "ostEIP20CogatewayAddress": {
           "$ref": "#/definitions/Address",
           "description": "Address of cogateway contract on auxiliary chain"
+        },
+        "redeemPoolAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of redeem pool contract on auxiliary chain"
         }
       },
       "required": [

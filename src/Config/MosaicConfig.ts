@@ -68,6 +68,8 @@ export class AuxiliaryContracts {
   public ostCoGatewayOrganizationAddress: Address;
 
   public ostEIP20CogatewayAddress: Address;
+
+  public redeemPoolAddress: Address;
 }
 
 /**
@@ -122,12 +124,8 @@ export default class MosaicConfig {
    * @return mosaic config
    */
   public static fromChain(originChain: string): MosaicConfig {
-    const filePath = path.join(
-      Directory.getDefaultMosaicDataDir,
-      originChain,
-      Directory.getMosaicFileName(),
-    );
-    if (fs.existsSync(filePath)) {
+    if (MosaicConfig.exists(originChain)) {
+      const filePath = Directory.getMosaicConfigPath(originChain);
       const configObject = MosaicConfig.readConfigFromFile(filePath);
       return new MosaicConfig(configObject);
     }
@@ -147,6 +145,15 @@ export default class MosaicConfig {
   }
 
   /**
+   * Checks if mosaic config exists for a origin chain.
+   * @param originChain chain identifier.
+   */
+  public static exists(originChain: string): boolean {
+    const filePath = Directory.getMosaicConfigPath(originChain);
+    return fs.existsSync(filePath);
+  }
+
+  /**
    * Saves this config to a file in its auxiliary chain directory.
    */
   public writeToMosaicConfigDirectory(): void {
@@ -156,10 +163,7 @@ export default class MosaicConfig {
     );
 
     fs.ensureDirSync(mosaicConfigDir);
-    const configPath = path.join(
-      mosaicConfigDir,
-      Directory.getMosaicFileName(),
-    );
+    const configPath = Directory.getMosaicConfigPath(this.originChain.chain);
     Logger.info('storing mosaic config', { configPath });
     fs.writeFileSync(
       configPath,
