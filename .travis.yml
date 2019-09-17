@@ -5,9 +5,9 @@ sudo: required
 services:
   - docker
 env:
-  - TEST_SUITE="npm run test:unit",
-  - TEST_SUITE="npm run test:smoke",
-  - TEST_SUITE="npm run test:package",
+  - TEST_SUITE="test:unit",
+  - TEST_SUITE="test:smoke",
+  - TEST_SUITE="test:package",
   - DOCKER_COMPOSE_VERSION=1.23.2
 before_install:
   - sudo rm /usr/local/bin/docker-compose
