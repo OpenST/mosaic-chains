@@ -30,9 +30,10 @@
   },
   "homepage": "https://github.com/OpenST/mosaic-chans#readme",
   "dependencies": {
-    "@openst/mosaic.js": "^0.10.0-beta.5",
     "@graphprotocol/graph-cli": "0.12.0",
     "@graphprotocol/graph-ts": "0.11.0",
+    "@openst/mosaic-contracts": "^0.12.0",
+    "@openst/mosaic.js": "^0.10.0-beta.5",
     "commander": "2.19.0",
     "fs-extra": "7.0.1",
     "ip": "1.1.5",

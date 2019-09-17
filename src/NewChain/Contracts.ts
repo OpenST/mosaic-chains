@@ -1,5 +1,7 @@
 import { ContractInteract } from '@openst/mosaic.js';
 import { Tx } from 'web3/eth/types';
+import Contract from 'web3/eth/contract';
+import { contracts } from '@openst/mosaic-contracts';
 import Logger from '../Logger';
 
 import Web3 = require('web3');
@@ -197,6 +199,41 @@ export default class Contracts {
       messageBus,
       merklePatriciaProof,
     };
+  }
+
+
+  /**
+   * This method deploys Redeem pool and it's organization.
+   *
+   * @param web3 Instance of Web3.
+   * @param redeemPoolOrganizationOwner Address of owner of Redeem Pool organization.
+   * @param redeemPoolOrganizationAdmin Address of admin of Redeem Pool organization.
+   * @param txOptions Transaction options.
+   */
+  public static async setupRedeemPool(
+    web3: Web3,
+    redeemPoolOrganizationOwner: string,
+    redeemPoolOrganizationAdmin: string,
+    txOptions: Tx,
+  ): Promise<Contract> {
+    const organization = await Contracts.deployOrganization(
+      web3,
+      txOptions,
+      redeemPoolOrganizationOwner,
+      redeemPoolOrganizationAdmin,
+    );
+    const { abi, bin } = contracts.RedeemPool;
+
+    const contract = new web3.eth.Contract(abi);
+    const rawDeployTransaction = contract.deploy({
+      data: bin,
+      arguments: [organization.address],
+    });
+    const deployTxOptions = {
+      ...txOptions,
+      gas: (await rawDeployTransaction.estimateGas()),
+    };
+    return rawDeployTransaction.send(deployTxOptions);
   }
 
   /**
