@@ -115,7 +115,11 @@ export default class OriginChainInteract {
     ).toString(10);
     this.logInfo(
       'approving stake plus bounty on ost',
-      { spender: this.ostGateway.address, amount: stakePlusBounty },
+      {
+        spender: this.ostGateway.address,
+        amount: stakePlusBounty,
+        from: this.initConfig.originTxOptions.from,
+      },
     );
     const ost = new ContractInteract.EIP20Token(this.web3, this.initConfig.originOstAddress);
     await ost.approve(

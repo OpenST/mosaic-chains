@@ -7,6 +7,9 @@ tags
 # Node passwords
 password.txt
 
+# integration test chain data
+chains/1
+
 # Packaging output
 lib/**
 openst-mosaic-chains-*.tgz

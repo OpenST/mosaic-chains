@@ -33,6 +33,7 @@ export default class Initialization {
     originWebsocket: string,
     auxiliaryNodeDescription: NodeDescription,
   ) {
+    Logger.info(`Setting up new auxiliary chain ${newChainId}`);
     // Preparing environment and objects before actually creating the new chain:
     const initConfig: InitConfig = InitConfig.createFromFile(newChainId);
 
@@ -43,7 +44,11 @@ export default class Initialization {
     const originWeb3: Web3 = new Web3(originWebsocket);
     const hashLockSecret: string = Web3.utils.randomHex(32);
 
-    const originChainInteract: OriginChainInteract = new OriginChainInteract(initConfig, originWeb3, newChainId);
+    const originChainInteract: OriginChainInteract = new OriginChainInteract(
+      initConfig,
+      originWeb3,
+      newChainId,
+    );
     const originChainId: string = await originChainInteract.getChainId();
 
     const auxiliaryChainInteract: AuxiliaryChainInteract = new AuxiliaryChainInteract(
@@ -109,20 +114,23 @@ export default class Initialization {
     auxiliaryChainInteract: AuxiliaryChainInteract,
     hashLockSecret: string,
   ): Promise<void> {
+    Logger.info('Creating auxiliary chain');
     Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
     const auxiliaryChain = new AuxiliaryChain();
     mosaicConfig.auxiliaryChains[auxiliaryNodeDescription.chain] = auxiliaryChain;
     auxiliaryChain.chainId = Integer.parseString(auxiliaryNodeDescription.chain);
 
+    Logger.info('Starting sealer');
     const { sealer, deployer } = await auxiliaryChainInteract.startNewChainSealer();
     auxiliaryChainInteract.auxiliarySealer = sealer;
     auxiliaryChainInteract.auxiliaryDeployer = deployer;
-
+    Logger.info('Sealer started');
     const auxiliaryStateRootZero: string = await auxiliaryChainInteract.getStateRootZero();
     const expectedOstCoGatewayAddress: string = auxiliaryChainInteract.getExpectedOstCoGatewayAddress(
       auxiliaryChainInteract.auxiliaryDeployer,
     );
 
+    Logger.info('Deploying origin contract');
     const {
       anchorOrganization: originAnchorOrganization,
       anchor: originAnchor,
@@ -133,6 +141,7 @@ export default class Initialization {
       expectedOstCoGatewayAddress,
       mosaicConfig.originChain.contractAddresses,
     );
+    Logger.info('Origin contracts deployed');
     const originContracts = auxiliaryChain.contractAddresses.origin;
     originContracts.anchorOrganizationAddress = Utils.toChecksumAddress(originAnchorOrganization.address);
     originContracts.anchorAddress = Utils.toChecksumAddress(originAnchor.address);
@@ -146,6 +155,7 @@ export default class Initialization {
       ),
     );
 
+    Logger.info('Started initial stake and mint');
     const {
       blockNumber: originBlockNumber,
       stateRoot: originStateRoot,
@@ -153,6 +163,7 @@ export default class Initialization {
       nonce: stakeMessageNonce,
     } = await originChainInteract.stake(auxiliaryChainInteract.auxiliaryDeployer, hashLockSecret);
 
+    Logger.info('Gateway stake is successful');
     const proofData: Proof = await Initialization.getStakeProof(
       originChainInteract.getWeb3(),
       auxiliaryChainInteract.getWeb3(),
@@ -162,6 +173,9 @@ export default class Initialization {
       originStateRoot,
     );
 
+    Logger.info('Generating Proof for Stake & mint');
+
+    Logger.info('Deploying auxiliary contract.');
     const {
       anchorOrganization,
       anchor,
@@ -179,6 +193,7 @@ export default class Initialization {
       hashLockSecret,
       proofData,
     );
+    Logger.info('Auxiliary contract deployed');
     const auxiliaryContracts = auxiliaryChain.contractAddresses.auxiliary;
 
     auxiliaryContracts.anchorOrganizationAddress = Utils.toChecksumAddress(anchorOrganization.address);
@@ -192,6 +207,7 @@ export default class Initialization {
 
     // Progressing on both chains in parallel (with hash lock secret).
     // Giving the deployer the amount of coins that were originally staked as tokens on origin.
+    Logger.info('Progressing Stake and mint with secret');
     await Promise.all([
       originChainInteract.progressWithSecret(
         auxiliaryContracts.ostEIP20CogatewayAddress,
@@ -204,7 +220,9 @@ export default class Initialization {
         hashLockSecret,
       ),
     ]);
+    Logger.info('Intial stake and mint is successful');
     mosaicConfig.writeToMosaicConfigDirectory();
+    Logger.info('Mosaic config is created');
   }
 
   /**
