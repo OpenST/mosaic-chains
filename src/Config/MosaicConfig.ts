@@ -125,11 +125,7 @@ export default class MosaicConfig {
    */
   public static fromChain(originChain: string): MosaicConfig {
     if (MosaicConfig.exists(originChain)) {
-      const filePath = path.join(
-        Directory.getDefaultMosaicDataDir,
-        originChain,
-        Directory.getMosaicFileName(),
-      );
+      const filePath = Directory.getMosaicConfigPath(originChain);
       const configObject = MosaicConfig.readConfigFromFile(filePath);
       return new MosaicConfig(configObject);
     }
@@ -153,11 +149,7 @@ export default class MosaicConfig {
    * @param originChain chain identifier.
    */
   public static exists(originChain: string): boolean {
-    const filePath = path.join(
-      Directory.getDefaultMosaicDataDir,
-      originChain,
-      Directory.getMosaicFileName(),
-    );
+    const filePath = Directory.getMosaicConfigPath(originChain);
     return fs.existsSync(filePath);
   }
 
@@ -171,10 +163,7 @@ export default class MosaicConfig {
     );
 
     fs.ensureDirSync(mosaicConfigDir);
-    const configPath = path.join(
-      mosaicConfigDir,
-      Directory.getMosaicFileName(),
-    );
+    const configPath = Directory.getMosaicConfigPath(this.originChain.chain);
     Logger.info('storing mosaic config', { configPath });
     fs.writeFileSync(
       configPath,

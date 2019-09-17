@@ -222,8 +222,7 @@ export default class Contracts {
       redeemPoolOrganizationOwner,
       redeemPoolOrganizationAdmin,
     );
-    const { abi } = contracts.RedeemPool;
-    const { bin } = contracts.RedeemPool;
+    const { abi, bin } = contracts.RedeemPool;
 
     const contract = new web3.eth.Contract(abi);
     const rawDeployTransaction = contract.deploy({
