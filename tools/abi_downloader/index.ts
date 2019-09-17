@@ -14,6 +14,7 @@ const allowedABIs = [
   'OSTComposer',
   'EIP20Gateway',
   'EIP20CoGateway',
+  'RedeemPool',
 ];
 
 /**
@@ -54,6 +55,7 @@ function writeToFile(name: string, abi: object, contractVersion: string): void {
   );
 }
 
-const contracts = Object.keys(mosaicContract);
+
+const contracts = Object.keys(mosaicContract.contracts);
 contracts.filter(c => allowedABIs.indexOf(c) !== -1)
-  .map(contract => writeToFile(contract, mosaicContract[contract].abi, version));
+  .map(contract => writeToFile(contract, mosaicContract.contracts[contract].abi, version));
