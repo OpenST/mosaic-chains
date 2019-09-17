@@ -21,7 +21,9 @@ export default class GethNode extends Node {
     super.ensureNetworkExists();
 
     let args = [];
-    if (this.chain === 'dev' || this.originChain === 'dev') {
+    if (ChainInfo.isDevOriginChain(this.chain)
+      || ChainInfo.isDevOriginChain(this.originChain)
+    ) {
       args = this.devGethArgs(this.chain);
     } else {
       args = this.defaultDockerGethArgs;
@@ -143,20 +145,12 @@ export default class GethNode extends Node {
 
   private devGethArgs(chain): string[] {
     let args = this.getDefaultDockerArgs();
-    let volume = '';
-    let devChainCommandParam = '';
 
-    const isDevOriginChain = ChainInfo.isDevOriginChain(chain);
-    if (isDevOriginChain) {
-      volume = `${this.chainDir}:/origin_volume`;
-      devChainCommandParam = 'origin';
-    } else {
-      volume = `${this.chainDir}:/auxiliary_volume`;
-      devChainCommandParam = 'auxiliary';
-    }
     args = args.concat([
-      '--volume', volume,
+      '--volume', `${this.mosaicDir}/${this.originChain || this.chain}:/root`,
     ]);
+
+    const devChainCommandParam = ChainInfo.isDevOriginChain(chain) ? 'origin' : 'auxiliary';
     args = args.concat([
       DEV_CHAIN_DOCKER,
       devChainCommandParam,

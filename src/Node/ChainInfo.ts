@@ -35,8 +35,7 @@ export default class ChainInfo {
    */
   public static get devOriginChainInfo(): any {
     return {
-      origin: '1515', // 1515 is the dev origin chain id
-      dev: '1515',
+      'dev-origin': '1515', // 1515 is the dev origin chain id
     };
   }
 
@@ -45,7 +44,7 @@ export default class ChainInfo {
    */
   public static get devAuxiliaryChainInfo(): any {
     return {
-      auxiliary: '1000', // 1000 is the dev auxiliary chain id
+      'dev-auxiliary': '1000', // 1000 is the dev auxiliary chain id
     };
   }
 

@@ -1,6 +1,6 @@
 import ChainInfo from '../Node/ChainInfo';
 
-const DEV_CHAIN_ROOT = 'dev';
+const DEV_CHAIN_ROOT = 'dev-origin';
 
 /**
  * For the ease of use of dev chains, the input provided to the mosaic commands

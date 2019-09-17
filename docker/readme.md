@@ -5,19 +5,21 @@
     `docker/Dockerfile`
     
     `docker/startup.sh`
+
 2. Create the following directories
     
-    `docker/origin_volume`
+    `docker/root/origin`
     
-    `docker/auxiliary_volume`
+    `docker/root/1000`
 
 3. Copy the origin and auxiliary chain data to the following location 
     
-    `docker/origin`
+    `docker/chain_data/origin`
     
-    `docker/<auxiliary chain id>`
+    `docker/chain_data/<auxiliary chain id>`
 
 4. The origin and <auxiliary chain id> directory should have the following content
+
     ```typescript
     - dev_pass (file) 
     - genesis.json (file)
@@ -35,10 +37,12 @@
         .
         .
     ```
-5. Go to docker folder and run the following.     
-6. Use the following command to build the docker image. 
-`docker build -t mosaicdao/dev-chains . -f docker/Dockerfile`
+5. Move the mosaic config file in `configs` directory
+6. Go to docker folder. Run the following command to build the docker image
 
-7. Use the following command to publish the Docker image.
-`docker push mosaicdao/dev-chains`
+    `docker build -t mosaicdao/dev-chains . -f docker/Dockerfile`
+
+7. Run the following command to publish the Docker image.
+
+    `docker push mosaicdao/dev-chains`
 
