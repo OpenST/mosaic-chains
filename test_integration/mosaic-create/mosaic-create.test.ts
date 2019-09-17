@@ -16,7 +16,7 @@ describe('Mosaic create', () => {
   const originPort = 8545;
   const originWeb3RPCEndPoint = `${originHost}:${originPort}`;
   const auxChainId = 500;
-  const passwordFile = './test_integration/mosaic-create/password.txt';
+  const passwordFile = './test_integration/mosaic-create/integration_test_password.txt';
   let originWeb3;
   let originChainId;
   let originDeployerAddress: string;
