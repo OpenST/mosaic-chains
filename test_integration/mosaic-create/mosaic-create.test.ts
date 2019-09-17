@@ -60,7 +60,7 @@ describe('Mosaic create', () => {
   });
 
   it('Deploy stake pool contract', async () => {
-    const command = `./mosaic stake-pool ${originChainId} ${originWeb3RPCEndPoint} ${originDeployerAddress} ${originDeployerAddress} ${originDeployerAddress}`;
+    const command = `./mosaic setup-stake-pool ${originChainId} ${originWeb3RPCEndPoint} ${originDeployerAddress} ${originDeployerAddress} ${originDeployerAddress}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
   });
 
@@ -69,7 +69,7 @@ describe('Mosaic create', () => {
     const password = fs.readFileSync(passwordFile).toString().trim().split('\n')[1];
 
     auxiliaryWeb3.eth.personal.unlockAccount(beneficiary, password);
-    const command = `./mosaic redeem-pool ${1} ${auxChainId} ${auxiliaryEndpoint} ${beneficiary} ${beneficiary} ${beneficiary}`;
+    const command = `./mosaic setup-redeem-pool ${originChainId} ${auxChainId} ${auxiliaryEndpoint} ${beneficiary} ${beneficiary} ${beneficiary}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
   });
 
