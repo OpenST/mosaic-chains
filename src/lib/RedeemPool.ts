@@ -26,11 +26,12 @@ const setupRedeemPool = async (
   PublishMosaicConfig.tryPublish(originChain);
 
   const auxiliaryWeb3 = new Web3(auxiliaryChainEndPoint);
+  const gasPrice = await auxiliaryWeb3.eth.getGasPrice();
   const redeemPool = await Contracts.setupRedeemPool(
     auxiliaryWeb3,
     organizationOwner,
     organizationAdmin,
-    { from: deployer, gasPrice: 0 },
+    { from: deployer, gasPrice },
   );
 
   if (!MosaicConfig.exists(originChain)) {

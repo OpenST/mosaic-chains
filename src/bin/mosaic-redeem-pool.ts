@@ -6,7 +6,7 @@ const mosaic = commander
   .arguments('<originChain> <auxiliaryChain> <auxChainWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>');
 mosaic.action(
   async (
-    originChain,
+    originChain: string,
     auxiliaryChain: string,
     auxChainWeb3EndPoint: string,
     deployer: string,
