@@ -17,6 +17,7 @@ openst-mosaic-chains-*.tgz
 # Initialization configs for new chains; keep example
 initialize/*.json
 !initialize/example.json
+!initialize/500.json
 
 # Logs
 logs
