@@ -37,6 +37,7 @@ dataSources:
         - StakeProgressed
         - RedeemIntentConfirmed
         - UnstakeProgressed
+        - GatewayProven
       abis:
         - name: EIP20Gateway
           file: "{{{projectRoot}}}/abi/0.10/EIP20Gateway.json"
@@ -47,6 +48,8 @@ dataSources:
           handler: handleStakeProgressed
         - event: RedeemIntentConfirmed(bytes32,address,uint256,address,uint256,uint256,bytes32)
           handler: handleRedeemIntentConfirmed
+        - event: GatewayProven(address,uint256,bytes32,bool)
+          handler: handleGatewayProven
         - event: UnstakeProgressed(bytes32,address,address,uint256,uint256,uint256,bool,bytes32)
           handler: handleUnstakeProgressed
       file: ./src/EIP20GatewayMapping.ts
