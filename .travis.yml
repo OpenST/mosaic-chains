@@ -28,7 +28,5 @@ notifications:
     on_failure: always
 install:
   - npm ci
-script:
-  - npm run test
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
