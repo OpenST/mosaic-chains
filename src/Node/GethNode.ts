@@ -3,7 +3,9 @@ import * as path from 'path';
 import Node from './Node';
 import Shell from '../Shell';
 import Directory from '../Directory';
+import ChainInfo from './ChainInfo';
 
+const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains';
 /**
  * Represents a geth node that runs in a docker container.
  */
@@ -18,8 +20,15 @@ export default class GethNode extends Node {
     this.initializeDirectories();
     super.ensureNetworkExists();
 
+    let args = [];
+    if (ChainInfo.isDevOriginChain(this.chain)
+      || ChainInfo.isDevOriginChain(this.originChain)
+    ) {
+      args = this.devGethArgs(this.chain);
+    } else {
+      args = this.defaultDockerGethArgs;
+    }
     this.logInfo('starting geth node');
-    const args = this.defaultDockerGethArgs;
     Shell.executeDockerCommand(args);
   }
 
@@ -65,7 +74,7 @@ export default class GethNode extends Node {
     }
   }
 
-  private get defaultDockerGethArgs(): string[] {
+  private getDefaultDockerArgs(): string[] {
     let args = [
       'run',
     ];
@@ -81,15 +90,21 @@ export default class GethNode extends Node {
       '--publish', `${this.port}:${this.port}`,
       '--publish', `${this.rpcPort}:8545`,
       '--publish', `${this.websocketPort}:8546`,
-      '--volume', `${this.chainDir}:/chain_data`,
     ]);
 
+    return args;
+  }
+
+  private get defaultDockerGethArgs(): string[] {
+    let args = this.getDefaultDockerArgs();
+    args = args.concat([
+      '--volume', `${this.chainDir}:/chain_data`,
+    ]);
     if (this.password !== '') {
       args = args.concat([
         '--volume', `${this.password}:/password.txt`,
       ]);
     }
-
     args = args.concat([
       'ethereum/client-go:v1.8.23',
       '--networkid', this.chain,
@@ -129,6 +144,22 @@ export default class GethNode extends Node {
     return args;
   }
 
+  private devGethArgs(chain): string[] {
+    let args = this.getDefaultDockerArgs();
+
+    args = args.concat([
+      '--volume', `${this.mosaicDir}/${this.originChain || this.chain}:/root`,
+    ]);
+
+    const devChainCommandParam = ChainInfo.isDevOriginChain(chain) ? 'origin' : 'auxiliary';
+    args = args.concat([
+      DEV_CHAIN_DOCKER,
+      devChainCommandParam,
+    ]);
+
+    return args;
+  }
+
   /**
    * Copies the initialized geth repository to the data directory if it does not exist.
    */
@@ -137,7 +168,7 @@ export default class GethNode extends Node {
 
     if (!fs.existsSync(this.chainDir)) {
       this.logInfo(`${this.chainDir} does not exist; initializing`);
-      fs.mkdirSync(this.chainDir);
+      fs.mkdirpSync(this.chainDir);
       const sourcePath = this.originChain === '' ? path.join(
         Directory.projectRoot,
         'chains',
@@ -151,10 +182,12 @@ export default class GethNode extends Node {
         this.chain,
         'geth',
       );
-      fs.copySync(
-        sourcePath,
-        path.join(this.chainDir, 'geth'),
-      );
+      if (fs.existsSync(sourcePath)) {
+        fs.copySync(
+          sourcePath,
+          path.join(this.chainDir, 'geth'),
+        );
+      }
     }
   }
 
