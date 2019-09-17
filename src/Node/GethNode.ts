@@ -120,6 +120,7 @@ export default class GethNode extends Node {
       '--wsport', '8546',
       '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
       '--wsorigins', '*',
+      '--rpccorsdomain', '*',
     ]);
 
     if (this.bootnodes !== '') {
@@ -162,13 +163,19 @@ export default class GethNode extends Node {
   /**
    * Copies the initialized geth repository to the data directory if it does not exist.
    */
-  private initializeDirectories(): void {
+  protected initializeDirectories(): void {
     super.initializeDataDir();
 
     if (!fs.existsSync(this.chainDir)) {
       this.logInfo(`${this.chainDir} does not exist; initializing`);
       fs.mkdirpSync(this.chainDir);
-      const sourcePath = path.join(
+      const sourcePath = this.originChain === '' ? path.join(
+        Directory.projectRoot,
+        'chains',
+        this.chain,
+        'origin',
+        'geth',
+      ) : path.join(
         Directory.projectRoot,
         'chains',
         this.originChain,
@@ -183,4 +190,5 @@ export default class GethNode extends Node {
       }
     }
   }
+
 }

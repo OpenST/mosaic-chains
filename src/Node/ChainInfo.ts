@@ -74,7 +74,7 @@ export default class ChainInfo {
   }
 
   /**
-   * Check if the give chain is a dev chain.
+   * Check if the given chain is a dev chain.
    * @param chain Chain name.
    */
   public static isDevChain(chain: string): boolean {
@@ -82,7 +82,7 @@ export default class ChainInfo {
   }
 
   /**
-   * Check if the give chain is origin dev chain.
+   * Check if the given chain is origin dev chain.
    * @param chain Chain name.
    */
   public static isDevOriginChain(chain: string): boolean {
@@ -90,7 +90,7 @@ export default class ChainInfo {
   }
 
   /**
-   * Check if the give chain is auxiliary dev chain.
+   * Check if the given chain is auxiliary dev chain.
    * @param chain Chain name.
    */
   public static isDevAuxiliaryChain(chain: string): boolean {

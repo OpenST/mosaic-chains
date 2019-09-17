@@ -37,8 +37,9 @@
         .
         .
     ```
-5. Move the mosaic config file in `configs` directory
-6. Go to docker folder. Run the following command to build the docker image
+5. Move the mosaic config file in `configs` directory.
+
+6. Go to docker folder. Run the following command to build the docker image.
 
     `docker build -t mosaicdao/dev-chains . -f docker/Dockerfile`
 
