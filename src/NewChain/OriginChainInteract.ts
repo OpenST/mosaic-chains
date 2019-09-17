@@ -291,8 +291,7 @@ export default class OriginChainInteract {
       );
     });
   }
-
-
+  
   /**
    * Setup StakerPool(OST Composer contract)
    * @param web3 Origin web3 instance.
