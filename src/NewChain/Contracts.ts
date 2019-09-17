@@ -201,6 +201,41 @@ export default class Contracts {
     };
   }
 
+  /**
+   * This method deploys OST composer and it's organization.
+   *
+   * @param web3 Instance of Web3.
+   * @param ostComposerOrganizationOwner Address of owner of OSTComposer organization.
+   * @param ostComposerOrganizationAdmin Address of admin of OSTComposer organization.
+   * @param txOptions Transaction options.
+   */
+  public static async setupOSTComposer(
+    web3: Web3,
+    ostComposerOrganizationOwner: string,
+    ostComposerOrganizationAdmin: string,
+    txOptions: Tx,
+  ): Promise<Contract> {
+    const organization = await this.deployOrganization(
+      web3,
+      txOptions,
+      ostComposerOrganizationOwner,
+      ostComposerOrganizationAdmin,
+    );
+    const { abi } = contracts.OSTComposer;
+    const { bin } = contracts.OSTComposer;
+
+    const contract = new web3.eth.Contract(abi);
+    const rawDeployTransaction = contract.deploy({
+      data: bin,
+      arguments: [organization.address],
+    });
+    const deployTxOptions = {
+      ...txOptions,
+      gas: (await rawDeployTransaction.estimateGas()),
+    };
+    return rawDeployTransaction.send(deployTxOptions);
+  }
+
 
   /**
    * This method deploys Redeem pool and it's organization.
