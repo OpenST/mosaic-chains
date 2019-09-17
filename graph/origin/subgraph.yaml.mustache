@@ -35,6 +35,9 @@ dataSources:
       entities:
         - StakeIntentDeclared
         - StakeProgressed
+        - RedeemIntentConfirmed
+        - UnstakeProgressed
+        - GatewayProven
       abis:
         - name: EIP20Gateway
           file: "{{{projectRoot}}}/abi/0.10/EIP20Gateway.json"
@@ -43,5 +46,31 @@ dataSources:
           handler: handleStakeIntentDeclared
         - event: StakeProgressed(bytes32,address,uint256,uint256,bool,bytes32)
           handler: handleStakeProgressed
+        - event: RedeemIntentConfirmed(bytes32,address,uint256,address,uint256,uint256,bytes32)
+          handler: handleRedeemIntentConfirmed
+        - event: GatewayProven(address,uint256,bytes32,bool)
+          handler: handleGatewayProven
+        - event: UnstakeProgressed(bytes32,address,address,uint256,uint256,uint256,bool,bytes32)
+          handler: handleUnstakeProgressed
       file: ./src/EIP20GatewayMapping.ts
+
+  - kind: ethereum/contract
+    name: Anchor
+    network: mainnet
+    source:
+      address: "{{anchorAddress}}"
+      abi: Anchor
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - StateRootAvailable
+      abis:
+        - name: Anchor
+          file: "{{{projectRoot}}}/abi/0.10/Anchor.json"
+      eventHandlers:
+        - event: StateRootAvailable(uint256,bytes32)
+        handler: handleStateRootAvailable
+    file: ./src/AnchorMapping.ts
 
