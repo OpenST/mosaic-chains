@@ -69,8 +69,8 @@ dataSources:
         - RedeemRevoked
         - RedeemRejected
       abis:
-        - name: Contract
-        file: "{{{projectRoot}}}/abi/0.11/RedeemPool.json
+        - name: RedeemPool
+          file: "{{{projectRoot}}}/abi/0.11/RedeemPool.json"
       eventHandlers:
         - event: RedeemRequested(uint256,address,uint256,uint256,uint256,address,address,address,bytes32)
           handler: handleRedeemRequested
@@ -78,4 +78,4 @@ dataSources:
           handler: handleRedeemRevoked
         - event: RedeemRejected(address,bytes32)
           handler: handleRedeemRejected
-      file: ./src/mapping.ts
+      file: ./src/RedeemPoolMapping.ts
