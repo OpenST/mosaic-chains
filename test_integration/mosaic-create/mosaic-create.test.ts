@@ -21,7 +21,8 @@ describe('Mosaic create', () => {
   let originChainId;
   let originDeployerAddress: string;
   let auxiliaryWeb3;
-  let auxiliaryEndpoint;
+  let auxiliaryEndpoint = 'http://localhost:40500';
+  ;
   let beneficiary;
   let stakeAmount;
 
@@ -46,7 +47,6 @@ describe('Mosaic create', () => {
   });
 
   it('Assert beneficiary balance after initial stake and mint', async () => {
-    auxiliaryEndpoint = 'http://localhost:40500';
     auxiliaryWeb3 = new Web3(auxiliaryEndpoint);
     const accounts = await auxiliaryWeb3.eth.getAccounts();
     // Select the beneficiary amount i.e. second account as first account is sealer.
@@ -74,7 +74,6 @@ describe('Mosaic create', () => {
   });
 
   it(`Verify auxiliary chain ${auxChainId}`, () => {
-    auxiliaryEndpoint = 'http://localhost:40500';
     const command = `./mosaic verify-chain ${originWeb3RPCEndPoint} ${auxiliaryEndpoint} ${1} ${500}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
   });

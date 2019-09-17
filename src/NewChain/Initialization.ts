@@ -173,7 +173,7 @@ export default class Initialization {
       originStateRoot,
     );
 
-    Logger.info('Generating Proof for Stake & mint');
+    Logger.info('Generated Proof for Stake & mint');
 
     Logger.info('Deploying auxiliary contract.');
     const {

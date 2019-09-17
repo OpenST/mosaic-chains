@@ -5,10 +5,6 @@ sudo: required
 services:
   - docker
 env:
-  - TEST_SUITE="test:unit",
-  - TEST_SUITE="test:smoke",
-  - TEST_SUITE="test:package",
-  - TEST_SUITE="test:integration",
   - DOCKER_COMPOSE_VERSION=1.23.2
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -30,6 +26,6 @@ notifications:
 install:
   - npm ci
 script:
-  - npm run ${TEST_SUITE}
+  - npm run test
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
