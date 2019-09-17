@@ -58,10 +58,10 @@ For development, you can use the dev chains. These chains have the initial chain
 Example:
 ```bash
 # start origin chain.
-./mosaic start origin
+./mosaic start dev-origin
 
 # start auxiliary chain.   
-./mosaic start auxiliary
+./mosaic start dev-auxiliary
 ```
 
 ### Default ports
