@@ -11,7 +11,8 @@
             "node",
             "mocha",
             "web3"
-        ]
+        ],
+        "resolveJsonModule": true
     },
     "include": [
         "index.ts",
