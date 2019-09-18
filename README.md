@@ -135,6 +135,8 @@ Troubleshooting:
 * Your machine is showing sign of slowness because of creation of auxiliary chains:
   * Too many docker containers could be running while creation of auxiliary chains with different chain ids. Make sure you stop the docker containers of auxiliary chains if it's not being used.  
 
+*Refer integration test of mosaic-create command to understand end to end flow.*
+
 ## Chain Verifier
 
 Chain verifier makes sure that newly created chain is being setup correctly.
