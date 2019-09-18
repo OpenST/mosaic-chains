@@ -124,7 +124,52 @@ Where:
 * `./password.txt` is the path to the password file that contains the **two identical passwords.**
 * `ropsten` is the origin chain.
 
-Troubleshooting:
+#### Stake Pool
+Stake pool command deploys ost composer and organization contract on the origin chain where staker can request stake and pool of facilitators can facilitate stake and mint on behalf of staker.
+
+```bash
+./mosaic setup-stake-pool <originChain> <originWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>
+```
+
+Where:
+ * `originChain` is origin chain identifier.
+ * `originWeb3EndPoint` is the web3 endpoint of the origin chain.   
+ * `deployer` Address on origin chain with funds.
+ * `organizationOwner` Address of organization owner of ost composer contract.
+ * `organizationAdmin` Address of organization admin of ost composer contract.
+ 
+ Example: 
+ ```bash
+ ./mosaic setup-stake-pool 12346  http://localhost:8545 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001
+ ```
+
+ Note: Setup stake pool command expects deployer address to be unlocked.
+ 
+#### Redeem Pool
+Redeem pool command deploys redeem pool and organization contract on the auxiliary chain where redeemer can request redeem and pool of facilitators can facilitate redeem and unstake on behalf of redeemer.
+
+```bash
+./mosaic setup-redeem-pool <originChain> <auxiliaryChain> <auxChainWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>
+```
+
+Where:
+ * `originChain` is origin chain identifier.
+ * `auxiliaryChain` is auxiliary chain identifier.
+ * `auxChainWeb3EndPoint` is the web3 endpoint of auxiliary chain.   
+ * `deployer` Address on auxiliary chain with funds.
+ * `organizationOwner` Address of organization owner of redeem pool contract.
+ `* organizationAdmin` Address of organization admin of redeem pool contract.
+ 
+ Example: 
+  ```bash
+ ./mosaic setup-redeem-pool 12346 500 http://localhost:40500 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001
+ ```
+
+ 
+ Note: Setup redeem pool command expects deployer address to be unlocked.
+
+ 
+####Troubleshooting:
 
 * When starting, you get an error that the connection is not open:
   * Make sure that the websocket you provide as an argument points to a running origin node and that your machine can connect to it.
