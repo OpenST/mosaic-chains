@@ -128,10 +128,16 @@ Where:
 Stake pool command deploys ost composer and organization contract on the origin chain where staker can request stake and pool of facilitators can facilitate stake and mint on behalf of staker.
 
 ```bash
-./mosaic setup-stake-pool <chain Identifier> <origin-websocket> <deployer> <organizationOwner> <organizationAdmin>
+./mosaic setup-stake-pool <originChain> <originWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>
 ```
 Setup stake pool command expects deployer address to be unlocked.
 
+Where:
+ `originChain` is origin chain identifier.
+ `originWeb3EndPoint` is the web3 endpoint of the origin chain.   
+ `deployer` Address on origin chain with funds.
+ `organizationOwner` Address of organization owner of ost composer contract.
+ `organizationAdmin` Address of organization admin of ost composer contract.
 #### Redeem Pool
 Redeem pool command deploys redeem pool and organization contract on the auxiliary chain where redeemer can request redeem and pool of facilitators can facilitate redeem and unstake on behalf of redeemer.
 
@@ -140,6 +146,14 @@ Redeem pool command deploys redeem pool and organization contract on the auxilia
 ```
 Setup redeem pool command expects deployer address to be unlocked.
 
+Where:
+ `originChain` is origin chain identifier.
+ `auxiliaryChain` is auxiliary chain identifier.
+ `auxChainWeb3EndPoint` is the web3 endpoint of auxiliary chain.   
+ `deployer` Address on auxiliary chain with funds.
+ `organizationOwner` Address of organization owner of redeem pool contract.
+ `organizationAdmin` Address of organization admin of redeem pool contract.
+ 
 Troubleshooting:
 
 * When starting, you get an error that the connection is not open:
