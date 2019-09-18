@@ -169,7 +169,7 @@ Where:
  Note: Setup redeem pool command expects deployer address to be unlocked.
 
  
-Troubleshooting:
+####Troubleshooting:
 
 * When starting, you get an error that the connection is not open:
   * Make sure that the websocket you provide as an argument points to a running origin node and that your machine can connect to it.
