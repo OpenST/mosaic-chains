@@ -124,6 +124,22 @@ Where:
 * `./password.txt` is the path to the password file that contains the **two identical passwords.**
 * `ropsten` is the origin chain.
 
+#### Stake Pool
+Stake pool command deploys ost composer and organization contract on the origin chain where staker can request stake and pool of facilitators can facilitate stake and mint on behalf of staker.
+
+```bash
+./mosaic setup-stake-pool <chain Identifier> <origin-websocket> <deployer> <organizationOwner> <organizationAdmin>
+```
+Setup stake pool command expects deployer address to be unlocked.
+
+#### Redeem Pool
+Redeem pool command deploys redeem pool and organization contract on the auxiliary chain where redeemer can request redeem and pool of facilitators can facilitate redeem and unstake on behalf of redeemer.
+
+```bash
+./mosaic setup-redeem-pool <originChain> <auxiliaryChain> <auxChainWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>
+```
+Setup redeem pool command expects deployer address to be unlocked.
+
 Troubleshooting:
 
 * When starting, you get an error that the connection is not open:
