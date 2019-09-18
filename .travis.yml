@@ -26,6 +26,6 @@ notifications:
 install:
   - npm ci
 script:
-  - npm run test
+  - sudo env "PATH=$PATH" npm run test
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
