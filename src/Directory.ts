@@ -149,4 +149,17 @@ export default class Directory {
   public static getMosaicFileName(): string {
     return MOSAIC_CONFIG_FILE;
   }
+
+  /**
+   * Returns the full path of mosaic config for a given origin chain.
+   * @param originChain Origin Chain Identifier
+   * @return Path of mosaic config file.
+   */
+  public static getMosaicConfigPath(originChain: string): string {
+    return path.join(
+      Directory.getDefaultMosaicDataDir,
+      originChain,
+      Directory.getMosaicFileName(),
+    );
+  }
 }

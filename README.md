@@ -52,6 +52,18 @@ For example Ethereum mainnet and `1414` or Ropsten and `1406`.
 The chain id of future auxiliary chains running against Ethereum mainnet will increase by one number each.
 The chain id of future auxiliary chains running against Ropsten will decrease by one number each.
 
+## Dev chains
+For development, you can use the dev chains. These chains have the initial chain setup contracts deployed. 
+
+Example:
+```bash
+# start origin chain.
+./mosaic start dev-origin
+
+# start auxiliary chain.   
+./mosaic start dev-auxiliary
+```
+
 ### Default ports
 
 By default, a chain uses the following ports:

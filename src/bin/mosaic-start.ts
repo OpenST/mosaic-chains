@@ -8,6 +8,7 @@ import GraphOptions from './GraphOptions';
 import GraphDescription from '../Graph/GraphDescription';
 import SubGraphDeployer from '../Graph/SubGraphDeployer';
 import Graph from '../Graph/Graph';
+import DevChainOptions from './DevChainOptions';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -21,6 +22,13 @@ mosaic
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
   .option('-d,--debug','boolean flag determining whether chain to be started in debug mode; if not provided then chain starts with only eth api enabled for ws and rpc')
   .action((chain: string, options) => {
+    let chainInput = chain;
+    let optionInput = Object.assign({}, options);
+    if (DevChainOptions.isDevChain(chain, options)) {
+      const devParams = DevChainOptions.getDevChainParams(chain, options);
+      chainInput = devParams.chain;
+      optionInput = devParams.options;
+    }
     const {
       mosaicDir,
       port,
@@ -31,9 +39,9 @@ mosaic
       password,
       originChain,
       debug,
-    } = NodeOptions.parseOptions(options, chain);
+    } = NodeOptions.parseOptions(optionInput, chainInput);
     const node: Node = NodeFactory.create({
-      chain,
+      chain: chainInput,
       mosaicDir,
       port,
       rpcPort,
@@ -46,8 +54,8 @@ mosaic
     });
     node.start();
 
-    if (!options.withoutGraphNode) {
-      const graphDescription: GraphDescription = GraphOptions.parseOptions(options, chain);
+    if (!optionInput.withoutGraphNode) {
+      const graphDescription: GraphDescription = GraphOptions.parseOptions(optionInput, chainInput);
       // reuse params from node start command
       graphDescription.mosaicDir = mosaicDir;
       graphDescription.ethereumRpcPort = rpcPort;
@@ -55,10 +63,10 @@ mosaic
       new Graph(graphDescription).start().then(() => {
         let subGraphDeployer;
         // options.origin passed only in case of starting an auxiliary chain
-        if (options.origin) {
-          subGraphDeployer = new SubGraphDeployer(graphDescription, options.origin, chain);
+        if (optionInput.origin) {
+          subGraphDeployer = new SubGraphDeployer(graphDescription, optionInput.origin, chainInput);
         } else {
-          subGraphDeployer = new SubGraphDeployer(graphDescription, chain, null);
+          subGraphDeployer = new SubGraphDeployer(graphDescription, chainInput, null);
         }
         return subGraphDeployer.deploy();
       });

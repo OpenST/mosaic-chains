@@ -16,7 +16,7 @@ dataSources:
         - StateRootAvailable
       abis:
         - name: Anchor
-          file: "{{{projectRoot}}}/abi/0.10/Anchor.json"
+          file: "{{{projectRoot}}}/abi/0.12/Anchor.json"
       eventHandlers:
         - event: StateRootAvailable(uint256,bytes32)
           handler: handleStateRootAvailable
@@ -36,9 +36,11 @@ dataSources:
         - StakeIntentConfirmed
         - MintProgressed
         - GatewayProven
+        - RedeemIntentDeclared
+        - RedeemProgressed
       abis:
         - name: EIP20CoGateway
-          file: "{{{projectRoot}}}/abi/0.10/EIP20CoGateway.json"
+          file: "{{{projectRoot}}}/abi/0.12/EIP20CoGateway.json"
       eventHandlers:
         - event: StakeIntentConfirmed(bytes32,address,uint256,address,uint256,uint256,bytes32)
           handler: handleStakeIntentConfirmed
@@ -46,4 +48,34 @@ dataSources:
           handler: handleMintProgressed
         - event: GatewayProven(address,uint256,bytes32,bool)
           handler: handleGatewayProven
+        - event: RedeemIntentDeclared(bytes32,address,uint256,address,uint256)
+          handler: handleRedeemIntentDeclared
+        - event: RedeemProgressed(bytes32,address,uint256,uint256,bool,bytes32)
+          handler: handleRedeemProgressed
       file: ./src/EIP20CoGatewayMapping.ts
+
+  - kind: ethereum/contract
+    name: RedeemPool
+    network: mainnet
+    source:
+      address: "{{redeemPoolAddress}}"
+      abi: RedeemPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - RedeemRequested
+        - RedeemRevoked
+        - RedeemRejected
+      abis:
+        - name: RedeemPool
+          file: "{{{projectRoot}}}/abi/0.12/RedeemPool.json"
+      eventHandlers:
+        - event: RedeemRequested(uint256,address,uint256,uint256,uint256,address,address,address,bytes32)
+          handler: handleRedeemRequested
+        - event: RedeemRevoked(address,bytes32)
+          handler: handleRedeemRevoked
+        - event: RedeemRejected(address,bytes32)
+          handler: handleRedeemRejected
+      file: ./src/RedeemPoolMapping.ts
