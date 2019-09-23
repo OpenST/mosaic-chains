@@ -22,6 +22,7 @@ export function handleRedeemRequested(event: RedeemRequestedEvent): void {
   entity.redeemerProxy = event.params.redeemerProxy
   entity.cogateway = event.params.cogateway
   entity.redeemRequestHash = event.params.redeemRequestHash
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -31,6 +32,7 @@ export function handleRedeemRevoked(event: RedeemRevokedEvent): void {
   )
   entity.redeemer = event.params.redeemer
   entity.redeemRequestHash = event.params.redeemRequestHash
+  entity.uts = event.block.timestamp
   entity.save()
 }
 
@@ -40,5 +42,6 @@ export function handleRedeemRejected(event: RedeemRejectedEvent): void {
   )
   entity.redeemer = event.params.redeemer
   entity.redeemRequestHash = event.params.redeemRequestHash
+  entity.uts = event.block.timestamp
   entity.save()
 }

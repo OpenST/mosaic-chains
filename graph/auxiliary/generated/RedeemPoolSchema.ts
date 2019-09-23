@@ -122,6 +122,15 @@ export class RedeemRequested extends Entity {
   set redeemRequestHash(value: Bytes) {
     this.set("redeemRequestHash", Value.fromBytes(value));
   }
+
+  get uts(): BigInt {
+    let value = this.get("uts");
+    return value.toBigInt();
+  }
+
+  set uts(value: BigInt) {
+    this.set("uts", Value.fromBigInt(value));
+  }
 }
 
 export class RedeemRevoked extends Entity {
@@ -171,6 +180,15 @@ export class RedeemRevoked extends Entity {
   set redeemRequestHash(value: Bytes) {
     this.set("redeemRequestHash", Value.fromBytes(value));
   }
+
+  get uts(): BigInt {
+    let value = this.get("uts");
+    return value.toBigInt();
+  }
+
+  set uts(value: BigInt) {
+    this.set("uts", Value.fromBigInt(value));
+  }
 }
 
 export class RedeemRejected extends Entity {
@@ -219,5 +237,14 @@ export class RedeemRejected extends Entity {
 
   set redeemRequestHash(value: Bytes) {
     this.set("redeemRequestHash", Value.fromBytes(value));
+  }
+
+  get uts(): BigInt {
+    let value = this.get("uts");
+    return value.toBigInt();
+  }
+
+  set uts(value: BigInt) {
+    this.set("uts", Value.fromBigInt(value));
   }
 }
