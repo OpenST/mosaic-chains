@@ -1,0 +1,23 @@
+{
+  "originTxOptions": {
+    "from": "0x40Ebe1ce3428b9CbAddBc20aF27F1c4780b7D49F",
+    "gasPrice": 3000000000
+  },
+  "originBounty": "10",
+  "auxiliaryBounty": "10",
+  "originStakeGasPrice": "0",
+  "originStakeGasLimit": "10000000",
+  "originStakeBlocksToWait": 3,
+  "originStakeAmount": "100000000000000000000",
+  "originOstAddress": "0x9AC77F4c0ca4D0F2142D7a77175cf4F1295fb2d8",
+  "originBurnerAddress": "0x0000000000000000000000000000000000000000",
+  "auxiliaryBurnerAddress": "0x0000000000000000000000000000000000000000",
+  "originAnchorBufferSize": "100",
+  "auxiliaryAnchorBufferSize": "200",
+  "originAnchorOrganizationOwner": "0x40Ebe1ce3428b9CbAddBc20aF27F1c4780b7D49F",
+  "originAnchorOrganizationAdmin": "0x40Ebe1ce3428b9CbAddBc20aF27F1c4780b7D49F",
+  "auxiliaryAnchorOrganizationOwner": "0x40Ebe1ce3428b9CbAddBc20aF27F1c4780b7D49F",
+  "auxiliaryAnchorOrganizationAdmin": "0x40Ebe1ce3428b9CbAddBc20aF27F1c4780b7D49F",
+  "originGatewayOrganizationOwner": "0x40Ebe1ce3428b9CbAddBc20aF27F1c4780b7D49F",
+  "auxiliaryCoGatewayAndOstPrimeOrganizationOwner": "0x40Ebe1ce3428b9CbAddBc20aF27F1c4780b7D49F"
+}

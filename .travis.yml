@@ -5,7 +5,8 @@ sudo: required
 services:
   - docker
 env:
-  - DOCKER_COMPOSE_VERSION=1.23.2
+  global:
+    - DOCKER_COMPOSE_VERSION=1.23.2
 before_install:
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -26,6 +27,10 @@ notifications:
 install:
   - npm ci
 script:
-  - npm run test
+  - npm run test:unit
+  - npm run test:smoke
+  - npm run test:package
+  - sudo env PATH=$PATH npm run test:integration
+
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log

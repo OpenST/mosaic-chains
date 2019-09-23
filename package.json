@@ -1,6 +1,6 @@
 {
   "name": "@openst/mosaic-chains",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "Mosaic chains is an executable to run and manage mosaic chains.",
   "bin": {
     "mosaic": "lib/src/bin/mosaic.js"
@@ -13,26 +13,28 @@
     "lint": "eslint src -c .eslintrc.json --ext ts",
     "package": "./package.sh",
     "prepack": "npm run package",
-    "test": "npm run test:unit && npm run test:smoke && npm run test:package",
+    "test": "npm run test:unit && npm run test:smoke && npm run test:package && npm run test:integration",
     "test:unit": "mocha -r ts-node/register tests/**/*.test.ts tests/*.test.ts",
     "test:smoke": "./tests/smoke.sh",
     "test:package": "./tests/package.sh",
+    "test:integration": "mocha -r ts-node/register test_integration/**/*.test.ts test_integration/*.test.ts --timeout 3000000",
     "pull-abi": "sh ./tools/abi_downloader/run.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenST/mosaic-chains.git"
+    "url": "git+https://github.com/mosaicdao/mosaic-chains.git"
   },
   "author": "OpenST Ltd.",
   "license": "LGPL-3.0-only",
   "bugs": {
-    "url": "https://github.com/OpenST/mosaic-chains/issues"
+    "url": "https://github.com/mosaicdao/mosaic-chains/issues"
   },
-  "homepage": "https://github.com/OpenST/mosaic-chans#readme",
+  "homepage": "https://github.com/mosaicdao/mosaic-chains#readme",
   "dependencies": {
-    "@openst/mosaic.js": "^0.10.0-beta.5",
     "@graphprotocol/graph-cli": "0.12.0",
     "@graphprotocol/graph-ts": "0.11.0",
+    "@openst/mosaic-contracts": "^0.12.0",
+    "@openst/mosaic.js": "^0.10.0-beta.5",
     "commander": "2.19.0",
     "fs-extra": "7.0.1",
     "ip": "1.1.5",

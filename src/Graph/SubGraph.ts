@@ -195,6 +195,7 @@ export default class SubGraph {
       projectRoot: Directory.projectRoot,
       ostComposerAddress: mosaicConfig.originChain.contractAddresses.ostComposerAddress,
       eip20GatewayAddress: mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.ostEIP20GatewayAddress,
+      anchorAddress: mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.anchorAddress,
     };
   }
 
@@ -208,6 +209,7 @@ export default class SubGraph {
       projectRoot: Directory.projectRoot,
       anchorAddress: auxiliaryContractAddresses.anchorAddress,
       eip20CoGatewayAddress: auxiliaryContractAddresses.ostEIP20CogatewayAddress,
+      redeemPoolAddress: auxiliaryContractAddresses.redeemPoolAddress,
     };
   }
 
