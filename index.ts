@@ -4,6 +4,7 @@ import Node from './src/Node/Node';
 import NodeDescription from './src/Node/NodeDescription';
 import NodeFactory from './src/Node/NodeFactory';
 import Shell from './src/Shell';
+import MosaicConfig from './src/Config/MosaicConfig';
 
 export {
   Directory,
@@ -12,4 +13,5 @@ export {
   NodeDescription,
   NodeFactory,
   Shell,
+  MosaicConfig
 };
