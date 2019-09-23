@@ -123,6 +123,33 @@ export class RedeemRequested extends Entity {
     this.set("redeemRequestHash", Value.fromBytes(value));
   }
 
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockHash(): Bytes {
+    let value = this.get("blockHash");
+    return value.toBytes();
+  }
+
+  set blockHash(value: Bytes) {
+    this.set("blockHash", Value.fromBytes(value));
+  }
+
+  get contractAddress(): Bytes {
+    let value = this.get("contractAddress");
+    return value.toBytes();
+  }
+
+  set contractAddress(value: Bytes) {
+    this.set("contractAddress", Value.fromBytes(value));
+  }
+
   get uts(): BigInt {
     let value = this.get("uts");
     return value.toBigInt();
@@ -181,6 +208,33 @@ export class RedeemRevoked extends Entity {
     this.set("redeemRequestHash", Value.fromBytes(value));
   }
 
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockHash(): Bytes {
+    let value = this.get("blockHash");
+    return value.toBytes();
+  }
+
+  set blockHash(value: Bytes) {
+    this.set("blockHash", Value.fromBytes(value));
+  }
+
+  get contractAddress(): Bytes {
+    let value = this.get("contractAddress");
+    return value.toBytes();
+  }
+
+  set contractAddress(value: Bytes) {
+    this.set("contractAddress", Value.fromBytes(value));
+  }
+
   get uts(): BigInt {
     let value = this.get("uts");
     return value.toBigInt();
@@ -237,6 +291,33 @@ export class RedeemRejected extends Entity {
 
   set redeemRequestHash(value: Bytes) {
     this.set("redeemRequestHash", Value.fromBytes(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockHash(): Bytes {
+    let value = this.get("blockHash");
+    return value.toBytes();
+  }
+
+  set blockHash(value: Bytes) {
+    this.set("blockHash", Value.fromBytes(value));
+  }
+
+  get contractAddress(): Bytes {
+    let value = this.get("contractAddress");
+    return value.toBytes();
+  }
+
+  set contractAddress(value: Bytes) {
+    this.set("contractAddress", Value.fromBytes(value));
   }
 
   get uts(): BigInt {
