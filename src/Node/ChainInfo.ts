@@ -31,7 +31,7 @@ export default class ChainInfo {
     };
   }
 
-    /**
+  /**
    * Mapping of origin dev chain name against chain id.
    */
   public static get devOriginChainInfo(): any {
