@@ -16,6 +16,9 @@ export default class NodeFactory {
    * @returns The node; based of the given input.
    */
   public static create(nodeDescription: NodeDescription): Node {
+    if (ChainInfo.officialIdentifiers.includes(nodeDescription.chain)) {
+      return new ParityNode(nodeDescription);
+    }
     const node = new GethNode(nodeDescription);
     node.readBootnodes();
 

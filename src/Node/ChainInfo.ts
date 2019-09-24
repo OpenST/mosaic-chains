@@ -31,6 +31,34 @@ export default class ChainInfo {
     };
   }
 
+    /**
+   * Mapping of origin dev chain name against chain id.
+   */
+  public static get devOriginChainInfo(): any {
+    return {
+      'dev-origin': '1515', // 1515 is the dev origin chain id
+    };
+  }
+
+  /**
+   * Mapping of auxiliary dev chain name against chain id.
+   */
+  public static get devAuxiliaryChainInfo(): any {
+    return {
+      'dev-auxiliary': '1000', // 1000 is the dev auxiliary chain id
+    };
+  }
+
+  /**
+   * Mapping of auxiliary dev chain name against chain id.
+   */
+  public static get devChainInfo(): any {
+    let devChains = {};
+    devChains = Object.assign(devChains, ChainInfo.devOriginChainInfo);
+    devChains = Object.assign(devChains, ChainInfo.devAuxiliaryChainInfo);
+    return devChains;
+  }
+
   /**
    * Returns the chain id for the given chain name. If the chain name is not
    * available in `ChainInfo.chainInfo`, then it will return chain as chain id.
