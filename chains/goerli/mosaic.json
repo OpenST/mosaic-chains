@@ -29,7 +29,8 @@
           "ostEIP20CogatewayAddress": "0x5efaE177C9f37E6DA82e807530EA550AA5F0AFdd",
           "gatewayLibAddress": "0xA1434c1A5Cd97410ca69ed65b2Bc820a1f0d3940",
           "messageBusAddress": "0x799772D93ff3e552f8A84F71550de7a9B6332f3e",
-          "merklePatriciaLibAddress": "0x1c9b9287B1a774C1FBa0bf5d73709077460A87Aa"
+          "merklePatriciaLibAddress": "0x1c9b9287B1a774C1FBa0bf5d73709077460A87Aa",
+          "redeemPoolAddress": "0x2E17dE7EC319287eC419ACBe04E4a9f25f76199D"
         }
       },
       "chainId": 1405,
