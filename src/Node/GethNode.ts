@@ -100,8 +100,8 @@ export default class GethNode extends Node {
    * It initializes the geth directory from genesis file if not already done.
    */
   private initializeGethDirectory(): void {
-    if(!this.isGethAlreadyInitiliazed()) {
-      let gethInitArgs = this.gethInitArgs;
+    if (!this.isGethAlreadyInitiliazed()) {
+      const { gethInitArgs } = this;
       this.logInfo('initiliazing geth directory');
       Shell.executeDockerCommand(gethInitArgs);
     } else {
@@ -123,7 +123,6 @@ export default class GethNode extends Node {
    * @returns geth init arguments.
    */
   private get gethInitArgs(): string [] {
-
     const genesisFilePath = path.join(
       Directory.projectRoot,
       'chains',
@@ -136,11 +135,11 @@ export default class GethNode extends Node {
       'run',
       '--rm',
       '--volume', `${genesisFilePath}:/genesis.json`,
-      '--volume',  `${this.chainDir}:/chain_data`,
+      '--volume', `${this.chainDir}:/chain_data`,
       'ethereum/client-go:v1.8.23',
       'init',
-      `/genesis.json`,
-      '--datadir', `/chain_data`,
+      '/genesis.json',
+      '--datadir', '/chain_data',
     ];
 
     return args;
@@ -222,5 +221,4 @@ export default class GethNode extends Node {
       fs.mkdirpSync(this.chainDir);
     }
   }
-
 }
