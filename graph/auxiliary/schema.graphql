@@ -158,16 +158,28 @@ type RedeemRequested @entity {
   redeemerProxy: Bytes! # address
   cogateway: Bytes! # address
   redeemRequestHash: Bytes! # bytes32
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type RedeemRevoked @entity {
   id: ID!
   redeemer: Bytes! # address
   redeemRequestHash: Bytes! # bytes32
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
 
 type RedeemRejected @entity {
   id: ID!
   redeemer: Bytes! # address
   redeemRequestHash: Bytes! # bytes32
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
 }
