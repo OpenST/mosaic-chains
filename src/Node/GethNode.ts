@@ -26,6 +26,7 @@ export default class GethNode extends Node {
     ) {
       args = this.devGethArgs(this.chain);
     } else {
+      this.initializeGethDirectory();
       args = this.defaultDockerGethArgs;
     }
     this.logInfo('starting geth node');
@@ -91,6 +92,56 @@ export default class GethNode extends Node {
       '--publish', `${this.rpcPort}:8545`,
       '--publish', `${this.websocketPort}:8546`,
     ]);
+
+    return args;
+  }
+
+  /**
+   * It initializes the geth directory from genesis file if not already done.
+   */
+  private initializeGethDirectory(): void {
+    if(!this.isGethAlreadyInitiliazed()) {
+      let gethInitArgs = this.gethInitArgs;
+      this.logInfo('initiliazing geth directory');
+      Shell.executeDockerCommand(gethInitArgs);
+    } else {
+      this.logInfo('skipping directory initialization as it is already done');
+    }
+  }
+
+  /**
+   * It verifies whether geth initialization already or not.
+   * @returns true if geth is already initialized otherwise false.
+   */
+  private isGethAlreadyInitiliazed(): boolean {
+    const chainGethPath = path.join(this.chainDir, 'geth');
+    return fs.existsSync(chainGethPath);
+  }
+
+  /**
+   * It provides parameters required for geth init command.
+   * @returns geth init arguments.
+   */
+  private get gethInitArgs(): string [] {
+
+    const genesisFilePath = path.join(
+      Directory.projectRoot,
+      'chains',
+      this.originChain,
+      this.chain,
+      'genesis.json',
+    );
+
+    const args = [
+      'run',
+      '--rm',
+      '--volume', `${genesisFilePath}:/genesis.json`,
+      '--volume',  `${this.chainDir}:/chain_data`,
+      'ethereum/client-go:v1.8.23',
+      'init',
+      `/genesis.json`,
+      '--datadir', `/chain_data`,
+    ];
 
     return args;
   }
@@ -161,7 +212,7 @@ export default class GethNode extends Node {
   }
 
   /**
-   * Copies the initialized geth repository to the data directory if it does not exist.
+   * Creates the directory for the chain.
    */
   protected initializeDirectories(): void {
     super.initializeDataDir();
@@ -169,25 +220,6 @@ export default class GethNode extends Node {
     if (!fs.existsSync(this.chainDir)) {
       this.logInfo(`${this.chainDir} does not exist; initializing`);
       fs.mkdirpSync(this.chainDir);
-      const sourcePath = this.originChain === '' ? path.join(
-        Directory.projectRoot,
-        'chains',
-        this.chain,
-        'origin',
-        'geth',
-      ) : path.join(
-        Directory.projectRoot,
-        'chains',
-        this.originChain,
-        this.chain,
-        'geth',
-      );
-      if (fs.existsSync(sourcePath)) {
-        fs.copySync(
-          sourcePath,
-          path.join(this.chainDir, 'geth'),
-        );
-      }
     }
   }
 
