@@ -29,7 +29,8 @@
           "ostEIP20CogatewayAddress": "0x02cffaa1e06c28021fff6b36d9e418a97b3de2fc",
           "gatewayLibAddress": "0xcf02a1d6053b53559a7c8060a74e1286a0b7c244",
           "messageBusAddress": "0xa482ff75b6a87ba9b669e0636867964b9c2f7950",
-          "merklePatriciaLibAddress": "0x8346e47aa6bf292d26ad7d08cb6b09afe7e8d4f9"
+          "merklePatriciaLibAddress": "0x8346e47aa6bf292d26ad7d08cb6b09afe7e8d4f9",
+          "redeemPoolAddress": "0xDF2FffBe5b2C53551C6879F957F4c9421f8443ae"
         }
       },
       "chainId": 1406,
@@ -83,7 +84,8 @@
           "ostEIP20CogatewayAddress": "0xf690624171fe06d02d2f4250bff17fe3b682ebd1",
           "gatewayLibAddress": "0x033e8675db854ba05b08b5e076a48e3eedeb0b54",
           "messageBusAddress": "0xd3b63c070ef226ef6dba0abf2ea223b04766efcc",
-          "merklePatriciaLibAddress": "0x233e3af4b022a58d25a03fff52c3e5925c289cc7"
+          "merklePatriciaLibAddress": "0x233e3af4b022a58d25a03fff52c3e5925c289cc7",
+          "redeemPoolAddress": "0x0FC346A86774939f6894bEE2e8c38a4A34c7BADC"
         }
       },
       "chainId": 1407,

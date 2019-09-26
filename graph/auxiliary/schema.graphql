@@ -146,3 +146,28 @@ type BountyChangeConfirmed @entity {
   contractAddress: Bytes! # address
   uts: BigInt! # uint256
 }
+
+type RedeemRequested @entity {
+  id: ID!
+  amount: BigInt! # uint256
+  beneficiary: Bytes! # address
+  gasPrice: BigInt! # uint256
+  gasLimit: BigInt! # uint256
+  nonce: BigInt! # uint256
+  redeemer: Bytes! # address
+  redeemerProxy: Bytes! # address
+  cogateway: Bytes! # address
+  redeemRequestHash: Bytes! # bytes32
+}
+
+type RedeemRevoked @entity {
+  id: ID!
+  redeemer: Bytes! # address
+  redeemRequestHash: Bytes! # bytes32
+}
+
+type RedeemRejected @entity {
+  id: ID!
+  redeemer: Bytes! # address
+  redeemRequestHash: Bytes! # bytes32
+}

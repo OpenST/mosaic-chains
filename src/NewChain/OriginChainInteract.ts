@@ -1,4 +1,5 @@
 import { ContractInteract, Contracts as MosaicContracts } from '@openst/mosaic.js';
+import Contract from 'web3/eth/contract';
 import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
 import Contracts from './Contracts';
@@ -114,7 +115,11 @@ export default class OriginChainInteract {
     ).toString(10);
     this.logInfo(
       'approving stake plus bounty on ost',
-      { spender: this.ostGateway.address, amount: stakePlusBounty },
+      {
+        spender: this.ostGateway.address,
+        amount: stakePlusBounty,
+        from: this.initConfig.originTxOptions.from,
+      },
     );
     const ost = new ContractInteract.EIP20Token(this.web3, this.initConfig.originOstAddress);
     await ost.approve(
@@ -290,6 +295,27 @@ export default class OriginChainInteract {
         }
       }
     }));
+  }
+
+  /**
+   * Setup StakerPool(OST Composer contract)
+   * @param web3 Origin web3 instance.
+   * @param ostComposerOrganizationOwner Address of ost composer organization owner.
+   * @param ostComposerOrganizationAdmin Address of ost composer organization admin.
+   * @param deployer Address of deployer.
+   */
+  public static async setupOSTComposer(
+    web3: Web3,
+    ostComposerOrganizationOwner: string,
+    ostComposerOrganizationAdmin: string,
+    deployer: string,
+  ): Promise<Contract> {
+    return Contracts.setupOSTComposer(
+      web3,
+      ostComposerOrganizationOwner,
+      ostComposerOrganizationAdmin,
+      { from: deployer },
+    );
   }
 
   /**
