@@ -102,7 +102,7 @@ export default class GethNode extends Node {
   private initializeGethDirectory(): void {
     if (!this.isGethAlreadyInitiliazed()) {
       const { gethInitArgs } = this;
-      this.logInfo('initiliazing geth directory');
+      this.logInfo('initializing geth directory');
       Shell.executeDockerCommand(gethInitArgs);
     } else {
       this.logInfo('skipping directory initialization as it is already done');
