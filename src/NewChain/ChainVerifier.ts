@@ -1,5 +1,7 @@
 import { Contracts as MosaicContracts, AbiBinProvider } from '@openst/mosaic.js';
 
+import { contracts } from '@openst/mosaic-contracts';
+
 import MosaicConfig, { ContractAddresses } from '../Config/MosaicConfig';
 
 import Logger from '../Logger';
@@ -65,6 +67,8 @@ export default class ChainVerifier {
     await this.verifyOriginAnchor();
     await this.verifyAuxiliaryAnchor();
     await this.verifyOSTPrime();
+    await this.verifyRedeemPool();
+    await this.verifyOSTComposer();
 
     Logger.info('Successfully completed chain verification!!!');
   }
@@ -392,6 +396,62 @@ export default class ChainVerifier {
     );
 
     Logger.info('Successfully completed OSTPrime contract verification!!!');
+  }
+
+  /**
+   * It verifies bin of ost composer contract.
+   * @returns
+   */
+  private async verifyOSTComposer(): Promise<void> {
+    const ostComposerBin = contracts.OSTComposer.bin;
+    const ostComposerAddress = this.mosaicConfig.originChain.contractAddresses.ostComposerAddress;
+    await this.validateBinFromMosaicContracts(
+      this.originWeb3,
+      ostComposerBin,
+      'ContractsBin: Mismatch of OSTComposer BIN!!!',
+      'OSTComposer',
+      ostComposerAddress,
+    );
+  }
+
+  /**
+   * It verifies bin of redeem pool contract.
+   */
+  private async verifyRedeemPool(): Promise<void> {
+    const redeemPoolBin = contracts.RedeemPool.bin;
+    const redeemPoolAddress = this.contractAddresses.auxiliary.redeemPoolAddress;
+
+    await this.validateBinFromMosaicContracts(
+      this.auxiliaryWeb3,
+      redeemPoolBin,
+      'ContractsBin: Mismatch of RedeemPool BIN!!!',
+      'RedeemPool',
+      redeemPoolAddress,
+    );
+    Logger.info('Successfully completedOSTPrime contract verification!!!');
+  }
+
+  /**
+   * Check if deployed bin is valid or not.
+   * Note: It is to be used for bin's of contracts which are not present in mosaic.js.
+   * @param web3 Web3 instance
+   * @param binFromMosaicContract Bin for the contract from mosaic-contracts package.
+   * @param errMsg Message to be displayed when bin from chain and mosaic-contracts doesn't match.
+   * @param contractName Name of the contract.
+   * @param contractAddress Address of the contract.
+   */
+  private async validateBinFromMosaicContracts(
+    web3,
+    binFromMosaicContract,
+    errMsg,
+    contractName,
+    contractAddress
+  ): Promise<void> {
+    const deployedBin = await web3.eth.getCode(contractAddress);
+    if (binFromMosaicContract.toLowerCase().indexOf(deployedBin.toLowerCase().slice(2)) === -1) {
+      Logger.error(errMsg, { contractName, contractAddress });
+      throw new Error(errMsg);
+    }
   }
 
   /**
