@@ -1,3 +1,13 @@
+type StateRootAvailable @entity {
+  id: ID!
+  _blockHeight: BigInt! # uint256
+  _stateRoot: Bytes! # bytes32
+  blockNumber: BigInt! # uint256
+  blockHash: Bytes! # bytes32
+  contractAddress: Bytes! # address
+  uts: BigInt! # uint256
+}
+
 type StakeRequested @entity {
   id: ID!
   amount: BigInt! # uint256
