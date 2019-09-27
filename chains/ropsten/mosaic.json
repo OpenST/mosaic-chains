@@ -16,6 +16,7 @@
       ],
       "contractAddresses": {
         "origin": {
+          "baseTokenAddress": "0xae96d2acd01ab795e5942591100f9f23adbe2a2e",
           "anchorOrganizationAddress": "0xd8cca90afe0a15a0d372540e2104d6098bdee9af",
           "anchorAddress": "0xe322ed07e235a6501bd017ae9ea059b12723c55c",
           "gatewayOrganizationAddress": "0x7c8ebf6da810261eb8ec9fbec989aa9c79200c07",
@@ -25,6 +26,7 @@
           "anchorOrganizationAddress": "0x29050903e7e2612743f9d6234c553d2b96ca9683",
           "anchorAddress": "0x959cc0a11176584d90fd77cf189b73345792e7f2",
           "coGatewayOrganizationAddress": "0xdff949b45ab91b7bc413bfef17aa9f5766b516f2",
+          "baseTokenAddress": "0x495b17dda2cd0406290af54e9ae978b381006809",
           "utilityTokenAddress": "0x495b17dda2cd0406290af54e9ae978b381006809",
           "eip20CogatewayAddress": "0x02cffaa1e06c28021fff6b36d9e418a97b3de2fc",
           "gatewayLibAddress": "0xcf02a1d6053b53559a7c8060a74e1286a0b7c244",
@@ -71,6 +73,7 @@
       ],
       "contractAddresses": {
         "origin": {
+          "baseTokenAddress": "0xae96d2acd01ab795e5942591100f9f23adbe2a2e",
           "anchorOrganizationAddress": "0xd8cca90afe0a15a0d372540e2104d6098bdee9af",
           "anchorAddress": "0x972d3e5e8fba4689add411cd8ebe27e6d060d531",
           "gatewayOrganizationAddress": "0x7c8ebf6da810261eb8ec9fbec989aa9c79200c07",
@@ -80,6 +83,7 @@
           "anchorOrganizationAddress": "0xe7d62158b4905a76d26ed93a254582ee6d84d5a7",
           "anchorAddress": "0xde1d126e4deb499bd7f64ff59fe8f9415be50ef8",
           "coGatewayOrganizationAddress": "0x610fb96852f0d854b0633aba0073d18246bc94d5",
+          "baseTokenAddress": "0x66ca08a32548593ea1860e3995b81e4354f3b1b1",
           "utilityTokenAddress": "0x66ca08a32548593ea1860e3995b81e4354f3b1b1",
           "eip20CogatewayAddress": "0xf690624171fe06d02d2f4250bff17fe3b682ebd1",
           "gatewayLibAddress": "0x033e8675db854ba05b08b5e076a48e3eedeb0b54",

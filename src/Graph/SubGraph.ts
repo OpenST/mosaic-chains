@@ -194,6 +194,7 @@ export default class SubGraph {
     return {
       projectRoot: Directory.projectRoot,
       stakePoolAddress: mosaicConfig.originChain.contractAddresses.stakePoolAddress,
+      baseTokenAddress: mosaicConfig.originChain.contractAddresses.valueTokenAddress,
       eip20GatewayAddress: mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.eip20GatewayAddress,
       anchorAddress: mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.anchorAddress,
     };

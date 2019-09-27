@@ -143,6 +143,7 @@ export default class Initialization {
     );
     Logger.info('Origin contracts deployed');
     const originContracts = auxiliaryChain.contractAddresses.origin;
+    originContracts.baseTokenAddress = Utils.toChecksumAddress(mosaicConfig.originChain.contractAddresses.valueTokenAddress)
     originContracts.anchorOrganizationAddress = Utils.toChecksumAddress(originAnchorOrganization.address);
     originContracts.anchorAddress = Utils.toChecksumAddress(originAnchor.address);
     originContracts.gatewayOrganizationAddress = Utils.toChecksumAddress(ostGatewayOrganization.address);
@@ -199,6 +200,7 @@ export default class Initialization {
     auxiliaryContracts.anchorOrganizationAddress = Utils.toChecksumAddress(anchorOrganization.address);
     auxiliaryContracts.anchorAddress = Utils.toChecksumAddress(anchor.address);
     auxiliaryContracts.coGatewayOrganizationAddress = Utils.toChecksumAddress(coGatewayAndOstPrimeOrganization.address);
+    auxiliaryContracts.baseTokenAddress = Utils.toChecksumAddress(ostPrime.address);
     auxiliaryContracts.utilityTokenAddress = Utils.toChecksumAddress(ostPrime.address);
     auxiliaryContracts.eip20CogatewayAddress = Utils.toChecksumAddress(ostCoGateway.address);
     auxiliaryContracts.gatewayLibAddress = Utils.toChecksumAddress(gatewayLib.address);

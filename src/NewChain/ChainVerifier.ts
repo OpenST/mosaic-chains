@@ -157,7 +157,7 @@ export default class ChainVerifier {
     await this.validateBIN(
       this.auxiliaryWeb3,
       'OSTPrime',
-      this.contractAddresses.auxiliary.utilityTokenAddress,
+      this.contractAddresses.auxiliary.baseTokenAddress,
       'ContractsBin: Mismatch of OSTPrime BIN!!!',
     );
 
@@ -193,7 +193,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       baseToken,
-      this.mosaicConfig.originChain.contractAddresses.valueTokenAddress,
+      this.mosaicConfig.auxiliaryChains[this.auxiliaryChainId].contractAddresses.origin.baseTokenAddress,
       'Gateway: Invalid baseToken address!!!',
     );
 
@@ -243,6 +243,14 @@ export default class ChainVerifier {
     );
 
     const utilityToken = await coGatewayInstance.methods.utilityToken().call();
+
+    ChainVerifier.validateDeployedAddress(
+      this.auxiliaryWeb3,
+      utilityToken,
+      this.contractAddresses.auxiliary.baseTokenAddress,
+      'CoGateway: Invalid BaseToken address!!!',
+    );
+
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       utilityToken,
