@@ -247,13 +247,6 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       utilityToken,
-      this.contractAddresses.auxiliary.baseTokenAddress,
-      'CoGateway: Invalid BaseToken address!!!',
-    );
-
-    ChainVerifier.validateDeployedAddress(
-      this.auxiliaryWeb3,
-      utilityToken,
       this.contractAddresses.auxiliary.utilityTokenAddress,
       'CoGateway: Invalid OSTPrime address!!!',
     );
