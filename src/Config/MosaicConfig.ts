@@ -67,7 +67,7 @@ export class AuxiliaryContracts {
 
   public coGatewayOrganizationAddress: Address;
 
-  public eip20CoGatewayAddress: Address;
+  public eip20CogatewayAddress: Address;
 
   public redeemPoolAddress: Address;
 }

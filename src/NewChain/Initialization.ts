@@ -200,7 +200,7 @@ export default class Initialization {
     auxiliaryContracts.anchorAddress = Utils.toChecksumAddress(anchor.address);
     auxiliaryContracts.coGatewayOrganizationAddress = Utils.toChecksumAddress(coGatewayAndOstPrimeOrganization.address);
     auxiliaryContracts.utilityTokenAddress = Utils.toChecksumAddress(ostPrime.address);
-    auxiliaryContracts.eip20CoGatewayAddress = Utils.toChecksumAddress(ostCoGateway.address);
+    auxiliaryContracts.eip20CogatewayAddress = Utils.toChecksumAddress(ostCoGateway.address);
     auxiliaryContracts.gatewayLibAddress = Utils.toChecksumAddress(gatewayLib.address);
     auxiliaryContracts.messageBusAddress = Utils.toChecksumAddress(messageBus.address);
     auxiliaryContracts.merklePatriciaLibAddress = Utils.toChecksumAddress(merklePatriciaProof.address);
@@ -210,12 +210,12 @@ export default class Initialization {
     Logger.info('Progressing Stake and mint with secret');
     await Promise.all([
       originChainInteract.progressWithSecret(
-        auxiliaryContracts.eip20CoGatewayAddress,
+        auxiliaryContracts.eip20CogatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
       auxiliaryChainInteract.progressWithSecret(
-        auxiliaryContracts.eip20CoGatewayAddress,
+        auxiliaryContracts.eip20CogatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),

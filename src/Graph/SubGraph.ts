@@ -208,7 +208,7 @@ export default class SubGraph {
     return {
       projectRoot: Directory.projectRoot,
       anchorAddress: auxiliaryContractAddresses.anchorAddress,
-      eip20CoGatewayAddress: auxiliaryContractAddresses.eip20CoGatewayAddress,
+      eip20CogatewayAddress: auxiliaryContractAddresses.eip20CogatewayAddress,
       redeemPoolAddress: auxiliaryContractAddresses.redeemPoolAddress,
     };
   }
