@@ -11,6 +11,7 @@ describe('ChainFactory.build()', () => {
     const ids = [
       'ethereum',
       'ropsten',
+      'goerli',
     ];
 
     for (const id of ids) {
