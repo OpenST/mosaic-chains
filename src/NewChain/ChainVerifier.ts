@@ -404,7 +404,7 @@ export default class ChainVerifier {
    */
   private async verifyOSTComposer(): Promise<void> {
     const ostComposerBin = contracts.OSTComposer.bin;
-    const ostComposerAddress = this.mosaicConfig.originChain.contractAddresses.ostComposerAddress;
+    const { ostComposerAddress } = this.mosaicConfig.originChain.contractAddresses;
     await this.validateBinFromMosaicContracts(
       this.originWeb3,
       ostComposerBin,
@@ -412,6 +412,7 @@ export default class ChainVerifier {
       'OSTComposer',
       ostComposerAddress,
     );
+    Logger.info('Successfully completed OSTComposer contract verification!!!');
   }
 
   /**
@@ -419,7 +420,7 @@ export default class ChainVerifier {
    */
   private async verifyRedeemPool(): Promise<void> {
     const redeemPoolBin = contracts.RedeemPool.bin;
-    const redeemPoolAddress = this.contractAddresses.auxiliary.redeemPoolAddress;
+    const { redeemPoolAddress } = this.contractAddresses.auxiliary;
 
     await this.validateBinFromMosaicContracts(
       this.auxiliaryWeb3,
@@ -428,13 +429,13 @@ export default class ChainVerifier {
       'RedeemPool',
       redeemPoolAddress,
     );
-    Logger.info('Successfully completedOSTPrime contract verification!!!');
+    Logger.info('Successfully completed RedeemPool contract verification!!!');
   }
 
   /**
    * Check if deployed bin is valid or not.
    * Note: It is to be used for bin's of contracts which are not present in mosaic.js.
-   * @param web3 Web3 instance
+   * @param web3 Web3 instance.
    * @param binFromMosaicContract Bin for the contract from mosaic-contracts package.
    * @param errMsg Message to be displayed when bin from chain and mosaic-contracts doesn't match.
    * @param contractName Name of the contract.
@@ -445,7 +446,7 @@ export default class ChainVerifier {
     binFromMosaicContract,
     errMsg,
     contractName,
-    contractAddress
+    contractAddress,
   ): Promise<void> {
     const deployedBin = await web3.eth.getCode(contractAddress);
     if (binFromMosaicContract.toLowerCase().indexOf(deployedBin.toLowerCase().slice(2)) === -1) {
