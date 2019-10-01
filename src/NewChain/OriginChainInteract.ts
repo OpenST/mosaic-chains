@@ -1,5 +1,6 @@
-import { ContractInteract, Contracts as MosaicContracts } from '@openst/mosaic.js';
+import { ContractInteract, Contracts as MosaicContracts, Utils as MosaicUtils } from '@openst/mosaic.js';
 import Contract from 'web3/eth/contract';
+import { Tx } from 'web3/eth/types';
 import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
 import Contracts from './Contracts';
@@ -209,6 +210,29 @@ export default class OriginChainInteract {
     merklePatriciaProof: ContractInteract.MerklePatriciaProof;
   }> {
     return Contracts.deployGatewayLibraries(web3, { from: deployer });
+  }
+
+
+  /**
+   * Returns Origin TX Options.
+   */
+  public get txOptions(): Tx {
+    return this.initConfig.originTxOptions;
+  }
+
+  /**
+   * This method set anchor organization admin.
+   * @param admin Admin address.
+   * @param anchorOrganization AnchorOrganization contract interact.
+   */
+  public async setAnchorOrganizationAdmin(
+    admin: string,
+    anchorOrganization: ContractInteract.Organization,
+  ) {
+    return MosaicUtils.sendTransaction(
+      anchorOrganization.contract.methods.setAdmin(admin),
+      this.txOptions,
+    );
   }
 
   /**

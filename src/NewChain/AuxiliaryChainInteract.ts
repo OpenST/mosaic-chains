@@ -1,7 +1,11 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as RLP from 'rlp';
-import { ContractInteract, Contracts as MosaicContracts } from '@openst/mosaic.js';
+import {
+  ContractInteract,
+  Contracts as MosaicContracts,
+  Utils as MosaicUtils,
+} from '@openst/mosaic.js';
 
 import { Tx } from 'web3/eth/types';
 import CliqueGenesis from './CliqueGenesis';
@@ -290,6 +294,21 @@ export default class AuxiliaryChainInteract {
   }
 
   /**
+   * This method set anchor organization admin.
+   * @param admin Admin address.
+   * @param anchorOrganization AnchorOrganization contract interact.
+   */
+  public async setAnchorOrganizationAdmin(
+    admin: string,
+    anchorOrganization: ContractInteract.Organization,
+  ) {
+    return MosaicUtils.sendTransaction(
+      anchorOrganization.contract.methods.setAdmin(admin),
+      this.txOptions,
+    );
+  }
+
+  /**
    * Generates two new accounts with an ethereum node and adds the addresses to the mosaic config
    * as auxiliaryOriginalSealer and auxiliaryOriginalDeployer. These accounts will be used to run
    * the sealer and deploy the contracts on auxiliary.
@@ -459,9 +478,13 @@ export default class AuxiliaryChainInteract {
     merklePatriciaProof: ContractInteract.MerklePatriciaProof;
   }> {
     this.logInfo('deploying contracts');
+
+    /* Deployer is set as admin, so that set co-anchor transaction can be done.
+     * Once setup is done, admin will be restored to actual address.
+     */
     const anchorOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryAnchorOrganizationOwner,
-      this.initConfig.auxiliaryAnchorOrganizationAdmin,
+      this.txOptions.from,
       this.anchorOrganizationDeploymentNonce,
     );
     const anchor = await this.deployAnchor(
@@ -564,7 +587,7 @@ export default class AuxiliaryChainInteract {
    * Nonce is often added to enforce failure when deploying in wrong order or missing a contract.
    * @returns The transaction options to use for transactions to the auxiliary chain.
    */
-  private get txOptions(): Tx {
+  public get txOptions(): Tx {
     return {
       from: this.deployer,
       gasPrice: '0',
