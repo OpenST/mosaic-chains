@@ -1,3 +1,6 @@
+export const GETH_CLIENT = 'geth';
+export const PARITY_CLIENT = 'parity';
+
 /**
  * Builds node based on the given chain id.
  */
@@ -5,7 +8,7 @@ export default class ChainInfo {
   /**
    * If a chain id matches any of these, it will build a parity node.
    */
-  public static get officialIdentifiers(): string[] {
+  public static get chainsSupportedByParityClient(): string[] {
     return Object.keys(ChainInfo.chainInfo as string[]);
   }
 

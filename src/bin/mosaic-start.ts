@@ -9,12 +9,40 @@ import GraphDescription from '../Graph/GraphDescription';
 import SubGraphDeployer from '../Graph/SubGraphDeployer';
 import Graph from '../Graph/Graph';
 import DevChainOptions from './DevChainOptions';
+import Logger from '../Logger';
+import { GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
 
 let mosaic = commander
   .arguments('<chain>');
 
 mosaic = NodeOptions.addCliOptions(mosaic);
 mosaic = GraphOptions.addCliOptions(mosaic);
+
+/**
+ * Validates CLI options
+ * @param chain chain-identifier
+ * @param options CLI options
+ * @return
+ */
+function validateOptions(chain, options) {
+  const client:string = options.client;
+  if (!client) {
+    return true;
+  }
+  if (client !== PARITY_CLIENT && client !== GETH_CLIENT) {
+    Logger.error(`Unsupported client ${client}`);
+    return false;
+  }
+  if (DevChainOptions.isDevChain(chain, options) && client === PARITY_CLIENT) {
+    Logger.error('Parity client is not supported for dev-chains');
+    return false;
+  }
+  if (options.origin && client === PARITY_CLIENT) {
+    Logger.error('Parity client is not supported for auxiliary-chains');
+    return false;
+  }
+  return true;
+}
 
 mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
@@ -23,6 +51,9 @@ mosaic
   .action((chain: string, options) => {
     let chainInput = chain;
     let optionInput = Object.assign({}, options);
+    if (!validateOptions(chain, optionInput)) {
+      process.exit(1);
+    }
     if (DevChainOptions.isDevChain(chain, options)) {
       const devParams = DevChainOptions.getDevChainParams(chain, options);
       chainInput = devParams.chain;
@@ -48,6 +79,7 @@ mosaic
       unlock,
       password,
       originChain,
+      client: optionInput.client
     });
     node.start();
 

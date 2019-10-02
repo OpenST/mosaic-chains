@@ -20,8 +20,8 @@ function error {
 
 # Starts a single origin node.
 function start_origin_node {
-    info "Starting node $1."
-    try_silent "./mosaic start $1" "Could not start node $1."
+    info "Starting node $1 with client $2."
+    try_silent "./mosaic start $1 --client $2" "Could not start node $1 with client $2."
 }
 
 # Starts a single auxiliary node.
@@ -41,7 +41,7 @@ function start_nodes {
     info "Starting all nodes."
     start_auxiliary_node 1406
     start_auxiliary_node 1407
-    start_origin_node ropsten
+    start_origin_node ropsten geth
 }
 
 # Stops all nodes for the test.
@@ -64,7 +64,7 @@ function fail_silent {
 
 # Sets the global variable `grep_command` with the command to check if given chain is running.
 function set_node_grep_command {
-    grep_command="./mosaic list | grep mosaic_$1"
+    grep_command="./mosaic list | grep mosaic_$1_$2"
 }
 
 # Sets the global variable `grep_command` with the command to check if given chain's corresponding graph is running.
@@ -75,7 +75,7 @@ function set_graph_grep_command {
 # Errors if the given chain and its graph is not in the output of `mosaic list`.
 function grep_try {
     info "Checking that node $1 is listed."
-    set_node_grep_command $1
+    set_node_grep_command $1 $2
     try_silent "$grep_command" "Node was expected to be running, but is not: $1."
     set_graph_grep_command $1
     try_silent "$grep_command" "Graph was expected to be running, but is not: $1."
@@ -84,7 +84,7 @@ function grep_try {
 # Errors if the given chain or its graph *is* in the output of `mosaic list`.
 function grep_fail {
     info "Checking that node $1 is *not* listed."
-    set_node_grep_command $1
+    set_node_grep_command $1 $2
     fail_silent "$grep_command" "Node was not expected to be running, but is: $1."
     set_graph_grep_command $1
     fail_silent "$grep_command" "Graph was not expected to be running, but is: $1."
@@ -113,9 +113,9 @@ try_silent "ls mosaic" "Script must be run from the mosaic chains root directory
 start_nodes
 
 # Check that the started nodes are listed.
-grep_try 1406
-grep_try 1407
-grep_try ropsten
+grep_try 1406 geth
+grep_try 1407 geth
+grep_try ropsten geth
 
 # Try to RPC call the running nodes.
 rpc_node_try 1406
@@ -130,19 +130,19 @@ rpc_auxiliary_sub_graph_try 1407
 
 # Stop and start some nodes and make sure they are or are not running.
 stop_node ropsten
-grep_fail ropsten
+grep_fail ropsten geth
 
 stop_node 1407
-grep_fail 1407
-grep_try 1406
+grep_fail 1407 geth
+grep_try 1406 geth
 
 start_auxiliary_node 1407
-grep_try 1407
-grep_try 1406
-grep_fail ropsten
+grep_try 1407 geth
+grep_try 1406 geth
+grep_fail ropsten geth
 
-start_origin_node ropsten
-grep_try ropsten
+start_origin_node ropsten parity
+grep_try ropsten parity
 
 # When done, stop all nodes.
 stop_nodes
