@@ -5,7 +5,7 @@ import InitConfig from '../../../src/Config/InitConfig';
 import OriginChainInteract from '../../../src/NewChain/OriginChainInteract';
 import SpyAssert from '../../test_utils/SpyAssert';
 
-describe('OriginChainInteract.setCoanchorAddress()', () => {
+describe('OriginChainInteract.setCoAnchorAddress()', () => {
   let mockInitConfig;
   let web3;
   const auxiliaryChainId = '123';
@@ -40,7 +40,7 @@ describe('OriginChainInteract.setCoanchorAddress()', () => {
   });
 
   it('should set co-anchor address', async () => {
-    await originChainInteract.setCoanchorAddress(
+    await originChainInteract.setCoAnchorAddress(
       anchor,
       coAnchorAddress,
     );

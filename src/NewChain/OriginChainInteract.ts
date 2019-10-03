@@ -240,7 +240,7 @@ export default class OriginChainInteract {
    * @param originAnchor Instance of anchor contract on origin chain.
    * @param coAnchorAddress CoAnchor address.
    */
-  public async setCoanchorAddress(
+  public async setCoAnchorAddress(
     originAnchor: ContractInteract.Anchor,
     coAnchorAddress: string,
   ) {

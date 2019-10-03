@@ -313,7 +313,7 @@ export default class AuxiliaryChainInteract {
    * @param auxiliaryAnchor Instance of anchor contract on auxiliary chain.
    * @param coAnchorAddress CoAnchor address.
    */
-  public async setCoanchorAddress(
+  public async setCoAnchorAddress(
     auxiliaryAnchor: ContractInteract.Anchor,
     coAnchorAddress: string,
   ) {

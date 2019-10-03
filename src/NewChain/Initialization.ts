@@ -256,12 +256,12 @@ export default class Initialization {
     originChainInteract: OriginChainInteract,
   ) {
     Logger.info('Setting up auxiliary co-auxiliaryAnchor');
-    await auxiliaryChainInteract.setCoanchorAddress(
+    await auxiliaryChainInteract.setCoAnchorAddress(
       auxiliaryAnchor,
       originAnchor.address,
     );
     Logger.info('Setting up origin co-auxiliaryAnchor');
-    await originChainInteract.setCoanchorAddress(
+    await originChainInteract.setCoAnchorAddress(
       originAnchor,
       auxiliaryAnchor.address,
     );

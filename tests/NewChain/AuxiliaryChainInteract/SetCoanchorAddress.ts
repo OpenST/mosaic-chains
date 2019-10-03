@@ -7,7 +7,7 @@ import AuxiliaryChainInteract
 import SpyAssert from '../../test_utils/SpyAssert';
 import NodeDescription from '../../../src/Node/NodeDescription';
 
-describe('AuxiliaryChainInteract.setCoanchorAddress()', () => {
+describe('AuxiliaryChainInteract.setCoAnchorAddress()', () => {
   let mockInitConfig;
   const auxiliaryChainId = '123';
   let auxiliaryChainInteract: AuxiliaryChainInteract;
@@ -41,7 +41,7 @@ describe('AuxiliaryChainInteract.setCoanchorAddress()', () => {
   });
 
   it('should set co-anchor address', async () => {
-    await auxiliaryChainInteract.setCoanchorAddress(
+    await auxiliaryChainInteract.setCoAnchorAddress(
       anchor,
       coAnchorAddress,
     );
