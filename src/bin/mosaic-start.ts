@@ -10,7 +10,7 @@ import SubGraphDeployer from '../Graph/SubGraphDeployer';
 import Graph from '../Graph/Graph';
 import DevChainOptions from './DevChainOptions';
 import Logger from '../Logger';
-import { GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
+import { default as ChainInfo, GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -25,7 +25,7 @@ mosaic = GraphOptions.addCliOptions(mosaic);
  * @return
  */
 function validateClientOption(chain, options) {
-  const client:string = options.client;
+  const { client } = options;
   if (!client) {
     return true;
   }
@@ -33,13 +33,19 @@ function validateClientOption(chain, options) {
     Logger.error(`Unsupported client ${client}`);
     return false;
   }
-  if (DevChainOptions.isDevChain(chain, options) && client === PARITY_CLIENT) {
-    Logger.error('Parity client is not supported for dev-chains');
-    return false;
-  }
-  if (options.origin && client === PARITY_CLIENT) {
-    Logger.error('Parity client is not supported for auxiliary-chains');
-    return false;
+  if (client === PARITY_CLIENT) {
+    if (!ChainInfo.chainsSupportedByParity.includes(chain)) {
+      Logger.error(`Parity client does not support chain: ${chain}`);
+      return false;
+    }
+    if (options.origin) {
+      Logger.error('Parity client is not supported for auxiliary-chains');
+      return false;
+    }
+    if (DevChainOptions.isDevChain(chain, options)) {
+      Logger.error('Parity client is not supported for dev-chains');
+      return false;
+    }
   }
   return true;
 }
@@ -89,7 +95,7 @@ mosaic
       unlock,
       password,
       originChain,
-      client: optionInput.client
+      client: optionInput.client,
     });
     node.start();
 

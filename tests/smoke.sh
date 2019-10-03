@@ -36,14 +36,6 @@ function stop_node {
     try_silent "./mosaic stop $1" "Could not stop node $1."
 }
 
-# Starts all nodes for the test.
-function start_nodes {
-    info "Starting all nodes."
-    start_auxiliary_node 1406
-    start_auxiliary_node 1407
-    start_origin_node ropsten geth
-}
-
 # Stops all nodes for the test.
 function stop_nodes {
     info "Stopping all nodes."
@@ -64,7 +56,17 @@ function fail_silent {
 
 # Sets the global variable `grep_command` with the command to check if given chain is running.
 function set_node_grep_command {
-    grep_command="./mosaic list | grep mosaic_$1 | grep $2"
+    grep_command="./mosaic list | grep mosaic_$1"
+    if [ $2 == 'geth' ]
+    then
+        grep_command="${grep_command} | grep ethereum/client-go"
+    fi
+
+    if [ $2 == 'parity' ]
+    then
+        grep_command="${grep_command} | grep parity/parity"
+    fi
+    info "node_grep_command : $grep_command."
 }
 
 # Sets the global variable `grep_command` with the command to check if given chain's corresponding graph is running.
@@ -109,24 +111,23 @@ function rpc_auxiliary_sub_graph_try {
 # Making sure the mosaic command exists (we are in the right directory).
 try_silent "ls mosaic" "Script must be run from the mosaic chains root directory so that the required node modules are available."
 
-# Start all nodes to test.
-start_nodes
+info "Starting node one by one and verifying if all services for it are running."
 
-# Check that the started nodes are listed.
+start_auxiliary_node 1406
 grep_try 1406 geth
-grep_try 1407 geth
-grep_try ropsten geth
-
-# Try to RPC call the running nodes.
 rpc_node_try 1406
-rpc_node_try 1407
-rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
+rpc_auxiliary_sub_graph_try 1406
 
+start_auxiliary_node 1407
+grep_try 1407 geth
+rpc_node_try 1407
+rpc_auxiliary_sub_graph_try 1407
+
+start_origin_node ropsten geth
+grep_try ropsten geth
+rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
 rpc_origin_sub_graph_try 1406 60003
 rpc_origin_sub_graph_try 1407 60003
-
-rpc_auxiliary_sub_graph_try 1406
-rpc_auxiliary_sub_graph_try 1407
 
 # Stop and start some nodes and make sure they are or are not running.
 stop_node ropsten

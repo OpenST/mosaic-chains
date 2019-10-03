@@ -7,9 +7,20 @@ export const PARITY_CLIENT = 'parity';
 export default class ChainInfo {
 
   /**
+   * array of supported origin chains.
+   */
+  public static get chainsSupportedByParity(): string[] {
+    return [
+      'ethereum',
+      'ropsten',
+      'goerli'
+    ];
+  }
+
+  /**
    * Mapping of supported origin chain name against chain id.
    */
-  public static get supportedOriginChainToIdMap(): Record<string, string> {
+  public static get publicOriginChainNameToIdMap(): Record<string, string> {
     return {
       ethereum: '1',
       ropsten: '3',
@@ -47,7 +58,7 @@ export default class ChainInfo {
 
   /**
    * Returns the chain id for the given chain name. If the chain name is not
-   * available in `ChainInfo.supportedOriginChainToIdMap`, then it will return chain as chain id.
+   * available in `ChainInfo.publicOriginChainNameToIdMap`, then it will return chain as chain id.
    * @param chain Chain name or chain id.
    * @returns Chain id; based on the given input.
    */
@@ -57,7 +68,7 @@ export default class ChainInfo {
     if (chainId) {
       return chainId;
     }
-    return ChainInfo.supportedOriginChainToIdMap[chain] || chain;
+    return ChainInfo.publicOriginChainNameToIdMap[chain] || chain;
   }
 
   /**
