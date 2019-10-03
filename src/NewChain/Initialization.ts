@@ -256,14 +256,14 @@ export default class Initialization {
     originChainInteract: OriginChainInteract,
   ) {
     Logger.info('Setting up auxiliary co-auxiliaryAnchor');
-    await auxiliaryAnchor.setCoAnchorAddress(
+    await auxiliaryChainInteract.setCoanchorAddress(
+      auxiliaryAnchor,
       originAnchor.address,
-      auxiliaryChainInteract.txOptions,
     );
     Logger.info('Setting up origin co-auxiliaryAnchor');
-    await originAnchor.setCoAnchorAddress(
+    await originChainInteract.setCoanchorAddress(
+      originAnchor,
       auxiliaryAnchor.address,
-      originChainInteract.txOptions,
     );
   }
 
@@ -283,12 +283,12 @@ export default class Initialization {
     auxiliaryAnchorOrganization: ContractInteract.Organization,
   ) {
     Logger.info('Setting up origin anchor organization admin');
-    await originChainInteract.setAnchorOrganizationAdmin(
+    await originChainInteract.setOrganizationAdmin(
       initConfig.originAnchorOrganizationAdmin,
       originAnchorOrganization,
     );
     Logger.info('Setting up auxiliary anchor organization admin');
-    await auxiliaryChainInteract.setAnchorOrganizationAdmin(
+    await auxiliaryChainInteract.setOrganizationAdmin(
       initConfig.auxiliaryAnchorOrganizationAdmin,
       auxiliaryAnchorOrganization,
     );

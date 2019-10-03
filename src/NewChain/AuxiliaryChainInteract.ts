@@ -294,16 +294,31 @@ export default class AuxiliaryChainInteract {
   }
 
   /**
-   * This method set anchor organization admin.
+   * This method set organization admin.
    * @param admin Admin address.
-   * @param anchorOrganization AnchorOrganization contract interact.
+   * @param organization Organization contract interact.
    */
-  public async setAnchorOrganizationAdmin(
+  public async setOrganizationAdmin(
     admin: string,
-    anchorOrganization: ContractInteract.Organization,
+    organization: ContractInteract.Organization,
   ) {
     return MosaicUtils.sendTransaction(
-      anchorOrganization.contract.methods.setAdmin(admin),
+      organization.contract.methods.setAdmin(admin),
+      this.txOptions,
+    );
+  }
+
+  /**
+   * This method set co-anchor address;
+   * @param auxiliaryAnchor Instance of anchor contract on auxiliary chain.
+   * @param coAnchorAddress CoAnchor address.
+   */
+  public async setCoanchorAddress(
+    auxiliaryAnchor: ContractInteract.Anchor,
+    coAnchorAddress: string,
+  ) {
+    return auxiliaryAnchor.setCoAnchorAddress(
+      coAnchorAddress,
       this.txOptions,
     );
   }
@@ -587,7 +602,7 @@ export default class AuxiliaryChainInteract {
    * Nonce is often added to enforce failure when deploying in wrong order or missing a contract.
    * @returns The transaction options to use for transactions to the auxiliary chain.
    */
-  public get txOptions(): Tx {
+  private get txOptions(): Tx {
     return {
       from: this.deployer,
       gasPrice: '0',

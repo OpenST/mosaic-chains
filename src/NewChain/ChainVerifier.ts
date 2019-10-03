@@ -288,7 +288,7 @@ export default class ChainVerifier {
 
     const coAnchor = await anchorInstance.methods.coAnchor().call();
     ChainVerifier.validateDeployedAddress(
-      this.originWeb3,
+      this.auxiliaryWeb3,
       coAnchor,
       this.contractAddresses.auxiliary.anchorAddress,
       'OriginAnchor: Invalid coAnchor address!!!',
@@ -324,7 +324,7 @@ export default class ChainVerifier {
 
     const coAnchor = await anchorInstance.methods.coAnchor().call();
     ChainVerifier.validateDeployedAddress(
-      this.auxiliaryWeb3,
+      this.originWeb3,
       coAnchor,
       this.contractAddresses.origin.anchorAddress,
       'AuxiliaryAnchor: Invalid coAnchor address!!!',

@@ -216,21 +216,36 @@ export default class OriginChainInteract {
   /**
    * Returns Origin TX Options.
    */
-  public get txOptions(): Tx {
+  private get txOptions(): Tx {
     return this.initConfig.originTxOptions;
   }
 
   /**
-   * This method set anchor organization admin.
+   * This method set organization admin.
    * @param admin Admin address.
-   * @param anchorOrganization AnchorOrganization contract interact.
+   * @param organization Organization contract interact.
    */
-  public async setAnchorOrganizationAdmin(
+  public async setOrganizationAdmin(
     admin: string,
-    anchorOrganization: ContractInteract.Organization,
+    organization: ContractInteract.Organization,
   ) {
     return MosaicUtils.sendTransaction(
-      anchorOrganization.contract.methods.setAdmin(admin),
+      organization.contract.methods.setAdmin(admin),
+      this.txOptions,
+    );
+  }
+
+  /**
+   * This method set co-anchor address;
+   * @param originAnchor Instance of anchor contract on origin chain.
+   * @param coAnchorAddress CoAnchor address.
+   */
+  public async setCoanchorAddress(
+    originAnchor: ContractInteract.Anchor,
+    coAnchorAddress: string,
+  ) {
+    return originAnchor.setCoAnchorAddress(
+      coAnchorAddress,
       this.txOptions,
     );
   }
