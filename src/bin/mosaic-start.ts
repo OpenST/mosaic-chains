@@ -8,6 +8,7 @@ import GraphOptions from './GraphOptions';
 import GraphDescription from '../Graph/GraphDescription';
 import SubGraphDeployer from '../Graph/SubGraphDeployer';
 import Graph from '../Graph/Graph';
+import NodeDescription from '../Node/NodeDescription';
 import DevChainOptions from './DevChainOptions';
 import Logger from '../Logger';
 import { default as ChainInfo, GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
@@ -85,7 +86,7 @@ mosaic
       password,
       originChain,
     } = NodeOptions.parseOptions(optionInput, chainInput);
-    const node: Node = NodeFactory.create({
+    const nodeDescription: NodeDescription = {
       chain: chainInput,
       mosaicDir,
       port,
@@ -96,7 +97,8 @@ mosaic
       password,
       originChain,
       client: optionInput.client,
-    });
+    };
+    const node: Node = NodeFactory.create(nodeDescription);
     node.start();
 
     if (!optionInput.withoutGraphNode) {
@@ -104,6 +106,7 @@ mosaic
       // reuse params from node start command
       graphDescription.mosaicDir = mosaicDir;
       graphDescription.ethereumRpcPort = rpcPort;
+      graphDescription.ethereumClient = nodeDescription.client;
 
       new Graph(graphDescription).start().then(() => {
         let subGraphDeployer;
