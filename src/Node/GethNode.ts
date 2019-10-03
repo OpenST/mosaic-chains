@@ -26,7 +26,10 @@ export default class GethNode extends Node {
     ) {
       args = this.devGethArgs(this.chain);
     } else {
-      this.initializeGethDirectory();
+      if (this.originChain) {
+        // init geth directory ONLY for auxiliary chains
+        this.initializeGethDirectory();
+      }
       args = this.defaultDockerGethArgs;
     }
     this.logInfo('starting geth node');
@@ -155,9 +158,10 @@ export default class GethNode extends Node {
         '--volume', `${this.password}:/password.txt`,
       ]);
     }
+
+    args = args.concat(['ethereum/client-go:v1.8.23']);
+    args = args.concat(this.networkOption());
     args = args.concat([
-      'ethereum/client-go:v1.8.23',
-      '--networkid', this.chain,
       '--datadir', './chain_data',
       '--port', `${this.port}`,
       '--rpc',
@@ -208,6 +212,23 @@ export default class GethNode extends Node {
     ]);
 
     return args;
+  }
+
+  /**
+   * @return array of network args which become part of geth start command
+   */
+  private networkOption(): string[] {
+    switch (this.chain) {
+      case 'goerli':
+        return ['--goerli'];
+      case 'ropsten':
+        return ['--testnet'];
+      case 'ethereum':
+        return ['--networkid', '1'];
+      default:
+        // aux chains go into this block
+        return ['--networkid', `${this.chain}`];
+    }
   }
 
   /**

@@ -77,7 +77,7 @@ export default abstract class Node {
     } else {
       this.chainDir = path.join(this.mosaicDir, this.originChain, this.chain);
     }
-    this.containerName = `${Node.prefix}${this.chain}_${nodeDescription.client}`;
+    this.containerName = `${Node.prefix}${this.chain}`;
   }
 
   public getChain(): string {

@@ -64,7 +64,7 @@ function fail_silent {
 
 # Sets the global variable `grep_command` with the command to check if given chain is running.
 function set_node_grep_command {
-    grep_command="./mosaic list | grep mosaic_$1_$2"
+    grep_command="./mosaic list | grep mosaic_$1 | grep $2"
 }
 
 # Sets the global variable `grep_command` with the command to check if given chain's corresponding graph is running.
