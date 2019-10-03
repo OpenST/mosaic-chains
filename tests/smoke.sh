@@ -111,7 +111,7 @@ function rpc_auxiliary_sub_graph_try {
 # Making sure the mosaic command exists (we are in the right directory).
 try_silent "ls mosaic" "Script must be run from the mosaic chains root directory so that the required node modules are available."
 
-info "Starting node one by one and verifying if all services for it are running."
+info "Starting node one by one and verifying if all services for them are running."
 
 start_auxiliary_node 1406
 grep_try 1406 geth
