@@ -286,14 +286,13 @@ export default class ChainVerifier {
       this.contractAddresses.origin.anchorAddress,
     );
 
-    // fixme mosaic create currently doesnot set co-anchor https://github.com/mosaicdao/mosaic-chains/issues/91
-    // const coAnchor = await anchorInstance.methods.coAnchor().call();
-    // this.validateDeployedAddress(
-    //   this.originWeb3,
-    //   coAnchor,
-    //   this.contractAddresses.auxiliary.anchorAddress,
-    //   'OriginAnchor: Invalid coAnchor address!!!',
-    // );
+    const coAnchor = await anchorInstance.methods.coAnchor().call();
+    ChainVerifier.validateDeployedAddress(
+      this.auxiliaryWeb3,
+      coAnchor,
+      this.contractAddresses.auxiliary.anchorAddress,
+      'OriginAnchor: Invalid coAnchor address!!!',
+    );
 
     const organization = await anchorInstance.methods.organization().call();
     ChainVerifier.validateDeployedAddress(
@@ -323,14 +322,13 @@ export default class ChainVerifier {
       this.contractAddresses.auxiliary.anchorAddress,
     );
 
-    // fixme mosaic create currently does not set co-anchor https://github.com/mosaicdao/mosaic-chains/issues/91
-    // const coAnchor = await anchorInstance.methods.coAnchor().call();
-    // this.validateDeployedAddress(
-    //   this.auxiliaryWeb3,
-    //   coAnchor,
-    //   this.contractAddresses.origin.anchorAddress,
-    //   'AuxiliaryAnchor: Invalid coAnchor address!!!',
-    // );
+    const coAnchor = await anchorInstance.methods.coAnchor().call();
+    ChainVerifier.validateDeployedAddress(
+      this.originWeb3,
+      coAnchor,
+      this.contractAddresses.origin.anchorAddress,
+      'AuxiliaryAnchor: Invalid coAnchor address!!!',
+    );
 
     const organization = await anchorInstance.methods.organization().call();
     ChainVerifier.validateDeployedAddress(
