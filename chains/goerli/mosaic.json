@@ -12,7 +12,7 @@
   "auxiliaryChains": {
     "1405": {
       "bootNodes": [
-        "enode://fe46eeff7cd42d13426fcdf11082b2050289d4480739517aaaf567d65a8a69fe05e37b0a4fef21205441d9a84842fb7cdb0ea18c8598f1e4650acf33ea4d1eb5@10.25.17.99:31405"
+        "enode://e640e7a311e3ec90b51b9e6b4333bbb5d1669e802d84c293b7e72849363a0f9f56cbb70b03af7e0d7cf853f891826dc020cf22d19a2077837341ff78211d69d1@52.19.3.8:31405"
       ],
       "contractAddresses": {
         "origin": {
