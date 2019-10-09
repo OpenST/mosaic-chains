@@ -36,9 +36,10 @@ export default class Shell {
    * Executes a command in child process and returns it.
    * It must be used when we need to utilize shell functionality such as pipe, redirects.
    * @param {string} command Command string to execute.
+   * @param {Object} Options to execSync command.
    * @returns Child process that was spawned by this call.
    */
-  public static executeInShell(command: string): Buffer {
-    return execSync(command);
+  public static executeInShell(command: string, options = {}): Buffer {
+    return execSync(command, options);
   }
 }

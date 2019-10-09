@@ -182,7 +182,7 @@ export default class ChainVerifier {
     }
 
     const valueToken = await gatewayInstance.methods.token().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       valueToken,
       this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
@@ -190,7 +190,7 @@ export default class ChainVerifier {
     );
 
     const baseToken = await gatewayInstance.methods.baseToken().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       baseToken,
       this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
@@ -198,7 +198,7 @@ export default class ChainVerifier {
     );
 
     const organization = await gatewayInstance.methods.organization().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       organization,
       this.contractAddresses.origin.ostGatewayOrganizationAddress,
@@ -206,7 +206,7 @@ export default class ChainVerifier {
     );
 
     const remoteGateway = await gatewayInstance.methods.remoteGateway().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       remoteGateway,
       this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
@@ -214,7 +214,7 @@ export default class ChainVerifier {
     );
 
     const stateRootProvider = await gatewayInstance.methods.stateRootProvider().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       stateRootProvider,
       this.contractAddresses.origin.anchorAddress,
@@ -235,7 +235,7 @@ export default class ChainVerifier {
     );
 
     const valueToken = await coGatewayInstance.methods.valueToken().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       valueToken,
       this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
@@ -243,7 +243,7 @@ export default class ChainVerifier {
     );
 
     const utilityToken = await coGatewayInstance.methods.utilityToken().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       utilityToken,
       this.contractAddresses.auxiliary.ostPrimeAddress,
@@ -251,7 +251,7 @@ export default class ChainVerifier {
     );
 
     const organization = await coGatewayInstance.methods.organization().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       organization,
       this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
@@ -259,7 +259,7 @@ export default class ChainVerifier {
     );
 
     const remoteGateway = await coGatewayInstance.methods.remoteGateway().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       remoteGateway,
       this.contractAddresses.origin.ostEIP20GatewayAddress,
@@ -267,7 +267,7 @@ export default class ChainVerifier {
     );
 
     const stateRootProvider = await coGatewayInstance.methods.stateRootProvider().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       stateRootProvider,
       this.contractAddresses.auxiliary.anchorAddress,
@@ -287,15 +287,15 @@ export default class ChainVerifier {
     );
 
     const coAnchor = await anchorInstance.methods.coAnchor().call();
-    this.validateDeployedAddress(
-      this.originWeb3,
+    ChainVerifier.validateDeployedAddress(
+      this.auxiliaryWeb3,
       coAnchor,
       this.contractAddresses.auxiliary.anchorAddress,
       'OriginAnchor: Invalid coAnchor address!!!',
     );
 
     const organization = await anchorInstance.methods.organization().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       organization,
       this.contractAddresses.origin.anchorOrganizationAddress,
@@ -323,15 +323,15 @@ export default class ChainVerifier {
     );
 
     const coAnchor = await anchorInstance.methods.coAnchor().call();
-    this.validateDeployedAddress(
-      this.auxiliaryWeb3,
+    ChainVerifier.validateDeployedAddress(
+      this.originWeb3,
       coAnchor,
       this.contractAddresses.origin.anchorAddress,
       'AuxiliaryAnchor: Invalid coAnchor address!!!',
     );
 
     const organization = await anchorInstance.methods.organization().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       organization,
       this.contractAddresses.auxiliary.anchorOrganizationAddress,
@@ -359,7 +359,7 @@ export default class ChainVerifier {
     );
 
     const valueToken = await ostPrimeInstance.methods.token().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       valueToken,
       this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
@@ -374,7 +374,7 @@ export default class ChainVerifier {
     }
 
     const organization = await ostPrimeInstance.methods.organization().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       organization,
       this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
@@ -382,7 +382,7 @@ export default class ChainVerifier {
     );
 
     const coGateway = await ostPrimeInstance.methods.coGateway().call();
-    this.validateDeployedAddress(
+    ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       coGateway,
       this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
@@ -442,11 +442,11 @@ export default class ChainVerifier {
   /**
    * Check if deployed bin is valid or not
    * @param web3 Web3 endpoint.
-   * @param contractName Name of the contract to verify.
-   * @param contractAddress Contract address to verify.
+   * @param deployedAddress Address of the contract to verify.
+   * @param mosaicConfigAddress Expected address of the contract.
    * @param errMsg Error message to show.
    */
-  private validateDeployedAddress(
+  private static validateDeployedAddress(
     web3,
     deployedAddress,
     mosaicConfigAddress,

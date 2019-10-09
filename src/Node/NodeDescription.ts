@@ -22,5 +22,7 @@ export default class NodeDescription {
 
   public debug: boolean = false;
 
+  public client: string = '';
+
   constructor(readonly chain: string) { }
 }
