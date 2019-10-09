@@ -32,7 +32,7 @@ const deployStakePool = async (
 
   const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
   mosaicConfig.originChain.chain = chain;
-  mosaicConfig.originChain.contractAddresses.ostComposerAddress = ostComposer.options.address;
+  mosaicConfig.originChain.contractAddresses.stakePoolAddress = ostComposer.options.address;
 
   mosaicConfig.writeToMosaicConfigDirectory();
 };
