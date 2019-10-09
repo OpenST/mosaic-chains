@@ -1,6 +1,6 @@
 {
   "name": "@openst/mosaic-chains",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.4",
   "description": "Mosaic chains is an executable to run and manage mosaic chains.",
   "bin": {
     "mosaic": "lib/src/bin/mosaic.js"
@@ -22,14 +22,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenST/mosaic-chains.git"
+    "url": "git+https://github.com/mosaicdao/mosaic-chains.git"
   },
   "author": "OpenST Ltd.",
   "license": "LGPL-3.0-only",
   "bugs": {
-    "url": "https://github.com/OpenST/mosaic-chains/issues"
+    "url": "https://github.com/mosaicdao/mosaic-chains/issues"
   },
-  "homepage": "https://github.com/OpenST/mosaic-chans#readme",
+  "homepage": "https://github.com/mosaicdao/mosaic-chains#readme",
   "dependencies": {
     "@graphprotocol/graph-cli": "0.12.0",
     "@graphprotocol/graph-ts": "0.11.0",

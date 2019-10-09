@@ -1,42 +1,42 @@
 {
   "originChain": {
     "contractAddresses": {
-      "gatewayLibAddress": "0x353AEba14b902e67cDdA99595f74d910e3FD5e97",
-      "messageBusAddress": "0xB69f2Aa06793028CC8E604122218b1D2E23eae4b",
-      "merklePatriciaLibAddress": "0xf8238D9850F2a47f1411Cb7F5F5F3279A72b7f7a",
-      "simpleTokenAddress": "0x8e183Fd2cd55C7C05bBf4FAC989740f69e559A6d",
-      "ostComposerAddress": "0x34817af7b685dbd8a360e8bed3121eb03d56c9bd"
+      "gatewayLibAddress": "0x0f08341505C01b7bc05C95A99aB7427eD4C3195F",
+      "messageBusAddress": "0xcaB4728ea030A04A183928884a6dcD83857d96Ba",
+      "merklePatriciaLibAddress": "0x83aA52516805Ff323CA1033a12c6bF133d9AC17e",
+      "simpleTokenAddress": "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
+      "ostComposerAddress": "0xeaa192d486ac5243886a28001e27a68cae5fde4b"
     },
-    "chain": "dev"
+    "chain": "goerli"
   },
   "auxiliaryChains": {
-    "1000": {
+    "1405": {
       "bootNodes": [
-        "enode://2b399ce3a05ba4c945df2748e3ef2cd521973755197d37141def71ee6ecd5c2c5c07049829244aa16b14e55253d4604cc9f14ce1f517a1371fd73aab96595209@172.16.0.206:31000"
+        "enode://fe46eeff7cd42d13426fcdf11082b2050289d4480739517aaaf567d65a8a69fe05e37b0a4fef21205441d9a84842fb7cdb0ea18c8598f1e4650acf33ea4d1eb5@10.25.17.99:31405"
       ],
       "contractAddresses": {
         "origin": {
-          "anchorOrganizationAddress": "0x7de07272E4c6cb822503B46C8a41517935C3f0c0",
-          "anchorAddress": "0xEa8D41fc6C6C0Ee155E5F6FbF9Cc1167Fa17927E",
-          "ostGatewayOrganizationAddress": "0x3f99f42d226A0CD1C1Fcae1e8dC11b2f7a9DcE4B",
-          "ostEIP20GatewayAddress": "0xaE02C7b1C324A8D94A564bC8d713Df89eae441fe"
+          "anchorOrganizationAddress": "0x3653968c38FA8c59CA22C95f2202505BFaA64F09",
+          "anchorAddress": "0x4fDF26dc9a99D11FfB39a2d88a7E39E49544602a",
+          "ostGatewayOrganizationAddress": "0x77DDDB66b12b2279A83D61fF443F1d8D16352C59",
+          "ostEIP20GatewayAddress": "0x6649c6FF3629aE875b91B6C1551139c9feaA2514"
         },
         "auxiliary": {
-          "anchorOrganizationAddress": "0xb8c982d0cd5f7c1B24B80f0e38cB25a6d9b5b716",
-          "anchorAddress": "0x50c0Af1A754CE6bA25a102D4ee759b08141C4aA9",
-          "ostCoGatewayOrganizationAddress": "0x2D586C7E220839a9284888B10aDF4823AcD6EdF3",
-          "ostPrimeAddress": "0x62F8729C1C282C231a22252e90CE9735533D2518",
-          "ostEIP20CogatewayAddress": "0xc6fF898ceBf631eFb58eEc7187E4c1f70AE8d943",
-          "gatewayLibAddress": "0x3d0c80965628a7e44AD70E0490DBB4D305F1636D",
-          "messageBusAddress": "0xF9234855d1Fb05f06A09baFB827faD084516b21c",
-          "merklePatriciaLibAddress": "0x3CaB7dE8Dde1fb082A315F986B09c431c1B7D9e7",
-          "redeemPoolAddress": "0x8bA9C19BeacBB3eF85E1Df57ceef1Df922F2D87F"
+          "anchorOrganizationAddress": "0xd9A951F51e725FDaA4Bc15C181635A608BD0dB2D",
+          "anchorAddress": "0x2Bbe4DFb364e76dA987Ac5754bB87b476cC6D80B",
+          "ostCoGatewayOrganizationAddress": "0x47Ef953C4372457754d3471Ca2BB1b5d6AD8F245",
+          "ostPrimeAddress": "0xBB5676d85d28DA039F982C07E4217fB0FDB2c2ef",
+          "ostEIP20CogatewayAddress": "0x962e1404D6957d8fF56F8fE79a3fC2B670C3d578",
+          "gatewayLibAddress": "0xa718f65c96a177d8967E8f6D67A7872b26771495",
+          "messageBusAddress": "0x8F3578462BaF62e48Ad02820f4b7cd9788B200B6",
+          "merklePatriciaLibAddress": "0x4473FBF3390e49e79b27D229b9BF230DAD78414e",
+          "redeemPoolAddress": "0x2E17dE7EC319287eC419ACBe04E4a9f25f76199D"
         }
       },
-      "chainId": 1000,
+      "chainId": 1405,
       "genesis": {
         "config": {
-          "chainId": 1000,
+          "chainId": 1405,
           "homesteadBlock": 0,
           "eip150Block": 0,
           "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -49,8 +49,8 @@
           }
         },
         "nonce": "0x0",
-        "timestamp": "0x5d3ef7b4",
-        "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000a5bcdd4ad7aaf2959ea164901086b38a01e43af50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "timestamp": "0x5d4168ce",
+        "extraData": "0x00000000000000000000000000000000000000000000000000000000000000003263293b717b0f54cc70a549ea2f3498c7f5f36a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         "gasLimit": "0x989680",
         "difficulty": "0x1",
         "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -824,7 +824,7 @@
           "00000000000000000000000000000000000000ff": {
             "balance": "0x1"
           },
-          "32bf4f3d3c0cd782c83cb96dff05a9c098e0c092": {
+          "1e8de4dd1290876b7f5fc6baa8002a4653941b80": {
             "balance": "0x295be96e640669720000000"
           }
         },

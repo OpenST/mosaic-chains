@@ -20,5 +20,7 @@ export default class NodeDescription {
 
   public originChain: string = '';
 
+  public client: string = '';
+
   constructor(readonly chain: string) { }
 }
