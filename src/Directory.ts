@@ -44,8 +44,7 @@ export default class Directory {
     }
 
     return path.join(
-      Directory.projectRoot,
-      'chains',
+      Directory.getProjectChainsDirectory,
       originChain,
       auxiliaryChainId,
     );
@@ -160,6 +159,16 @@ export default class Directory {
       Directory.getDefaultMosaicDataDir,
       originChain,
       Directory.getMosaicFileName(),
+    );
+  }
+
+  /**
+   * This method return project chains directory.
+   */
+  public static get getProjectChainsDirectory(): string {
+    return path.join(
+      Directory.projectRoot,
+      'chains',
     );
   }
 }

@@ -9,6 +9,7 @@ import GraphDescription from '../Graph/GraphDescription';
 import SubGraphDeployer from '../Graph/SubGraphDeployer';
 import Graph from '../Graph/Graph';
 import DevChainOptions from './DevChainOptions';
+import Validator from './Validator';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -38,6 +39,22 @@ mosaic
       password,
       originChain,
     } = NodeOptions.parseOptions(optionInput, chainInput);
+
+    if (originChain && originChain.length > 0) {
+      if (!Validator.isValidOriginChain(originChain)) {
+        console.error(`Invalid origin chain identifier: ${originChain}`)
+        process.exit(1);
+      }
+
+      if (!Validator.isValidAuxChain(chain)) {
+        console.error(`Invalid aux chain identifier: ${chain}`)
+        process.exit(1);
+      }
+    } else if (!Validator.isValidOriginChain(chain)) {
+      console.error(`Invalid orgiin chain identifier: ${chain}`)
+      process.exit(1);
+    }
+
     const node: Node = NodeFactory.create({
       chain: chainInput,
       mosaicDir,

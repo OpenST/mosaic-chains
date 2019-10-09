@@ -7,12 +7,18 @@ import Node from '../Node/Node';
 import GraphDescription from '../Graph/GraphDescription';
 import Graph from '../Graph/Graph';
 import DevChainOptions from './DevChainOptions';
+import Validator from './Validator';
 
 mosaic
   .arguments('<chains...>')
   .action((chains: string[]) => {
     for (const chain of chains) {
       let chainInput = chain;
+
+      if (!(Validator.isValidOriginChain(chain) || Validator.isValidAuxChain(chain))) {
+        console.error(`Invalid chain identifier: ${chain}`);
+        process.exit(1);
+      }
       if (DevChainOptions.isDevChain(chain)) {
         chainInput = DevChainOptions.getDevChainParams(chain).chain;
       }
