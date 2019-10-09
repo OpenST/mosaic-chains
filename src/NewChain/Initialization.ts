@@ -200,7 +200,6 @@ export default class Initialization {
     auxiliaryContracts.anchorOrganizationAddress = Utils.toChecksumAddress(anchorOrganization.address);
     auxiliaryContracts.anchorAddress = Utils.toChecksumAddress(anchor.address);
     auxiliaryContracts.coGatewayOrganizationAddress = Utils.toChecksumAddress(coGatewayAndOstPrimeOrganization.address);
-    auxiliaryContracts.baseTokenAddress = Utils.toChecksumAddress(ostPrime.address);
     auxiliaryContracts.utilityTokenAddress = Utils.toChecksumAddress(ostPrime.address);
     auxiliaryContracts.eip20CogatewayAddress = Utils.toChecksumAddress(ostCoGateway.address);
     auxiliaryContracts.gatewayLibAddress = Utils.toChecksumAddress(gatewayLib.address);

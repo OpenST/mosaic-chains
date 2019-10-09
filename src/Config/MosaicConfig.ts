@@ -55,8 +55,6 @@ export class OriginContracts {
  * Contract addresses deployed on the auxiliary chain.
  */
 export class AuxiliaryContracts {
-  public baseTokenAddress: Address;
-
   public utilityTokenAddress: Address;
 
   public anchorOrganizationAddress: Address;

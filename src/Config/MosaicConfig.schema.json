@@ -22,10 +22,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "baseTokenAddress": {
-          "$ref": "#/definitions/Address",
-          "description": "Base token contract address"
-        },
         "utilityTokenAddress": {
           "$ref": "#/definitions/Address",
           "description": "Utility token contract address"
@@ -71,7 +67,6 @@
         "messageBusAddress",
         "coGatewayOrganizationAddress",
         "eip20CogatewayAddress",
-        "baseTokenAddress",
         "utilityTokenAddress"
       ],
       "title": "Auxiliary",
