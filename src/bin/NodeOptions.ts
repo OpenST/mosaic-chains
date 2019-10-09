@@ -69,6 +69,7 @@ export default class NodeOptions {
   public static addCliOptions(command): any {
     command
       .option('-o,--origin <string>', 'identifier for origin chain. To be passed while starting auxiliary chain')
+      .option('-c,--client <string>', 'identifier for client (geth/parity). To be passed while starting origin chain')
       .option('-d,--mosaic-dir <dir>', 'a path to a directory where the chain data will be stored', DEFAULT_MOSAIC_DIR)
       .option('-p,--port <port>', 'the port to use for forwarding from host to container', Integer.parseString)
       .option('-r,--rpc-port <port>', 'the RPC port to use for forwarding from host to container', Integer.parseString)

@@ -20,6 +20,9 @@ export default class Graph {
   /** Docker has published Ethereum WS port at this port on the host. */
   private readonly ethereumRpcPort: number;
 
+  /** client of ethereum node. */
+  private readonly ethereumClient: string;
+
   /** Docker will publish this RPC port on the host. */
   private readonly rpcPort: number;
 
@@ -67,7 +70,7 @@ export default class Graph {
     this.ipfsPort = graphDescription.ipfsPort;
     this.postgresPort = graphDescription.postgresPort;
     this.originChain = graphDescription.originChain;
-
+    this.ethereumClient = graphDescription.ethereumClient;
     this.containerName = `${Graph.namePrefix}${this.chain}`;
   }
 
@@ -130,7 +133,7 @@ export default class Graph {
     if (this.originChain) {
       return path.join(this.mosaicDir, this.originChain, this.chain, 'graph');
     }
-    return path.join(this.mosaicDir, this.chain, 'origin', 'graph');
+    return path.join(this.mosaicDir, this.chain, `origin-${this.ethereumClient}`, 'graph');
   }
 
   /**

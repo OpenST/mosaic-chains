@@ -60,7 +60,7 @@ export default class SubGraph {
 
   /**
    * Create local instance and deploy graph.
-   * @return {{success: boolean; message: string}}
+   * @return
    */
   public deploy(): {success: boolean; message: string} {
     if (FileSystem.pathExistsSync(this.getSubGraphProjectDir)) {
@@ -86,7 +86,7 @@ export default class SubGraph {
 
   /**
    * Directory in which we would persist code which was used for sub graph deployment.
-   * @return {string}
+   * @return
    */
   private get getSubGraphProjectDir(): string {
     return path.join(
@@ -112,7 +112,11 @@ export default class SubGraph {
    */
   private get getSubGraphProjectDirSuffix(): string {
     if (this.subGraphType === SubGraph.originSubGraphType) {
-      return Directory.getOriginSubGraphProjectDirSuffix(this.originChain, this.auxiliaryChain);
+      return Directory.getOriginSubGraphProjectDirSuffix(
+        this.originChain,
+        this.auxiliaryChain,
+        this.graphDescription.ethereumClient
+      );
     }
     return Directory.getAuxiliarySubGraphProjectDirSuffix(this.originChain, this.auxiliaryChain);
   }
@@ -139,7 +143,7 @@ export default class SubGraph {
 
   /**
    * Create local sub graph. This would fail if sub graph was already registered.
-   * @return {{success: boolean; message: string}}
+   * @return
    */
   private createLocal(): {success: boolean; message: string} {
     this.logInfo('attempting to create local graph');
@@ -215,7 +219,7 @@ export default class SubGraph {
 
   /**
    * Create local instance and deploy sub graph.
-   * @return {{success: boolean; message: string}}
+   * @return
    */
   private deployLocal(): {success: boolean; message: string} {
     this.logInfo('attempting to deploy local graph');
@@ -235,7 +239,7 @@ export default class SubGraph {
 
   /**
    * Execute graph command.
-   * @param {string} commandSuffix
+   * @param commandSuffix
    */
   private executeGraphCommand(commandSuffix: string): void {
     Shell.executeInShell(`cd ${this.getTempGraphInstallationDir} && ./node_modules/.bin/graph ${commandSuffix}`);
@@ -264,8 +268,8 @@ export default class SubGraph {
 
   /**
    * Extract message from error object.
-   * @param {Error} error
-   * @return {string}
+   * @param error
+   * @return
    */
   private extractMessageFromError(error: Error): string {
     const jsonErrorObject = JSON.parse(JSON.stringify(error));
