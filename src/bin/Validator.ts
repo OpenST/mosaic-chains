@@ -21,8 +21,7 @@ export default class Validator {
    * @param value Chain identifier.
    */
   public static isValidOriginChain(value: string): boolean {
-    console.log('n !!ChainInfo.chainInfo[value]  ', !!ChainInfo.chainInfo[value]);
-    return !!ChainInfo.chainInfo[value];
+    return !!ChainInfo.publicOriginChainNameToIdMap[value];
   }
 
   /**
@@ -39,7 +38,6 @@ export default class Validator {
         validAuxChain = true;
       }
     });
-    console.log('valid aux chain  ', validAuxChain);
     return validAuxChain;
   }
 
