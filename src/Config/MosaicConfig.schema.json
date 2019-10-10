@@ -50,7 +50,7 @@
           "$ref": "#/definitions/Address",
           "description": "Address of ost cogateway organization on auxiliary chain"
         },
-        "eip20CogatewayAddress": {
+        "eip20CoGatewayAddress": {
           "$ref": "#/definitions/Address",
           "description": "Address of cogateway contract on auxiliary chain"
         },
@@ -66,7 +66,7 @@
         "merklePatriciaLibAddress",
         "messageBusAddress",
         "coGatewayOrganizationAddress",
-        "eip20CogatewayAddress",
+        "eip20CoGatewayAddress",
         "utilityTokenAddress"
       ],
       "title": "Auxiliary",

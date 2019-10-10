@@ -27,7 +27,7 @@
           "anchorAddress": "0x50c0Af1A754CE6bA25a102D4ee759b08141C4aA9",
           "coGatewayOrganizationAddress": "0x2D586C7E220839a9284888B10aDF4823AcD6EdF3",
           "utilityTokenAddress": "0x62F8729C1C282C231a22252e90CE9735533D2518",
-          "eip20CogatewayAddress": "0xc6fF898ceBf631eFb58eEc7187E4c1f70AE8d943",
+          "eip20CoGatewayAddress": "0xc6fF898ceBf631eFb58eEc7187E4c1f70AE8d943",
           "gatewayLibAddress": "0x3d0c80965628a7e44AD70E0490DBB4D305F1636D",
           "messageBusAddress": "0xF9234855d1Fb05f06A09baFB827faD084516b21c",
           "merklePatriciaLibAddress": "0x3CaB7dE8Dde1fb082A315F986B09c431c1B7D9e7",
