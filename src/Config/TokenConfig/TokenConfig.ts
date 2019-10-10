@@ -5,6 +5,7 @@ import {
 } from "../../Exception";
 import * as fs from "fs-extra";
 import {Validator} from "jsonschema";
+const schema = require('./TokenConfig.schema.json');
 
 /**
  * Contract addresses of the origin chain specific to a token.
@@ -96,15 +97,15 @@ export default class TokenConfig {
   }
 
   /**
-   * This method validate json object against token config schema also throws an exception on
-   * failure.
+   * This method validate json object against token config schema.
+   * Also throws an exception on failure.
    *
    * @param jsonObject JSON object to be validated against schema.
    */
   private static validateSchema(jsonObject: any): void {
     const validator = new Validator();
     try {
-       // validator.validate(jsonObject, schema, { throwError: true });
+       validator.validate(jsonObject, schema, { throwError: true });
     } catch (error) {
       throw new InvalidTokenConfigException(error.message);
     }

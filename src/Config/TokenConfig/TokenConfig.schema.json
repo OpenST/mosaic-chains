@@ -87,7 +87,7 @@
       },
       "required": [
         "coGatewayOrganizationAddress",
-        "eip20CogatewayAddress",
+        "eip20CoGatewayAddress",
         "utilityTokenAddress"
       ],
       "title": "Auxiliary",
@@ -101,9 +101,9 @@
           "type": "string",
           "description": "File path of mosaic config."
         },
-        "chainId": {
+        "auxChainId": {
           "type": "integer",
-          "description": "chain id as integer"
+          "description": "auxiliary chain id as integer"
         },
         "originContracts": {
           "$ref": "#/definitions/OriginChainContractAddresses",
@@ -116,9 +116,9 @@
       },
       "required": [
         "mosaicConfigFilePath",
-        "chainId",
-        "originContractAddresses",
-        "auxiliaryContractAddresses"
+        "auxChainId",
+        "originContracts",
+        "auxiliaryContracts"
       ],
       "title": "TokenConfig",
       "description": "This object represents token config of single token."
