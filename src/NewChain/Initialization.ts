@@ -3,9 +3,9 @@ import * as path from 'path';
 import { Utils as MosaicUtils, ContractInteract } from '@openst/mosaic.js';
 import * as ip from 'ip';
 
-import InitConfig from '../Config/InitConfig';
-import MosaicConfig, { AuxiliaryChain } from '../Config/MosaicConfig';
-import PublishMosaicConfig from '../Config/PublishMosaicConfig';
+import InitConfig from '../Config/MosaicConfig/InitConfig';
+import MosaicConfig, { AuxiliaryChain } from '../Config/MosaicConfig/MosaicConfig';
+import PublishMosaicConfig from '../Config/MosaicConfig/PublishMosaicConfig';
 import OriginChainInteract from './OriginChainInteract';
 import AuxiliaryChainInteract from './AuxiliaryChainInteract';
 import NodeDescription from '../Node/NodeDescription';

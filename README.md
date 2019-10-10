@@ -103,7 +103,7 @@ Other prerequisites that you need:
 
 * A password file with exactly two lines (followed by a newline) of the **same password.** For now, this is the only way to set up the (temporary) accounts for sealing and deploying on the new auxiliary chain.
 * A websocket connection to a node that is connected to an existing origin chain. It has to have an unlocked account with sufficient balance. The account address of the unlocked account must be added to the file in the `initialize` directory (see next bullet point).
-* An initial configuration file in the project's `initialize` directory. The file name has to equal the new chain ID that you want to use. You can copy the example file and fill in your values. If you want to know what the parameters mean, check the [relevant documentation in the code](./src/Config/InitConfig.ts).
+* An initial configuration file in the project's `initialize` directory. The file name has to equal the new chain ID that you want to use. You can copy the example file and fill in your values. If you want to know what the parameters mean, check the [relevant documentation in the code](src/Config/MosaicConfig/InitConfig.ts).
 
 To see the help:
 

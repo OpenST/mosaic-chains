@@ -1,6 +1,6 @@
 import * as path from 'path';
-import Directory from '../Directory';
-import FileSystem from '../FileSystem ';
+import Directory from '../../Directory';
+import FileSystem from '../../FileSystem ';
 
 /**
  * Publish Mosaic Config.

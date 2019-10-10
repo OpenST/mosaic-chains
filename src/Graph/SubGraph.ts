@@ -3,7 +3,7 @@ import * as mustache from 'mustache';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import Directory from '../Directory';
-import MosaicConfig from '../Config/MosaicConfig';
+import MosaicConfig from '../Config/MosaicConfig/MosaicConfig';
 import GraphDescription from './GraphDescription';
 import FileSystem from '../FileSystem ';
 

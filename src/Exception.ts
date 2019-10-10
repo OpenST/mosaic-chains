@@ -13,3 +13,19 @@ export class MosaicConfigNotFoundException extends Error {
     this.message = message;
   }
 }
+
+export class InvalidTokenConfigException extends Error {
+  public constructor(message: string) {
+    super(message);
+    this.name = 'InvalidTokenConfigException';
+    this.message = message;
+  }
+}
+
+export class TokenConfigNotFoundException extends Error {
+  public constructor(message: string) {
+    super(message);
+    this.name = 'TokenConfigNotFoundException';
+    this.message = message;
+  }
+}

@@ -1,6 +1,6 @@
 import { Contracts as MosaicContracts, AbiBinProvider } from '@openst/mosaic.js';
 
-import MosaicConfig, { ContractAddresses } from '../Config/MosaicConfig';
+import MosaicConfig, { ContractAddresses } from '../Config/MosaicConfig/MosaicConfig';
 
 import Logger from '../Logger';
 

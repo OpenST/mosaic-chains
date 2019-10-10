@@ -15,7 +15,7 @@ import Directory from '../Directory';
 import Logger from '../Logger';
 import NodeDescription from '../Node/NodeDescription';
 import GethNode from '../Node/GethNode';
-import InitConfig from '../Config/InitConfig';
+import InitConfig from '../Config/MosaicConfig/InitConfig';
 import Proof from './Proof';
 
 import Web3 = require('web3');
