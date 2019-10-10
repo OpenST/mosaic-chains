@@ -17,7 +17,7 @@ export default class NodeFactory {
    */
   public static create(nodeDescription: NodeDescription): Node {
     if (!nodeDescription.client) {
-      // default for aux chains is GETH and for origin chains in Parity
+      // default for aux chains is GETH and for origin chains is Parity
       nodeDescription.client = nodeDescription.originChain ? GETH_CLIENT : PARITY_CLIENT;
     }
     if (nodeDescription.client === PARITY_CLIENT) {

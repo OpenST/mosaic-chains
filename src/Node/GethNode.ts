@@ -13,6 +13,9 @@ export default class GethNode extends Node {
   /** A list of bootnodes that are passed to the geth container. */
   private bootnodes: string = '';
 
+  /** A list of default rpc and ws api to be exposed. */
+  private defaultApi = 'eth,net,web3,network,debug,txpool,admin,personal';
+
   /**
    * Starts the container that runs this chain node.
    */
@@ -159,6 +162,7 @@ export default class GethNode extends Node {
       ]);
     }
 
+
     args = args.concat(['ethereum/client-go:v1.8.23']);
     args = args.concat(this.networkOption());
     args = args.concat([
@@ -168,32 +172,22 @@ export default class GethNode extends Node {
       '--rpcaddr', '0.0.0.0',
       '--rpcvhosts=*',
       '--rpccorsdomain=*',
-      '--rpcapi', 'eth,net,web3,network,debug,txpool,admin,personal',
+      '--rpcapi', `${this.rpcApi.length > 0 ? this.rpcApi : this.defaultApi}`,
       '--rpcport', '8545',
       '--ws',
       '--wsaddr', '0.0.0.0',
       '--wsport', '8546',
-      '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
+      '--wsapi', `${this.wsApi.length > 0 ? this.rpcApi : this.defaultApi}`,
       '--wsorigins=*',
     ]);
 
-    if(this.debug) {
+    if (this.bootnodes !== '') {
       args = args.concat([
-        '--rpcapi', 'eth,net,web3,network,debug,txpool,admin,personal',
-        '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
-      ]);
-    } else {
-      args = args.concat([
-        '--rpcapi', 'eth,net',
-        '--wsapi', 'eth,net',
+        '--bootnodes', this.bootnodes.trim(),
       ]);
     }
 
-    if (this.bootnodes !== '') {
-      args = args.concat([
-        '--bootnodes', this.bootnodes,
-      ]);
-    }
+    console.log('args :- ',args);
 
     if (this.unlock !== '') {
       args = args.concat([

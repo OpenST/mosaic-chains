@@ -12,6 +12,7 @@ import NodeDescription from '../Node/NodeDescription';
 import DevChainOptions from './DevChainOptions';
 import Logger from '../Logger';
 import { default as ChainInfo, GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
+import Utils from '../Utils';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -65,13 +66,25 @@ mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
-  .option('-d,--debug','boolean flag determining whether chain to be started in debug mode; if not provided then chain starts with only eth api enabled for ws and rpc')
+  .option('-z,--rpcApi <rpcApi>','rpc api to be exposed when chain starts')
+  .option('-y,--wsApi <wsApi>','ws rpi to be exposed when chain starts')
   .action((chain: string, options) => {
     let chainInput = chain;
     let optionInput = Object.assign({}, options);
     if (!validateCLIOptions(chain, optionInput)) {
       process.exit(1);
     }
+
+    if(optionInput.rpcApi && !(Utils.validateMandatoryApiForGraphNode(optionInput.rpcApi))) {
+      Logger.error(`mandatory rpc api ${Utils.mandatoryApiForGraphNode} for graphnode not found`);
+      process.exit(1);
+    }
+
+    if(optionInput.wsApi && !(Utils.validateMandatoryApiForGraphNode(optionInput.wsApi))) {
+      Logger.error(`mandatory ws api ${Utils.mandatoryApiForGraphNode} for graphnode not found`);
+      process.exit(1);
+    }
+
     if (DevChainOptions.isDevChain(chain, options)) {
       const devParams = DevChainOptions.getDevChainParams(chain, options);
       chainInput = devParams.chain;
@@ -86,7 +99,8 @@ mosaic
       unlock,
       password,
       originChain,
-      debug,
+      rpcApi,
+      wsApi,
     } = NodeOptions.parseOptions(optionInput, chainInput);
     const nodeDescription: NodeDescription = {
       chain: chainInput,
@@ -99,7 +113,8 @@ mosaic
       password,
       originChain,
       client: optionInput.client,
-      debug,
+      rpcApi,
+      wsApi,
     };
     const node: Node = NodeFactory.create(nodeDescription);
     node.start();

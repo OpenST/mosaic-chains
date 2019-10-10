@@ -45,11 +45,11 @@ export default abstract class Node {
    */
   public originChain: string;
 
-  /**
-   * If true then eth, net, web3, network, debug, txpool, admin, personal api's are enabled.
-   * Otherwise only eth api is enabled.
-   */
-  public debug: boolean;
+  /** rpc api to be exposed for a chain. */
+  protected rpcApi: string;
+
+  /** ws api to be exposed for a chain. */
+  protected wsApi: string;
 
   /**
    * Docker container names will have this prefix.
@@ -77,7 +77,8 @@ export default abstract class Node {
     this.unlock = nodeDescription.unlock;
     this.password = nodeDescription.password;
     this.originChain = nodeDescription.originChain;
-    this.debug = nodeDescription.debug;
+    this.rpcApi = nodeDescription.rpcApi;
+    this.wsApi = nodeDescription.wsApi;
 
     if (this.originChain === '') {
       this.chainDir = path.join(this.mosaicDir, this.chain, `origin-${nodeDescription.client}`);
