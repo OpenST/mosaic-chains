@@ -61,8 +61,8 @@ export default class TokenConfig {
   private constructor(config: any) {
     this.mosaicConfig = MosaicConfig.fromFile(config.mosaicConfigFilePath);
     this.auxChainId = config.auxChainId;
-    this.originContracts = config.origin;
-    this.auxiliaryContracts = config.auxiliary;
+    this.originContracts = config.originContracts;
+    this.auxiliaryContracts = config.auxiliaryContracts;
   }
 
   /**
