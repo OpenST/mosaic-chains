@@ -106,7 +106,7 @@ export default class ChainVerifier {
     await this.validateLinkedBin(
       this.auxiliaryWeb3,
       'EIP20CoGateway',
-      this.contractAddresses.auxiliary.eip20CogatewayAddress,
+      this.contractAddresses.auxiliary.eip20CoGatewayAddress,
       messageBusLinkInfo,
       gatewayLibLinkInfo,
       'ContractsBin: Mismatch of CoGateway BIN!!!',
@@ -194,7 +194,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       remoteGateway,
-      this.contractAddresses.auxiliary.eip20CogatewayAddress,
+      this.contractAddresses.auxiliary.eip20CoGatewayAddress,
       'Gateway: Invalid CoGateway address!!!',
     );
 
@@ -216,7 +216,7 @@ export default class ChainVerifier {
    */
   private async verifyCoGateway(): Promise<void> {
     const coGatewayInstance = this.mosaicContract.EIP20CoGateway(
-      this.contractAddresses.auxiliary.eip20CogatewayAddress,
+      this.contractAddresses.auxiliary.eip20CoGatewayAddress,
     );
 
     const valueToken = await coGatewayInstance.methods.valueToken().call();
@@ -371,7 +371,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       coGateway,
-      this.contractAddresses.auxiliary.eip20CogatewayAddress,
+      this.contractAddresses.auxiliary.eip20CoGatewayAddress,
       'OSTPrime: Invalid coGateway address!!!',
     );
 
