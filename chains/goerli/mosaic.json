@@ -5,7 +5,7 @@
       "messageBusAddress": "0x9c50aD270A2CA1D897326B0880b3f639c3b0acef",
       "merklePatriciaLibAddress": "0x168803cA6d5D466eA7005627bfd6EAf0b5B164B0",
       "valueTokenAddress": "0xd426b22f3960d01189a3d548b45a7202489ff4de",
-      "stakePool": "0xeaa192d486ac5243886a28001e27a68cae5fde4b"
+      "stakePoolAddress": "0xeaa192d486ac5243886a28001e27a68cae5fde4b"
     },
     "chain": "goerli"
   },
