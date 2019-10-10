@@ -78,18 +78,15 @@ export default class Directory {
    *
    * @param originChain
    * @param auxiliaryChain
-   * @param chainClient
    * @return
    */
   public static getOriginSubGraphProjectDirSuffix(
     originChain: string,
     auxiliaryChain: string,
-    chainClient: string
   ): string {
     return path.join(
       originChain,
-      `origin-${chainClient}`,
-      'subgraph',
+      'origin-subgraph',
       auxiliaryChain,
     );
   }
