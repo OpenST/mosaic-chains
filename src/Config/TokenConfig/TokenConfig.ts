@@ -6,6 +6,7 @@ import {
 import * as fs from "fs-extra";
 import {Validator} from "jsonschema";
 const schema = require('./TokenConfig.schema.json');
+const path = require('path');
 
 /**
  * Contract addresses of the origin chain specific to a token.
@@ -60,6 +61,7 @@ export default class TokenConfig {
   public auxiliaryContracts: AuxiliaryContracts;
 
   private constructor(config: any) {
+
     this.mosaicConfig = MosaicConfig.fromFile(config.mosaicConfigFilePath);
     this.auxChainId = config.auxChainId;
     this.originContracts = config.originContracts;
@@ -91,9 +93,25 @@ export default class TokenConfig {
     if (configString && configString.length > 0) {
       const configObject = JSON.parse(configString);
       TokenConfig.validateSchema(configObject);
+      configObject.mosaicConfigFilePath = TokenConfig.resolveHomePath(
+        configObject.mosaicConfigFilePath
+      );
       return configObject;
     }
     throw new InvalidTokenConfigException(`blank config file found at: ${filePath}`);
+  }
+
+  /**
+   * It resolves token config file path to absolute path after resolving tilde.
+   *
+   * @param filePath Token config file path. e.g. ~/.mosaic/goerli/WETH.json
+   * @return {string} Absolute file path.
+   */
+  private static resolveHomePath(filePath: string) {
+    if (filePath[0] === '~') {
+      return path.join(process.env.HOME, filePath.slice(1));
+    }
+    return filePath;
   }
 
   /**
