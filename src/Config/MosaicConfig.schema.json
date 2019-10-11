@@ -214,8 +214,10 @@
         }
       },
       "required": [
+        "bootNodes",
         "chainId",
-        "contractAddresses"
+        "contractAddresses",
+        "genesis"
       ],
       "title": "ChainID",
       "description": "Details of single auxiliary chain"
