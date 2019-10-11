@@ -6,6 +6,10 @@
       "type": "string",
       "pattern":"^0x[a-fA-F0-9]{40}$"
     },
+    "FilePath": {
+      "type": "string",
+      "pattern": "^(.+)\/([^\/]+)$"
+    },
     "OriginChainContractAddresses": {
       "type": "object",
       "additionalProperties": false,
@@ -98,7 +102,7 @@
       "additionalProperties": false,
       "properties": {
         "mosaicConfigFilePath": {
-          "type": "string",
+          "$ref": "#/definitions/FilePath",
           "description": "File path of mosaic config."
         },
         "auxChainId": {
