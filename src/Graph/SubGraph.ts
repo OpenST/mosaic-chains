@@ -189,7 +189,7 @@ export default class SubGraph {
   private originChainTemplateVariables(): object {
     return {
       projectRoot: Directory.projectRoot,
-      ostComposerAddress: this.tokenAddresses.stakerProxyAddress,
+      stakePoolAddress: this.tokenAddresses.stakePoolAddress,
       eip20GatewayAddress: this.tokenAddresses.eip20GatewayAddress,
       anchorAddress: this.tokenAddresses.anchorAddress,
     };

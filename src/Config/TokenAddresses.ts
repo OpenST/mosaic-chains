@@ -4,7 +4,7 @@ import MosaicConfig from './MosaicConfig';
  * This class represents set of addresses specific to a single token gateway.
  */
 export default class TokenAddresses {
-  public readonly stakerProxyAddress: string;
+  public readonly stakePoolAddress: string;
 
   public readonly eip20GatewayAddress: string;
 
@@ -18,7 +18,7 @@ export default class TokenAddresses {
 
   /**
    * Constructor
-   * @param stakerProxyAddress Stakerproxy address.
+   * @param stakePoolAddress StakePool Address address.
    * @param eip20GatewayAddress eip20Gateway address.
    * @param anchorAddress anchor address.
    * @param coAnchorAddress coanchor address.
@@ -26,14 +26,14 @@ export default class TokenAddresses {
    * @param redeemPoolAddress redeem pool address.
    */
   private constructor(
-    stakerProxyAddress: string,
+    stakePoolAddress: string,
     eip20GatewayAddress: string,
     anchorAddress: string,
     coAnchorAddress: string,
     eip20CoGatewayAddress: string,
     redeemPoolAddress: string,
   ) {
-    this.stakerProxyAddress = stakerProxyAddress;
+    this.stakePoolAddress = stakePoolAddress;
     this.eip20GatewayAddress = eip20GatewayAddress;
     this.anchorAddress = anchorAddress;
     this.coAnchorAddress = coAnchorAddress;
@@ -56,11 +56,11 @@ export default class TokenAddresses {
     const originContractAddresses = mosaicConfig.auxiliaryChains[auxiliaryChain]
       .contractAddresses.origin;
     return new TokenAddresses(
-      mosaicConfig.originChain.contractAddresses.ostComposerAddress,
-      originContractAddresses.ostEIP20GatewayAddress,
+      mosaicConfig.originChain.contractAddresses.stakePoolAddress,
+      originContractAddresses.eip20GatewayAddress,
       originContractAddresses.anchorAddress,
       auxiliaryContractAddresses.anchorAddress,
-      auxiliaryContractAddresses.ostEIP20CogatewayAddress,
+      auxiliaryContractAddresses.eip20CoGatewayAddress,
       auxiliaryContractAddresses.redeemPoolAddress,
     );
   }
