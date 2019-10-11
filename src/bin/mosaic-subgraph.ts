@@ -4,12 +4,14 @@ import * as commander from 'commander';
 
 import Logger from '../Logger';
 import MosaicConfig from '../Config/MosaicConfig';
-import SubGraph, {SubGraphType} from '../Graph/SubGraph';
+import SubGraph, { SubGraphType } from '../Graph/SubGraph';
+import TokenAddresses from '../Config/TokenAddresses';
 
 const mosaic = commander
   .arguments('<originChain> <auxiliaryChain> <subgraphType> <graphAdminRPC> <graphIPFS>');
 
 mosaic.option('-m,--mosaic-config <string>', 'Mosaic config absolute path');
+mosaic.option('-t,--token-config <string>', 'Token config absolute path');
 mosaic.option('-a,--auxiliary <string>', 'auxiliary chain identifier');
 mosaic.action(
   async (
@@ -21,15 +23,18 @@ mosaic.action(
     options,
   ) => {
     try {
-      let mosaicConfig;
+      let tokenAddresses;
+
       if (options.mosaicConfig) {
-        mosaicConfig = MosaicConfig.fromFile(options.mosaicConfig);
+        const mosaicConfig = MosaicConfig.fromFile(options.mosaicConfig);
+        tokenAddresses = TokenAddresses.fromMosaicConfig(mosaicConfig, auxiliaryChain);
       } else if (MosaicConfig.exists(originChain)) {
-        mosaicConfig = MosaicConfig.fromChain(originChain);
+        const mosaicConfig = MosaicConfig.fromChain(originChain);
+        tokenAddresses = TokenAddresses.fromMosaicConfig(mosaicConfig, auxiliaryChain);
       }
 
-      if (!mosaicConfig) {
-        console.error(`Mosaic config not found for chain ${originChain} on default location. Use --mosaic-config option to provide path.`);
+      if (!tokenAddresses) {
+        console.error('Mosaic config or token config not found . Use --mosaic-config or --token-config option to provide path.');
         process.exit(1);
       }
 
@@ -39,10 +44,10 @@ mosaic.action(
         subgraphType,
         graphAdminRPC,
         graphIPFS,
-        mosaicConfig,
+        tokenAddresses,
       ).deploy();
     } catch (error) {
-      Logger.error('error while executing mosaic libraries', {error: error.toString()});
+      Logger.error('error while executing mosaic libraries', { error: error.toString() });
       process.exit(1);
     }
 

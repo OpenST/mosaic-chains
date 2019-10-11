@@ -20,9 +20,9 @@ mosaic.action(
 
     // Creates subscription client
     const subscriptionClient = new SubscriptionClient(wsEndPoint, {
-        reconnect: true,
-      },
-      WebSocket);
+      reconnect: true,
+    },
+    WebSocket);
     subscriptionClient.onConnected(() => {
       Logger.info(`Connected to sub graph: ${subGraphName}`);
       subscriptionClient.close();

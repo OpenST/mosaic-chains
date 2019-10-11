@@ -3,8 +3,8 @@ import * as mustache from 'mustache';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import Directory from '../Directory';
-import MosaicConfig from '../Config/MosaicConfig';
 import FileSystem from '../FileSystem ';
+import TokenAddresses from '../Config/TokenAddresses';
 
 export enum SubGraphType {
   ORIGIN = 'origin',
@@ -30,7 +30,7 @@ export default class SubGraph {
   private readonly graphIPFSURL: string;
 
   /** Mosaic config instance */
-  private readonly mosaicConfig: MosaicConfig;
+  private readonly tokenAddresses: TokenAddresses;
 
   /**
    * Constructor.
@@ -39,7 +39,7 @@ export default class SubGraph {
    * @param subGraphType Subgraph type
    * @param graphRPCAdminURL Graph node rpc admin URL.
    * @param graphIPFSURL Graph node IPFS url.
-   * @param mosaicConfig Mosaic config instance.
+   * @param tokenAddresses Token addresses instance.
    */
   public constructor(
     originChain: string,
@@ -47,14 +47,14 @@ export default class SubGraph {
     subGraphType: string,
     graphRPCAdminURL: string,
     graphIPFSURL: string,
-    mosaicConfig: MosaicConfig,
+    tokenAddresses: TokenAddresses,
   ) {
     this.originChain = originChain;
     this.auxiliaryChain = auxiliaryChain;
     this.subGraphType = subGraphType;
     this.graphRPCAdminURL = graphRPCAdminURL;
     this.graphIPFSURL = graphIPFSURL;
-    this.mosaicConfig = mosaicConfig;
+    this.tokenAddresses = tokenAddresses;
   }
 
   /**
@@ -189,22 +189,22 @@ export default class SubGraph {
   private originChainTemplateVariables(): object {
     return {
       projectRoot: Directory.projectRoot,
-      ostComposerAddress: this.mosaicConfig.originChain.contractAddresses.ostComposerAddress,
-      eip20GatewayAddress: this.mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.ostEIP20GatewayAddress,
-      anchorAddress: this.mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.anchorAddress,
+      ostComposerAddress: this.tokenAddresses.stakerProxyAddress,
+      eip20GatewayAddress: this.tokenAddresses.eip20GatewayAddress,
+      anchorAddress: this.tokenAddresses.anchorAddress,
     };
   }
 
   /**
-   * Returns values for all template variables which need to be replaced in subgraph.yaml for auxiliary subGraphType
+   * Returns values for all template variables which need to be replaced in
+   * subgraph.yaml for auxiliary subGraphType.
    */
   private auxiliaryChainTemplateVariables(): object {
-    const auxiliaryContractAddresses = this.mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.auxiliary;
     return {
       projectRoot: Directory.projectRoot,
-      anchorAddress: auxiliaryContractAddresses.anchorAddress,
-      eip20CoGatewayAddress: auxiliaryContractAddresses.ostEIP20CogatewayAddress,
-      redeemPoolAddress: auxiliaryContractAddresses.redeemPoolAddress,
+      anchorAddress: this.tokenAddresses.coAnchorAddress,
+      eip20CoGatewayAddress: this.tokenAddresses.eip20CoGatewayAddress,
+      redeemPoolAddress: this.tokenAddresses.redeemPoolAddress,
     };
   }
 
