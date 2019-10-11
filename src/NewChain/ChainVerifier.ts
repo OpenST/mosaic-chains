@@ -156,7 +156,7 @@ export default class ChainVerifier {
 
     await this.validateBIN(
       this.auxiliaryWeb3,
-      'utilityTokenAddress',
+      'OSTPrime',
       this.contractAddresses.auxiliary.utilityTokenAddress,
       'ContractsBin: Mismatch of utilityTokenAddress BIN!!!',
     );
