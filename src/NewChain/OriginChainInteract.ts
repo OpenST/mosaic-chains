@@ -1,10 +1,10 @@
 import { ContractInteract, Contracts as MosaicContracts, Utils as MosaicUtils } from '@openst/mosaic.js';
 import Contract from 'web3/eth/contract';
 import { Tx } from 'web3/eth/types';
-import InitConfig from '../Config/MosaicConfig/InitConfig';
+import InitConfig from '../Config/InitConfig';
 import Logger from '../Logger';
 import Contracts from './Contracts';
-import { OriginLibraries } from '../Config/MosaicConfig/MosaicConfig';
+import { OriginLibraries } from '../Config/MosaicConfig';
 
 import Web3 = require('web3');
 import BN = require('bn.js');

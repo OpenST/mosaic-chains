@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { assert } from 'chai';
 import Shell from '../../src/Shell';
 import Utils from './Utils';
-import InitConfig from '../../src/Config/MosaicConfig/InitConfig';
+import InitConfig from '../../src/Config/InitConfig';
 
 import Web3 = require('web3');
 import BN = require('bn.js');

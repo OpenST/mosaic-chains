@@ -1,6 +1,6 @@
-import PublishMosaicConfig from '../Config/MosaicConfig/PublishMosaicConfig';
+import PublishMosaicConfig from '../Config/PublishMosaicConfig';
 import Contracts from '../NewChain/Contracts';
-import MosaicConfig from '../Config/MosaicConfig/MosaicConfig';
+import MosaicConfig from '../Config/MosaicConfig';
 import { MosaicConfigNotFoundException } from '../Exception';
 
 import Web3 = require('web3');

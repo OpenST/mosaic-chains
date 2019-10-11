@@ -1,6 +1,6 @@
 import GraphDescription from './GraphDescription';
 import SubGraph from './SubGraph';
-import MosaicConfig from '../Config/MosaicConfig/MosaicConfig';
+import MosaicConfig from '../Config/MosaicConfig';
 import Logger from '../Logger';
 
 /**

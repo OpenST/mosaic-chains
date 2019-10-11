@@ -1,8 +1,8 @@
-import MosaicConfig, { Address } from "../MosaicConfig/MosaicConfig";
+import MosaicConfig, { Address } from "./MosaicConfig";
 import {
   InvalidTokenConfigException,
   TokenConfigNotFoundException
-} from "../../Exception";
+} from "../Exception";
 import * as fs from "fs-extra";
 import {Validator} from "jsonschema";
 const schema = require('./TokenConfig.schema.json');

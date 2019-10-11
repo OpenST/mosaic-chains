@@ -4,8 +4,8 @@ import * as commander from 'commander';
 
 import Logger from '../Logger';
 import OriginChainInteract from '../NewChain/OriginChainInteract';
-import MosaicConfig from '../Config/MosaicConfig/MosaicConfig';
-import PublishMosaicConfig from '../Config/MosaicConfig/PublishMosaicConfig';
+import MosaicConfig from '../Config/MosaicConfig';
+import PublishMosaicConfig from '../Config/PublishMosaicConfig';
 import Utils from '../Utils';
 
 import Web3 = require('web3');

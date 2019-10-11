@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import Logger from '../../Logger';
-import Directory from '../../Directory';
+import Logger from '../Logger';
+import Directory from '../Directory';
 
 /**
  * An InitConfig is used when initializing a new auxiliary chain.

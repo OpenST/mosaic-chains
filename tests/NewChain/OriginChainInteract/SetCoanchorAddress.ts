@@ -1,7 +1,7 @@
 import 'mocha';
 import * as sinon from 'sinon';
 import { ContractInteract } from '@openst/mosaic.js';
-import InitConfig from '../../../src/Config/MosaicConfig/InitConfig';
+import InitConfig from '../../../src/Config/InitConfig';
 import OriginChainInteract from '../../../src/NewChain/OriginChainInteract';
 import SpyAssert from '../../test_utils/SpyAssert';
 

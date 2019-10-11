@@ -2,9 +2,9 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 
 import { Validator } from 'jsonschema';
-import Directory from '../../Directory';
-import Logger from '../../Logger';
-import { InvalidMosaicConfigException, MosaicConfigNotFoundException } from '../../Exception';
+import Directory from '../Directory';
+import Logger from '../Logger';
+import { InvalidMosaicConfigException, MosaicConfigNotFoundException } from '../Exception';
 
 const schema = require('./MosaicConfig.schema.json');
 

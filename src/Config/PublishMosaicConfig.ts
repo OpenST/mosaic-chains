@@ -1,5 +1,5 @@
 import * as path from 'path';
-import Directory from '../../Directory';
+import Directory from '../Directory';
 import FileSystem from '../../FileSystem ';
 
 /**

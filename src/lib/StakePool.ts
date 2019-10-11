@@ -1,6 +1,6 @@
-import PublishMosaicConfig from '../Config/MosaicConfig/PublishMosaicConfig';
+import PublishMosaicConfig from '../Config/PublishMosaicConfig';
 import OriginChainInteract from '../NewChain/OriginChainInteract';
-import MosaicConfig from '../Config/MosaicConfig/MosaicConfig';
+import MosaicConfig from '../Config/MosaicConfig';
 
 import Web3 = require('web3');
 
