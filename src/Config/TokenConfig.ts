@@ -5,7 +5,8 @@ import {
   InvalidTokenConfigException,
   TokenConfigNotFoundException,
 } from '../Exception';
-import FileSystem from "../FileSystem ";
+import FileSystem from '../FileSystem ';
+import Directory from '../Directory';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const schema = require('./TokenConfig.schema.json');
@@ -70,9 +71,9 @@ export default class TokenConfig {
   }
 
   /**
-   * @param {string} filePath tokenConfig absolute path.
+   * @param filePath tokenConfig absolute path.
    *
-   * @return {TokenConfig} TokenConfig object.
+   * @return TokenConfig object.
    */
   public static fromFile(filePath: string): TokenConfig {
     if (fs.existsSync(filePath)) {
@@ -83,11 +84,32 @@ export default class TokenConfig {
   }
 
   /**
+   * Construct TokenConfig object
+   *
+   * @param originChain Origin chain identifier.
+   * @param auxChainId Auxiliary chain Id.
+   * @param gatewayAddress Address of Gateway.
+   *
+   * @return mosaic config
+   */
+  public static fromChain(originChain: string, auxChainId: number, gatewayAddress: string):
+  TokenConfig {
+    let filePath;
+    if (TokenConfig.exists(originChain, auxChainId, gatewayAddress)) {
+      filePath = Directory.getTokenConfigPath(originChain, auxChainId, gatewayAddress);
+      console.log('File path:', filePath);
+      const configObject = TokenConfig.readConfigFromFile(filePath);
+      return new TokenConfig(configObject);
+    }
+    throw new TokenConfigNotFoundException(`Missing token config file at path: ${filePath}`);
+  }
+
+  /**
    * Read config from file, validate it and return as JSON object.
    *
-   * @param {string} filePath tokenConfig absolute path.
+   * @param filePath tokenConfig absolute path.
    *
-   * @return {object} Json parsed object.
+   * @return Json parsed object.
    */
   private static readConfigFromFile(filePath: string): object {
     const configString = fs.readFileSync(filePath).toString();
@@ -115,5 +137,19 @@ export default class TokenConfig {
     } catch (error) {
       throw new InvalidTokenConfigException(error.message);
     }
+  }
+
+  /**
+   * Checks if token config exists for a origin chain.
+   *
+   * @param originChain Origin chain identifier.
+   * @param auxChainId Auxiliary chain Id.
+   * @param gatewayAddress Address of Gateway.
+   *
+   * @return True if file exists.
+   */
+  public static exists(originChain: string, auxChainId: number, gatewayAddress: string): boolean {
+    const filePath = Directory.getTokenConfigPath(originChain, auxChainId, gatewayAddress);
+    return fs.existsSync(filePath);
   }
 }
