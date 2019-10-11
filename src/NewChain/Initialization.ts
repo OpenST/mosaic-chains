@@ -63,7 +63,7 @@ export default class Initialization {
 
     const mosaicConfig = MosaicConfig.fromChain(auxiliaryNodeDescription.originChain);
     mosaicConfig.originChain.chain = auxiliaryNodeDescription.originChain;
-    mosaicConfig.originChain.contractAddresses.simpleTokenAddress = initConfig.originOstAddress;
+    mosaicConfig.originChain.contractAddresses.valueTokenAddress = initConfig.originOstAddress;
 
     // Actually creating the new chain:
     await Initialization.createAuxiliaryChain(
@@ -145,10 +145,11 @@ export default class Initialization {
     );
     Logger.info('Origin contracts deployed');
     const originContracts = auxiliaryChain.contractAddresses.origin;
+    originContracts.baseTokenAddress = Utils.toChecksumAddress(mosaicConfig.originChain.contractAddresses.valueTokenAddress)
     originContracts.anchorOrganizationAddress = Utils.toChecksumAddress(originAnchorOrganization.address);
     originContracts.anchorAddress = Utils.toChecksumAddress(originAnchor.address);
-    originContracts.ostGatewayOrganizationAddress = Utils.toChecksumAddress(ostGatewayOrganization.address);
-    originContracts.ostEIP20GatewayAddress = Utils.toChecksumAddress(ostGateway.address);
+    originContracts.gatewayOrganizationAddress = Utils.toChecksumAddress(ostGatewayOrganization.address);
+    originContracts.eip20GatewayAddress = Utils.toChecksumAddress(ostGateway.address);
     auxiliaryChain.genesis = auxiliaryChainInteract.getGenesis();
     auxiliaryChain.bootNodes.push(
       Initialization.getBootNode(
@@ -169,7 +170,7 @@ export default class Initialization {
     const proofData: Proof = await Initialization.getStakeProof(
       originChainInteract.getWeb3(),
       auxiliaryChainInteract.getWeb3(),
-      originContracts.ostEIP20GatewayAddress,
+      originContracts.eip20GatewayAddress,
       originMessageHash,
       originBlockNumber,
       originStateRoot,
@@ -188,7 +189,7 @@ export default class Initialization {
       messageBus,
       merklePatriciaProof,
     } = await auxiliaryChainInteract.initializeContracts(
-      originContracts.ostEIP20GatewayAddress,
+      originContracts.eip20GatewayAddress,
       originBlockNumber.toString(10),
       originStateRoot,
       stakeMessageNonce,
@@ -215,9 +216,9 @@ export default class Initialization {
 
     auxiliaryContracts.anchorOrganizationAddress = Utils.toChecksumAddress(auxiliaryAnchorOrganization.address);
     auxiliaryContracts.anchorAddress = Utils.toChecksumAddress(auxiliaryAnchor.address);
-    auxiliaryContracts.ostCoGatewayOrganizationAddress = Utils.toChecksumAddress(coGatewayAndOstPrimeOrganization.address);
-    auxiliaryContracts.ostPrimeAddress = Utils.toChecksumAddress(ostPrime.address);
-    auxiliaryContracts.ostEIP20CogatewayAddress = Utils.toChecksumAddress(ostCoGateway.address);
+    auxiliaryContracts.coGatewayOrganizationAddress = Utils.toChecksumAddress(coGatewayAndOstPrimeOrganization.address);
+    auxiliaryContracts.utilityTokenAddress = Utils.toChecksumAddress(ostPrime.address);
+    auxiliaryContracts.eip20CoGatewayAddress = Utils.toChecksumAddress(ostCoGateway.address);
     auxiliaryContracts.gatewayLibAddress = Utils.toChecksumAddress(gatewayLib.address);
     auxiliaryContracts.messageBusAddress = Utils.toChecksumAddress(messageBus.address);
     auxiliaryContracts.merklePatriciaLibAddress = Utils.toChecksumAddress(merklePatriciaProof.address);
@@ -227,12 +228,12 @@ export default class Initialization {
     Logger.info('Progressing Stake and mint with secret');
     await Promise.all([
       originChainInteract.progressWithSecret(
-        auxiliaryContracts.ostEIP20CogatewayAddress,
+        auxiliaryContracts.eip20CoGatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
       auxiliaryChainInteract.progressWithSecret(
-        auxiliaryContracts.ostEIP20CogatewayAddress,
+        auxiliaryContracts.eip20CoGatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
@@ -314,11 +315,11 @@ export default class Initialization {
     const auxiliaryChain = mosaicConfig.auxiliaryChains[auxiliaryChainInteract.getChainId()];
     await Promise.all([
       originChainInteract.resetOrganizationAdmin(
-        auxiliaryChain.contractAddresses.origin.ostGatewayOrganizationAddress,
+        auxiliaryChain.contractAddresses.origin.gatewayOrganizationAddress,
         { from: originOrganizationAdmin },
       ),
       auxiliaryChainInteract.resetOrganizationAdmin(
-        auxiliaryChain.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
+        auxiliaryChain.contractAddresses.auxiliary.coGatewayOrganizationAddress,
         { from: auxiliaryChainInteract.auxiliaryDeployer },
       ),
     ]);

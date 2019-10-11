@@ -22,9 +22,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "ostPrimeAddress": {
+        "utilityTokenAddress": {
           "$ref": "#/definitions/Address",
-          "description": "OST prime contract address"
+          "description": "Utility token contract address"
         },
         "anchorOrganizationAddress": {
           "$ref": "#/definitions/Address",
@@ -46,11 +46,11 @@
           "$ref": "#/definitions/Address",
           "description": "Address of message bus library on auxiliary chain"
         },
-        "ostCoGatewayOrganizationAddress": {
+        "coGatewayOrganizationAddress": {
           "$ref": "#/definitions/Address",
           "description": "Address of ost cogateway organization on auxiliary chain"
         },
-        "ostEIP20CogatewayAddress": {
+        "eip20CoGatewayAddress": {
           "$ref": "#/definitions/Address",
           "description": "Address of cogateway contract on auxiliary chain"
         },
@@ -65,9 +65,9 @@
         "anchorOrganizationAddress",
         "merklePatriciaLibAddress",
         "messageBusAddress",
-        "ostCoGatewayOrganizationAddress",
-        "ostEIP20CogatewayAddress",
-        "ostPrimeAddress"
+        "coGatewayOrganizationAddress",
+        "eip20CoGatewayAddress",
+        "utilityTokenAddress"
       ],
       "title": "Auxiliary",
       "description": "Contract addresses of auxiliary chain"
@@ -76,6 +76,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "baseTokenAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of baseToken contract on origin chain"
+        },
         "anchorOrganizationAddress": {
           "$ref": "#/definitions/Address",
           "description": "Anchor organization address on origin chain"
@@ -84,20 +88,21 @@
           "$ref": "#/definitions/Address",
           "description": "Anchor contract address on origin chain"
         },
-        "ostGatewayOrganizationAddress": {
+        "gatewayOrganizationAddress": {
           "$ref": "#/definitions/Address",
           "description": "Address of ost gateway organization on origin chain"
         },
-        "ostEIP20GatewayAddress": {
+        "eip20GatewayAddress": {
           "$ref": "#/definitions/Address",
           "description": "Address of gateway contract on origin chain"
         }
       },
       "required": [
+        "baseTokenAddress",
         "anchorAddress",
         "anchorOrganizationAddress",
-        "ostEIP20GatewayAddress",
-        "ostGatewayOrganizationAddress"
+        "eip20GatewayAddress",
+        "gatewayOrganizationAddress"
       ],
       "title": "Origin"
     },
@@ -131,9 +136,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "simpleTokenAddress": {
+        "valueTokenAddress": {
           "$ref": "#/definitions/Address",
-          "description": "Address of simple token contract on origin chain"
+          "description": "Address of value token contract on origin chain"
         },
         "merklePatriciaLibAddress": {
           "$ref": "#/definitions/Address",
@@ -147,9 +152,9 @@
           "$ref": "#/definitions/Address",
           "description": "Address of message bus library on origin chain"
         },
-        "ostComposerAddress": {
+        "stakePoolAddress": {
           "$ref": "#/definitions/Address",
-          "description": "Address of ost composer contract on origin chain."
+          "description": "Address of staker pool contract on origin chain."
         }
       },
       "required": [

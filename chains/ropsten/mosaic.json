@@ -4,8 +4,8 @@
       "gatewayLibAddress": "0x2fdbe39dcc46f9c8c973e30349f388b4490d50e0",
       "messageBusAddress": "0x19e9c9a9e5f53c060387567835b534dbad0b8d02",
       "merklePatriciaLibAddress": "0x17b27fe03befcac0712b13df7ff242d8f994fed5",
-      "simpleTokenAddress": "0xae96d2acd01ab795e5942591100f9f23adbe2a2e",
-      "ostComposerAddress": "0x4a633b3375a5b9eaa6ddc226ebe2ac832b557746"
+      "valueTokenAddress": "0xae96d2acd01ab795e5942591100f9f23adbe2a2e",
+      "stakePoolAddress": "0x4a633b3375a5b9eaa6ddc226ebe2ac832b557746"
     },
     "chain": "ropsten"
   },
@@ -16,17 +16,18 @@
       ],
       "contractAddresses": {
         "origin": {
+          "baseTokenAddress": "0xae96d2acd01ab795e5942591100f9f23adbe2a2e",
           "anchorOrganizationAddress": "0xd8cca90afe0a15a0d372540e2104d6098bdee9af",
           "anchorAddress": "0xe322ed07e235a6501bd017ae9ea059b12723c55c",
-          "ostGatewayOrganizationAddress": "0x7c8ebf6da810261eb8ec9fbec989aa9c79200c07",
-          "ostEIP20GatewayAddress": "0x04df90efbedf393361cdf498234af818da14f562"
+          "gatewayOrganizationAddress": "0x7c8ebf6da810261eb8ec9fbec989aa9c79200c07",
+          "eip20GatewayAddress": "0x04df90efbedf393361cdf498234af818da14f562"
         },
         "auxiliary": {
           "anchorOrganizationAddress": "0x29050903e7e2612743f9d6234c553d2b96ca9683",
           "anchorAddress": "0x959cc0a11176584d90fd77cf189b73345792e7f2",
-          "ostCoGatewayOrganizationAddress": "0xdff949b45ab91b7bc413bfef17aa9f5766b516f2",
-          "ostPrimeAddress": "0x495b17dda2cd0406290af54e9ae978b381006809",
-          "ostEIP20CogatewayAddress": "0x02cffaa1e06c28021fff6b36d9e418a97b3de2fc",
+          "coGatewayOrganizationAddress": "0xdff949b45ab91b7bc413bfef17aa9f5766b516f2",
+          "utilityTokenAddress": "0x495b17dda2cd0406290af54e9ae978b381006809",
+          "eip20CoGatewayAddress": "0x02cffaa1e06c28021fff6b36d9e418a97b3de2fc",
           "gatewayLibAddress": "0xcf02a1d6053b53559a7c8060a74e1286a0b7c244",
           "messageBusAddress": "0xa482ff75b6a87ba9b669e0636867964b9c2f7950",
           "merklePatriciaLibAddress": "0x8346e47aa6bf292d26ad7d08cb6b09afe7e8d4f9",
@@ -71,17 +72,18 @@
       ],
       "contractAddresses": {
         "origin": {
+          "baseTokenAddress": "0xae96d2acd01ab795e5942591100f9f23adbe2a2e",
           "anchorOrganizationAddress": "0xd8cca90afe0a15a0d372540e2104d6098bdee9af",
           "anchorAddress": "0x972d3e5e8fba4689add411cd8ebe27e6d060d531",
-          "ostGatewayOrganizationAddress": "0x7c8ebf6da810261eb8ec9fbec989aa9c79200c07",
-          "ostEIP20GatewayAddress": "0x31c8870c76390c5eb0d425799b5bd214a2600438"
+          "gatewayOrganizationAddress": "0x7c8ebf6da810261eb8ec9fbec989aa9c79200c07",
+          "eip20GatewayAddress": "0x31c8870c76390c5eb0d425799b5bd214a2600438"
         },
         "auxiliary": {
           "anchorOrganizationAddress": "0xe7d62158b4905a76d26ed93a254582ee6d84d5a7",
           "anchorAddress": "0xde1d126e4deb499bd7f64ff59fe8f9415be50ef8",
-          "ostCoGatewayOrganizationAddress": "0x610fb96852f0d854b0633aba0073d18246bc94d5",
-          "ostPrimeAddress": "0x66ca08a32548593ea1860e3995b81e4354f3b1b1",
-          "ostEIP20CogatewayAddress": "0xf690624171fe06d02d2f4250bff17fe3b682ebd1",
+          "coGatewayOrganizationAddress": "0x610fb96852f0d854b0633aba0073d18246bc94d5",
+          "utilityTokenAddress": "0x66ca08a32548593ea1860e3995b81e4354f3b1b1",
+          "eip20CoGatewayAddress": "0xf690624171fe06d02d2f4250bff17fe3b682ebd1",
           "gatewayLibAddress": "0x033e8675db854ba05b08b5e076a48e3eedeb0b54",
           "messageBusAddress": "0xd3b63c070ef226ef6dba0abf2ea223b04766efcc",
           "merklePatriciaLibAddress": "0x233e3af4b022a58d25a03fff52c3e5925c289cc7",
