@@ -97,7 +97,6 @@ export default class TokenConfig {
     let filePath;
     if (TokenConfig.exists(originChain, auxChainId, gatewayAddress)) {
       filePath = Directory.getTokenConfigPath(originChain, auxChainId, gatewayAddress);
-      console.log('File path:', filePath);
       const configObject = TokenConfig.readConfigFromFile(filePath);
       return new TokenConfig(configObject);
     }

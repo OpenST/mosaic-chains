@@ -74,7 +74,7 @@ export default class FileSystem {
   /**
    * It resolves token config file path to absolute path after resolving tilde.
    *
-   * @param filePath Token config file path. e.g. ~/.mosaic/goerli/weth.json
+   * @param filePath Token config file path. e.g. ~/.mosaic/goerli/token-config.json
    * @return {string} Absolute file path.
    */
   public static resolveHomePath(filePath: string) {
