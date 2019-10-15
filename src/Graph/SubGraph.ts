@@ -197,8 +197,8 @@ export default class SubGraph {
     const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(this.originChain);
     return {
       projectRoot: Directory.projectRoot,
-      ostComposerAddress: mosaicConfig.originChain.contractAddresses.ostComposerAddress,
-      eip20GatewayAddress: mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.ostEIP20GatewayAddress,
+      stakePoolAddress: mosaicConfig.originChain.contractAddresses.stakePoolAddress,
+      eip20GatewayAddress: mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.eip20GatewayAddress,
       anchorAddress: mosaicConfig.auxiliaryChains[this.auxiliaryChain].contractAddresses.origin.anchorAddress,
     };
   }
@@ -212,7 +212,7 @@ export default class SubGraph {
     return {
       projectRoot: Directory.projectRoot,
       anchorAddress: auxiliaryContractAddresses.anchorAddress,
-      eip20CoGatewayAddress: auxiliaryContractAddresses.ostEIP20CogatewayAddress,
+      eip20CoGatewayAddress: auxiliaryContractAddresses.eip20CoGatewayAddress,
       redeemPoolAddress: auxiliaryContractAddresses.redeemPoolAddress,
     };
   }
