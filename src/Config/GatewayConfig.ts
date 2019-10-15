@@ -90,7 +90,7 @@ export default class GatewayConfig {
    * @param auxChainId Auxiliary chain Id.
    * @param gatewayAddress Address of Gateway.
    *
-   * @return mosaic config
+   * @return gateway config
    */
   public static fromChain(originChain: string, auxChainId: number, gatewayAddress: string):
   GatewayConfig {
