@@ -54,6 +54,19 @@ function  deploy_subgraph {
     try_silent "./mosaic subgraph $1 $2 $3 http://localhost:$4 http://localhost:$5"
 }
 
+# Deploy subgraph
+# $1 origin chain identifier
+# $2 aux chain identifier
+# $3 chain {origin, auxiliary}
+# $4 graph admin rpc port
+# $5 graph IPFS port
+# gateway config
+function  deploy_subgraph_gateway_config {
+    info "Deploying origin subraph."
+    try_silent "./mosaic subgraph $1 $2 $3 http://localhost:$4 http://localhost:$5 --gateway-config ~/.mosaic/$1/$2/$6.json"
+}
+
+
 # Tries a command without output. Errors if the command does not execute successfully.
 function try_silent {
     eval $1 2>&1 || error "$2"
@@ -161,8 +174,10 @@ grep_try ropsten parity
 
 start_origin_node dev-origin geth
 start_auxiliary_node dev-auxiliary geth
-deploy_subgraph dev-origin 1000 origin 9535 6516
-deploy_subgraph dev-origin 1000 auxiliary 9020 6001
+deploy_subgraph_gateway_config dev-origin 1000 origin 9535 6516 0xae02c7b1c324a8d94a564bc8d713df89eae441fe
+deploy_subgraph_gateway_config dev-origin 1000 auxiliary 9020 6001 0xae02c7b1c324a8d94a564bc8d713df89eae441fe
+rpc_origin_sub_graph_try 1000 61515
+rpc_auxiliary_sub_graph_try 1000
 
 # When done, stop all nodes.
 stop_nodes
