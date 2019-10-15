@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/GatewayConfig",
+  "definitions": {
+    "Address": {
+      "type": "string",
+      "pattern":"^0x[a-fA-F0-9]{40}$"
+    },
+    "OriginChainContractAddresses": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "baseTokenAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of base token contract on origin chain"
+        },
+        "valueTokenAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of value token contract on origin chain"
+        },
+        "gatewayOrganizationAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of ost gateway organization on origin chain"
+        },
+        "eip20GatewayAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of gateway contract on origin chain"
+        },
+        "merklePatriciaLibAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of merkle patricia library on origin chain"
+        },
+        "gatewayLibAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of gateway library on origin chain"
+        },
+        "messageBusAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of message bus library on origin chain"
+        },
+        "stakePoolAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of staker pool contract on origin chain."
+        }
+      },
+      "required": [
+        "baseTokenAddress",
+        "valueTokenAddress",
+        "gatewayOrganizationAddress",
+        "eip20GatewayAddress"
+      ],
+      "title": "OriginChainContractAddresses",
+      "description": "Contract addresses on origin chain"
+    },
+    "AuxiliaryChainContractAddresses": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "coGatewayOrganizationAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of ost cogateway organization on auxiliary chain"
+        },
+        "eip20CoGatewayAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of cogateway contract on auxiliary chain"
+        },
+        "utilityTokenAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Utility token contract address"
+        },
+        "merklePatriciaLibAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of merkle patricia library on auxiliary chain"
+        },
+        "gatewayLibAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of gateway library on auxiliary chain"
+        },
+        "messageBusAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of message bus library on auxiliary chain"
+        },
+        "redeemPoolAddress": {
+          "$ref": "#/definitions/Address",
+          "description": "Address of redeem pool contract on auxiliary chain"
+        }
+      },
+      "required": [
+        "coGatewayOrganizationAddress",
+        "eip20CoGatewayAddress",
+        "utilityTokenAddress"
+      ],
+      "title": "Auxiliary",
+      "description": "Contract addresses of auxiliary chain"
+    },
+    "GatewayConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mosaicConfigFilePath": {
+          "type": "string",
+          "description": "File path of mosaic config."
+        },
+        "auxChainId": {
+          "type": "integer",
+          "description": "auxiliary chain id as integer"
+        },
+        "originContracts": {
+          "$ref": "#/definitions/OriginChainContractAddresses",
+          "description": "Origin chain contract addresses."
+        },
+        "auxiliaryContracts": {
+          "$ref": "#/definitions/AuxiliaryChainContractAddresses",
+          "description": "Auxiliary chain contract addresses."
+        }
+      },
+      "required": [
+        "mosaicConfigFilePath",
+        "auxChainId",
+        "originContracts",
+        "auxiliaryContracts"
+      ],
+      "title": "GatewayConfig",
+      "description": "This object represents GatewayConfig of single gateway pair."
+    }
+  }
+}
