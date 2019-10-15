@@ -182,6 +182,35 @@ Where:
 
 *Refer integration test of mosaic-create command to understand end to end flow.*
 
+## Subgraph deployment
+Subgraph command can be used to deploy mosaic subgraph. Subgraph by [thegraph](https://thegraph.com) protocol is used to index transactions and events by mosaic smart contract. 
+
+#### Prerequisite: Below commands assumes the blockchain node and graph node is already running. You can use `mosaic start` command to start a node and graph node.
+
+##### Subgraph deployment for mosaic gateways: 
+Below command deploys subgraph of mosaic gateways.
+
+```bash
+./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chain> <admin-graph-rpc> <graph-ipfs> 
+```
+**where:** 
+1. origin-chain-identifier: Origin chain identifier like ropsten, goerli, dev-origin
+2.auxiliary-chain-identifier: Auxiliary chain ID like 1405, 1406, 1407 or 1000(dev-auxiliary).
+3. Chain: Either`origin` or `auxiliary` chain.
+4. admin-graph-rpc: RPC endpoint of graph node.
+5. graph-ipfs: IPFS endpoint used by graph node.
+
+Optionally `--mosaic-config` option can be used to pass mosaic config otherwise command will search on default path.
+
+#### Subgraph deployment for any EIP20 gateways:
+Below command deploys subgraph of any eip20gateway.
+```bash
+./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chain> <admin-graph-rpc> <graph-ipfs>  --gateway-config <gateway-config>
+```
+**where:**
+1. gateway-config: Path of gateway config. 
+
+Optionally `gateway-address` option can be passed which will search gateway config on default path.  
 ## Chain Verifier
 
 Chain verifier makes sure that newly created chain is being setup correctly.

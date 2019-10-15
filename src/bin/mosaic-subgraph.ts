@@ -6,17 +6,19 @@ import Logger from '../Logger';
 import MosaicConfig from '../Config/MosaicConfig';
 import SubGraph, { SubGraphType } from '../Graph/SubGraph';
 import GatewayAddresses from '../Config/GatewayAddresses';
+import GatewayConfig from '../Config/GatewayConfig';
 
 const mosaic = commander
   .arguments('<originChain> <auxiliaryChain> <subgraphType> <graphAdminRPC> <graphIPFS>');
 
-mosaic.option('-m,--mosaic-config <string>', 'Mosaic config absolute path');
-mosaic.option('-t,--gateway-config <string>', 'Gateway config absolute path');
-mosaic.option('-a,--auxiliary <string>', 'auxiliary chain identifier');
+mosaic.option('-m,--mosaic-config <string>', 'Mosaic config absolute path.');
+mosaic.option('-t,--gateway-config <string>', 'Gateway config absolute path.');
+mosaic.option('-a,--auxiliary <string>', 'auxiliary chain identifier.');
+mosaic.option('-g,--gateway-address <string>', 'gateway address of origin.');
 mosaic.action(
   async (
     originChain: string,
-    auxiliaryChain: string,
+    auxiliaryChain: number,
     subgraphType: SubGraphType,
     graphAdminRPC: string,
     graphIPFS: string,
@@ -24,13 +26,36 @@ mosaic.action(
   ) => {
     try {
       let gatewayAddresses;
+      let gatewayConfig;
+      let mosaicConfig;
+
+      if (options.gatewayConfig) {
+        gatewayConfig = GatewayConfig.fromFile(options.gatewayConfig);
+      } else if (options.gatewayAddress) {
+        gatewayConfig = GatewayConfig.fromChain(
+          originChain,
+          auxiliaryChain,
+          options.gatewayAddress,
+        );
+      }
 
       if (options.mosaicConfig) {
-        const mosaicConfig = MosaicConfig.fromFile(options.mosaicConfig);
-        gatewayAddresses = GatewayAddresses.fromMosaicConfig(mosaicConfig, auxiliaryChain);
+        mosaicConfig = MosaicConfig.fromFile(options.mosaicConfig);
       } else if (MosaicConfig.exists(originChain)) {
-        const mosaicConfig = MosaicConfig.fromChain(originChain);
-        gatewayAddresses = GatewayAddresses.fromMosaicConfig(mosaicConfig, auxiliaryChain);
+        mosaicConfig = MosaicConfig.fromChain(originChain);
+      }
+
+      if (gatewayConfig) {
+        if (auxiliaryChain !== gatewayConfig.auxChainId) {
+          console.error(`Auxiliary chain id in gateway config is ${gatewayConfig.auxChainId} but value passed is ${auxiliaryChain}`);
+          process.exit(1);
+        }
+        gatewayAddresses = GatewayAddresses.fromGatewayConfig(gatewayConfig);
+      } else if (mosaicConfig) {
+        gatewayAddresses = GatewayAddresses.fromMosaicConfig(
+          mosaicConfig,
+          auxiliaryChain.toString(),
+        );
       }
 
       if (!gatewayAddresses) {
@@ -40,7 +65,7 @@ mosaic.action(
 
       new SubGraph(
         originChain,
-        auxiliaryChain,
+        auxiliaryChain.toString(),
         subgraphType,
         graphAdminRPC,
         graphIPFS,

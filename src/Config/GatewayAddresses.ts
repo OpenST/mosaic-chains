@@ -1,4 +1,5 @@
 import MosaicConfig from './MosaicConfig';
+import GatewayConfig from './GatewayConfig';
 
 /**
  * This class represents set of addresses specific to a gateway pair.
@@ -43,7 +44,7 @@ export default class GatewayAddresses {
 
 
   /**
-   * Create token address instance based on mosaic config.
+   * Create Gateway address instance based on mosaic config.
    * @param mosaicConfig Mosaic config object.
    * @param auxiliaryChain aux chain identifier.
    */
@@ -62,6 +63,35 @@ export default class GatewayAddresses {
       auxiliaryContractAddresses.anchorAddress,
       auxiliaryContractAddresses.eip20CoGatewayAddress,
       auxiliaryContractAddresses.redeemPoolAddress,
+    );
+  }
+
+  /**
+   * Creates gateway address instance from gateway config.
+   * @param gatewayConfig GatewayConfig instance.
+   */
+  public static fromGatewayConfig(
+    gatewayConfig: GatewayConfig,
+  ): GatewayAddresses {
+    const { auxChainId } = gatewayConfig;
+    const stakePoolAddress = gatewayConfig.originContracts.stakePoolAddress
+      ? gatewayConfig.originContracts.stakePoolAddress
+      : gatewayConfig.mosaicConfig.originChain.contractAddresses.stakePoolAddress;
+
+    const auxiliaryChain = gatewayConfig.mosaicConfig.auxiliaryChains[auxChainId];
+    const auxiliaryContracts = auxiliaryChain.contractAddresses.auxiliary;
+    const redeemPool = gatewayConfig.auxiliaryContracts.redeemPoolAddress
+      ? gatewayConfig.auxiliaryContracts.redeemPoolAddress
+      : auxiliaryContracts.redeemPoolAddress;
+
+    const originContracts = auxiliaryChain.contractAddresses.origin;
+    return new GatewayAddresses(
+      stakePoolAddress,
+      gatewayConfig.originContracts.eip20GatewayAddress,
+      originContracts.anchorAddress,
+      auxiliaryContracts.anchorAddress,
+      gatewayConfig.auxiliaryContracts.eip20CoGatewayAddress,
+      redeemPool,
     );
   }
 }
