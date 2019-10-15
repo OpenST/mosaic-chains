@@ -23,6 +23,7 @@ export default class ParityNode extends Node {
       args = args.concat('--rm');
     }
 
+    console.log('this.containerName  ',this.containerName);
     args = args.concat([
       '--network', Node.network,
       '--detach',
@@ -72,7 +73,7 @@ export default class ParityNode extends Node {
         '--password', '/home/parity/password.txt',
       ]);
     }
-
+    console.log('args  ',args);
     Shell.executeDockerCommand(args);
   }
 
@@ -84,7 +85,7 @@ export default class ParityNode extends Node {
 
     if (!fs.existsSync(this.chainDir)) {
       this.logInfo(`${this.chainDir} does not exist; initializing`);
-      fs.mkdirSync(this.chainDir);
+      fs.mkdirSync(this.chainDir, { recursive: true });
     }
   }
 }
