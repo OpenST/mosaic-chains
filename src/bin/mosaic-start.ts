@@ -67,74 +67,87 @@ mosaic
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
   .action((chain: string, options) => {
-    let chainInput = chain;
-    let optionInput = Object.assign({}, options);
-    if (!validateCLIOptions(chain, optionInput)) {
-      process.exit(1);
-    }
-    if (DevChainOptions.isDevChain(chain, options)) {
-      const devParams = DevChainOptions.getDevChainParams(chain, options);
-      chainInput = devParams.chain;
-      optionInput = devParams.options;
-    }
-    const {
-      mosaicDir,
-      port,
-      rpcPort,
-      websocketPort,
-      keepAfterStop,
-      unlock,
-      password,
-      originChain,
-    } = NodeOptions.parseOptions(optionInput, chainInput);
-
-    if (originChain && originChain.length > 0) {
-      if (!Validator.isValidOriginChain(originChain)) {
-        console.error(`Invalid origin chain identifier: ${originChain}`)
+    try {
+      let chainInput = chain;
+      let optionInput = Object.assign({}, options);
+      if (!validateCLIOptions(chain, optionInput)) {
         process.exit(1);
       }
-
-      if (!Validator.isValidAuxChain(chain)) {
-        console.error(`Invalid aux chain identifier: ${chain}`)
-        process.exit(1);
+      if (DevChainOptions.isDevChain(chain, options)) {
+        const devParams = DevChainOptions.getDevChainParams(chain, options);
+        chainInput = devParams.chain;
+        optionInput = devParams.options;
+        // Dev chain should always start with geth.
+        optionInput.client = GETH_CLIENT;
       }
-    } else if (!Validator.isValidOriginChain(chain)) {
-      console.error(`Invalid orgiin chain identifier: ${chain}`)
-      process.exit(1);
-    }
+      const {
+        mosaicDir,
+        port,
+        rpcPort,
+        websocketPort,
+        keepAfterStop,
+        unlock,
+        password,
+        originChain,
+      } = NodeOptions.parseOptions(optionInput, chainInput);
 
-    const nodeDescription: NodeDescription = {
-      chain: chainInput,
-      mosaicDir,
-      port,
-      rpcPort,
-      websocketPort,
-      keepAfterStop,
-      unlock,
-      password,
-      originChain,
-      client: optionInput.client,
-    };
-    const node: Node = NodeFactory.create(nodeDescription);
-    node.start();
-
-    if (!optionInput.withoutGraphNode) {
-      const graphDescription: GraphDescription = GraphOptions.parseOptions(optionInput, chainInput);
-      // reuse params from node start command
-      graphDescription.mosaicDir = mosaicDir;
-      graphDescription.ethereumRpcPort = rpcPort;
-      graphDescription.ethereumClient = nodeDescription.client;
-
-      new Graph(graphDescription).start().then(() => {
-        let subGraphDeployer;
-        // options.origin passed only in case of starting an auxiliary chain
-        if (optionInput.origin) {
-          subGraphDeployer = new SubGraphDeployer(graphDescription, optionInput.origin, chainInput);
-        } else {
-          subGraphDeployer = new SubGraphDeployer(graphDescription, chainInput, null);
+      if (originChain && originChain.length > 0) {
+        if (!Validator.isValidOriginChain(originChain)) {
+          console.error(`Invalid origin chain identifier: ${originChain}`)
+          process.exit(1);
         }
-        return subGraphDeployer.deploy();
-      });
+
+        if (!Validator.isValidAuxChain(chain)) {
+          console.error(`Invalid aux chain identifier: ${chain}`)
+          process.exit(1);
+        }
+      } else if (!Validator.isValidOriginChain(chain)) {
+        console.error(`Invalid orgiin chain identifier: ${chain}`)
+        process.exit(1);
+      }
+
+      const nodeDescription: NodeDescription = {
+        chain: chainInput,
+        mosaicDir,
+        port,
+        rpcPort,
+        websocketPort,
+        keepAfterStop,
+        unlock,
+        password,
+        originChain,
+        client: optionInput.client,
+      };
+      const node: Node = NodeFactory.create(nodeDescription);
+      node.start();
+
+      if (!optionInput.withoutGraphNode) {
+        const graphDescription: GraphDescription = GraphOptions.parseOptions(
+          optionInput,
+          chainInput,
+        );
+        // reuse params from node start command
+        graphDescription.mosaicDir = mosaicDir;
+        graphDescription.ethereumRpcPort = rpcPort;
+        graphDescription.ethereumClient = nodeDescription.client;
+
+        new Graph(graphDescription).start().then(() => {
+          let subGraphDeployer;
+          // options.origin passed only in case of starting an auxiliary chain
+          if (optionInput.origin) {
+            subGraphDeployer = new SubGraphDeployer(
+              graphDescription,
+              optionInput.origin,
+              chainInput,
+            );
+          } else {
+            subGraphDeployer = new SubGraphDeployer(graphDescription, chainInput, null);
+          }
+          return subGraphDeployer.deploy();
+        });
+      }
+    } catch (e) {
+      Logger.error(`Error starting node: ${e} `);
     }
   })
   .parse(process.argv);
