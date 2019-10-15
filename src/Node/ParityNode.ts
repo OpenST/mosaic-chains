@@ -23,7 +23,6 @@ export default class ParityNode extends Node {
       args = args.concat('--rm');
     }
 
-    console.log('this.containerName  ',this.containerName);
     args = args.concat([
       '--network', Node.network,
       '--detach',
@@ -73,7 +72,6 @@ export default class ParityNode extends Node {
         '--password', '/home/parity/password.txt',
       ]);
     }
-    console.log('args  ',args);
     Shell.executeDockerCommand(args);
   }
 

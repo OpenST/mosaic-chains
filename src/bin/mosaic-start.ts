@@ -105,7 +105,10 @@ mosaic
       node.start();
 
       if (!optionInput.withoutGraphNode) {
-        const graphDescription: GraphDescription = GraphOptions.parseOptions(optionInput, chainInput);
+        const graphDescription: GraphDescription = GraphOptions.parseOptions(
+          optionInput,
+          chainInput,
+        );
         // reuse params from node start command
         graphDescription.mosaicDir = mosaicDir;
         graphDescription.ethereumRpcPort = rpcPort;
@@ -115,7 +118,11 @@ mosaic
           let subGraphDeployer;
           // options.origin passed only in case of starting an auxiliary chain
           if (optionInput.origin) {
-            subGraphDeployer = new SubGraphDeployer(graphDescription, optionInput.origin, chainInput);
+            subGraphDeployer = new SubGraphDeployer(
+              graphDescription,
+              optionInput.origin,
+              chainInput,
+            );
           } else {
             subGraphDeployer = new SubGraphDeployer(graphDescription, chainInput, null);
           }
