@@ -159,5 +159,10 @@ grep_fail ropsten geth
 start_origin_node ropsten parity
 grep_try ropsten parity
 
+start_origin_node dev-origin geth
+start_auxiliary_node dev-auxiliary geth
+deploy_subgraph dev-origin 1000 origin 9535 6516
+deploy_subgraph dev-origin 1000 auxiliary 9020 6001
+
 # When done, stop all nodes.
 stop_nodes
