@@ -177,9 +177,9 @@ export default class SubGraph {
    */
   private get name(): string {
     if (this.subGraphType === SubGraphType.ORIGIN) {
-      return `mosaic/origin-${this.gatewayAddresses.eip20GatewayAddress}`;
+      return `mosaic/origin-${this.auxiliaryChain}`;
     }
-    return `mosaic/auxiliary-${this.gatewayAddresses.eip20CoGatewayAddress}`;
+    return `mosaic/auxiliary-${this.auxiliaryChain}`;
   }
 
   /**
