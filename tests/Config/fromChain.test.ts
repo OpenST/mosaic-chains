@@ -1,13 +1,12 @@
 import 'mocha';
 import * as sinon from 'sinon';
-import GatewayConfig from './../../src/Config/GatewayConfig'
 import { assert } from 'chai';
-import Directory from "../../src/Directory";
-import SpyAssert from "../test_utils/SpyAssert";
+import GatewayConfig from '../../src/Config/GatewayConfig';
+import Directory from '../../src/Directory';
+import SpyAssert from '../test_utils/SpyAssert';
 
 
 describe('GatewayConfig.fromChain()', () => {
-
   const filePath = './tests/Config/testdata/0xae02c7b1c324a8d94a564bc8d713df89eae441fe.json';
   const originChain = 'dev';
   const auxChainId = 1000;
@@ -20,13 +19,13 @@ describe('GatewayConfig.fromChain()', () => {
   const eip20CoGatewayAddress = '0xc6fF898ceBf631eFb58eEc7187E4c1f70AE8d943';
 
   it('Should return TokenConfig object', async () => {
-    let existsSpy = sinon.replace(
+    const existsSpy = sinon.replace(
       GatewayConfig,
       'exists' as any,
-      sinon.fake.returns(true)
+      sinon.fake.returns(true),
     );
 
-    let getGatewayConfigPathSpy = sinon.replace(
+    const getGatewayConfigPathSpy = sinon.replace(
       Directory,
       'getGatewayConfigPath',
       sinon.fake.returns(filePath),
@@ -85,7 +84,7 @@ describe('GatewayConfig.fromChain()', () => {
   it('Should fail when origin chain is incorrect', async () => {
     assert.throws(
       () => GatewayConfig.fromChain('wrongChain', auxChainId, eip20GatewayAddress),
-      "Missing GatewayConfig file at path: undefined",
+      'Missing GatewayConfig file at path: undefined',
     );
     sinon.restore();
   });
@@ -93,7 +92,7 @@ describe('GatewayConfig.fromChain()', () => {
   it('Should fail when aux chain id is incorrect', async () => {
     assert.throws(
       () => GatewayConfig.fromChain(originChain, 0, eip20GatewayAddress),
-      "Missing GatewayConfig file at path: undefined",
+      'Missing GatewayConfig file at path: undefined',
     );
     sinon.restore();
   });
@@ -101,9 +100,8 @@ describe('GatewayConfig.fromChain()', () => {
   it('Should fail when gateway address is incorrect', async () => {
     assert.throws(
       () => GatewayConfig.fromChain(originChain, auxChainId, 'invalidAddress'),
-      "Missing GatewayConfig file at path: undefined",
+      'Missing GatewayConfig file at path: undefined',
     );
     sinon.restore();
   });
-
 });

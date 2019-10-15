@@ -1,11 +1,10 @@
 import 'mocha';
 import * as sinon from 'sinon';
-import GatewayConfig from './../../src/Config/GatewayConfig'
 import { assert } from 'chai';
+import GatewayConfig from '../../src/Config/GatewayConfig';
 
 
 describe('GatewayConfig.fromFile()', () => {
-
   const filePath = './tests/Config/testdata/0xae02c7b1c324a8d94a564bc8d713df89eae441fe.json';
   const auxChainId = 1000;
   const originBaseTokenAddress = '0x8e183Fd2cd55C7C05bBf4FAC989740f69e559A6d';
@@ -58,9 +57,8 @@ describe('GatewayConfig.fromFile()', () => {
   it('Should fail when input filePath is incorrect', async () => {
     assert.throws(
       () => GatewayConfig.fromFile('wrongPath'),
-      "Missing GatewayConfig file at path: wrongPath",
+      'Missing GatewayConfig file at path: wrongPath',
     );
     sinon.restore();
   });
-
 });
