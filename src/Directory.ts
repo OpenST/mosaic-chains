@@ -169,7 +169,7 @@ export default class Directory {
    * @param auxChainId Auxiliary chain Id.
    * @param gatewayAddress Address of Gateway.
    *
-   * @return Path of mosaic config file.
+   * @return Path of gateway config file.
    */
   public static getGatewayConfigPath(originChain: string, auxChainId: number, gatewayAddress: string):
     string {
