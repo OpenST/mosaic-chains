@@ -18,7 +18,7 @@ mosaic.option('-g,--gateway-address <string>', 'gateway address of origin.');
 mosaic.action(
   async (
     originChain: string,
-    auxiliaryChain: number,
+    auxiliaryChain: string,
     subgraphType: SubGraphType,
     graphAdminRPC: string,
     graphIPFS: string,
@@ -34,7 +34,7 @@ mosaic.action(
       } else if (options.gatewayAddress) {
         gatewayConfig = GatewayConfig.fromChain(
           originChain,
-          auxiliaryChain,
+          parseInt(auxiliaryChain),
           options.gatewayAddress,
         );
       }
@@ -46,7 +46,7 @@ mosaic.action(
       }
 
       if (gatewayConfig) {
-        if (auxiliaryChain !== gatewayConfig.auxChainId) {
+        if (parseInt(auxiliaryChain) !== gatewayConfig.auxChainId) {
           console.error(`Auxiliary chain id in gateway config is ${gatewayConfig.auxChainId} but value passed is ${auxiliaryChain}`);
           process.exit(1);
         }
