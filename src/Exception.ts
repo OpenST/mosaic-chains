@@ -14,18 +14,18 @@ export class MosaicConfigNotFoundException extends Error {
   }
 }
 
-export class InvalidTokenConfigException extends Error {
+export class InvalidGatewayConfigException extends Error {
   public constructor(message: string) {
     super(message);
-    this.name = 'InvalidTokenConfigException';
+    this.name = 'InvalidGatewayConfigException';
     this.message = message;
   }
 }
 
-export class TokenConfigNotFoundException extends Error {
+export class GatewayConfigNotFoundException extends Error {
   public constructor(message: string) {
     super(message);
-    this.name = 'TokenConfigNotFoundException';
+    this.name = 'GatewayConfigNotFoundException';
     this.message = message;
   }
 }

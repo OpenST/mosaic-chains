@@ -5,7 +5,7 @@ import NodeDescription from './src/Node/NodeDescription';
 import NodeFactory from './src/Node/NodeFactory';
 import Shell from './src/Shell';
 import MosaicConfig from './src/Config/MosaicConfig';
-import TokenConfig from './src/Config/TokenConfig';
+import GatewayConfig from './src/Config/GatewayConfig';
 
 export {
   Directory,
@@ -15,5 +15,5 @@ export {
   NodeFactory,
   Shell,
   MosaicConfig,
-  TokenConfig
+  GatewayConfig
 };

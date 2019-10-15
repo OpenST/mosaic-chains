@@ -2,17 +2,17 @@ import * as fs from 'fs-extra';
 import { Validator } from 'jsonschema';
 import MosaicConfig, { Address } from './MosaicConfig';
 import {
-  InvalidTokenConfigException,
-  TokenConfigNotFoundException,
+  InvalidGatewayConfigException,
+  GatewayConfigNotFoundException,
 } from '../Exception';
 import FileSystem from '../FileSystem ';
 import Directory from '../Directory';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
-const schema = require('./TokenConfig.schema.json');
+const schema = require('./GatewayConfig.schema.json');
 
 /**
- * Contract addresses of the origin chain specific to a token.
+ * Contract addresses of the origin chain specific to a gateway pair.
  */
 export class OriginContracts {
   public baseTokenAddress: Address;
@@ -33,7 +33,7 @@ export class OriginContracts {
 }
 
 /**
- * Contract addresses deployed on the auxiliary chain specific to a token.
+ * Contract addresses deployed on the auxiliary chain specific to a gateway pair.
  */
 export class AuxiliaryContracts {
   public coGatewayOrganizationAddress: Address;
@@ -52,9 +52,9 @@ export class AuxiliaryContracts {
 }
 
 /**
- * Holds the config of a deployed token.
+ * Holds the config of a deployed gateway pair.
  */
-export default class TokenConfig {
+export default class GatewayConfig {
   public mosaicConfig: MosaicConfig;
 
   public auxChainId: number;
@@ -71,20 +71,20 @@ export default class TokenConfig {
   }
 
   /**
-   * @param filePath tokenConfig absolute path.
+   * @param filePath GatewayConfig absolute path.
    *
-   * @return TokenConfig object.
+   * @return GatewayConfig object.
    */
-  public static fromFile(filePath: string): TokenConfig {
+  public static fromFile(filePath: string): GatewayConfig {
     if (fs.existsSync(filePath)) {
-      const configObject = TokenConfig.readConfigFromFile(filePath);
-      return new TokenConfig(configObject);
+      const configObject = GatewayConfig.readConfigFromFile(filePath);
+      return new GatewayConfig(configObject);
     }
-    throw new TokenConfigNotFoundException(`Missing token config file at path: ${filePath}`);
+    throw new GatewayConfigNotFoundException(`Missing GatewayConfig file at path: ${filePath}`);
   }
 
   /**
-   * Construct TokenConfig object
+   * Construct GatewayConfig object
    *
    * @param originChain Origin chain identifier.
    * @param auxChainId Auxiliary chain Id.
@@ -93,20 +93,20 @@ export default class TokenConfig {
    * @return mosaic config
    */
   public static fromChain(originChain: string, auxChainId: number, gatewayAddress: string):
-  TokenConfig {
+  GatewayConfig {
     let filePath;
-    if (TokenConfig.exists(originChain, auxChainId, gatewayAddress)) {
-      filePath = Directory.getTokenConfigPath(originChain, auxChainId, gatewayAddress);
-      const configObject = TokenConfig.readConfigFromFile(filePath);
-      return new TokenConfig(configObject);
+    if (GatewayConfig.exists(originChain, auxChainId, gatewayAddress)) {
+      filePath = Directory.getGatewayConfigPath(originChain, auxChainId, gatewayAddress);
+      const configObject = GatewayConfig.readConfigFromFile(filePath);
+      return new GatewayConfig(configObject);
     }
-    throw new TokenConfigNotFoundException(`Missing token config file at path: ${filePath}`);
+    throw new GatewayConfigNotFoundException(`Missing GatewayConfig file at path: ${filePath}`);
   }
 
   /**
    * Read config from file, validate it and return as JSON object.
    *
-   * @param filePath tokenConfig absolute path.
+   * @param filePath GatewayConfig absolute path.
    *
    * @return Json parsed object.
    */
@@ -114,17 +114,17 @@ export default class TokenConfig {
     const configString = fs.readFileSync(filePath).toString();
     if (configString && configString.length > 0) {
       const configObject = JSON.parse(configString);
-      TokenConfig.validateSchema(configObject);
+      GatewayConfig.validateSchema(configObject);
       configObject.mosaicConfigFilePath = FileSystem.resolveHomePath(
         configObject.mosaicConfigFilePath,
       );
       return configObject;
     }
-    throw new InvalidTokenConfigException(`blank config file found at: ${filePath}`);
+    throw new InvalidGatewayConfigException(`blank config file found at: ${filePath}`);
   }
 
   /**
-   * This method validate json object against token config schema.
+   * This method validate json object against GatewayConfig schema.
    * Also throws an exception on failure.
    *
    * @param jsonObject JSON object to be validated against schema.
@@ -134,12 +134,12 @@ export default class TokenConfig {
     try {
       validator.validate(jsonObject, schema, { throwError: true });
     } catch (error) {
-      throw new InvalidTokenConfigException(error.message);
+      throw new InvalidGatewayConfigException(error.message);
     }
   }
 
   /**
-   * Checks if token config exists for a origin chain.
+   * Checks if GatewayConfig exists for a origin chain.
    *
    * @param originChain Origin chain identifier.
    * @param auxChainId Auxiliary chain Id.
@@ -147,8 +147,8 @@ export default class TokenConfig {
    *
    * @return True if file exists.
    */
-  public static exists(originChain: string, auxChainId: number, gatewayAddress: string): boolean {
-    const filePath = Directory.getTokenConfigPath(originChain, auxChainId, gatewayAddress);
+  private static exists(originChain: string, auxChainId: number, gatewayAddress: string): boolean {
+    const filePath = Directory.getGatewayConfigPath(originChain, auxChainId, gatewayAddress);
     return fs.existsSync(filePath);
   }
 }

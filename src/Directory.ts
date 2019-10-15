@@ -166,7 +166,7 @@ export default class Directory {
   }
 
   /**
-   * Returns the full path of token config for a given origin, auxiliary and gatewayAddress.
+   * Returns the full path of GatewayConfig for a given origin, auxiliary and gatewayAddress.
    *
    * @param originChain Origin chain identifier.
    * @param auxChainId Auxiliary chain Id.
@@ -174,7 +174,7 @@ export default class Directory {
    *
    * @return Path of mosaic config file.
    */
-  public static getTokenConfigPath(originChain: string, auxChainId: number, gatewayAddress: string):
+  public static getGatewayConfigPath(originChain: string, auxChainId: number, gatewayAddress: string):
     string {
     return path.join(
       Directory.getDefaultMosaicDataDir,

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$ref": "#/definitions/TokenConfig",
+  "$ref": "#/definitions/GatewayConfig",
   "definitions": {
     "Address": {
       "type": "string",
@@ -93,7 +93,7 @@
       "title": "Auxiliary",
       "description": "Contract addresses of auxiliary chain"
     },
-    "TokenConfig": {
+    "GatewayConfig": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -120,8 +120,8 @@
         "originContracts",
         "auxiliaryContracts"
       ],
-      "title": "TokenConfig",
-      "description": "This object represents token config of single token."
+      "title": "GatewayConfig",
+      "description": "This object represents GatewayConfig of single gateway pair."
     }
   }
 }
