@@ -6,7 +6,7 @@ import Directory from "../../src/Directory";
 import SpyAssert from "../test_utils/SpyAssert";
 
 
-describe('GatewayConfig.fromFile()', () => {
+describe('GatewayConfig.fromChain()', () => {
 
   const filePath = './tests/Config/testdata/0xae02c7b1c324a8d94a564bc8d713df89eae441fe.json';
   const originChain = 'dev';
