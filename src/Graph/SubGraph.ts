@@ -4,7 +4,7 @@ import Logger from '../Logger';
 import Shell from '../Shell';
 import Directory from '../Directory';
 import FileSystem from '../FileSystem ';
-import TokenAddresses from '../Config/TokenAddresses';
+import GatewayAddresses from '../Config/GatewayAddresses';
 
 export enum SubGraphType {
   ORIGIN = 'origin',
@@ -29,8 +29,8 @@ export default class SubGraph {
   /** Graph node IPFS URL */
   private readonly graphIPFSURL: string;
 
-  /** Mosaic config instance */
-  private readonly tokenAddresses: TokenAddresses;
+  /** Gateway pair addresses */
+  private readonly gatewayAddresses: GatewayAddresses;
 
   /**
    * Constructor.
@@ -39,7 +39,7 @@ export default class SubGraph {
    * @param subGraphType Subgraph type
    * @param graphRPCAdminURL Graph node rpc admin URL.
    * @param graphIPFSURL Graph node IPFS url.
-   * @param tokenAddresses Token addresses instance.
+   * @param gatewayAddresses Gateway pair addresses.
    */
   public constructor(
     originChain: string,
@@ -47,14 +47,14 @@ export default class SubGraph {
     subGraphType: string,
     graphRPCAdminURL: string,
     graphIPFSURL: string,
-    tokenAddresses: TokenAddresses,
+    gatewayAddresses: GatewayAddresses,
   ) {
     this.originChain = originChain;
     this.auxiliaryChain = auxiliaryChain;
     this.subGraphType = subGraphType;
     this.graphRPCAdminURL = graphRPCAdminURL;
     this.graphIPFSURL = graphIPFSURL;
-    this.tokenAddresses = tokenAddresses;
+    this.gatewayAddresses = gatewayAddresses;
   }
 
   /**
@@ -189,9 +189,9 @@ export default class SubGraph {
   private originChainTemplateVariables(): object {
     return {
       projectRoot: Directory.projectRoot,
-      stakePoolAddress: this.tokenAddresses.stakePoolAddress,
-      eip20GatewayAddress: this.tokenAddresses.eip20GatewayAddress,
-      anchorAddress: this.tokenAddresses.anchorAddress,
+      stakePoolAddress: this.gatewayAddresses.stakePoolAddress,
+      eip20GatewayAddress: this.gatewayAddresses.eip20GatewayAddress,
+      anchorAddress: this.gatewayAddresses.anchorAddress,
     };
   }
 
@@ -202,9 +202,9 @@ export default class SubGraph {
   private auxiliaryChainTemplateVariables(): object {
     return {
       projectRoot: Directory.projectRoot,
-      anchorAddress: this.tokenAddresses.coAnchorAddress,
-      eip20CoGatewayAddress: this.tokenAddresses.eip20CoGatewayAddress,
-      redeemPoolAddress: this.tokenAddresses.redeemPoolAddress,
+      anchorAddress: this.gatewayAddresses.coAnchorAddress,
+      eip20CoGatewayAddress: this.gatewayAddresses.eip20CoGatewayAddress,
+      redeemPoolAddress: this.gatewayAddresses.redeemPoolAddress,
     };
   }
 

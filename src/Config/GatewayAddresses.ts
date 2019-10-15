@@ -1,9 +1,9 @@
 import MosaicConfig from './MosaicConfig';
 
 /**
- * This class represents set of addresses specific to a single token gateway.
+ * This class represents set of addresses specific to a gateway pair.
  */
-export default class TokenAddresses {
+export default class GatewayAddresses {
   public readonly stakePoolAddress: string;
 
   public readonly eip20GatewayAddress: string;
@@ -50,12 +50,12 @@ export default class TokenAddresses {
   public static fromMosaicConfig(
     mosaicConfig: MosaicConfig,
     auxiliaryChain: string,
-  ): TokenAddresses {
+  ): GatewayAddresses {
     const auxiliaryContractAddresses = mosaicConfig.auxiliaryChains[auxiliaryChain]
       .contractAddresses.auxiliary;
     const originContractAddresses = mosaicConfig.auxiliaryChains[auxiliaryChain]
       .contractAddresses.origin;
-    return new TokenAddresses(
+    return new GatewayAddresses(
       mosaicConfig.originChain.contractAddresses.stakePoolAddress,
       originContractAddresses.eip20GatewayAddress,
       originContractAddresses.anchorAddress,
