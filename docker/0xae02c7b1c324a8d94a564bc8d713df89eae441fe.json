@@ -1,5 +1,5 @@
 {
-  "mosaicConfigFilePath":"~/.mosaic/dev/mosaic.json",
+  "mosaicConfigFilePath":"~/.mosaic/dev-origin/mosaic.json",
   "auxChainId":1000,
   "originContracts":{
     "baseTokenAddress":"0x8e183Fd2cd55C7C05bBf4FAC989740f69e559A6d",
