@@ -37,8 +37,8 @@ export default class SubGraph {
    * @param originChain Origin chain identifier.
    * @param auxiliaryChain Auxiliary chain identifier.
    * @param subGraphType Subgraph type
-   * @param graphRPCAdminEndPoint Graph node rpc admin URL.
-   * @param graphIPFSEndPoint Graph node IPFS url.
+   * @param graphRPCAdminEndPoint Graph node rpc admin endpoint.
+   * @param graphIPFSEndPoint Graph node IPFS endpoint.
    * @param gatewayAddresses Gateway pair addresses.
    */
   public constructor(

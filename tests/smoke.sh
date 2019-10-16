@@ -205,7 +205,7 @@ grep_try ropsten parity
 # Deploy subgraph with gateway config
 start_origin_node dev-origin geth
 start_auxiliary_node dev-auxiliary geth
-deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID origin $GRAPH_ADMIN_RPC_DEV_ORIGIN $GRAPH_IPFS_DEV_ORIGIN OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
+deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID origin $GRAPH_ADMIN_RPC_DEV_ORIGIN $GRAPH_IPFS_DEV_ORIGIN $OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
 deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID auxiliary $GRAPH_ADMIN_RPC_DEV_AUXILIARY $GRAPH_IPFS_DEV_AUXILIARY $OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
 rpc_origin_sub_graph_try  $GRAPH_WS_PORT_DEV_ORIGIN $OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
 rpc_auxiliary_sub_graph_try $DEV_AUXILIARY_CHAIN_ID $OST_CO_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
