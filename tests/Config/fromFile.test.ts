@@ -21,35 +21,50 @@ describe('GatewayConfig.fromFile()', () => {
     assert.strictEqual(
       gatewayConfig.auxChainId,
       auxChainId,
+      'Expected GatewayConfig auxChainId is not equal to actual auxChainId',
     );
 
     assert.strictEqual(
       gatewayConfig.originContracts.baseTokenAddress,
       originBaseTokenAddress,
+      'Expected GatewayConfig baseTokenAddress '
+      + 'is not equal to actual originBaseTokenAddress',
     );
     assert.strictEqual(
       gatewayConfig.originContracts.eip20GatewayAddress,
       eip20GatewayAddress,
+      'Expected GatewayConfig origin eip20GatewayAddress '
+      + 'is not equal to actual eip20GatewayAddress',
     );
     assert.strictEqual(
       gatewayConfig.originContracts.gatewayOrganizationAddress,
       gatewayOrganizationAddress,
+      'Expected GatewayConfig origin gatewayOrganizationAddress '
+      + 'is not equal to actual gatewayOrganizationAddress',
     );
     assert.strictEqual(
       gatewayConfig.originContracts.valueTokenAddress,
       valueTokenAddress,
+      'Expected GatewayConfig origin valueTokenAddress '
+      + 'is not equal to actual valueTokenAddress',
     );
     assert.strictEqual(
       gatewayConfig.auxiliaryContracts.utilityTokenAddress,
       utilityTokenAddress,
+      'Expected GatewayConfig auxiliary utilityTokenAddress '
+      + 'is not equal to actual utilityTokenAddress',
     );
     assert.strictEqual(
       gatewayConfig.auxiliaryContracts.eip20CoGatewayAddress,
       eip20CoGatewayAddress,
+      'Expected GatewayConfig eip20CoGatewayAddress '
+      + 'is not equal to actual eip20CoGatewayAddress',
     );
     assert.strictEqual(
       gatewayConfig.auxiliaryContracts.coGatewayOrganizationAddress,
       coGatewayOrganizationAddress,
+      'Expected GatewayConfig auxiliary coGatewayOrganizationAddress '
+      + 'is not equal to actual coGatewayOrganizationAddress',
     );
     sinon.restore();
   });

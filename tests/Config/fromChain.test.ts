@@ -5,7 +5,6 @@ import GatewayConfig from '../../src/Config/GatewayConfig';
 import Directory from '../../src/Directory';
 import SpyAssert from '../test_utils/SpyAssert';
 
-
 describe('GatewayConfig.fromChain()', () => {
   const filePath = './tests/Config/testdata/0xae02c7b1c324a8d94a564bc8d713df89eae441fe.json';
   const originChain = 'dev';
@@ -19,12 +18,6 @@ describe('GatewayConfig.fromChain()', () => {
   const eip20CoGatewayAddress = '0xc6fF898ceBf631eFb58eEc7187E4c1f70AE8d943';
 
   it('Should return TokenConfig object', async () => {
-    const existsSpy = sinon.replace(
-      GatewayConfig,
-      'exists' as any,
-      sinon.fake.returns(true),
-    );
-
     const getGatewayConfigPathSpy = sinon.replace(
       Directory,
       'getGatewayConfigPath',
@@ -33,11 +26,6 @@ describe('GatewayConfig.fromChain()', () => {
 
     const gatewayConfig = GatewayConfig.fromChain(originChain, auxChainId, eip20GatewayAddress);
 
-    SpyAssert.assert(
-      existsSpy,
-      1,
-      [[originChain, auxChainId, eip20GatewayAddress]],
-    );
 
     SpyAssert.assert(
       getGatewayConfigPathSpy,
@@ -48,59 +36,89 @@ describe('GatewayConfig.fromChain()', () => {
     assert.strictEqual(
       gatewayConfig.auxChainId,
       auxChainId,
+      'Expected GatewayConfig auxChainId is not equal to actual auxChainId',
     );
 
     assert.strictEqual(
       gatewayConfig.originContracts.baseTokenAddress,
       originBaseTokenAddress,
+      'Expected GatewayConfig origin baseTokenAddress is '
+      + 'not equal to actual baseTokenAddress',
     );
     assert.strictEqual(
       gatewayConfig.originContracts.eip20GatewayAddress,
       eip20GatewayAddress,
+      'Expected GatewayConfig origin eip20GatewayAddress '
+      + 'is not equal to actual eip20GatewayAddress',
     );
     assert.strictEqual(
       gatewayConfig.originContracts.gatewayOrganizationAddress,
       gatewayOrganizationAddress,
+      'Expected GatewayConfig origin gatewayOrganizationAddress '
+      + 'is not equal to actual gatewayOrganizationAddress',
     );
     assert.strictEqual(
       gatewayConfig.originContracts.valueTokenAddress,
       valueTokenAddress,
+      'Expected GatewayConfig origin valueTokenAddress '
+      + 'is not equal to actual valueTokenAddress',
     );
     assert.strictEqual(
       gatewayConfig.auxiliaryContracts.utilityTokenAddress,
       utilityTokenAddress,
+      'Expected GatewayConfig auxiliary utilityTokenAddress '
+      + 'is not equal to actual utilityTokenAddress',
     );
     assert.strictEqual(
       gatewayConfig.auxiliaryContracts.eip20CoGatewayAddress,
       eip20CoGatewayAddress,
+      'Expected GatewayConfig eip20CoGatewayAddress '
+      + 'is not equal to actual eip20CoGatewayAddress',
     );
     assert.strictEqual(
       gatewayConfig.auxiliaryContracts.coGatewayOrganizationAddress,
       coGatewayOrganizationAddress,
+      'Expected GatewayConfig auxiliary coGatewayOrganizationAddress '
+      + 'is not equal to actual coGatewayOrganizationAddress',
     );
     sinon.restore();
   });
 
   it('Should fail when origin chain is incorrect', async () => {
+    const expectedFilePath = Directory.getGatewayConfigPath(
+      'wrongChain',
+      auxChainId,
+      eip20GatewayAddress,
+    );
     assert.throws(
       () => GatewayConfig.fromChain('wrongChain', auxChainId, eip20GatewayAddress),
-      'Missing GatewayConfig file at path: undefined',
+      `Missing GatewayConfig file at path: ${expectedFilePath}`,
     );
     sinon.restore();
   });
 
   it('Should fail when aux chain id is incorrect', async () => {
+    const expectedFilePath = Directory.getGatewayConfigPath(
+      originChain,
+      0,
+      eip20GatewayAddress,
+    );
     assert.throws(
       () => GatewayConfig.fromChain(originChain, 0, eip20GatewayAddress),
-      'Missing GatewayConfig file at path: undefined',
+      `Missing GatewayConfig file at path: ${expectedFilePath}`,
     );
     sinon.restore();
   });
 
   it('Should fail when gateway address is incorrect', async () => {
+    const expectedFilePath = Directory.getGatewayConfigPath(
+      originChain,
+      auxChainId,
+      'invalidaddress',
+    );
     assert.throws(
       () => GatewayConfig.fromChain(originChain, auxChainId, 'invalidAddress'),
-      'Missing GatewayConfig file at path: undefined',
+      `Missing GatewayConfig file at path: ${expectedFilePath}`,
     );
     sinon.restore();
   });

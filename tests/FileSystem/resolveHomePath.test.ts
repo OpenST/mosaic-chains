@@ -21,7 +21,7 @@ describe('FileSystem.resolveHomeDirectory()', () => {
     assert.strictEqual(
       filePath,
       expectedFilePath,
-      'Error resolving home directory',
+      'Expected resolved file path is not equal to actual file path',
     );
   });
 });

@@ -65,6 +65,7 @@ describe('Directory.sanitize()', () => {
     assert.strictEqual(
       fullPath,
       expectedPath,
+      `Path: ${fullPath} is not equal to expectedPath: ${expectedPath}`,
     );
   });
 });
