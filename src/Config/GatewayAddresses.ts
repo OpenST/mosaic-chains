@@ -19,7 +19,7 @@ export default class GatewayAddresses {
 
   /**
    * Constructor
-   * @param stakePoolAddress StakePool Address address.
+   * @param stakePoolAddress StakePool address.
    * @param eip20GatewayAddress eip20Gateway address.
    * @param anchorAddress anchor address.
    * @param coAnchorAddress coanchor address.
@@ -41,7 +41,6 @@ export default class GatewayAddresses {
     this.eip20CoGatewayAddress = eip20CoGatewayAddress;
     this.redeemPoolAddress = redeemPoolAddress;
   }
-
 
   /**
    * Create Gateway address instance based on mosaic config.
@@ -75,14 +74,12 @@ export default class GatewayAddresses {
   ): GatewayAddresses {
     const { auxChainId } = gatewayConfig;
     const stakePoolAddress = gatewayConfig.originContracts.stakePoolAddress
-      ? gatewayConfig.originContracts.stakePoolAddress
-      : gatewayConfig.mosaicConfig.originChain.contractAddresses.stakePoolAddress;
+      || gatewayConfig.mosaicConfig.originChain.contractAddresses.stakePoolAddress;
 
     const auxiliaryChain = gatewayConfig.mosaicConfig.auxiliaryChains[auxChainId];
     const auxiliaryContracts = auxiliaryChain.contractAddresses.auxiliary;
     const redeemPool = gatewayConfig.auxiliaryContracts.redeemPoolAddress
-      ? gatewayConfig.auxiliaryContracts.redeemPoolAddress
-      : auxiliaryContracts.redeemPoolAddress;
+      || auxiliaryContracts.redeemPoolAddress;
 
     const originContracts = auxiliaryChain.contractAddresses.origin;
     return new GatewayAddresses(

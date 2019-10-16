@@ -191,12 +191,12 @@ Subgraph command can be used to deploy mosaic subgraph. Subgraph by [thegraph](h
 Below command deploys subgraph of mosaic gateways.
 
 ```bash
-./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chain> <admin-graph-rpc> <graph-ipfs> 
+./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chainType> <admin-graph-rpc> <graph-ipfs> 
 ```
 **where:** 
 1. origin-chain-identifier: Origin chain identifier like ropsten, goerli, dev-origin
-2.auxiliary-chain-identifier: Auxiliary chain ID like 1405, 1406, 1407 or 1000(dev-auxiliary).
-3. Chain: Either`origin` or `auxiliary` chain.
+2. auxiliary-chain-identifier: Auxiliary chain ID like 1405, 1406, 1407 or 1000(dev-auxiliary).
+3. chainType: Either`origin` or `auxiliary` chain.
 4. admin-graph-rpc: RPC endpoint of graph node.
 5. graph-ipfs: IPFS endpoint used by graph node.
 

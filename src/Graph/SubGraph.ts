@@ -23,11 +23,11 @@ export default class SubGraph {
   /** To be used to determine which code is deployed. For example origin/auxiliary */
   private readonly subGraphType: string;
 
-  /** Graph node rpc admin URL */
-  private readonly graphRPCAdminURL: string;
+  /** Graph node rpc admin endpoint */
+  private readonly graphRPCAdminEndPoint: string;
 
-  /** Graph node IPFS URL */
-  private readonly graphIPFSURL: string;
+  /** Graph node IPFS endpoint */
+  private readonly graphIPFSEndPoint: string;
 
   /** Gateway pair addresses */
   private readonly gatewayAddresses: GatewayAddresses;
@@ -37,23 +37,23 @@ export default class SubGraph {
    * @param originChain Origin chain identifier.
    * @param auxiliaryChain Auxiliary chain identifier.
    * @param subGraphType Subgraph type
-   * @param graphRPCAdminURL Graph node rpc admin URL.
-   * @param graphIPFSURL Graph node IPFS url.
+   * @param graphRPCAdminEndPoint Graph node rpc admin URL.
+   * @param graphIPFSEndPoint Graph node IPFS url.
    * @param gatewayAddresses Gateway pair addresses.
    */
   public constructor(
     originChain: string,
     auxiliaryChain: string,
     subGraphType: string,
-    graphRPCAdminURL: string,
-    graphIPFSURL: string,
+    graphRPCAdminEndPoint: string,
+    graphIPFSEndPoint: string,
     gatewayAddresses: GatewayAddresses,
   ) {
     this.originChain = originChain;
     this.auxiliaryChain = auxiliaryChain;
     this.subGraphType = subGraphType;
-    this.graphRPCAdminURL = graphRPCAdminURL;
-    this.graphIPFSURL = graphIPFSURL;
+    this.graphRPCAdminEndPoint = graphRPCAdminEndPoint;
+    this.graphIPFSEndPoint = graphIPFSEndPoint;
     this.gatewayAddresses = gatewayAddresses;
   }
 
@@ -129,7 +129,7 @@ export default class SubGraph {
     this.logInfo('attempting to create local graph');
     try {
       this.tryRemovingSubgraph();
-      this.executeGraphCommand(`create --node ${this.graphRPCAdminURL}/ ${this.name}`);
+      this.executeGraphCommand(`create --node ${this.graphRPCAdminEndPoint}/ ${this.name}`);
       return { success: true, message: '' };
     } catch (ex) {
       const message = this.extractMessageFromError(ex);
@@ -143,7 +143,7 @@ export default class SubGraph {
    */
   private tryRemovingSubgraph() {
     try {
-      this.executeGraphCommand(`remove --node ${this.graphRPCAdminURL}/ ${this.name}`);
+      this.executeGraphCommand(`remove --node ${this.graphRPCAdminEndPoint}/ ${this.name}`);
     } catch (e) {
       this.logInfo('No subgraph exists, deploying for the first time.');
     }
@@ -216,14 +216,14 @@ export default class SubGraph {
     this.logInfo('attempting to deploy local graph');
     try {
       this.executeGraphCommand(
-        `deploy --node ${this.graphRPCAdminURL}/ --ipfs ${this.graphIPFSURL} ${this.name}`,
+        `deploy --node ${this.graphRPCAdminEndPoint}/ --ipfs ${this.graphIPFSEndPoint} ${this.name}`,
       );
       return { success: true, message: '' };
     } catch (ex) {
       const message = this.extractMessageFromError(ex);
       this.logInfo(`deploy local graph failed with: ${message}`);
       this.logInfo('removing local graph');
-      this.executeGraphCommand(`remove --node ${this.graphRPCAdminURL}/ ${this.name}`);
+      this.executeGraphCommand(`remove --node ${this.graphRPCAdminEndPoint}/ ${this.name}`);
       return { success: false, message };
     }
   }

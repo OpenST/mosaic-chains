@@ -13,7 +13,6 @@ const mosaic = commander
 
 mosaic.option('-m,--mosaic-config <string>', 'Mosaic config absolute path.');
 mosaic.option('-t,--gateway-config <string>', 'Gateway config absolute path.');
-mosaic.option('-a,--auxiliary <string>', 'auxiliary chain identifier.');
 mosaic.option('-g,--gateway-address <string>', 'gateway address of origin.');
 mosaic.action(
   async (
@@ -25,9 +24,9 @@ mosaic.action(
     options,
   ) => {
     try {
-      let gatewayAddresses;
-      let gatewayConfig;
-      let mosaicConfig;
+      let gatewayAddresses: GatewayAddresses;
+      let gatewayConfig: GatewayConfig;
+      let mosaicConfig: MosaicConfig;
 
       if (options.gatewayConfig) {
         gatewayConfig = GatewayConfig.fromFile(options.gatewayConfig);
@@ -52,6 +51,10 @@ mosaic.action(
         }
         gatewayAddresses = GatewayAddresses.fromGatewayConfig(gatewayConfig);
       } else if (mosaicConfig) {
+        if (mosaicConfig.originChain.chain !== originChain) {
+          Logger.error(`Origin chain id in mosaic config is ${mosaicConfig.originChain.chain} but received argument is ${originChain}`);
+          process.exit(1);
+        }
         gatewayAddresses = GatewayAddresses.fromMosaicConfig(
           mosaicConfig,
           auxiliaryChain.toString(),
@@ -59,7 +62,7 @@ mosaic.action(
       }
 
       if (!gatewayAddresses) {
-        Logger.error('Mosaic config or token config not found . Use --mosaic-config or --token-config option to provide path.');
+        Logger.error('Mosaic config or gateway config not found . Use --mosaic-config or --gateway-config option to provide path.');
         process.exit(1);
       }
 
@@ -72,7 +75,7 @@ mosaic.action(
         gatewayAddresses,
       ).deploy();
     } catch (error) {
-      Logger.error('error while executing mosaic libraries', { error: error.toString() });
+      Logger.error('error while executing mosaic subgraph command', { error: error.toString() });
       process.exit(1);
     }
 
