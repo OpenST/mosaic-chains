@@ -22,7 +22,6 @@ describe('Mosaic create', () => {
   let originDeployerAddress: string;
   let auxiliaryWeb3;
   let auxiliaryEndpoint = 'http://localhost:40500';
-  ;
   let beneficiary;
   let stakeAmount;
 
@@ -74,7 +73,7 @@ describe('Mosaic create', () => {
   });
 
   it(`Verify auxiliary chain ${auxChainId}`, () => {
-    const command = `./mosaic verify-chain ${originWeb3RPCEndPoint} ${auxiliaryEndpoint} ${1} ${500}`;
+    const command = `./mosaic verify-chain ${originWeb3RPCEndPoint} ${auxiliaryEndpoint} ${originChainId} ${auxChainId}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
   });
 
