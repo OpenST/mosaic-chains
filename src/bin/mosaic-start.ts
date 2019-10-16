@@ -65,49 +65,58 @@ mosaic
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
   .action(async (chain: string, options) => {
-    let chainInput = chain;
-    let optionInput = Object.assign({}, options);
-    if (!validateCLIOptions(chain, optionInput)) {
-      process.exit(1);
-    }
-    if (DevChainOptions.isDevChain(chain, options)) {
-      const devParams = DevChainOptions.getDevChainParams(chain, options);
-      chainInput = devParams.chain;
-      optionInput = devParams.options;
-    }
-    const {
-      mosaicDir,
-      port,
-      rpcPort,
-      websocketPort,
-      keepAfterStop,
-      unlock,
-      password,
-      originChain,
-    } = NodeOptions.parseOptions(optionInput, chainInput);
-    const nodeDescription: NodeDescription = {
-      chain: chainInput,
-      mosaicDir,
-      port,
-      rpcPort,
-      websocketPort,
-      keepAfterStop,
-      unlock,
-      password,
-      originChain,
-      client: optionInput.client,
-    };
-    const node: Node = NodeFactory.create(nodeDescription);
-    node.start();
+    try {
+      let chainInput = chain;
+      let optionInput = Object.assign({}, options);
+      if (!validateCLIOptions(chain, optionInput)) {
+        process.exit(1);
+      }
+      if (DevChainOptions.isDevChain(chain, options)) {
+        const devParams = DevChainOptions.getDevChainParams(chain, options);
+        chainInput = devParams.chain;
+        optionInput = devParams.options;
+        // Dev chain should always start with geth.
+        optionInput.client = GETH_CLIENT;
+      }
+      const {
+        mosaicDir,
+        port,
+        rpcPort,
+        websocketPort,
+        keepAfterStop,
+        unlock,
+        password,
+        originChain,
+      } = NodeOptions.parseOptions(optionInput, chainInput);
+      const nodeDescription: NodeDescription = {
+        chain: chainInput,
+        mosaicDir,
+        port,
+        rpcPort,
+        websocketPort,
+        keepAfterStop,
+        unlock,
+        password,
+        originChain,
+        client: optionInput.client,
+      };
+      const node: Node = NodeFactory.create(nodeDescription);
+      node.start();
 
-    if (!optionInput.withoutGraphNode) {
-      const graphDescription: GraphDescription = GraphOptions.parseOptions(optionInput, chainInput);
-      // reuse params from node start command
-      graphDescription.mosaicDir = mosaicDir;
-      graphDescription.ethereumRpcPort = rpcPort;
-      graphDescription.ethereumClient = nodeDescription.client;
+      if (!optionInput.withoutGraphNode) {
+        const graphDescription: GraphDescription = GraphOptions.parseOptions(
+          optionInput,
+          chainInput,
+        );
+        // reuse params from node start command
+        graphDescription.mosaicDir = mosaicDir;
+        graphDescription.ethereumRpcPort = rpcPort;
+        graphDescription.ethereumClient = nodeDescription.client;
 
-      await (new Graph(graphDescription).start());
+        await (new Graph(graphDescription).start());
+      }
+    } catch (e) {
+      Logger.error(`Error starting node: ${e} `);
     }
   })
   .parse(process.argv);
