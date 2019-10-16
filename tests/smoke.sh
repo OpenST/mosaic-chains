@@ -155,26 +155,36 @@ GRAPH_WS_PORT_ROPSTEN=60003
 OST_GATEWAY_ADDRESS_ROPSTEN_1406=0x04df90efbedf393361cdf498234af818da14f562
 OST_GATEWAY_ADDRESS_ROPSTEN_1407=0x31c8870c76390c5eb0d425799b5bd214a2600438
 
+# Dev chain config
+GRAPH_ADMIN_RPC_DEV_ORIGIN=9535
+GRAPH_IPFS_DEV_ORIGIN=6516
+GRAPH_WS_PORT_DEV_ORIGIN=61515
+OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH=0xaE02C7b1C324A8D94A564bC8d713Df89eae441fe
+OST_CO_GATEWAY_ADDRESS_DEV_ORIGIN_WETH=0xc6fF898ceBf631eFb58eEc7187E4c1f70AE8d943
+
+DEV_AUXILIARY_CHAIN_ID=1000
+GRAPH_ADMIN_RPC_DEV_AUXILIARY=9020
+GRAPH_IPFS_DEV_AUXILIARY=6001
 
 start_auxiliary_node 1406
 grep_try 1406 geth
 rpc_node_try 1406
-deploy_subgraph ropsten 1406 auxiliary 9426 6407
-rpc_auxiliary_sub_graph_try 1406 0x02cffaa1e06c28021fff6b36d9e418a97b3de2fc
+deploy_subgraph ropsten 1406 auxiliary $GRAPH_ADMIN_RPC_1406 $GRAPH_IPFS_1406
+rpc_auxiliary_sub_graph_try 1406 $OST_COGATEWAY_ADDRESS_1406
 
 start_auxiliary_node 1407
 grep_try 1407 geth
 rpc_node_try 1407
-deploy_subgraph ropsten 1407 auxiliary 9427 6408
-rpc_auxiliary_sub_graph_try 1407 0xf690624171fe06d02d2f4250bff17fe3b682ebd1
+deploy_subgraph ropsten 1407 auxiliary $GRAPH_ADMIN_RPC_1407 $GRAPH_IPFS_1407
+rpc_auxiliary_sub_graph_try 1407 $OST_COGATEWAY_ADDRESS_1407
 
 start_origin_node ropsten geth
 grep_try ropsten geth
 rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
-deploy_subgraph ropsten 1406 origin 8023 5004
-deploy_subgraph ropsten 1407 origin 8023 5004
-rpc_origin_sub_graph_try 60003 0x04df90efbedf393361cdf498234af818da14f562
-rpc_origin_sub_graph_try 60003 0x31c8870c76390c5eb0d425799b5bd214a2600438
+deploy_subgraph ropsten 1406 origin $GRAPH_ADMIN_RPC_ROPSTEN $GRAPH_IPFS_ROPSTEN
+deploy_subgraph ropsten 1407 origin $GRAPH_ADMIN_RPC_ROPSTEN $GRAPH_IPFS_ROPSTEN
+rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_ROPSTEN_1406
+rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_ROPSTEN_1407
 
 # Stop and start some nodes and make sure they are or are not running.
 stop_node ropsten
@@ -192,19 +202,12 @@ grep_fail ropsten geth
 start_origin_node ropsten parity
 grep_try ropsten parity
 
-# Dev chain config
-GRAPH_ADMIN_RPC_DEV_ORIGIN=9535
-GRAPH_IPFS_DEV_ORIGIN=6516
-GRAPH_WS_PORT_DEV_ORIGIN=61515
-OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH=0xaE02C7b1C324A8D94A564bC8d713Df89eae441fe
-OST_CO_GATEWAY_ADDRESS_DEV_ORIGIN_WETH=0xc6fF898ceBf631eFb58eEc7187E4c1f70AE8d943
-
 # Deploy subgraph with gateway config
 start_origin_node dev-origin geth
 start_auxiliary_node dev-auxiliary geth
-deploy_subgraph_gateway_config dev-origin 1000 origin 9535 6516 0xae02c7b1c324a8d94a564bc8d713df89eae441fe
-deploy_subgraph_gateway_config dev-origin 1000 auxiliary 9020 6001 0xae02c7b1c324a8d94a564bc8d713df89eae441fe
-rpc_origin_sub_graph_try  61515 0xaE02C7b1C324A8D94A564bC8d713Df89eae441fe
-rpc_auxiliary_sub_graph_try 1000 0xc6fF898ceBf631eFb58eEc7187E4c1f70AE8d943
+deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID origin $GRAPH_ADMIN_RPC_DEV_ORIGIN $GRAPH_IPFS_DEV_ORIGIN OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
+deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID auxiliary $GRAPH_ADMIN_RPC_DEV_AUXILIARY $GRAPH_IPFS_DEV_AUXILIARY $OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
+rpc_origin_sub_graph_try  $GRAPH_WS_PORT_DEV_ORIGIN $OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
+rpc_auxiliary_sub_graph_try $DEV_AUXILIARY_CHAIN_ID $OST_CO_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
 # When done, stop all nodes.
 stop_nodes
