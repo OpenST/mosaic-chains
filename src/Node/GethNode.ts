@@ -5,7 +5,7 @@ import Shell from '../Shell';
 import Directory from '../Directory';
 import ChainInfo from './ChainInfo';
 
-const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains';
+const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.0';
 /**
  * Represents a geth node that runs in a docker container.
  */
