@@ -76,7 +76,7 @@ export default class GatewayConfig {
    * @return GatewayConfig object.
    */
   public static fromFile(filePath: string): GatewayConfig {
-    if (fs.existsSync(filePath)) {
+    if (GatewayConfig.exists(filePath)) {
       const configObject = GatewayConfig.readConfigFromFile(filePath);
       return new GatewayConfig(configObject);
     }
@@ -94,9 +94,8 @@ export default class GatewayConfig {
    */
   public static fromChain(originChain: string, auxChainId: number, gatewayAddress: string):
   GatewayConfig {
-    let filePath;
-    if (GatewayConfig.exists(originChain, auxChainId, gatewayAddress)) {
-      filePath = Directory.getGatewayConfigPath(originChain, auxChainId, gatewayAddress);
+    const filePath = Directory.getGatewayConfigPath(originChain, auxChainId, gatewayAddress);
+    if (GatewayConfig.exists(filePath)) {
       const configObject = GatewayConfig.readConfigFromFile(filePath);
       return new GatewayConfig(configObject);
     }
@@ -139,16 +138,13 @@ export default class GatewayConfig {
   }
 
   /**
-   * Checks if GatewayConfig exists for a origin chain.
+   * Checks if GatewayConfig path exists or not.
    *
-   * @param originChain Origin chain identifier.
-   * @param auxChainId Auxiliary chain Id.
-   * @param gatewayAddress Address of Gateway.
+   * @param filePath GatewayConfig file path.
    *
    * @return True if file exists.
    */
-  private static exists(originChain: string, auxChainId: number, gatewayAddress: string): boolean {
-    const filePath = Directory.getGatewayConfigPath(originChain, auxChainId, gatewayAddress);
+  private static exists(filePath: string): boolean {
     return fs.existsSync(filePath);
   }
 }
