@@ -45,6 +45,7 @@ function stop_nodes {
     stop_node dev-origin
     stop_node dev-auxiliary
 }
+
 # Deploy subgraph
 # $1 origin chain identifier
 # $2 aux chain identifier
@@ -137,6 +138,23 @@ function rpc_auxiliary_sub_graph_try {
 try_silent "ls mosaic" "Script must be run from the mosaic chains root directory so that the required node modules are available."
 
 info "Starting node one by one and verifying if all services for them are running."
+# 1406 config
+GRAPH_ADMIN_RPC_1406=9426
+GRAPH_IPFS_1406=6407
+OST_COGATEWAY_ADDRESS_1406=0x02cffaa1e06c28021fff6b36d9e418a97b3de2fc
+
+# 1407 config
+GRAPH_ADMIN_RPC_1407=9427
+GRAPH_IPFS_1407=6408
+OST_COGATEWAY_ADDRESS_1407=0xf690624171fe06d02d2f4250bff17fe3b682ebd1
+
+# ropsten config
+GRAPH_ADMIN_RPC_ROPSTEN=8023
+GRAPH_IPFS_ROPSTEN=5004
+GRAPH_WS_PORT_ROPSTEN=60003
+OST_GATEWAY_ADDRESS_ROPSTEN_1406=0x04df90efbedf393361cdf498234af818da14f562
+OST_GATEWAY_ADDRESS_ROPSTEN_1407=0x31c8870c76390c5eb0d425799b5bd214a2600438
+
 
 start_auxiliary_node 1406
 grep_try 1406 geth
@@ -173,6 +191,13 @@ grep_fail ropsten geth
 
 start_origin_node ropsten parity
 grep_try ropsten parity
+
+# Dev chain config
+GRAPH_ADMIN_RPC_DEV_ORIGIN=9535
+GRAPH_IPFS_DEV_ORIGIN=6516
+GRAPH_WS_PORT_DEV_ORIGIN=61515
+OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH=0xaE02C7b1C324A8D94A564bC8d713Df89eae441fe
+OST_CO_GATEWAY_ADDRESS_DEV_ORIGIN_WETH=0xc6fF898ceBf631eFb58eEc7187E4c1f70AE8d943
 
 # Deploy subgraph with gateway config
 start_origin_node dev-origin geth
