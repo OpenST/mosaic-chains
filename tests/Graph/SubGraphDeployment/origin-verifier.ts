@@ -8,14 +8,16 @@ import Logger from '../../../src/Logger';
 import WebSocket = require('ws');
 
 const mosaic = commander
-  .arguments('<auxiliary-chain-identifier> <graph-ws-port>');
+  .arguments('<graph-ws-port> <gateway-address');
 
 mosaic.action(
   async (
-    auxiliaryChainIdentifier: string,
     graphWsPort: string,
+    gatewayAddresses: string,
   ) => {
-    const subGraphName = `mosaic/origin-${auxiliaryChainIdentifier}`;
+    const subGraphName = `mosaic/origin-${gatewayAddresses.substr(2, 25)}`
+    Logger.info(`subgraph name for verification   ${subGraphName}`);
+    Logger.info(`graph ws port ${graphWsPort}`);
     const wsEndPoint = `ws://127.0.0.1:${graphWsPort}/subgraphs/name/${subGraphName}`;
 
     // Creates subscription client

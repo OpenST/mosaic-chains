@@ -23,7 +23,7 @@ mosaic.action(
         organizationAdmin,
       );
     } catch (error) {
-      Logger.error('error while executing mosaic libraries', {error: error.toString()});
+      Logger.error('error while executing mosaic setup redeem pool', { error: error.toString() });
       process.exit(1);
     }
 
