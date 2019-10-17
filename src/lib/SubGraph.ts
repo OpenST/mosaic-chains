@@ -1,7 +1,7 @@
 import GatewayAddresses from '../Config/GatewayAddresses';
 import GatewayConfig from '../Config/GatewayConfig';
 import MosaicConfig from '../Config/MosaicConfig';
-import SubGraph, {SubGraphType} from '../Graph/SubGraph';
+import SubGraph, { SubGraphType } from '../Graph/SubGraph';
 
 const deploySubGraph = (
   originChain: string,
@@ -17,6 +17,14 @@ const deploySubGraph = (
   let gatewayConfig: GatewayConfig;
   let mosaicConfig: MosaicConfig;
 
+  const inputSet = new Set();
+  inputSet.add(mosaicConfigPath);
+  inputSet.add(gatewayAddress);
+  inputSet.add(gatewayConfigPath);
+
+  if (inputSet.size > 2) {
+    throw new Error('Only one option should be passed from --mosaic-config,--gateway-config and --gateway-address.');
+  }
   if (gatewayConfigPath) {
     gatewayConfig = GatewayConfig.fromFile(gatewayConfigPath);
   } else if (gatewayAddress) {
