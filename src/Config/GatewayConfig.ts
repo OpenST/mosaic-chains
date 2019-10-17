@@ -7,6 +7,7 @@ import {
 } from '../Exception';
 import FileSystem from '../FileSystem ';
 import Directory from '../Directory';
+import Logger from "../Logger";
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const schema = require('./GatewayConfig.schema.json');
@@ -95,6 +96,7 @@ export default class GatewayConfig {
   public static fromChain(originChain: string, auxChainId: number, gatewayAddress: string):
   GatewayConfig {
     const filePath = Directory.getGatewayConfigPath(originChain, auxChainId, gatewayAddress);
+    Logger.info(`filepath for gateway config ${filePath}`);
     if (GatewayConfig.exists(filePath)) {
       const configObject = GatewayConfig.readConfigFromFile(filePath);
       return new GatewayConfig(configObject);

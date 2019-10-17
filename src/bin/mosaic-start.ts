@@ -6,7 +6,6 @@ import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
 import GraphOptions from './GraphOptions';
 import GraphDescription from '../Graph/GraphDescription';
-import SubGraphDeployer from '../Graph/SubGraphDeployer';
 import Graph from '../Graph/Graph';
 import NodeDescription from '../Node/NodeDescription';
 import DevChainOptions from './DevChainOptions';
@@ -65,7 +64,7 @@ mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
-  .action((chain: string, options) => {
+  .action(async (chain: string, options) => {
     try {
       let chainInput = chain;
       let optionInput = Object.assign({}, options);
@@ -114,20 +113,7 @@ mosaic
         graphDescription.ethereumRpcPort = rpcPort;
         graphDescription.ethereumClient = nodeDescription.client;
 
-        new Graph(graphDescription).start().then(() => {
-          let subGraphDeployer;
-          // options.origin passed only in case of starting an auxiliary chain
-          if (optionInput.origin) {
-            subGraphDeployer = new SubGraphDeployer(
-              graphDescription,
-              optionInput.origin,
-              chainInput,
-            );
-          } else {
-            subGraphDeployer = new SubGraphDeployer(graphDescription, chainInput, null);
-          }
-          return subGraphDeployer.deploy();
-        });
+        await (new Graph(graphDescription).start());
       }
     } catch (e) {
       Logger.error(`Error starting node: ${e} `);
