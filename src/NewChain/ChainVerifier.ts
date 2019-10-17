@@ -1,6 +1,7 @@
 import { Contracts as MosaicContracts, AbiBinProvider } from '@openst/mosaic.js';
 
 import MosaicConfig, { ContractAddresses } from '../Config/MosaicConfig';
+import ChainInfo from '../Node/ChainInfo';
 
 import Logger from '../Logger';
 
@@ -17,6 +18,8 @@ export default class ChainVerifier {
   private originChainIdentifier: string;
 
   private auxiliaryChainId: string;
+
+  private originChainId: string;
 
   private mosaicConfig: MosaicConfig;
 
@@ -42,8 +45,9 @@ export default class ChainVerifier {
   ) {
     this.originWeb3 = new Web3(originWebSocket);
     this.auxiliaryWeb3 = new Web3(auxiliaryWebSocket);
-    this.originChainIdentifier = originChainIdentifier;
     this.auxiliaryChainId = auxiliaryChainId;
+    this.originChainIdentifier = originChainIdentifier;
+    this.originChainId = ChainInfo.getChainId(this.originChainIdentifier);
     this.mosaicConfig = MosaicConfig.fromChain(this.originChainIdentifier);
     this.mosaicContract = new MosaicContracts(this.originWeb3, this.auxiliaryWeb3);
     this.contractAddresses = this.mosaicConfig.auxiliaryChains[this.auxiliaryChainId]
@@ -340,7 +344,7 @@ export default class ChainVerifier {
     );
 
     const remoteChainId = await anchorInstance.methods.getRemoteChainId().call();
-    if (remoteChainId !== this.mosaicConfig.originChain.chain) {
+    if (remoteChainId !== this.originChainId) {
       const errMsg = 'AuxiliaryAnchor: Invalid remoteChainId!!!';
       Logger.error(errMsg);
       throw new Error(errMsg);
