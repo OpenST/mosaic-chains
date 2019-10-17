@@ -172,12 +172,12 @@ export default class Directory {
    * @return Path of gateway config file.
    */
   public static getGatewayConfigPath(originChain: string, auxChainId: number, gatewayAddress: string):
-    string {
+  string {
     return path.join(
       Directory.getDefaultMosaicDataDir,
       originChain,
       auxChainId.toString(),
-      gatewayAddress.toLowerCase()+'.json',
+      `${gatewayAddress.toLowerCase()}.json`,
     );
   }
 }
