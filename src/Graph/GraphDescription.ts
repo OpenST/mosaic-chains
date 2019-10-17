@@ -20,6 +20,8 @@ export default class GraphDescription {
 
   public keepAfterStop: boolean = false;
 
+  public ethereumClient: string;
+
   public originChain?: string;
 
   constructor(readonly chain: string) { }

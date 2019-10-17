@@ -13,4 +13,5 @@ mosaic
   .command('verify-chain <origin-websocket> <auxiliary-websocket> <origin-chain-identifier> <auxiliary-chain-identifier>', 'Verifies an auxiliary chain.')
   .command('setup-redeem-pool <originChain> <auxiliaryChain> <auxChainWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>', 'Deploys redeem pool contract.')
   .command('setup-stake-pool <chain> <origin-websocket> <deployer> <organizationOwner> <organizationAdmin>', 'Deploys stake pool contract.')
+  .command('subgraph <originChain> <auxiliaryChain> <subgraphType> <graphAdminRPC> <graphIPFS>', 'Deploys mosaic subgraph on a graph node')
   .parse(process.argv);

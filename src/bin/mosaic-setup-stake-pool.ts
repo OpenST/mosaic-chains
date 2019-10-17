@@ -17,7 +17,7 @@ mosaic.action(
     try {
       await deployStakePool(chain, originWebsocket, deployer, organizationOwner, organizationAdmin);
     } catch (error) {
-      Logger.error('error while executing mosaic libraries', { error: error.toString() });
+      Logger.error('error while executing mosaic setup stake pool', { error: error.toString() });
       process.exit(1);
     }
 

@@ -52,7 +52,7 @@ export default class ParityNode extends Node {
     }
 
     args = args.concat([
-      'parity/parity:v2.3.3',
+      'parity/parity:v2.5.5-stable',
       `--chain=${this.chain}`,
       '--base-path=/home/parity/.local/share/io.parity.ethereum/',
       `--port=${this.port}`,
@@ -72,7 +72,6 @@ export default class ParityNode extends Node {
         '--password', '/home/parity/password.txt',
       ]);
     }
-
     Shell.executeDockerCommand(args);
   }
 
@@ -84,7 +83,7 @@ export default class ParityNode extends Node {
 
     if (!fs.existsSync(this.chainDir)) {
       this.logInfo(`${this.chainDir} does not exist; initializing`);
-      fs.mkdirSync(this.chainDir);
+      fs.mkdirSync(this.chainDir, { recursive: true });
     }
   }
 }
