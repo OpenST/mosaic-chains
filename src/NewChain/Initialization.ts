@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Utils as MosaicUtils } from '@openst/mosaic.js';
+import { Utils as MosaicUtils, ContractInteract } from '@openst/mosaic.js';
 import * as ip from 'ip';
 
 import InitConfig from '../Config/InitConfig';
@@ -63,7 +63,7 @@ export default class Initialization {
 
     const mosaicConfig = MosaicConfig.fromChain(auxiliaryNodeDescription.originChain);
     mosaicConfig.originChain.chain = auxiliaryNodeDescription.originChain;
-    mosaicConfig.originChain.contractAddresses.simpleTokenAddress = initConfig.originOstAddress;
+    mosaicConfig.originChain.contractAddresses.valueTokenAddress = initConfig.originOstAddress;
 
     // Actually creating the new chain:
     await Initialization.createAuxiliaryChain(
@@ -72,6 +72,7 @@ export default class Initialization {
       originChainInteract,
       auxiliaryChainInteract,
       hashLockSecret,
+      initConfig,
     );
 
     await Initialization.resetOrganizationAdmins(
@@ -113,6 +114,7 @@ export default class Initialization {
     originChainInteract: OriginChainInteract,
     auxiliaryChainInteract: AuxiliaryChainInteract,
     hashLockSecret: string,
+    initConfig: InitConfig,
   ): Promise<void> {
     Logger.info('Creating auxiliary chain');
     Initialization.initializeDataDir(auxiliaryNodeDescription.mosaicDir);
@@ -143,10 +145,11 @@ export default class Initialization {
     );
     Logger.info('Origin contracts deployed');
     const originContracts = auxiliaryChain.contractAddresses.origin;
+    originContracts.baseTokenAddress = Utils.toChecksumAddress(mosaicConfig.originChain.contractAddresses.valueTokenAddress)
     originContracts.anchorOrganizationAddress = Utils.toChecksumAddress(originAnchorOrganization.address);
     originContracts.anchorAddress = Utils.toChecksumAddress(originAnchor.address);
-    originContracts.ostGatewayOrganizationAddress = Utils.toChecksumAddress(ostGatewayOrganization.address);
-    originContracts.ostEIP20GatewayAddress = Utils.toChecksumAddress(ostGateway.address);
+    originContracts.gatewayOrganizationAddress = Utils.toChecksumAddress(ostGatewayOrganization.address);
+    originContracts.eip20GatewayAddress = Utils.toChecksumAddress(ostGateway.address);
     auxiliaryChain.genesis = auxiliaryChainInteract.getGenesis();
     auxiliaryChain.bootNodes.push(
       Initialization.getBootNode(
@@ -167,7 +170,7 @@ export default class Initialization {
     const proofData: Proof = await Initialization.getStakeProof(
       originChainInteract.getWeb3(),
       auxiliaryChainInteract.getWeb3(),
-      originContracts.ostEIP20GatewayAddress,
+      originContracts.eip20GatewayAddress,
       originMessageHash,
       originBlockNumber,
       originStateRoot,
@@ -177,8 +180,8 @@ export default class Initialization {
 
     Logger.info('Deploying auxiliary contract.');
     const {
-      anchorOrganization,
-      anchor,
+      anchorOrganization: auxiliaryAnchorOrganization,
+      anchor: auxiliaryAnchor,
       coGatewayAndOstPrimeOrganization,
       ostPrime,
       ostCoGateway,
@@ -186,21 +189,36 @@ export default class Initialization {
       messageBus,
       merklePatriciaProof,
     } = await auxiliaryChainInteract.initializeContracts(
-      originContracts.ostEIP20GatewayAddress,
+      originContracts.eip20GatewayAddress,
       originBlockNumber.toString(10),
       originStateRoot,
       stakeMessageNonce,
       hashLockSecret,
       proofData,
     );
+
+    await Initialization.setCoAnchors(
+      auxiliaryAnchor,
+      originAnchor,
+      auxiliaryChainInteract,
+      originChainInteract,
+    );
+
+    await Initialization.setAnchorOrganizationAdmins(
+      auxiliaryChainInteract,
+      originChainInteract,
+      initConfig,
+      originAnchorOrganization,
+      auxiliaryAnchorOrganization,
+    );
     Logger.info('Auxiliary contract deployed');
     const auxiliaryContracts = auxiliaryChain.contractAddresses.auxiliary;
 
-    auxiliaryContracts.anchorOrganizationAddress = Utils.toChecksumAddress(anchorOrganization.address);
-    auxiliaryContracts.anchorAddress = Utils.toChecksumAddress(anchor.address);
-    auxiliaryContracts.ostCoGatewayOrganizationAddress = Utils.toChecksumAddress(coGatewayAndOstPrimeOrganization.address);
-    auxiliaryContracts.ostPrimeAddress = Utils.toChecksumAddress(ostPrime.address);
-    auxiliaryContracts.ostEIP20CogatewayAddress = Utils.toChecksumAddress(ostCoGateway.address);
+    auxiliaryContracts.anchorOrganizationAddress = Utils.toChecksumAddress(auxiliaryAnchorOrganization.address);
+    auxiliaryContracts.anchorAddress = Utils.toChecksumAddress(auxiliaryAnchor.address);
+    auxiliaryContracts.coGatewayOrganizationAddress = Utils.toChecksumAddress(coGatewayAndOstPrimeOrganization.address);
+    auxiliaryContracts.utilityTokenAddress = Utils.toChecksumAddress(ostPrime.address);
+    auxiliaryContracts.eip20CoGatewayAddress = Utils.toChecksumAddress(ostCoGateway.address);
     auxiliaryContracts.gatewayLibAddress = Utils.toChecksumAddress(gatewayLib.address);
     auxiliaryContracts.messageBusAddress = Utils.toChecksumAddress(messageBus.address);
     auxiliaryContracts.merklePatriciaLibAddress = Utils.toChecksumAddress(merklePatriciaProof.address);
@@ -210,12 +228,12 @@ export default class Initialization {
     Logger.info('Progressing Stake and mint with secret');
     await Promise.all([
       originChainInteract.progressWithSecret(
-        auxiliaryContracts.ostEIP20CogatewayAddress,
+        auxiliaryContracts.eip20CoGatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
       auxiliaryChainInteract.progressWithSecret(
-        auxiliaryContracts.ostEIP20CogatewayAddress,
+        auxiliaryContracts.eip20CoGatewayAddress,
         originMessageHash,
         hashLockSecret,
       ),
@@ -223,6 +241,58 @@ export default class Initialization {
     Logger.info('Intial stake and mint is successful');
     mosaicConfig.writeToMosaicConfigDirectory();
     Logger.info('Mosaic config is created');
+  }
+
+  /**
+   * This methods set co-anchors.
+   * @param auxiliaryAnchor Auxiliary anchor contract instance.
+   * @param originAnchor Origin anchor contract instance.
+   * @param auxiliaryChainInteract Auxiliary chain contract interact.
+   * @param originChainInteract Origin chain contract interact.
+   */
+  private static async setCoAnchors(
+    auxiliaryAnchor: ContractInteract.Anchor,
+    originAnchor: ContractInteract.Anchor,
+    auxiliaryChainInteract: AuxiliaryChainInteract,
+    originChainInteract: OriginChainInteract,
+  ) {
+    Logger.info('Setting up auxiliary co-auxiliaryAnchor');
+    await auxiliaryChainInteract.setCoAnchorAddress(
+      auxiliaryAnchor,
+      originAnchor.address,
+    );
+    Logger.info('Setting up origin co-auxiliaryAnchor');
+    await originChainInteract.setCoAnchorAddress(
+      originAnchor,
+      auxiliaryAnchor.address,
+    );
+  }
+
+  /**
+   * This method sets anchor organization admins.
+   * @param auxiliaryChainInteract Interact of auxiliary chain contract.
+   * @param originChainInteract Interact of origin chain contract.
+   * @param initConfig InitConfig instance.
+   * @param originAnchorOrganization origin anchor organization instance.
+   * @param auxiliaryAnchorOrganization auxiliary anchor organization instance.
+   */
+  private static async setAnchorOrganizationAdmins(
+    auxiliaryChainInteract: AuxiliaryChainInteract,
+    originChainInteract: OriginChainInteract,
+    initConfig: InitConfig,
+    originAnchorOrganization: ContractInteract.Organization,
+    auxiliaryAnchorOrganization: ContractInteract.Organization,
+  ) {
+    Logger.info('Setting up origin anchor organization admin');
+    await originChainInteract.setOrganizationAdmin(
+      initConfig.originAnchorOrganizationAdmin,
+      originAnchorOrganization,
+    );
+    Logger.info('Setting up auxiliary anchor organization admin');
+    await auxiliaryChainInteract.setOrganizationAdmin(
+      initConfig.auxiliaryAnchorOrganizationAdmin,
+      auxiliaryAnchorOrganization,
+    );
   }
 
   /**
@@ -245,11 +315,11 @@ export default class Initialization {
     const auxiliaryChain = mosaicConfig.auxiliaryChains[auxiliaryChainInteract.getChainId()];
     await Promise.all([
       originChainInteract.resetOrganizationAdmin(
-        auxiliaryChain.contractAddresses.origin.ostGatewayOrganizationAddress,
+        auxiliaryChain.contractAddresses.origin.gatewayOrganizationAddress,
         { from: originOrganizationAdmin },
       ),
       auxiliaryChainInteract.resetOrganizationAdmin(
-        auxiliaryChain.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
+        auxiliaryChain.contractAddresses.auxiliary.coGatewayOrganizationAddress,
         { from: auxiliaryChainInteract.auxiliaryDeployer },
       ),
     ]);

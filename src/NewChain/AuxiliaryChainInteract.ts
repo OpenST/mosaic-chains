@@ -1,7 +1,11 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as RLP from 'rlp';
-import { ContractInteract, Contracts as MosaicContracts } from '@openst/mosaic.js';
+import {
+  ContractInteract,
+  Contracts as MosaicContracts,
+  Utils as MosaicUtils,
+} from '@openst/mosaic.js';
 
 import { Tx } from 'web3/eth/types';
 import CliqueGenesis from './CliqueGenesis';
@@ -290,6 +294,36 @@ export default class AuxiliaryChainInteract {
   }
 
   /**
+   * This method set organization admin.
+   * @param admin Admin address.
+   * @param organization Organization contract interact.
+   */
+  public async setOrganizationAdmin(
+    admin: string,
+    organization: ContractInteract.Organization,
+  ) {
+    return MosaicUtils.sendTransaction(
+      organization.contract.methods.setAdmin(admin),
+      this.txOptions,
+    );
+  }
+
+  /**
+   * This method set co-anchor address;
+   * @param auxiliaryAnchor Instance of anchor contract on auxiliary chain.
+   * @param coAnchorAddress CoAnchor address.
+   */
+  public async setCoAnchorAddress(
+    auxiliaryAnchor: ContractInteract.Anchor,
+    coAnchorAddress: string,
+  ) {
+    return auxiliaryAnchor.setCoAnchorAddress(
+      coAnchorAddress,
+      this.txOptions,
+    );
+  }
+
+  /**
    * Generates two new accounts with an ethereum node and adds the addresses to the mosaic config
    * as auxiliaryOriginalSealer and auxiliaryOriginalDeployer. These accounts will be used to run
    * the sealer and deploy the contracts on auxiliary.
@@ -459,9 +493,13 @@ export default class AuxiliaryChainInteract {
     merklePatriciaProof: ContractInteract.MerklePatriciaProof;
   }> {
     this.logInfo('deploying contracts');
+
+    /* Deployer is set as admin, so that set co-anchor transaction can be done.
+     * Once setup is done, admin will be restored to actual address.
+     */
     const anchorOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryAnchorOrganizationOwner,
-      this.initConfig.auxiliaryAnchorOrganizationAdmin,
+      this.txOptions.from,
       this.anchorOrganizationDeploymentNonce,
     );
     const anchor = await this.deployAnchor(

@@ -85,3 +85,9 @@ typings/
 
 # next.js build output
 .next
+
+
+# Docker data folders
+docker/chain_data
+docker/configs
+docker/root

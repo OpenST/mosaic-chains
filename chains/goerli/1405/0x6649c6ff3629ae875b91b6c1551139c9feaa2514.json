@@ -1,0 +1,21 @@
+{
+  "mosaicConfigFilePath":"~/.mosaic/goerli/mosaic.json",
+  "auxChainId":1405,
+  "originContracts":{
+    "baseTokenAddress":"0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
+    "valueTokenAddress":"0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
+    "gatewayOrganizationAddress":"0x77DDDB66b12b2279A83D61fF443F1d8D16352C59",
+    "eip20GatewayAddress":"0x6649c6FF3629aE875b91B6C1551139c9feaA2514",
+    "gatewayLibAddress":"0x0f08341505C01b7bc05C95A99aB7427eD4C3195F",
+    "messageBusAddress":"0xcaB4728ea030A04A183928884a6dcD83857d96Ba",
+    "merklePatriciaLibAddress":"0x83aA52516805Ff323CA1033a12c6bF133d9AC17e"
+  },
+  "auxiliaryContracts":{
+    "coGatewayOrganizationAddress":"0x47Ef953C4372457754d3471Ca2BB1b5d6AD8F245",
+    "eip20CoGatewayAddress":"0x962e1404D6957d8fF56F8fE79a3fC2B670C3d578",
+    "utilityTokenAddress":"0xBB5676d85d28DA039F982C07E4217fB0FDB2c2ef",
+    "gatewayLibAddress":"0xa718f65c96a177d8967E8f6D67A7872b26771495",
+    "messageBusAddress":"0x8F3578462BaF62e48Ad02820f4b7cd9788B200B6",
+    "merklePatriciaLibAddress":"0x4473FBF3390e49e79b27D229b9BF230DAD78414e"
+  }
+}
