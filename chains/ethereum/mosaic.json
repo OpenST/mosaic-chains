@@ -4,8 +4,7 @@
       "gatewayLibAddress": "0x1c9e18c8ab156753f7eca95d8c042f7842aaf09e",
       "messageBusAddress": "0x0b71bb83d2814633f7dfeb9cb5c4c2e63be215ed",
       "merklePatriciaLibAddress": "0x30db9dd1875dbea601ba061e81dd88325d68fd18",
-      "valueTokenAddress": "0x2c4e8f2d746113d0696ce89b35f0d8bf88e0aeca",
-      "stakePoolAddress": ""
+      "valueTokenAddress": "0x2c4e8f2d746113d0696ce89b35f0d8bf88e0aeca"
     },
     "chain": "ethereum"
   },
@@ -30,8 +29,7 @@
           "eip20CoGatewayAddress": "0x25cf88ef96af49950b1bb942d04b5563312dd82b",
           "gatewayLibAddress": "0x9902f4fe064a8471333224e68c6e9159e38ad73f",
           "messageBusAddress": "0x82207dd728f447056b61284983595fa95ad3b627",
-          "merklePatriciaLibAddress": "0x4045c0155fe09757f2576c2624aa15826bb87fa7",
-          "redeemPoolAddress": ""
+          "merklePatriciaLibAddress": "0x4045c0155fe09757f2576c2624aa15826bb87fa7"
         }
       },
       "chainId": 1414,
