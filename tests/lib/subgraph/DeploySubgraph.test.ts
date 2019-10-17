@@ -34,7 +34,7 @@ describe('Subgraph.deploySubgraph', () => {
     input.mosaicConfigPath = undefined;
     input.gatewayAddress = undefined;
     input.gatewayConfigPath = undefined;
-    sinon.replace(
+    const existsSpy = sinon.replace(
       MosaicConfig,
       'exists',
       sinon.fake.returns(false),
@@ -53,20 +53,21 @@ describe('Subgraph.deploySubgraph', () => {
       ),
       'Mosaic config or gateway config not found . Use --mosaic-config or --gateway-config option to provide path.',
     );
+    SpyAssert.assert(existsSpy, 1, [[input.originChain]]);
   });
 
   it('should fail if mosaic config origin chain is different from passed value', () => {
     input.mosaicConfigPath = undefined;
     input.gatewayAddress = undefined;
     input.gatewayConfigPath = undefined;
-    sinon.replace(
+    const existsSpy = sinon.replace(
       MosaicConfig,
       'exists',
       sinon.fake.returns(true),
     );
 
     const fakeMosaicConfig = { originChain: { chain: 'goerli' } };
-    sinon.replace(
+    const fromChainSpy = sinon.replace(
       MosaicConfig,
       'fromChain',
       sinon.fake.returns(fakeMosaicConfig),
@@ -85,9 +86,12 @@ describe('Subgraph.deploySubgraph', () => {
       ),
       `Origin chain id in mosaic config is ${fakeMosaicConfig.originChain.chain} but received argument is ${input.originChain}`,
     );
+
+    SpyAssert.assert(existsSpy, 1, [[input.originChain]]);
+    SpyAssert.assert(fromChainSpy, 1, [[input.originChain]]);
   });
 
-  it('should fail if auxiliary chain id in gateway config doesnot match passed value', () => {
+  it('should fail if auxiliary chain id in gateway config does not match passed value', () => {
     input.mosaicConfigPath = undefined;
     input.gatewayAddress = undefined;
     input.gatewayConfigPath = path.join(
@@ -109,7 +113,7 @@ describe('Subgraph.deploySubgraph', () => {
     );
   });
 
-  it('should fail if mosaic config doesnot exist on mentioned path', () => {
+  it('should fail if mosaic config does not exist on mentioned path', () => {
     input.mosaicConfigPath = 'Some wrong path';
     input.gatewayAddress = undefined;
     input.gatewayConfigPath = undefined;
@@ -129,7 +133,7 @@ describe('Subgraph.deploySubgraph', () => {
     );
   });
 
-  it('should fail if gateway config doesnot exist on mentioned path', () => {
+  it('should fail if gateway config does not exist on mentioned path', () => {
     input.mosaicConfigPath = undefined;
     input.gatewayAddress = undefined;
     input.gatewayConfigPath = 'Some wrong path';
@@ -149,7 +153,7 @@ describe('Subgraph.deploySubgraph', () => {
     );
   });
 
-  it('should fail if gateway config doesnot exist for mentioned gateway address', () => {
+  it('should fail if gateway config does not exist for mentioned gateway address', () => {
     input.mosaicConfigPath = undefined;
     input.gatewayAddress = '0x110000000000000000000000000000000000001';
     input.gatewayConfigPath = undefined;
@@ -189,7 +193,7 @@ describe('Subgraph.deploySubgraph', () => {
     );
   });
 
-  it('should fail if all any two options are passed', () => {
+  it('should fail if any two options are passed', () => {
     input.mosaicConfigPath = undefined;
     assert.throws(
       () => deploySubGraph(
@@ -213,12 +217,12 @@ describe('Subgraph.deploySubgraph', () => {
     input.originChain = someMosaicConfig.originChain.chain;
     input.auxiliaryChain = '1000';
 
-    sinon.replace(
+    const existsSpy = sinon.replace(
       MosaicConfig,
       'exists',
       sinon.fake.returns(true),
     );
-    sinon.replace(
+    const fromChainSpy = sinon.replace(
       MosaicConfig,
       'fromChain',
       sinon.fake.returns(someMosaicConfig),
@@ -241,6 +245,9 @@ describe('Subgraph.deploySubgraph', () => {
       1,
       'Deploy subgraph must be called once',
     );
+
+    SpyAssert.assert(existsSpy, 1, [[input.originChain]]);
+    SpyAssert.assert(fromChainSpy, 1, [[input.originChain]]);
   });
 
   it('should deploy sub-graph if mosaic config is passed as an argument', () => {
