@@ -5,7 +5,6 @@ export const PARITY_CLIENT = 'parity';
  * Builds node based on the given chain id.
  */
 export default class ChainInfo {
-
   /**
    * array of supported origin chains.
    */
@@ -76,9 +75,9 @@ export default class ChainInfo {
    * @param chain Chain name.
    */
   public static isDevChain(chain: string): boolean {
-    const setOfChain = new Set();
-    setOfChain.add(Object.keys(ChainInfo.devChainInfo));
-    setOfChain.add(Object.values(ChainInfo.devChainInfo));
+    const setOfChain = new Set(
+      [...Object.keys(ChainInfo.devChainInfo),
+        ...Object.values(ChainInfo.devChainInfo)]);
     return setOfChain.has(chain);
   }
 
