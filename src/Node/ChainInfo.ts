@@ -76,7 +76,10 @@ export default class ChainInfo {
    * @param chain Chain name.
    */
   public static isDevChain(chain: string): boolean {
-    return (ChainInfo.devChainInfo[chain] !== undefined);
+    const setOfChain = new Set();
+    setOfChain.add(Object.keys(ChainInfo.devChainInfo));
+    setOfChain.add(Object.values(ChainInfo.devChainInfo));
+    return setOfChain.has(chain);
   }
 
   /**
