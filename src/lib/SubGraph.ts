@@ -18,7 +18,7 @@ const deploySubGraph = (
     throw new Error(`Invalid origin chain identifier: ${originChain}`);
   }
 
-  if (!Validator.isValidAuxChain(auxiliaryChain)) {
+  if (!Validator.isValidAuxChain(auxiliaryChain, originChain)) {
     throw new Error(`Invalid aux chain identifier: ${auxiliaryChain}`);
   }
   if (gatewayAddress && !Validator.isValidAddress(gatewayAddress)) {

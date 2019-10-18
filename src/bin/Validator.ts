@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import ChainInfo from '../Node/ChainInfo';
 import Directory from '../Directory';
+import MosaicConfig from '../Config/MosaicConfig';
 
 /**
  * This is contains methods to validate command arguments.
@@ -27,8 +28,15 @@ export default class Validator {
   /**
    * This method validates a validate aux chain.
    * @param auxChain Chain identifier.
+   * @param originChainId Origin chain identifier.
    */
-  public static isValidAuxChain(auxChain: string): boolean {
+  public static isValidAuxChain(auxChain: string, originChainId: string): boolean {
+    if (MosaicConfig.exists(originChainId)) {
+      const mosaicConfig = MosaicConfig.fromChain(originChainId);
+      if (mosaicConfig.auxiliaryChains[auxChain]) {
+        return true;
+      }
+    }
     if (ChainInfo.isDevChain(auxChain)) {
       return true;
     }

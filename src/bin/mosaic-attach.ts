@@ -5,22 +5,12 @@ import Shell from '../Shell';
 import Node from '../Node/Node';
 import NodeFactory from '../Node/NodeFactory';
 import NodeDescription from '../Node/NodeDescription';
-import DevChainOptions from './DevChainOptions';
-import Validator from './Validator';
-import Logger from '../Logger';
 
 mosaic
   .arguments('<chain>')
+  // Chain can't be validated as origin chain id is not received for aux chain.
   .action((chain: string) => {
-    let chainInput = chain;
-    if (DevChainOptions.isDevChain(chain)) {
-      chainInput = DevChainOptions.getDevChainParams(chain).chain;
-    }
-    if (!(Validator.isValidOriginChain(chain) || Validator.isValidAuxChain(chain))) {
-      Logger.error(`Invalid chain identifier: ${chain}`);
-      process.exit(1);
-    }
-    const node: Node = NodeFactory.create(new NodeDescription(chainInput));
+    const node: Node = NodeFactory.create(new NodeDescription(chain));
 
     const args = [
       'run',

@@ -19,7 +19,7 @@ mosaic.action(
       process.exit(1);
     }
 
-    if (!Validator.isValidAuxChain(auxiliaryChain)) {
+    if (!Validator.isValidAuxChain(auxiliaryChain, originChain)) {
       Logger.error(`Invalid aux chain identifier: ${auxiliaryChain}`)
       process.exit(1);
     }
