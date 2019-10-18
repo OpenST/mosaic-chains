@@ -163,6 +163,7 @@ export default class AuxiliaryChainInteract {
    *     lock for the origin stake.
    * @param proofData The proof data of the origin stake. Will be used to proof the stake against an
    *     available origin state root on auxiliary.
+   * @param originChainId Chain ID of origin chain used to set remote chain Id in anchor.
    */
   public async initializeContracts(
     originOstGatewayAddress: string,
@@ -171,6 +172,7 @@ export default class AuxiliaryChainInteract {
     stakeMessageNonce: string,
     hashLockSecret: string,
     proofData: Proof,
+    originChainId?: string,
   ): Promise<{
     anchorOrganization: ContractInteract.Organization;
     anchor: ContractInteract.Anchor;
@@ -194,6 +196,7 @@ export default class AuxiliaryChainInteract {
       originOstGatewayAddress,
       originHeight,
       originStateRoot,
+      originChainId,
     );
 
     await this.transferAllOstIntoOstPrime(ostPrime.address);
@@ -482,6 +485,7 @@ export default class AuxiliaryChainInteract {
     originOstGatewayAddress: string,
     originHeight: string,
     originStateRoot: string,
+    originChainId?: string,
   ): Promise<{
     anchorOrganization: ContractInteract.Organization;
     anchor: ContractInteract.Anchor;
@@ -503,7 +507,7 @@ export default class AuxiliaryChainInteract {
       this.anchorOrganizationDeploymentNonce,
     );
     const anchor = await this.deployAnchor(
-      this.originChainId,
+      originChainId || this.originChainId,
       originHeight,
       originStateRoot,
       anchorOrganization.address,

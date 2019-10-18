@@ -179,6 +179,7 @@ export default class Initialization {
     Logger.info('Generated Proof for Stake & mint');
 
     Logger.info('Deploying auxiliary contract.');
+    const originChainId = (await (originChainInteract.getWeb3().eth.net.getId())).toString();
     const {
       anchorOrganization: auxiliaryAnchorOrganization,
       anchor: auxiliaryAnchor,
@@ -195,6 +196,7 @@ export default class Initialization {
       stakeMessageNonce,
       hashLockSecret,
       proofData,
+      originChainId,
     );
 
     await Initialization.setCoAnchors(

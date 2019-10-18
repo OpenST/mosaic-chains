@@ -18,12 +18,12 @@ mosaic.action(
     auxiliaryChainIdentifier: string,
   ) => {
     if (!Validator.isValidOriginChain(originChainIdentifier)) {
-      console.error(`Invalid origin chain identifier: ${originChainIdentifier}`)
+      Logger.error(`Invalid origin chain identifier: ${originChainIdentifier}`)
       process.exit(1);
     }
 
     if (!Validator.isValidAuxChain(auxiliaryChainIdentifier)) {
-      console.error(`Invalid aux chain identifier: ${auxiliaryChainIdentifier}`)
+      Logger.error(`Invalid aux chain identifier: ${auxiliaryChainIdentifier}`)
       process.exit(1);
     }
     try {

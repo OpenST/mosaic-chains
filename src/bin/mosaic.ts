@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as mosaic from 'commander';
+import Logger from '../Logger';
 
 mosaic
   .command('start <chain>', 'start container that runs a given chain')
@@ -20,13 +21,13 @@ mosaic
     // Check if command is implemented.
     const searchedCommand = mosaic.commands.find(c => c._name === firstCommand);
     if (!searchedCommand) {
-      console.error('Invalid command: %s\nSee --help for a list of available commands.', mosaic.args.join(' '));
+      Logger.error('Invalid command: %s\nSee --help for a list of available commands.', mosaic.args.join(' '));
       process.exit(1);
     }
     const requiredArgsCount = searchedCommand._args.filter(cmd => cmd.required).length;
     // Check for required arguments.
     if ((command.length - 1) < requiredArgsCount) {
-      console.error('Missing required argument: See --help for details.');
+      Logger.error('Missing required argument: See --help for details.');
       process.exit(1);
     }
   })

@@ -15,26 +15,26 @@ mosaic.action(
     organizationAdmin: string,
   ) => {
     if (!Validator.isValidOriginChain(originChain)) {
-      console.error(`Invalid origin chain identifier: ${originChain}`)
+      Logger.error(`Invalid origin chain identifier: ${originChain}`)
       process.exit(1);
     }
 
     if (!Validator.isValidAuxChain(auxiliaryChain)) {
-      console.error(`Invalid aux chain identifier: ${auxiliaryChain}`)
+      Logger.error(`Invalid aux chain identifier: ${auxiliaryChain}`)
       process.exit(1);
     }
 
     if (!Validator.isValidAddress(deployer)) {
-      console.error(`Invalid deployer address: ${deployer}`);
+      Logger.error(`Invalid deployer address: ${deployer}`);
       process.exit(1);
     }
     if (!Validator.isValidAddress(organizationOwner)) {
-      console.error(`Invalid organization owner address: ${organizationOwner}`);
+      Logger.error(`Invalid organization owner address: ${organizationOwner}`);
       process.exit(1);
     }
 
     if (!Validator.isValidAddress(organizationAdmin)) {
-      console.error(`Invalid organization admin address: ${organizationAdmin}`);
+      Logger.error(`Invalid organization admin address: ${organizationAdmin}`);
       process.exit(1);
     }
 

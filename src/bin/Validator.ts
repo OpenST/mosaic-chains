@@ -21,7 +21,7 @@ export default class Validator {
    * @param value Chain identifier.
    */
   public static isValidOriginChain(value: string): boolean {
-    return !!ChainInfo.publicOriginChainNameToIdMap[value];
+    return !!ChainInfo.publicOriginChainNameToIdMap[value] || ChainInfo.isDevChain(value);
   }
 
   /**

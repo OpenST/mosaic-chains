@@ -92,16 +92,16 @@ mosaic
 
       if (originChain && originChain.length > 0) {
         if (!Validator.isValidOriginChain(originChain)) {
-          console.error(`Invalid origin chain identifier: ${originChain}`)
+          Logger.error(`Invalid origin chain identifier: ${originChain}`);
           process.exit(1);
         }
 
         if (!Validator.isValidAuxChain(chain)) {
-          console.error(`Invalid aux chain identifier: ${chain}`)
+          Logger.error(`Invalid aux chain identifier: ${chain}`);
           process.exit(1);
         }
       } else if (!Validator.isValidOriginChain(chain)) {
-        console.error(`Invalid orgiin chain identifier: ${chain}`)
+        Logger.error(`Invalid origin chain identifier: ${chain}`);
         process.exit(1);
       }
 
