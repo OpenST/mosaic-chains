@@ -7,7 +7,7 @@ import NodeDescription from '../Node/NodeDescription';
 import NodeFactory from '../Node/NodeFactory';
 import DevChainOptions from './DevChainOptions';
 import Validator from './Validator';
-import { Logger } from '../../lib';
+import Logger from '../Logger';
 
 mosaic
   .arguments('<chain>')

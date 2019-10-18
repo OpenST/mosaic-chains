@@ -8,7 +8,7 @@ import GraphDescription from '../Graph/GraphDescription';
 import Graph from '../Graph/Graph';
 import DevChainOptions from './DevChainOptions';
 import Validator from './Validator';
-import { Logger } from '../../lib';
+import Logger from '../Logger';
 
 mosaic
   .arguments('<chains...>')
