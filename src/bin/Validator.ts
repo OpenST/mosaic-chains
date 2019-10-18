@@ -29,6 +29,9 @@ export default class Validator {
    * @param auxChain Chain identifier.
    */
   public static isValidAuxChain(auxChain: string): boolean {
+    if (ChainInfo.isDevChain(auxChain)) {
+      return true;
+    }
     let validAuxChain = false;
     const chainDir = Directory.getProjectChainsDirectory;
     const originChainDirectories = Validator.getDirectories(chainDir);
