@@ -3,6 +3,8 @@ import Logger from '../Logger';
 import setupRedeemPool from '../lib/RedeemPool';
 import Validator from './Validator';
 
+import Web3 = require('web3');
+
 const mosaic = commander
   .arguments('<originChain> <auxiliaryChain> <auxChainWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>');
 mosaic.action(
@@ -14,13 +16,19 @@ mosaic.action(
     organizationOwner: string,
     organizationAdmin: string,
   ) => {
+    const originWeb3 = new Web3(auxChainWeb3EndPoint);
+    const isListening = await originWeb3.eth.net.isListening();
+    if (!isListening) {
+      Logger.error('Could not connect to aux node with web3');
+    }
+
     if (!Validator.isValidOriginChain(originChain)) {
-      Logger.error(`Invalid origin chain identifier: ${originChain}`)
+      Logger.error(`Invalid origin chain identifier: ${originChain}`);
       process.exit(1);
     }
 
     if (!Validator.isValidAuxChain(auxiliaryChain, originChain)) {
-      Logger.error(`Invalid aux chain identifier: ${auxiliaryChain}`)
+      Logger.error(`Invalid aux chain identifier: ${auxiliaryChain}`);
       process.exit(1);
     }
 

@@ -19,8 +19,14 @@ mosaic.action(
     originWebsocket: string,
     deployer: string,
   ) => {
+    const originWeb3 = new Web3(originWebsocket);
+    const isListening = await originWeb3.eth.net.isListening();
+    if (!isListening) {
+      Logger.error('Could not connect to origin node with web3');
+    }
+
     if (!Validator.isValidOriginChain(chain)) {
-      Logger.error(`Invalid origin chain identifier: ${chain}`)
+      Logger.error(`Invalid origin chain identifier: ${chain}`);
       process.exit(1);
     }
     if (!Validator.isValidAddress(deployer)) {
