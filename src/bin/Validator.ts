@@ -5,6 +5,8 @@ import ChainInfo from '../Node/ChainInfo';
 import Directory from '../Directory';
 import MosaicConfig from '../Config/MosaicConfig';
 
+import Web3 = require('web3');
+
 /**
  * This class contains methods to validate commandline  arguments.
  */
@@ -50,6 +52,12 @@ export default class Validator {
       }
     });
     return validAuxChain;
+  }
+
+  public static async isValidWeb3EndPoint(web3EndPoint: string): Promise<boolean> {
+    const web3 = new Web3(web3EndPoint);
+    // https://web3js.readthedocs.io/en/v1.2.0/web3-net.html#islistening
+    return web3.eth.net.isListening();
   }
 
   /**

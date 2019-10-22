@@ -19,9 +19,8 @@ mosaic.action(
     originWebsocket: string,
     deployer: string,
   ) => {
-    const originWeb3 = new Web3(originWebsocket);
-    const isListening = await originWeb3.eth.net.isListening();
-    if (!isListening) {
+    const isValidWeb3Connection = await Validator.isValidWeb3EndPoint(originWebsocket);
+    if (!isValidWeb3Connection) {
       Logger.error('Could not connect to origin node with web3');
     }
 

@@ -5,8 +5,6 @@ import Logger from '../Logger';
 import deployStakePool from '../lib/StakePool';
 import Validator from './Validator';
 
-import Web3 = require('web3');
-
 const mosaic = commander
   .arguments('<chain> <origin-websocket> <deployer> <organizationOwner> <organizationAdmin>');
 mosaic.action(
@@ -17,9 +15,8 @@ mosaic.action(
     organizationOwner: string,
     organizationAdmin: string,
   ) => {
-    const originWeb3 = new Web3(originWebsocket);
-    const isListening = await originWeb3.eth.net.isListening();
-    if (!isListening) {
+    const isValidWeb3Connection = await Validator.isValidWeb3EndPoint(originWebsocket);
+    if (!isValidWeb3Connection) {
       Logger.error('Could not connect to origin node with web3');
     }
     if (!Validator.isValidOriginChain(chain)) {

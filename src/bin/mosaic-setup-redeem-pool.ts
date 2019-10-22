@@ -16,9 +16,8 @@ mosaic.action(
     organizationOwner: string,
     organizationAdmin: string,
   ) => {
-    const originWeb3 = new Web3(auxChainWeb3EndPoint);
-    const isListening = await originWeb3.eth.net.isListening();
-    if (!isListening) {
+    const isValidWeb3Connection = await Validator.isValidWeb3EndPoint(auxChainWeb3EndPoint);
+    if (!isValidWeb3Connection) {
       Logger.error('Could not connect to aux node with web3');
     }
 
