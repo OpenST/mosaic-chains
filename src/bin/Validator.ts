@@ -6,11 +6,11 @@ import Directory from '../Directory';
 import MosaicConfig from '../Config/MosaicConfig';
 
 /**
- * This is contains methods to validate command arguments.
+ * This class contains methods to validate commandline  arguments.
  */
 export default class Validator {
   /**
-   * This method validates a ethereum address.
+   * This method validates an ethereum address.
    * @param value Ethereum address.
    */
   public static isValidAddress(value: string): boolean {
@@ -18,7 +18,7 @@ export default class Validator {
   }
 
   /**
-   * This method validates a validate origin chain.
+   * This method validates an origin chain.
    * @param value Chain identifier.
    */
   public static isValidOriginChain(value: string): boolean {
@@ -26,7 +26,7 @@ export default class Validator {
   }
 
   /**
-   * This method validates a validate aux chain.
+   * This method validates an aux chain.
    * @param auxChain Chain identifier.
    * @param originChainId Origin chain identifier.
    */

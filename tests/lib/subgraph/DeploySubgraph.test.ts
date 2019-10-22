@@ -356,4 +356,62 @@ describe('Subgraph.deploySubgraph', () => {
       'Deploy subgraph must be called once',
     );
   });
+
+  it('should fail for an invalid originChain', () => {
+    sinon.restore();
+    const validOriginChainSpy = sinon.replace(
+      Validator,
+      'isValidOriginChain',
+      sinon.fake.returns(false),
+    );
+
+    assert.throws(
+      () => deploySubGraph(
+        input.originChain,
+        input.auxiliaryChain,
+        input.subgraphType,
+        input.graphAdminRPC,
+        input.graphIPFS,
+        input.mosaicConfigPath,
+        input.gatewayAddress,
+        input.gatewayConfigPath,
+      ),
+      `Invalid origin chain identifier: ${input.originChain}`,
+    );
+
+    SpyAssert.assert(
+      validOriginChainSpy,
+      1,
+      [[input.originChain]],
+    );
+  });
+
+  it('should fail for an invalid aux chain', () => {
+    sinon.restore();
+    const validAuxChainSpy = sinon.replace(
+      Validator,
+      'isValidAuxChain',
+      sinon.fake.returns(false),
+    );
+
+    assert.throws(
+      () => deploySubGraph(
+        input.originChain,
+        input.auxiliaryChain,
+        input.subgraphType,
+        input.graphAdminRPC,
+        input.graphIPFS,
+        input.mosaicConfigPath,
+        input.gatewayAddress,
+        input.gatewayConfigPath,
+      ),
+      `Invalid aux chain identifier: ${input.auxiliaryChain}`,
+    );
+
+    SpyAssert.assert(
+      validAuxChainSpy,
+      1,
+      [[input.auxiliaryChain, input.originChain]],
+    );
+  });
 });

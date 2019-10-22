@@ -20,11 +20,11 @@ mosaic.action(
     deployer: string,
   ) => {
     if (!Validator.isValidOriginChain(chain)) {
-      console.error(`Invalid origin chain identifier: ${chain}`)
+      Logger.error(`Invalid origin chain identifier: ${chain}`)
       process.exit(1);
     }
     if (!Validator.isValidAddress(deployer)) {
-      console.error(`Invalid deployer address: ${deployer}`);
+      Logger.error(`Invalid deployer address: ${deployer}`);
       process.exit(1);
     }
     try {
