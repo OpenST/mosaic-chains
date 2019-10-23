@@ -7,6 +7,7 @@ import SubGraph, { SubGraphType } from '../../../src/Graph/SubGraph';
 import MosaicConfig from '../../../src/Config/MosaicConfig';
 import Directory from '../../../src/Directory';
 import SpyAssert from '../../test_utils/SpyAssert';
+import Validator from '../../../src/bin/Validator';
 
 import someMosaicConfig = require('../../Config/testdata/mosaic.json');
 
@@ -24,6 +25,18 @@ describe('Subgraph.deploySubgraph', () => {
       gatewayAddress: '0x0000000000000000000000000000000000000001',
       gatewayConfigPath: '~/.mosaic/ropsten/1405/0x0000000000000000000000000000000000000001,json',
     };
+
+    sinon.replace(
+      Validator,
+      'isValidOriginChain',
+      sinon.fake.returns(true),
+    );
+
+    sinon.replace(
+      Validator,
+      'isValidAuxChain',
+      sinon.fake.returns(true),
+    );
   });
 
   afterEach(() => {
@@ -155,7 +168,7 @@ describe('Subgraph.deploySubgraph', () => {
 
   it('should fail if gateway config does not exist for mentioned gateway address', () => {
     input.mosaicConfigPath = undefined;
-    input.gatewayAddress = '0x110000000000000000000000000000000000001';
+    input.gatewayAddress = '0x1100000000000000000000000000000000000011';
     input.gatewayConfigPath = undefined;
 
     assert.throws(
@@ -341,6 +354,64 @@ describe('Subgraph.deploySubgraph', () => {
       deploySpy.callCount,
       1,
       'Deploy subgraph must be called once',
+    );
+  });
+
+  it('should fail for an invalid originChain', () => {
+    sinon.restore();
+    const validOriginChainSpy = sinon.replace(
+      Validator,
+      'isValidOriginChain',
+      sinon.fake.returns(false),
+    );
+
+    assert.throws(
+      () => deploySubGraph(
+        input.originChain,
+        input.auxiliaryChain,
+        input.subgraphType,
+        input.graphAdminRPC,
+        input.graphIPFS,
+        input.mosaicConfigPath,
+        input.gatewayAddress,
+        input.gatewayConfigPath,
+      ),
+      `Invalid origin chain identifier: ${input.originChain}`,
+    );
+
+    SpyAssert.assert(
+      validOriginChainSpy,
+      1,
+      [[input.originChain]],
+    );
+  });
+
+  it('should fail for an invalid aux chain', () => {
+    sinon.restore();
+    const validAuxChainSpy = sinon.replace(
+      Validator,
+      'isValidAuxChain',
+      sinon.fake.returns(false),
+    );
+
+    assert.throws(
+      () => deploySubGraph(
+        input.originChain,
+        input.auxiliaryChain,
+        input.subgraphType,
+        input.graphAdminRPC,
+        input.graphIPFS,
+        input.mosaicConfigPath,
+        input.gatewayAddress,
+        input.gatewayConfigPath,
+      ),
+      `Invalid aux chain identifier: ${input.auxiliaryChain}`,
+    );
+
+    SpyAssert.assert(
+      validAuxChainSpy,
+      1,
+      [[input.auxiliaryChain, input.originChain]],
     );
   });
 });

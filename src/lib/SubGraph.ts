@@ -2,6 +2,7 @@ import GatewayAddresses from '../Config/GatewayAddresses';
 import GatewayConfig from '../Config/GatewayConfig';
 import MosaicConfig from '../Config/MosaicConfig';
 import SubGraph, { SubGraphType } from '../Graph/SubGraph';
+import Validator from '../bin/Validator';
 
 const deploySubGraph = (
   originChain: string,
@@ -13,6 +14,17 @@ const deploySubGraph = (
   gatewayAddress?: string,
   gatewayConfigPath?: string,
 ) => {
+  if (!Validator.isValidOriginChain(originChain)) {
+    throw new Error(`Invalid origin chain identifier: ${originChain}`);
+  }
+
+  if (!Validator.isValidAuxChain(auxiliaryChain, originChain)) {
+    throw new Error(`Invalid aux chain identifier: ${auxiliaryChain}`);
+  }
+  if (gatewayAddress && !Validator.isValidAddress(gatewayAddress)) {
+    throw new Error(`Invalid deployer address: ${gatewayAddress}`);
+  }
+
   let gatewayAddresses: GatewayAddresses;
   let gatewayConfig: GatewayConfig;
   let mosaicConfig: MosaicConfig;
