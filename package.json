@@ -18,7 +18,8 @@
     "test:smoke": "./tests/smoke.sh",
     "test:package": "./tests/package.sh",
     "test:integration": "mocha -r ts-node/register test_integration/**/*.test.ts test_integration/*.test.ts --timeout 3000000",
-    "pull-abi": "sh ./tools/abi_downloader/run.sh"
+    "pull-abi": "sh ./tools/abi_downloader/run.sh",
+    "whitelist-workers": "ts-node tools/whitelistworker.ts"
   },
   "repository": {
     "type": "git",

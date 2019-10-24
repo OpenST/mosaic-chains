@@ -243,6 +243,34 @@ If you have those, follow the steps below:
 4. Run `./build.sh` to generate all chain inits.
 5. Add `./chains/<origin_chain>/<chain_id>/bootnodes` and add the boot nodes (see other chains for examples).
 
+## Tool
+
+ #### Whitelist worker for stakepool and redeempool. 
+ 
+ This tool enables whitelisting of workers for stake and redeem pool contract.
+ 
+   *1. Set below environment variables*:
+    
+     
+     export ORIGIN_WEB3_ENDPOINT='replace_with_origin_web3_endpoint';
+     export AUXILIARY_WEB3_ENDPOINT='replace_with_auxiliary_web3_endpoint';
+     export AUXILIARY_CHAIN_ID='replace_with_auxiliary_chain_id';
+     export MOSAIC_CONFIG_PATH='replace_with_mosaic_config_path';
+     export ORIGIN_WORKER_ADDRESS='replace_with_origin_worker_address';
+     export AUXILIARY_WORKER_ADDRESS='replace_with_auxiliary_worker_address';
+     export ORIGIN_WORKER_EXPIRATION_HEIGHT='replace_with_origin_expiration_height';
+     export AUXILIARY_WORKER_EXPIRATION_HEIGHT='replace_with_auxiliary_expiration_height';
+ 
+ origin and auxiliary worker addresses are generated with `facilitator init` step. 
+ Mosaic config path for supported chain should be available on `~/.mosaic/<origin-chain>/mosaic.json` where `<origin-chain>` is origin chain identifier e.g. `ropsten`.  
+ 
+ origin and auxiliary worker expiration height is block height from current block for which worker keys are whitelisted. If current block is 1000 and expiration height is set to 100 then worker keys will be whitelisted for 1100 block.
+ 
+ *2. run command*:
+      
+      npm run whitelist-workers
+          
+
 ## Tests
 
 Run the tests with `npm test`.
