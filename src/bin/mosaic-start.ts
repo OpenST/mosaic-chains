@@ -12,7 +12,7 @@ import DevChainOptions from './DevChainOptions';
 import Logger from '../Logger';
 import { default as ChainInfo, GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
 import Validator from './Validator';
-
+import * as markdownTable from 'markdown-table';
 let mosaic = commander
   .arguments('<chain>');
 
@@ -119,9 +119,9 @@ mosaic
       };
       const node: Node = NodeFactory.create(nodeDescription);
       node.start();
-
+      let graphDescription: GraphDescription;
       if (!optionInput.withoutGraphNode) {
-        const graphDescription: GraphDescription = GraphOptions.parseOptions(
+        graphDescription = GraphOptions.parseOptions(
           optionInput,
           chainInput,
         );
@@ -132,6 +132,16 @@ mosaic
 
         await (new Graph(graphDescription).start());
       }
+      // printing of endpoints on console.
+      const endPointsTable = markdownTable([
+        ["","rpc port", "ws port"],
+        [chain, rpcPort, websocketPort],
+        ["Graph node", graphDescription.rpcPort, graphDescription.websocketPort],
+      ],{
+        align: ['c'],
+        },
+      );
+      Logger.info(`\n below is the list of endpoints : \n${endPointsTable}\n\n`);
     } catch (e) {
       Logger.error(`Error starting node: ${e} `);
     }
