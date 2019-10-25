@@ -145,7 +145,7 @@ export default class Initialization {
     );
     Logger.info('Origin contracts deployed');
     const originContracts = auxiliaryChain.contractAddresses.origin;
-    originContracts.baseTokenAddress = Utils.toChecksumAddress(mosaicConfig.originChain.contractAddresses.valueTokenAddress)
+    originContracts.baseTokenAddress = Utils.toChecksumAddress(mosaicConfig.originChain.contractAddresses.valueTokenAddress);
     originContracts.anchorOrganizationAddress = Utils.toChecksumAddress(originAnchorOrganization.address);
     originContracts.anchorAddress = Utils.toChecksumAddress(originAnchor.address);
     originContracts.gatewayOrganizationAddress = Utils.toChecksumAddress(ostGatewayOrganization.address);
@@ -179,6 +179,8 @@ export default class Initialization {
     Logger.info('Generated Proof for Stake & mint');
 
     Logger.info('Deploying auxiliary contract.');
+    // Origin chain Id is used to set remote chain while deploying anchor.
+    const originChainId = (await (originChainInteract.getWeb3().eth.net.getId())).toString();
     const {
       anchorOrganization: auxiliaryAnchorOrganization,
       anchor: auxiliaryAnchor,
@@ -195,6 +197,7 @@ export default class Initialization {
       stakeMessageNonce,
       hashLockSecret,
       proofData,
+      originChainId,
     );
 
     await Initialization.setCoAnchors(

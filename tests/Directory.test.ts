@@ -36,7 +36,7 @@ describe('Directory.sanitize()', () => {
       path.join(
         Directory.projectRoot,
         'some',
-        'path'
+        'path',
       ),
       'Does not properly replace `.` with the project root.',
     );
@@ -46,7 +46,7 @@ describe('Directory.sanitize()', () => {
       path.join(
         Directory.projectRoot,
         'other',
-        'path'
+        'path',
       ),
       'Does not properly add project root before a relative path.',
     );
@@ -66,6 +66,21 @@ describe('Directory.sanitize()', () => {
       fullPath,
       expectedPath,
       `Path: ${fullPath} is not equal to expectedPath: ${expectedPath}`,
+    );
+  });
+});
+
+describe('Directory.getProjectChainsDirectory()', () => {
+  it('should return project chain directory', () => {
+    const projectChainsDirectory = Directory.getProjectChainsDirectory;
+
+    assert.strictEqual(
+      projectChainsDirectory,
+      path.join(
+        Directory.projectRoot,
+        'chains',
+      ),
+      'Expected project chain directory doesnot match',
     );
   });
 });

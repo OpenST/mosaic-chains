@@ -6,6 +6,7 @@ import ChainInfo from '../Node/ChainInfo';
 import Logger from '../Logger';
 
 import Web3 = require('web3');
+import BN = require('bn.js');
 
 /**
  * Chain verifier does verification of newly created auxiliary chains.
@@ -344,7 +345,8 @@ export default class ChainVerifier {
     );
 
     const remoteChainId = await anchorInstance.methods.getRemoteChainId().call();
-    if (remoteChainId !== this.originChainId) {
+    const originChainId = await this.originWeb3.eth.net.getId();
+    if (!new BN(remoteChainId).eq(new BN(originChainId))) {
       const errMsg = 'AuxiliaryAnchor: Invalid remoteChainId!!!';
       Logger.error(errMsg);
       throw new Error(errMsg);

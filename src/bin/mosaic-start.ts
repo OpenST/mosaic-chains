@@ -11,6 +11,7 @@ import NodeDescription from '../Node/NodeDescription';
 import DevChainOptions from './DevChainOptions';
 import Logger from '../Logger';
 import { default as ChainInfo, GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
+import Validator from './Validator';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -88,6 +89,22 @@ mosaic
         password,
         originChain,
       } = NodeOptions.parseOptions(optionInput, chainInput);
+
+      if (originChain && originChain.length > 0) {
+        if (!Validator.isValidOriginChain(originChain)) {
+          Logger.error(`Invalid origin chain identifier: ${originChain}`);
+          process.exit(1);
+        }
+
+        if (!Validator.isValidAuxChain(chain, originChain)) {
+          Logger.error(`Invalid aux chain identifier: ${chain}`);
+          process.exit(1);
+        }
+      } else if (!Validator.isValidOriginChain(chain)) {
+        Logger.error(`Invalid origin chain identifier: ${chain}`);
+        process.exit(1);
+      }
+
       const nodeDescription: NodeDescription = {
         chain: chainInput,
         mosaicDir,

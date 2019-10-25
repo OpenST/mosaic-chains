@@ -7,7 +7,7 @@ import GatewayConfig from '../../src/Config/GatewayConfig';
 describe('GatewayConfig.fromFile()', () => {
   const filePath = './tests/Config/testdata/0xae02c7b1c324a8d94a564bc8d713df89eae441fe.json';
   const auxChainId = 1000;
-  const originBaseTokenAddress = '0x8e183Fd2cd55C7C05bBf4FAC989740f69e559A6d';
+  const originBaseTokenAddress = '0x9ac77f4c0ca4d0f2142d7a77175cf4f1295fb2d8';
   const valueTokenAddress = '0x8e183Fd2cd55C7C05bBf4FAC989740f69e559A6d';
   const gatewayOrganizationAddress = '0x3f99f42d226A0CD1C1Fcae1e8dC11b2f7a9DcE4B';
   const eip20GatewayAddress = '0xaE02C7b1C324A8D94A564bC8d713Df89eae441fe';
