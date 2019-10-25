@@ -60,13 +60,20 @@ export default class GethNode extends Node {
     // Added try catch, because this is called even in case of mosaic stop.
     // This is needed only while mosaic start.
 
-    let bootNodePath = path.join(
-      Directory.projectRoot,
-      'chains',
-      this.originChain,
-      this.chain,
-      'bootnodes',
-    );
+    let bootNodePath = this.originChain
+      ? path.join(
+        Directory.projectRoot,
+        'chains',
+        this.originChain,
+        this.chain,
+        'bootnodes',
+      )
+      : path.join(
+        Directory.projectRoot,
+        'chains',
+        this.chain,
+        'bootnodes',
+      );
 
     if (this.bootNodesFile) {
       bootNodePath = this.bootNodesFile;
@@ -75,12 +82,12 @@ export default class GethNode extends Node {
 
     try {
       this.logInfo('reading bootnodes from disk');
-      this.bootnodes = fs.readFileSync(
+      this.bootnodes = `${fs.readFileSync(
         bootNodePath,
         {
           encoding: 'utf8',
         },
-      );
+      ).trim()}`;
     } catch (e) {
       this.logInfo('Boot nodes not present');
     }
@@ -230,17 +237,7 @@ export default class GethNode extends Node {
       case 'goerli':
         return ['--goerli'];
       case 'ropsten':
-        // Geth is not able to sync ropsten without providing custom bootnodes
-        // Bootnodes of ropsten.
-        // Refer https://gist.githubusercontent.com/rfikki/c895641b6405c082f68bcf139cf2f7ae/raw/8af5efb74db7be0c36003a81d0363b4e87fb8bbb/ropsten-peers-latest.txt
-        return [
-          '--testnet',
-          '--bootnodes',
-          'enode://a60baadd908740e1fed9690ec399db6cbec47244acecd845a3585ec560f89d9ab96400004412b4dbf59c4e56758824e606ded5be97376ffc012a62869877f9af@155.138.211.79:30303,'
-          + 'enode://3869e363263a54cd930960d485338a7ef1b5b6cd61a4484c81b31f48a2b68200783472a2e7f89c31a86f087e377050720a91cfa82903bd8d45456b6a5e0ffe5f@54.149.176.240:30303,'
-          + 'enode://24cabc9618a4bd4ef3ccfb124b885ddfc352b87bd9f30c4f98f4791b6e81d58824f2c8b451bbdbac25a1b6311b9e12e50775ee49cdb1847c3132b4abfa7842c2@54.39.102.3:30302,'
-          + 'enode://eecaf5852a9f0973d20fd9cb20b480ab0e47fe4a53a2395394e8fe618e8c9e5cb058fd749bf8f0b8483d7dc14c2948e18433490f7dd6182455e3f046d2225a8c@52.221.19.47:30303',
-        ];
+        return ['--testnet'];
       case 'ethereum':
         return ['--networkid', '1'];
       default:
