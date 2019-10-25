@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as commander from 'commander';
+import * as markdownTable from 'markdown-table';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
@@ -12,7 +13,7 @@ import DevChainOptions from './DevChainOptions';
 import Logger from '../Logger';
 import { default as ChainInfo, GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
 import Validator from './Validator';
-import * as markdownTable from 'markdown-table';
+
 let mosaic = commander
   .arguments('<chain>');
 
@@ -134,13 +135,12 @@ mosaic
       }
       // printing of endpoints on console.
       const endPointsTable = markdownTable([
-        ["","rpc port", "ws port"],
+        ['', 'rpc port', 'ws port'],
         [chain, rpcPort, websocketPort],
-        ["Graph node", graphDescription.rpcPort, graphDescription.websocketPort],
-      ],{
-        align: ['c'],
-        },
-      );
+        ['Graph node', graphDescription.rpcPort, graphDescription.websocketPort],
+      ], {
+        align: ['c', 'c', 'c'],
+      });
       Logger.info(`\n below is the list of endpoints : \n${endPointsTable}\n\n`);
     } catch (e) {
       Logger.error(`Error starting node: ${e} `);
