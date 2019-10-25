@@ -45,6 +45,9 @@ export default abstract class Node {
    */
   public originChain: string;
 
+  /** Path of bootnodes file. */
+  public bootNodesFile: string;
+
   /**
    * Docker container names will have this prefix.
    * @returns The prefix.
@@ -71,7 +74,7 @@ export default abstract class Node {
     this.unlock = nodeDescription.unlock;
     this.password = nodeDescription.password;
     this.originChain = nodeDescription.originChain;
-
+    this.bootNodesFile = nodeDescription.bootNodesFile;
     if (this.originChain === '') {
       this.chainDir = path.join(this.mosaicDir, this.chain, `origin-${nodeDescription.client}`);
     } else {

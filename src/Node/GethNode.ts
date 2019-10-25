@@ -59,16 +59,24 @@ export default class GethNode extends Node {
   public readBootnodes(): void {
     // Added try catch, because this is called even in case of mosaic stop.
     // This is needed only while mosaic start.
+
+    let bootNodePath = path.join(
+      Directory.projectRoot,
+      'chains',
+      this.originChain,
+      this.chain,
+      'bootnodes',
+    );
+
+    if (this.bootNodesFile) {
+      bootNodePath = this.bootNodesFile;
+      this.logInfo(`Reading bootnodes from file ${bootNodePath}`);
+    }
+
     try {
       this.logInfo('reading bootnodes from disk');
       this.bootnodes = fs.readFileSync(
-        path.join(
-          Directory.projectRoot,
-          'chains',
-          this.originChain,
-          this.chain,
-          'bootnodes',
-        ),
+        bootNodePath,
         {
           encoding: 'utf8',
         },

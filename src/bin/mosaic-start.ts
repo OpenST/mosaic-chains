@@ -65,6 +65,8 @@ mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
+  .option('-b,--bootnodes <bootnodes>', 'Path to bootnodes file')
+
   .action(async (chain: string, options) => {
     try {
       let chainInput = chain;
@@ -88,6 +90,7 @@ mosaic
         unlock,
         password,
         originChain,
+        bootNodesFile,
       } = NodeOptions.parseOptions(optionInput, chainInput);
 
       if (originChain && originChain.length > 0) {
@@ -116,6 +119,7 @@ mosaic
         password,
         originChain,
         client: optionInput.client,
+        bootNodesFile,
       };
       const node: Node = NodeFactory.create(nodeDescription);
       node.start();
