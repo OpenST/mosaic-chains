@@ -65,7 +65,7 @@ mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
-  .option('-b,--bootnodes <bootnodes>', 'Path to bootnodes file')
+  .option('-b,--bootnodes <bootnodes>', 'Path to bootnodes file for geth client')
 
   .action(async (chain: string, options) => {
     try {
