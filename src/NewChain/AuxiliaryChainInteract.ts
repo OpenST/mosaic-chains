@@ -66,10 +66,10 @@ export default class AuxiliaryChainInteract {
   constructor(
     private initConfig: InitConfig,
     private chainId: string,
-    private originChainId: string,
+    private originChain: string,
     private nodeDescription: NodeDescription,
   ) {
-    this.chainDir = path.join(nodeDescription.mosaicDir, originChainId, this.chainId);
+    this.chainDir = path.join(nodeDescription.mosaicDir, originChain, this.chainId);
   }
 
   /**
@@ -163,6 +163,8 @@ export default class AuxiliaryChainInteract {
    *     lock for the origin stake.
    * @param proofData The proof data of the origin stake. Will be used to proof the stake against an
    *     available origin state root on auxiliary.
+   * @param originChainId Chain ID of origin chain is used to set remote chain Id in anchor.
+   * It's required because originChain in the constructor can be a string like ropsten.
    */
   public async initializeContracts(
     originOstGatewayAddress: string,
@@ -171,6 +173,7 @@ export default class AuxiliaryChainInteract {
     stakeMessageNonce: string,
     hashLockSecret: string,
     proofData: Proof,
+    originChainId?: string,
   ): Promise<{
     anchorOrganization: ContractInteract.Organization;
     anchor: ContractInteract.Anchor;
@@ -194,6 +197,7 @@ export default class AuxiliaryChainInteract {
       originOstGatewayAddress,
       originHeight,
       originStateRoot,
+      originChainId,
     );
 
     await this.transferAllOstIntoOstPrime(ostPrime.address);
@@ -482,6 +486,7 @@ export default class AuxiliaryChainInteract {
     originOstGatewayAddress: string,
     originHeight: string,
     originStateRoot: string,
+    originChainId?: string,
   ): Promise<{
     anchorOrganization: ContractInteract.Organization;
     anchor: ContractInteract.Anchor;
@@ -503,7 +508,7 @@ export default class AuxiliaryChainInteract {
       this.anchorOrganizationDeploymentNonce,
     );
     const anchor = await this.deployAnchor(
-      this.originChainId,
+      originChainId || this.originChain,
       originHeight,
       originStateRoot,
       anchorOrganization.address,
@@ -652,7 +657,7 @@ export default class AuxiliaryChainInteract {
    * to connect.
    */
   private copyStateToChainsDir(): void {
-    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.originChainId, this.chainId));
+    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.originChain, this.chainId));
 
     this.copy('geth');
     this.copy('genesis.json');
@@ -664,7 +669,7 @@ export default class AuxiliaryChainInteract {
   private copy(file: string): void {
     const source: string = path.join(this.chainDir, file);
     const destination: string = path.join(
-      Directory.getProjectUtilityChainDir(this.originChainId, this.chainId),
+      Directory.getProjectUtilityChainDir(this.originChain, this.chainId),
       file,
     );
     this.logInfo('copying chains state to utility chains directory', { source, destination });

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as mosaic from 'commander';
+import Logger from '../Logger';
 
 mosaic
   .command('start <chain>', 'start container that runs a given chain')
@@ -14,4 +15,20 @@ mosaic
   .command('setup-redeem-pool <originChain> <auxiliaryChain> <auxChainWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>', 'Deploys redeem pool contract.')
   .command('setup-stake-pool <chain> <origin-websocket> <deployer> <organizationOwner> <organizationAdmin>', 'Deploys stake pool contract.')
   .command('subgraph <originChain> <auxiliaryChain> <subgraphType> <graphAdminRPC> <graphIPFS>', 'Deploys mosaic subgraph on a graph node')
+  .on('command:*', (command) => {
+    // First argument is the command name.
+    const firstCommand = command[0];
+    // Check if command is implemented.
+    const searchedCommand = mosaic.commands.find(c => c._name === firstCommand);
+    if (!searchedCommand) {
+      Logger.error('Invalid command: %s\nSee --help for a list of available commands.', mosaic.args.join(' '));
+      process.exit(1);
+    }
+    const requiredArgsCount = searchedCommand._args.filter(cmd => cmd.required).length;
+    // Check for required arguments.
+    if ((command.length - 1) < requiredArgsCount) {
+      Logger.error('Missing required argument: See --help for details.');
+      process.exit(1);
+    }
+  })
   .parse(process.argv);

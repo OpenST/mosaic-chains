@@ -7,6 +7,7 @@ import OriginChainInteract from '../NewChain/OriginChainInteract';
 import MosaicConfig from '../Config/MosaicConfig';
 import PublishMosaicConfig from '../Config/PublishMosaicConfig';
 import Utils from '../Utils';
+import Validator from './Validator';
 
 import Web3 = require('web3');
 
@@ -18,6 +19,19 @@ mosaic.action(
     originWebsocket: string,
     deployer: string,
   ) => {
+    const isValidWeb3Connection = await Validator.isValidWeb3EndPoint(originWebsocket);
+    if (!isValidWeb3Connection) {
+      Logger.error('Could not connect to origin node with web3');
+    }
+
+    if (!Validator.isValidOriginChain(chain)) {
+      Logger.error(`Invalid origin chain identifier: ${chain}`);
+      process.exit(1);
+    }
+    if (!Validator.isValidAddress(deployer)) {
+      Logger.error(`Invalid deployer address: ${deployer}`);
+      process.exit(1);
+    }
     try {
       // Publishes mosaic configs for existing chains
       PublishMosaicConfig.tryPublish(chain);
