@@ -4,12 +4,22 @@ import Node from './Node';
 import Shell from '../Shell';
 import Directory from '../Directory';
 import ChainInfo from './ChainInfo';
+import NodeDescription from './NodeDescription';
+import Logger from '../Logger';
 
 const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.0';
 /**
  * Represents a geth node that runs in a docker container.
  */
 export default class GethNode extends Node {
+  /** Path of bootnodes file. */
+  public bootNodesFile?: string;
+
+  public constructor(nodeDescription: NodeDescription) {
+    super(nodeDescription);
+    this.bootNodesFile = nodeDescription.bootNodesFile;
+  }
+
   /** A list of bootnodes that are passed to the geth container. */
   private bootnodes: string = '';
 
@@ -60,24 +70,31 @@ export default class GethNode extends Node {
     // Added try catch, because this is called even in case of mosaic stop.
     // This is needed only while mosaic start.
 
-    let bootNodePath = this.originChain
-      ? path.join(
-        Directory.projectRoot,
-        'chains',
-        this.originChain,
-        this.chain,
-        'bootnodes',
-      )
-      : path.join(
-        Directory.projectRoot,
-        'chains',
-        this.chain,
-        'bootnodes',
-      );
-
+    let bootNodePath;
     if (this.bootNodesFile) {
+      const bootFileExists = fs.pathExistsSync(this.bootNodesFile);
+      if (!bootFileExists) {
+        const message = `Bootnode file ${this.bootNodesFile} does not exist`;
+        Logger.error(message);
+        throw new Error(message);
+      }
       bootNodePath = this.bootNodesFile;
       this.logInfo(`Reading bootnodes from file ${bootNodePath}`);
+    } else {
+      bootNodePath = this.originChain
+        ? path.join(
+          Directory.projectRoot,
+          'chains',
+          this.originChain,
+          this.chain,
+          'bootnodes',
+        )
+        : path.join(
+          Directory.projectRoot,
+          'chains',
+          this.chain,
+          'bootnodes',
+        );
     }
 
     try {

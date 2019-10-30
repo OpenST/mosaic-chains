@@ -22,7 +22,7 @@ export default class NodeDescription {
 
   public client: string = '';
 
-  public bootNodesFile: string;
+  public bootNodesFile?: string;
 
   constructor(readonly chain: string) { }
 }
