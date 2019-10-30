@@ -136,7 +136,7 @@ mosaic
         await (new Graph(graphDescription).start());
       }
 
-      const ipAddress = Utils.ipAddress;
+      const ipAddress = Utils.ipAddress();
       // printing of endpoints on console.
       const chainEndPoints = markdownTable([
         ['', 'url'],
@@ -146,6 +146,7 @@ mosaic
         align: ['c', 'c'],
       });
 
+      Logger.info(`\n below is the list of endpoints for ${chain} chain : \n${chainEndPoints}\n\n`);
       if (isGraphServices) {
         const graphNodeEndPoints = markdownTable([
           ['', 'url'],
@@ -169,8 +170,6 @@ mosaic
         ], {
           align: ['c', 'c'],
         });
-
-        Logger.info(`\n below is the list of endpoints for ${chain} chain : \n${chainEndPoints}\n\n`);
         Logger.info(`\n\n below is the list of endpoints for graph node : \n${graphNodeEndPoints}\n\n`);
         Logger.info(`\n\n below is the list of endpoints for postgres db : \n${postGresEndPoints}\n\n`);
         Logger.info(`\n\n below is the list of endpoints for ipfs : \n${ipfsEndPoints}\n\n`);

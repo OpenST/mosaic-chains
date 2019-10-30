@@ -19,7 +19,7 @@ export default class Utils {
    * It return ip address of the system.
    * @returns  Ip address.
    */
-  public static get ipAddress(): string {
+  public static ipAddress(): string {
     return ip.address();
   }
 }

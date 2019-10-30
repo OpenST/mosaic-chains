@@ -373,6 +373,6 @@ export default class Initialization {
    * @param port Port of boot node.
    */
   private static getBootNode(auxiliaryChainInteract: AuxiliaryChainInteract, port: number) {
-    return `enode://${auxiliaryChainInteract.getBootNode()}@${Utils.ipAddress}:${port}`;
+    return `enode://${auxiliaryChainInteract.getBootNode()}@${Utils.ipAddress()}:${port}`;
   }
 }
