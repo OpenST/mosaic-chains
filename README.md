@@ -261,10 +261,12 @@ If you have those, follow the steps below:
      export ORIGIN_WORKER_EXPIRATION_HEIGHT='replace_with_origin_expiration_height';
      export AUXILIARY_WORKER_EXPIRATION_HEIGHT='replace_with_auxiliary_expiration_height';
  
- origin and auxiliary worker addresses are generated with `facilitator init` step. 
+ Origin and auxiliary worker addresses are generated with `facilitator init` step. 
  Mosaic config path for supported chain should be available at `~/.mosaic/<origin-chain>/mosaic.json` where `<origin-chain>` is origin chain identifier e.g. `ropsten`.  
  
- Origin and auxiliary worker expiration height is block height from current block for which worker keys are whitelisted. If current block is 1000 and expiration height is set to 100 then worker keys will be whitelisted for 1100 block.
+ Origin and auxiliary worker expiration height is block height from current block for which worker keys are whitelisted. 
+ 
+ Example: If current block is 1000 and expiration height is set to 100 then worker keys will be whitelisted for 1100 block.
  
  *2. run command*:
       
