@@ -1,4 +1,5 @@
 import Web3 = require('web3');
+import * as ip from 'ip';
 
 /**
  * It contains utility methods.
@@ -12,5 +13,13 @@ export default class Utils {
    */
   public static toChecksumAddress(address: string): string {
     return Web3.utils.toChecksumAddress(address);
+  }
+
+  /**
+   * It return ip address of the system.
+   * @returns  Ip address.
+   */
+  public static get ipAddress(): string {
+    return ip.address();
   }
 }

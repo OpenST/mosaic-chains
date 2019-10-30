@@ -13,6 +13,7 @@ import DevChainOptions from './DevChainOptions';
 import Logger from '../Logger';
 import { default as ChainInfo, GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
 import Validator from './Validator';
+import Utils from '../Utils';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -121,7 +122,8 @@ mosaic
       const node: Node = NodeFactory.create(nodeDescription);
       node.start();
       let graphDescription: GraphDescription;
-      if (!optionInput.withoutGraphNode) {
+      const isGraphServices = !optionInput.withoutGraphNode;
+      if (isGraphServices) {
         graphDescription = GraphOptions.parseOptions(
           optionInput,
           chainInput,
@@ -133,15 +135,46 @@ mosaic
 
         await (new Graph(graphDescription).start());
       }
+
+      const ipAddress = Utils.ipAddress;
       // printing of endpoints on console.
-      const endPointsTable = markdownTable([
-        ['', 'rpc port', 'ws port'],
-        [chain, rpcPort, websocketPort],
-        ['Graph node', graphDescription.rpcPort, graphDescription.websocketPort],
+      const chainEndPoints = markdownTable([
+        ['', 'url'],
+        ['rpc', `http://${ipAddress}:${rpcPort}`],
+        ['ws', `ws://${ipAddress}:${websocketPort}`],
       ], {
-        align: ['c', 'c', 'c'],
+        align: ['c', 'c'],
       });
-      Logger.info(`\n below is the list of endpoints : \n${endPointsTable}\n\n`);
+
+      if (isGraphServices) {
+        const graphNodeEndPoints = markdownTable([
+          ['', 'url'],
+          ['rpc', `http://${ipAddress}:${graphDescription.rpcPort}`],
+          ['ws', `ws://${ipAddress}:${graphDescription.websocketPort}`],
+          ['admin', `ws://${ipAddress}:${graphDescription.rpcAdminPort}`],
+        ], {
+          align: ['c', 'c'],
+        });
+
+        const postGresEndPoints = markdownTable([
+          ['', 'url'],
+          ['rpc', `http://${ipAddress}:${graphDescription.postgresPort}`],
+        ], {
+          align: ['c', 'c'],
+        });
+
+        const ipfsEndPoints = markdownTable([
+          ['', 'url'],
+          ['rpc', `http://${ipAddress}:${graphDescription.ipfsPort}`],
+        ], {
+          align: ['c', 'c'],
+        });
+
+        Logger.info(`\n below is the list of endpoints for ${chain} chain : \n${chainEndPoints}\n\n`);
+        Logger.info(`\n\n below is the list of endpoints for graph node : \n${graphNodeEndPoints}\n\n`);
+        Logger.info(`\n\n below is the list of endpoints for postgres db : \n${postGresEndPoints}\n\n`);
+        Logger.info(`\n\n below is the list of endpoints for ipfs : \n${ipfsEndPoints}\n\n`);
+      }
     } catch (e) {
       Logger.error(`Error starting node: ${e} `);
     }
