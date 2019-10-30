@@ -247,7 +247,7 @@ If you have those, follow the steps below:
 
  #### Whitelist worker for stakepool and redeempool. 
  
- This tool enables whitelisting of workers for stake and redeem pool contract.
+ This tool enables whitelisting of workers for stake and redeem pool contract. It expects organization admin of stakepool and redeempool contract is unlocked on the node. 
  
    *1. Set below environment variables*:
     
@@ -262,15 +262,14 @@ If you have those, follow the steps below:
      export AUXILIARY_WORKER_EXPIRATION_HEIGHT='replace_with_auxiliary_expiration_height';
  
  origin and auxiliary worker addresses are generated with `facilitator init` step. 
- Mosaic config path for supported chain should be available on `~/.mosaic/<origin-chain>/mosaic.json` where `<origin-chain>` is origin chain identifier e.g. `ropsten`.  
+ Mosaic config path for supported chain should be available at `~/.mosaic/<origin-chain>/mosaic.json` where `<origin-chain>` is origin chain identifier e.g. `ropsten`.  
  
- origin and auxiliary worker expiration height is block height from current block for which worker keys are whitelisted. If current block is 1000 and expiration height is set to 100 then worker keys will be whitelisted for 1100 block.
+ Origin and auxiliary worker expiration height is block height from current block for which worker keys are whitelisted. If current block is 1000 and expiration height is set to 100 then worker keys will be whitelisted for 1100 block.
  
  *2. run command*:
       
       npm run whitelist-workers
           
-
 ## Tests
 
 Run the tests with `npm test`.
