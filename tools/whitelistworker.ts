@@ -31,7 +31,8 @@ assert(auxiliaryweb3EndPoint, 'Auxiliary web3 endpoint must be defined');
 assert(auxiliaryChainId, 'Auxiliary chainId must be defined.');
 const mosaicConfig = MosaicConfig.fromFile(mosaicConfigPath);
 const { stakePoolAddress } = mosaicConfig.originChain.contractAddresses;
-const { redeemPoolAddress } = mosaicConfig.auxiliaryChains[auxiliaryChainId].contractAddresses.auxiliary;
+const { redeemPoolAddress } = mosaicConfig
+  .auxiliaryChains[auxiliaryChainId].contractAddresses.auxiliary;
 
 assert(stakePoolAddress, 'Stake pool address must be defined');
 assert(redeemPoolAddress, 'Redeem pool address must be defined');
