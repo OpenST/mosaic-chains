@@ -1,9 +1,9 @@
 import * as path from 'path';
-import * as ip from 'ip';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import GraphDescription from './GraphDescription';
 import Directory from '../Directory';
+import Utils from '../Utils';
 
 const waitPort = require('wait-port');
 
@@ -118,7 +118,7 @@ export default class Graph {
       `MOSAIC_GRAPH_POSTGRES_PORT=${this.postgresPort}`,
       `MOSAIC_GRAPH_DATA_FOLDER=${this.getMosaicGraphDataFolder()}`,
       `MOSAIC_ETHEREUM_RPC_PORT=${this.ethereumRpcPort}`,
-      `MOSAIC_GRAPH_NODE_HOST=${ip.address()}`,
+      `MOSAIC_GRAPH_NODE_HOST=${Utils.ipAddress()}`,
       'docker-compose',
       `-f ${path.join(Directory.getProjectGraphDir(), 'docker-compose.yml')}`,
       '-p', this.containerName,
