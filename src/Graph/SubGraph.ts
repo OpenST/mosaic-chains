@@ -118,7 +118,7 @@ export default class SubGraph {
    */
   private installNodeModules(): void {
     this.logInfo('installing node modules');
-    Shell.executeInShell(`cd ${this.getTempGraphInstallationDir} && npm install`);
+    Shell.executeInShell(`cd ${this.getTempGraphInstallationDir} && npm ci`);
   }
 
   /**
