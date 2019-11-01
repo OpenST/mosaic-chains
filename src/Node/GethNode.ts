@@ -171,7 +171,7 @@ export default class GethNode extends Node {
       '--rm',
       '--volume', `${genesisFilePath}:/genesis.json`,
       '--volume', `${this.chainDir}:/chain_data`,
-      'ethereum/client-go:v1.8.23',
+      'ethereum/client-go:v1.9.5',
       'init',
       '/genesis.json',
       '--datadir', '/chain_data',
