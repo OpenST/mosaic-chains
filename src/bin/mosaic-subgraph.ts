@@ -52,7 +52,7 @@ mosaic.action(
         });
 
         console.log(`\n\n Sub-graph details : \n${details}\n`);
-        console.log('ℹ️: Replace host, ws-port and http-port with actual values');
+        console.log('ℹ️ Replace host, ws-port and http-port with actual values');
       } else {
         console.log('\n\n Subgraph deployment failed.😱');
       }
