@@ -143,40 +143,40 @@ mosaic
       const ipAddress = Utils.ipAddress();
       // printing of endpoints on console.
       const chainEndPoints = markdownTable([
-        ['', 'url'],
+        ['Type', 'URL'],
         ['rpc', `http://${ipAddress}:${rpcPort}`],
         ['ws', `ws://${ipAddress}:${websocketPort}`],
       ], {
-        align: ['c', 'c'],
+        align: ['c', 'c', 'c'],
       });
 
-      Logger.info(`\n below is the list of endpoints for ${chain} chain : \n${chainEndPoints}\n\n`);
+      console.log(`\n Below are the list of endpoints for ${chain} chain : \n${chainEndPoints}\n`);
       if (isGraphServices) {
         const graphNodeEndPoints = markdownTable([
-          ['', 'url'],
+          ['Type', 'URL'],
           ['rpc', `http://${ipAddress}:${graphDescription.rpcPort}`],
           ['ws', `ws://${ipAddress}:${graphDescription.websocketPort}`],
-          ['admin', `ws://${ipAddress}:${graphDescription.rpcAdminPort}`],
+          ['admin', `http://${ipAddress}:${graphDescription.rpcAdminPort}`],
         ], {
-          align: ['c', 'c'],
+          align: ['c', 'c', 'c', 'c'],
         });
 
         const postGresEndPoints = markdownTable([
-          ['', 'url'],
+          ['Type', 'URL'],
           ['rpc', `http://${ipAddress}:${graphDescription.postgresPort}`],
         ], {
           align: ['c', 'c'],
         });
 
         const ipfsEndPoints = markdownTable([
-          ['', 'url'],
+          ['Type', 'URL'],
           ['rpc', `http://${ipAddress}:${graphDescription.ipfsPort}`],
         ], {
           align: ['c', 'c'],
         });
-        Logger.info(`\n\n below is the list of endpoints for graph node : \n${graphNodeEndPoints}\n\n`);
-        Logger.info(`\n\n below is the list of endpoints for postgres db : \n${postGresEndPoints}\n\n`);
-        Logger.info(`\n\n below is the list of endpoints for ipfs : \n${ipfsEndPoints}\n\n`);
+        console.log(`\n Below are the list of endpoints for graph node : \n${graphNodeEndPoints}\n`);
+        console.log(`\n Below are the list of endpoints for postgres db : \n${postGresEndPoints}\n`);
+        console.log(`\n Below are the list of endpoints for ipfs : \n${ipfsEndPoints}\n`);
       }
     } catch (e) {
       Logger.error(`Error starting node: ${e} `);
