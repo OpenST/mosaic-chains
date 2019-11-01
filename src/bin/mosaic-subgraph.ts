@@ -43,7 +43,7 @@ mosaic.action(
           ],
           [
             subgraphType,
-            response,
+            response.subgraphName,
             Utils.graphWSEndpoint(response.subgraphName),
             Utils.graphRPCEndPoint(response.subgraphName),
           ],
