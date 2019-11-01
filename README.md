@@ -282,7 +282,7 @@ Mosaic config file is required in various steps and commands. There are two ways
 
 1. **On local machine**: Mosaic config is copied on local machine inside folder `~/.mosaic/<origin-chain-identifier>/mosaic.json` while starting mosaic chain. Here `<origin-chain-identifier>` can be `ropsten`, `goerli` and `dev-origin`.
 
-2. **On github**: Mosaic config can be download for different origin chains from [github](/develop/chains).
+2. **On github**: Mosaic config can be download for different origin chains from [github](chains).
   Mosaic config file exists inside folders [goerli](chains/goerli) and [ropsten](chains/ropsten).    
   
 ## Gateway config
