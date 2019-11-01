@@ -274,7 +274,22 @@ If you have those, follow the steps below:
  *2. run command*:
       
       npm run whitelist-workers
-          
+
+
+
+## Mosaic Config: 
+Mosaic config file is required in various steps and commands. There are two ways to locate mosaic config file. 
+
+1. **On local machine**: Mosaic config is copied on local machine inside folder `~/.mosaic/<origin-chain-identifier>/mosaic.json` while starting mosaic chain. Here `<origin-chain-identifier>` can be `ropsten`, `goerli` and `dev-origin`.
+
+2. **On github**: Mosaic config can be download for different origin chains from [github](https://github.com/mosaicdao/mosaic-chains/tree/develop/chains).
+  Mosaic config file exists inside folders [goerli](https://github.com/mosaicdao/mosaic-chains/tree/develop/chains/goerli) and [ropsten](https://github.com/mosaicdao/mosaic-chains/tree/develop/chains/ropsten).    
+  
+## Gateway config
+Gateway config file is also required for various commands. This file contains information about gateway addresses. Currently below config files are supported: 
+
+1. [WETH gateway config](https://github.com/mosaicdao/mosaic-chains/blob/develop/chains/goerli/1405/0x6649c6ff3629ae875b91b6c1551139c9feaa2514.json).
+        
 ## Tests
 
 Run the tests with `npm test`.
