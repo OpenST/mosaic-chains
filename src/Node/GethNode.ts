@@ -191,7 +191,7 @@ export default class GethNode extends Node {
       ]);
     }
 
-    args = args.concat(['ethereum/client-go:v1.8.23']);
+    args = args.concat(['ethereum/client-go:v1.9.5']);
     args = args.concat(this.networkOption());
     args = args.concat([
       '--datadir', './chain_data',
