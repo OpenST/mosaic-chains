@@ -185,7 +185,8 @@ Where:
 ## Subgraph deployment
 Subgraph command can be used to deploy mosaic subgraph. Subgraph by [thegraph](https://thegraph.com) protocol is used to index transactions and events by mosaic smart contract. 
 
-#### Prerequisite: Below commands assumes the blockchain node and graph node is already running. You can use `mosaic start` command to start a node and graph node.
+#### Prerequisite: 
+Below commands assumes the blockchain node and graph node is already running. You can use `mosaic start` command to start a node and graph node.
 
 ##### Subgraph deployment for mosaic gateways: 
 Below command deploys subgraph of mosaic gateways.
@@ -211,6 +212,8 @@ Below command deploys subgraph of any eip20gateway.
 1. gateway-config: Path of gateway config. 
 
 Optionally `gateway-address` option can be passed which will search gateway config on default path.  
+
+Subgraph deployment command also prints subgraph endpoint after execution.
 ## Chain Verifier
 
 Chain verifier makes sure that newly created chain is being setup correctly.
