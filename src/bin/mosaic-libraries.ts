@@ -57,6 +57,8 @@ mosaic.action(
       );
 
       mosaicConfig.writeToMosaicConfigDirectory();
+      Utils.printContracts(['Gateway library', 'Message bus library', 'Merkle patricia proof library'],
+        [gatewayLib.address, messageBus.address, merklePatriciaProof.address]);
     } catch (error) {
       Logger.error('error while executing mosaic libraries', { error: error.toString() });
       process.exit(1);

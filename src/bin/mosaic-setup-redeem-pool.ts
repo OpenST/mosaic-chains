@@ -2,11 +2,12 @@ import * as commander from 'commander';
 import Logger from '../Logger';
 import setupRedeemPool from '../lib/RedeemPool';
 import Validator from './Validator';
-
-import Web3 = require('web3');
+import MosaicConfig from '../Config/MosaicConfig';
+import Utils from "../Utils";
 
 const mosaic = commander
   .arguments('<originChain> <auxiliaryChain> <auxChainWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>');
+mosaic.option('-m,--mosaic-config <string>', 'Mosaic config absolute path.');
 mosaic.action(
   async (
     originChain: string,
@@ -15,6 +16,7 @@ mosaic.action(
     deployer: string,
     organizationOwner: string,
     organizationAdmin: string,
+    options,
   ) => {
     const isValidWeb3Connection = await Validator.isValidWeb3EndPoint(auxChainWeb3EndPoint);
     if (!isValidWeb3Connection) {
@@ -46,14 +48,20 @@ mosaic.action(
     }
 
     try {
-      await setupRedeemPool(
+      let mosaicConfig: MosaicConfig;
+      if (options.mosaicConfig) {
+        mosaicConfig = MosaicConfig.fromFile(options.mosaicConfig);
+      }
+      const redeemPoolAddress = await setupRedeemPool(
         originChain,
         auxiliaryChain,
         auxChainWeb3EndPoint,
         deployer,
         organizationOwner,
         organizationAdmin,
+        mosaicConfig,
       );
+      Utils.printContracts(['Redeem Pool'], [redeemPoolAddress]);
     } catch (error) {
       Logger.error('error while executing mosaic setup redeem pool', { error: error.toString() });
       process.exit(1);

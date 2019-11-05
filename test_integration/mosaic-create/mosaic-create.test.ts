@@ -62,12 +62,27 @@ describe('Mosaic create', () => {
     Shell.executeInShell(command, { stdio: 'inherit' });
   });
 
+
+  it('Deploy stake pool contract with mosaic config option', async () => {
+    const command = `./mosaic setup-stake-pool ${originChainId} ${originWeb3RPCEndPoint} ${originDeployerAddress} ${originDeployerAddress} ${originDeployerAddress} --mosaic-config ~/.mosaic/dev-origin/mosaic.json`;
+    Shell.executeInShell(command, { stdio: 'inherit' });
+  });
+
   it('Deploy redeem pool contract', async () => {
     // Second account password.
     const password = fs.readFileSync(passwordFile).toString().trim().split('\n')[1];
 
     auxiliaryWeb3.eth.personal.unlockAccount(beneficiary, password);
     const command = `./mosaic setup-redeem-pool ${originChainId} ${auxChainId} ${auxiliaryEndpoint} ${beneficiary} ${beneficiary} ${beneficiary}`;
+    Shell.executeInShell(command, { stdio: 'inherit' });
+  });
+
+  it('Deploy redeem pool contract with mosaic config option', async () => {
+    // Second account password.
+    const password = fs.readFileSync(passwordFile).toString().trim().split('\n')[1];
+
+    auxiliaryWeb3.eth.personal.unlockAccount(beneficiary, password);
+    const command = `./mosaic setup-redeem-pool ${originChainId} ${auxChainId} ${auxiliaryEndpoint} ${beneficiary} ${beneficiary} ${beneficiary} --mosaic-config ~/.mosaic/dev-origin/mosaic.json`;
     Shell.executeInShell(command, { stdio: 'inherit' });
   });
 

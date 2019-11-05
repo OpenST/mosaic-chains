@@ -13,6 +13,7 @@ import Web3 = require('web3');
  * @param deployer Address of the deployer.
  * @param organizationOwner Address of organization owner of redeem pool.
  * @param organizationAdmin Address of organization admin of redeem pool.
+ * @param mosaicConfigObject Mosaic config Object.
  */
 const setupRedeemPool = async (
   originChain: string,
@@ -21,9 +22,16 @@ const setupRedeemPool = async (
   deployer: string,
   organizationOwner: string,
   organizationAdmin: string,
-): Promise<void> => {
+  mosaicConfigObject?: MosaicConfig,
+): Promise<string> => {
   // Publishes mosaic configs for existing chains
   PublishMosaicConfig.tryPublish(originChain);
+
+  if (!(MosaicConfig.exists(originChain) || mosaicConfigObject)) {
+    throw new MosaicConfigNotFoundException(`Mosaic config for ${originChain} not found.`);
+  }
+
+  const mosaicConfig = mosaicConfigObject || MosaicConfig.fromChain(originChain);
 
   const auxiliaryWeb3 = new Web3(auxiliaryChainEndPoint);
   const gasPrice = await auxiliaryWeb3.eth.getGasPrice();
@@ -33,12 +41,6 @@ const setupRedeemPool = async (
     organizationAdmin,
     { from: deployer, gasPrice },
   );
-
-  if (!MosaicConfig.exists(originChain)) {
-    throw new MosaicConfigNotFoundException(`Mosaic config for ${originChain} not found.`);
-  }
-
-  const mosaicConfig = MosaicConfig.fromChain(originChain);
 
   if (!mosaicConfig.auxiliaryChains[auxiliaryChain]) {
     throw new Error(
@@ -50,6 +52,7 @@ const setupRedeemPool = async (
     .auxiliary
     .redeemPoolAddress = redeemPool.options.address;
   mosaicConfig.writeToMosaicConfigDirectory();
+  return redeemPool.options.address;
 };
 
 export default setupRedeemPool;
