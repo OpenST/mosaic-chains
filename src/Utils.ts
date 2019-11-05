@@ -37,7 +37,7 @@ export default class Utils {
    * @param subgraphName Name of subgraph.
    */
   public static graphRPCEndPoint(subgraphName: string): string {
-    return `http://{host}:{graph-http-port/subgraphs/name/${subgraphName}`;
+    return `http://{host}:{graph-http-port}/subgraphs/name/${subgraphName}`;
   }
 
   /**
