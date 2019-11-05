@@ -61,18 +61,24 @@ export default class SubGraph {
    * Create local instance and deploy graph.
    * @return
    */
-  public deploy(): {success: boolean; message: string} {
+  public deploy(): {success: boolean; message: string; subgraphName: string} {
     this.copyCodeToTempDir();
     this.installNodeModules();
     this.writeSubGraphConfigFile();
     const createLocalResponse = this.createLocal();
     if (!createLocalResponse.success) {
       this.deleteCodeFromTempDir();
-      return createLocalResponse;
+      return {
+        ...createLocalResponse,
+        subgraphName: this.name,
+      };
     }
     const deployLocalResponse = this.deployLocal();
     this.deleteCodeFromTempDir();
-    return deployLocalResponse;
+    return {
+      ...deployLocalResponse,
+      subgraphName: this.name,
+    };
   }
 
   /**
@@ -118,7 +124,7 @@ export default class SubGraph {
    */
   private installNodeModules(): void {
     this.logInfo('installing node modules');
-    Shell.executeInShell(`cd ${this.getTempGraphInstallationDir} && npm install`);
+    Shell.executeInShell(`cd ${this.getTempGraphInstallationDir} && npm ci`);
   }
 
   /**

@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Utils as MosaicUtils, ContractInteract } from '@openst/mosaic.js';
-import * as ip from 'ip';
 
+import Utils from '../Utils';
 import InitConfig from '../Config/InitConfig';
 import MosaicConfig, { AuxiliaryChain } from '../Config/MosaicConfig';
 import PublishMosaicConfig from '../Config/PublishMosaicConfig';
@@ -13,7 +13,6 @@ import Logger from '../Logger';
 import Proof from './Proof';
 import Directory from '../Directory';
 import Integer from '../Integer';
-import Utils from '../Utils';
 
 import Web3 = require('web3');
 
@@ -374,6 +373,6 @@ export default class Initialization {
    * @param port Port of boot node.
    */
   private static getBootNode(auxiliaryChainInteract: AuxiliaryChainInteract, port: number) {
-    return `enode://${auxiliaryChainInteract.getBootNode()}@${ip.address()}:${port}`;
+    return `enode://${auxiliaryChainInteract.getBootNode()}@${Utils.ipAddress()}:${port}`;
   }
 }

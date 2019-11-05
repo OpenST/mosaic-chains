@@ -44,6 +44,9 @@ export default class NodeOptions {
    */
   public originChain: string;
 
+  /** List of boot nodes to start the node */
+  public bootNodesFile: string;
+
   /**
    * @param options The options from the command line.
    */
@@ -56,8 +59,10 @@ export default class NodeOptions {
     unlock: string;
     password: string;
     originChain: string;
+    bootNodesFile: string;
   }) {
     Object.assign(this, options);
+    this.bootNodesFile = options.bootNodesFile;
   }
 
   /**
@@ -95,6 +100,7 @@ export default class NodeOptions {
       unlock: options.unlock || '',
       password: options.password || '',
       originChain: options.origin || '',
+      bootNodesFile: options.bootnodes,
     });
 
     parsedOptions.mosaicDir = Directory.sanitize(parsedOptions.mosaicDir);
