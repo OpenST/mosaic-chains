@@ -1,6 +1,6 @@
 {
   "name": "@openst/mosaic-chains",
-  "version": "0.1.0-alpha.6",
+  "version": "0.1.0-alpha.8",
   "description": "Mosaic chains is an executable to run and manage mosaic chains.",
   "bin": {
     "mosaic": "lib/src/bin/mosaic.js"
