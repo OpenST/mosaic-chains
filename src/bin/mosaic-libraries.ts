@@ -36,14 +36,13 @@ mosaic.action(
       // Publishes mosaic configs for existing chains
       PublishMosaicConfig.tryPublish(chain);
 
+      const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
       const originWeb3 = new Web3(originWebsocket);
       const {
         gatewayLib,
         messageBus,
         merklePatriciaProof,
       } = await OriginChainInteract.deployLibraries(originWeb3, deployer);
-
-      const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
 
       mosaicConfig.originChain.chain = chain;
       mosaicConfig.originChain.contractAddresses.gatewayLibAddress = Utils.toChecksumAddress(
