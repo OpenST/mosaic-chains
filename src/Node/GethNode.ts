@@ -4,12 +4,22 @@ import Node from './Node';
 import Shell from '../Shell';
 import Directory from '../Directory';
 import ChainInfo from './ChainInfo';
+import NodeDescription from './NodeDescription';
+import Logger from '../Logger';
 
-const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains';
+const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.0';
 /**
  * Represents a geth node that runs in a docker container.
  */
 export default class GethNode extends Node {
+  /** Path of bootnodes file. */
+  public bootNodesFile?: string;
+
+  public constructor(nodeDescription: NodeDescription) {
+    super(nodeDescription);
+    this.bootNodesFile = nodeDescription.bootNodesFile;
+  }
+
   /** A list of bootnodes that are passed to the geth container. */
   private bootnodes: string = '';
 
@@ -26,6 +36,10 @@ export default class GethNode extends Node {
     ) {
       args = this.devGethArgs(this.chain);
     } else {
+      if (this.originChain) {
+        // init geth directory ONLY for auxiliary chains
+        this.initializeGethDirectory();
+      }
       args = this.defaultDockerGethArgs;
     }
     this.logInfo('starting geth node');
@@ -55,20 +69,42 @@ export default class GethNode extends Node {
   public readBootnodes(): void {
     // Added try catch, because this is called even in case of mosaic stop.
     // This is needed only while mosaic start.
-    try {
-      this.logInfo('reading bootnodes from disk');
-      this.bootnodes = fs.readFileSync(
-        path.join(
+
+    let bootNodePath;
+    if (this.bootNodesFile) {
+      const bootFileExists = fs.pathExistsSync(this.bootNodesFile);
+      if (!bootFileExists) {
+        const message = `Bootnode file ${this.bootNodesFile} does not exist`;
+        Logger.error(message);
+        throw new Error(message);
+      }
+      bootNodePath = this.bootNodesFile;
+      this.logInfo(`Reading bootnodes from file ${bootNodePath}`);
+    } else {
+      bootNodePath = this.originChain
+        ? path.join(
           Directory.projectRoot,
           'chains',
           this.originChain,
           this.chain,
           'bootnodes',
-        ),
+        )
+        : path.join(
+          Directory.projectRoot,
+          'chains',
+          this.chain,
+          'bootnodes',
+        );
+    }
+
+    try {
+      this.logInfo('reading bootnodes from disk');
+      this.bootnodes = `${fs.readFileSync(
+        bootNodePath,
         {
           encoding: 'utf8',
         },
-      );
+      ).trim()}`;
     } catch (e) {
       this.logInfo('Boot nodes not present');
     }
@@ -95,6 +131,55 @@ export default class GethNode extends Node {
     return args;
   }
 
+  /**
+   * It initializes the geth directory from genesis file if not already done.
+   */
+  private initializeGethDirectory(): void {
+    if (!this.isGethAlreadyInitiliazed()) {
+      const { gethInitArgs } = this;
+      this.logInfo('initializing geth directory');
+      Shell.executeDockerCommand(gethInitArgs);
+    } else {
+      this.logInfo('skipping directory initialization as it is already done');
+    }
+  }
+
+  /**
+   * It verifies whether geth initialization already or not.
+   * @returns true if geth is already initialized otherwise false.
+   */
+  private isGethAlreadyInitiliazed(): boolean {
+    const chainGethPath = path.join(this.chainDir, 'geth');
+    return fs.existsSync(chainGethPath);
+  }
+
+  /**
+   * It provides parameters required for geth init command.
+   * @returns geth init arguments.
+   */
+  private get gethInitArgs(): string [] {
+    const genesisFilePath = path.join(
+      Directory.projectRoot,
+      'chains',
+      this.originChain,
+      this.chain,
+      'genesis.json',
+    );
+
+    const args = [
+      'run',
+      '--rm',
+      '--volume', `${genesisFilePath}:/genesis.json`,
+      '--volume', `${this.chainDir}:/chain_data`,
+      'ethereum/client-go:v1.8.23',
+      'init',
+      '/genesis.json',
+      '--datadir', '/chain_data',
+    ];
+
+    return args;
+  }
+
   private get defaultDockerGethArgs(): string[] {
     let args = this.getDefaultDockerArgs();
     args = args.concat([
@@ -105,27 +190,28 @@ export default class GethNode extends Node {
         '--volume', `${this.password}:/password.txt`,
       ]);
     }
+
+    args = args.concat(['ethereum/client-go:v1.8.23']);
+    args = args.concat(this.networkOption());
     args = args.concat([
-      'ethereum/client-go:v1.8.23',
-      '--networkid', this.chain,
       '--datadir', './chain_data',
       '--port', `${this.port}`,
       '--rpc',
       '--rpcaddr', '0.0.0.0',
-      '--rpcvhosts', '*',
+      '--rpcvhosts=*',
+      '--rpccorsdomain=*',
       '--rpcapi', 'eth,net,web3,network,debug,txpool,admin,personal',
       '--rpcport', '8545',
       '--ws',
       '--wsaddr', '0.0.0.0',
       '--wsport', '8546',
       '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
-      '--wsorigins', '*',
-      '--rpccorsdomain', '*',
+      '--wsorigins=*',
     ]);
 
     if (this.bootnodes !== '') {
       args = args.concat([
-        '--bootnodes', this.bootnodes,
+        '--bootnodes', this.bootnodes.trim(),
       ]);
     }
 
@@ -161,7 +247,24 @@ export default class GethNode extends Node {
   }
 
   /**
-   * Copies the initialized geth repository to the data directory if it does not exist.
+   * @return array of network args which become part of geth start command
+   */
+  private networkOption(): string[] {
+    switch (this.chain) {
+      case 'goerli':
+        return ['--goerli'];
+      case 'ropsten':
+        return ['--testnet'];
+      case 'ethereum':
+        return ['--networkid', '1'];
+      default:
+        // aux chains go into this block
+        return ['--networkid', `${this.chain}`];
+    }
+  }
+
+  /**
+   * Creates the directory for the chain.
    */
   protected initializeDirectories(): void {
     super.initializeDataDir();
@@ -169,26 +272,6 @@ export default class GethNode extends Node {
     if (!fs.existsSync(this.chainDir)) {
       this.logInfo(`${this.chainDir} does not exist; initializing`);
       fs.mkdirpSync(this.chainDir);
-      const sourcePath = this.originChain === '' ? path.join(
-        Directory.projectRoot,
-        'chains',
-        this.chain,
-        'origin',
-        'geth',
-      ) : path.join(
-        Directory.projectRoot,
-        'chains',
-        this.originChain,
-        this.chain,
-        'geth',
-      );
-      if (fs.existsSync(sourcePath)) {
-        fs.copySync(
-          sourcePath,
-          path.join(this.chainDir, 'geth'),
-        );
-      }
     }
   }
-
 }

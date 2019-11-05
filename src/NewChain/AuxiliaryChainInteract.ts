@@ -1,7 +1,11 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as RLP from 'rlp';
-import { ContractInteract, Contracts as MosaicContracts } from '@openst/mosaic.js';
+import {
+  ContractInteract,
+  Contracts as MosaicContracts,
+  Utils as MosaicUtils,
+} from '@openst/mosaic.js';
 
 import { Tx } from 'web3/eth/types';
 import CliqueGenesis from './CliqueGenesis';
@@ -62,10 +66,10 @@ export default class AuxiliaryChainInteract {
   constructor(
     private initConfig: InitConfig,
     private chainId: string,
-    private originChainId: string,
+    private originChain: string,
     private nodeDescription: NodeDescription,
   ) {
-    this.chainDir = path.join(nodeDescription.mosaicDir, originChainId, this.chainId);
+    this.chainDir = path.join(nodeDescription.mosaicDir, originChain, this.chainId);
   }
 
   /**
@@ -159,6 +163,8 @@ export default class AuxiliaryChainInteract {
    *     lock for the origin stake.
    * @param proofData The proof data of the origin stake. Will be used to proof the stake against an
    *     available origin state root on auxiliary.
+   * @param originChainId Chain ID of origin chain is used to set remote chain Id in anchor.
+   * It's required because originChain in the constructor can be a string like ropsten.
    */
   public async initializeContracts(
     originOstGatewayAddress: string,
@@ -167,6 +173,7 @@ export default class AuxiliaryChainInteract {
     stakeMessageNonce: string,
     hashLockSecret: string,
     proofData: Proof,
+    originChainId?: string,
   ): Promise<{
     anchorOrganization: ContractInteract.Organization;
     anchor: ContractInteract.Anchor;
@@ -190,6 +197,7 @@ export default class AuxiliaryChainInteract {
       originOstGatewayAddress,
       originHeight,
       originStateRoot,
+      originChainId,
     );
 
     await this.transferAllOstIntoOstPrime(ostPrime.address);
@@ -287,6 +295,36 @@ export default class AuxiliaryChainInteract {
    */
   set auxiliarySealer(value: string) {
     this._auxiliarySealer = value;
+  }
+
+  /**
+   * This method set organization admin.
+   * @param admin Admin address.
+   * @param organization Organization contract interact.
+   */
+  public async setOrganizationAdmin(
+    admin: string,
+    organization: ContractInteract.Organization,
+  ) {
+    return MosaicUtils.sendTransaction(
+      organization.contract.methods.setAdmin(admin),
+      this.txOptions,
+    );
+  }
+
+  /**
+   * This method set co-anchor address;
+   * @param auxiliaryAnchor Instance of anchor contract on auxiliary chain.
+   * @param coAnchorAddress CoAnchor address.
+   */
+  public async setCoAnchorAddress(
+    auxiliaryAnchor: ContractInteract.Anchor,
+    coAnchorAddress: string,
+  ) {
+    return auxiliaryAnchor.setCoAnchorAddress(
+      coAnchorAddress,
+      this.txOptions,
+    );
   }
 
   /**
@@ -448,6 +486,7 @@ export default class AuxiliaryChainInteract {
     originOstGatewayAddress: string,
     originHeight: string,
     originStateRoot: string,
+    originChainId?: string,
   ): Promise<{
     anchorOrganization: ContractInteract.Organization;
     anchor: ContractInteract.Anchor;
@@ -459,13 +498,17 @@ export default class AuxiliaryChainInteract {
     merklePatriciaProof: ContractInteract.MerklePatriciaProof;
   }> {
     this.logInfo('deploying contracts');
+
+    /* Deployer is set as admin, so that set co-anchor transaction can be done.
+     * Once setup is done, admin will be restored to actual address.
+     */
     const anchorOrganization = await this.deployOrganization(
       this.initConfig.auxiliaryAnchorOrganizationOwner,
-      this.initConfig.auxiliaryAnchorOrganizationAdmin,
+      this.txOptions.from,
       this.anchorOrganizationDeploymentNonce,
     );
     const anchor = await this.deployAnchor(
-      this.originChainId,
+      originChainId || this.originChain,
       originHeight,
       originStateRoot,
       anchorOrganization.address,
@@ -614,7 +657,7 @@ export default class AuxiliaryChainInteract {
    * to connect.
    */
   private copyStateToChainsDir(): void {
-    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.originChainId, this.chainId));
+    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.originChain, this.chainId));
 
     this.copy('geth');
     this.copy('genesis.json');
@@ -626,7 +669,7 @@ export default class AuxiliaryChainInteract {
   private copy(file: string): void {
     const source: string = path.join(this.chainDir, file);
     const destination: string = path.join(
-      Directory.getProjectUtilityChainDir(this.originChainId, this.chainId),
+      Directory.getProjectUtilityChainDir(this.originChain, this.chainId),
       file,
     );
     this.logInfo('copying chains state to utility chains directory', { source, destination });

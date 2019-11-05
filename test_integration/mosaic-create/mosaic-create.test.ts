@@ -18,11 +18,10 @@ describe('Mosaic create', () => {
   const auxChainId = 500;
   const passwordFile = './test_integration/mosaic-create/integration_test_password.txt';
   let originWeb3;
-  let originChainId;
+  const originChainId = 'dev-origin';
   let originDeployerAddress: string;
   let auxiliaryWeb3;
-  let auxiliaryEndpoint = 'http://localhost:40500';
-  ;
+  const auxiliaryEndpoint = 'http://localhost:40500';
   let beneficiary;
   let stakeAmount;
 
@@ -32,7 +31,6 @@ describe('Mosaic create', () => {
   it('Start origin chain', async () => {
     await Utils.startOriginChain(originPort);
     originWeb3 = new Web3(originWeb3RPCEndPoint);
-    originChainId = await originWeb3.eth.net.getId();
     originDeployerAddress = (await originWeb3.eth.getAccounts())[0];
   });
 
@@ -74,7 +72,7 @@ describe('Mosaic create', () => {
   });
 
   it(`Verify auxiliary chain ${auxChainId}`, () => {
-    const command = `./mosaic verify-chain ${originWeb3RPCEndPoint} ${auxiliaryEndpoint} ${1} ${500}`;
+    const command = `./mosaic verify-chain ${originWeb3RPCEndPoint} ${auxiliaryEndpoint} ${originChainId} ${auxChainId}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
   });
 

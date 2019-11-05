@@ -44,6 +44,9 @@ export default class NodeOptions {
    */
   public originChain: string;
 
+  /** List of boot nodes to start the node */
+  public bootNodesFile: string;
+
   /**
    * @param options The options from the command line.
    */
@@ -56,8 +59,10 @@ export default class NodeOptions {
     unlock: string;
     password: string;
     originChain: string;
+    bootNodesFile: string;
   }) {
     Object.assign(this, options);
+    this.bootNodesFile = options.bootNodesFile;
   }
 
   /**
@@ -69,6 +74,7 @@ export default class NodeOptions {
   public static addCliOptions(command): any {
     command
       .option('-o,--origin <string>', 'identifier for origin chain. To be passed while starting auxiliary chain')
+      .option('-c,--client <string>', 'identifier for client (geth/parity). To be passed while starting origin chain')
       .option('-d,--mosaic-dir <dir>', 'a path to a directory where the chain data will be stored', DEFAULT_MOSAIC_DIR)
       .option('-p,--port <port>', 'the port to use for forwarding from host to container', Integer.parseString)
       .option('-r,--rpc-port <port>', 'the RPC port to use for forwarding from host to container', Integer.parseString)
@@ -94,6 +100,7 @@ export default class NodeOptions {
       unlock: options.unlock || '',
       password: options.password || '',
       originChain: options.origin || '',
+      bootNodesFile: options.bootnodes,
     });
 
     parsedOptions.mosaicDir = Directory.sanitize(parsedOptions.mosaicDir);

@@ -1,4 +1,5 @@
 import * as fs from 'fs-extra';
+const path = require('path');
 
 /**
  * Provides file system related operations.
@@ -69,4 +70,18 @@ export default class FileSystem {
       return false;
     }
   }
+
+  /**
+   * It resolves home path to absolute path after resolving tilde.
+   *
+   * @param filePath GatewayConfig file path. e.g. ~/.mosaic/goerli/gatewayAddress.json
+   * @return {string} Absolute file path.
+   */
+  public static resolveHomePath(filePath: string) {
+    if (filePath[0] === '~') {
+      return path.join(process.env.HOME, filePath.slice(1));
+    }
+    return filePath;
+  }
+
 }

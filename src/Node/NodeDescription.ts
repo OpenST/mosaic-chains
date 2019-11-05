@@ -20,5 +20,9 @@ export default class NodeDescription {
 
   public originChain: string = '';
 
+  public client: string = '';
+
+  public bootNodesFile?: string;
+
   constructor(readonly chain: string) { }
 }

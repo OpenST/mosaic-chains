@@ -1,6 +1,6 @@
 {
   "name": "@openst/mosaic-chains",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.8",
   "description": "Mosaic chains is an executable to run and manage mosaic chains.",
   "bin": {
     "mosaic": "lib/src/bin/mosaic.js"
@@ -14,11 +14,12 @@
     "package": "./package.sh",
     "prepack": "npm run package",
     "test": "npm run test:unit && npm run test:smoke && npm run test:package && npm run test:integration",
-    "test:unit": "mocha -r ts-node/register tests/**/*.test.ts tests/*.test.ts",
+    "test:unit": "mocha -r ts-node/register tests/**/**/*.test.ts tests/**/*.test.ts tests/*.test.ts",
     "test:smoke": "./tests/smoke.sh",
     "test:package": "./tests/package.sh",
     "test:integration": "mocha -r ts-node/register test_integration/**/*.test.ts test_integration/*.test.ts --timeout 3000000",
-    "pull-abi": "sh ./tools/abi_downloader/run.sh"
+    "pull-abi": "sh ./tools/abi_downloader/run.sh",
+    "whitelist-workers": "ts-node tools/whitelistworker.ts"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "fs-extra": "7.0.1",
     "ip": "1.1.5",
     "jsonschema": "1.2.4",
+    "markdown-table": "1.1.3",
     "mustache": "3.0.1",
     "rlp": "2.2.3",
     "ts-node": "8.0.3",

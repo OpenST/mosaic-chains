@@ -1,9 +1,9 @@
 import * as path from 'path';
-import * as ip from 'ip';
 import Logger from '../Logger';
 import Shell from '../Shell';
 import GraphDescription from './GraphDescription';
 import Directory from '../Directory';
+import Utils from '../Utils';
 
 const waitPort = require('wait-port');
 
@@ -19,6 +19,9 @@ export default class Graph {
 
   /** Docker has published Ethereum WS port at this port on the host. */
   private readonly ethereumRpcPort: number;
+
+  /** client of ethereum node. */
+  private readonly ethereumClient: string;
 
   /** Docker will publish this RPC port on the host. */
   private readonly rpcPort: number;
@@ -67,7 +70,7 @@ export default class Graph {
     this.ipfsPort = graphDescription.ipfsPort;
     this.postgresPort = graphDescription.postgresPort;
     this.originChain = graphDescription.originChain;
-
+    this.ethereumClient = graphDescription.ethereumClient;
     this.containerName = `${Graph.namePrefix}${this.chain}`;
   }
 
@@ -115,7 +118,7 @@ export default class Graph {
       `MOSAIC_GRAPH_POSTGRES_PORT=${this.postgresPort}`,
       `MOSAIC_GRAPH_DATA_FOLDER=${this.getMosaicGraphDataFolder()}`,
       `MOSAIC_ETHEREUM_RPC_PORT=${this.ethereumRpcPort}`,
-      `MOSAIC_GRAPH_NODE_HOST=${ip.address()}`,
+      `MOSAIC_GRAPH_NODE_HOST=${Utils.ipAddress()}`,
       'docker-compose',
       `-f ${path.join(Directory.getProjectGraphDir(), 'docker-compose.yml')}`,
       '-p', this.containerName,
@@ -130,7 +133,7 @@ export default class Graph {
     if (this.originChain) {
       return path.join(this.mosaicDir, this.originChain, this.chain, 'graph');
     }
-    return path.join(this.mosaicDir, this.chain, 'origin', 'graph');
+    return path.join(this.mosaicDir, this.chain, `origin-${this.ethereumClient}`, 'graph');
   }
 
   /**

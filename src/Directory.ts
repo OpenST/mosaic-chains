@@ -44,8 +44,7 @@ export default class Directory {
     }
 
     return path.join(
-      Directory.projectRoot,
-      'chains',
+      Directory.getProjectChainsDirectory,
       originChain,
       auxiliaryChainId,
     );
@@ -76,9 +75,9 @@ export default class Directory {
 
   /**
    *
-   * @param {string} originChain
-   * @param {string} auxiliaryChain
-   * @return {string}
+   * @param originChain
+   * @param auxiliaryChain
+   * @return
    */
   public static getOriginSubGraphProjectDirSuffix(
     originChain: string,
@@ -86,8 +85,7 @@ export default class Directory {
   ): string {
     return path.join(
       originChain,
-      'origin',
-      'subgraph',
+      'origin-subgraph',
       auxiliaryChain,
     );
   }
@@ -160,6 +158,35 @@ export default class Directory {
       Directory.getDefaultMosaicDataDir,
       originChain,
       Directory.getMosaicFileName(),
+    );
+  }
+
+  /**
+   * This method return project chains directory.
+   */
+  public static get getProjectChainsDirectory(): string {
+    return path.join(
+      Directory.projectRoot,
+      'chains',
+    );
+  }
+
+  /**
+   * Returns the full path of GatewayConfig for a given origin, auxiliary and gatewayAddress.
+   *
+   * @param originChain Origin chain identifier.
+   * @param auxChainId Auxiliary chain Id.
+   * @param gatewayAddress Address of Gateway.
+   *
+   * @return Path of gateway config file.
+   */
+  public static getGatewayConfigPath(originChain: string, auxChainId: number, gatewayAddress: string):
+  string {
+    return path.join(
+      Directory.getDefaultMosaicDataDir,
+      originChain,
+      auxChainId.toString(),
+      `${gatewayAddress.toLowerCase()}.json`,
     );
   }
 }

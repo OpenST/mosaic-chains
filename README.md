@@ -103,7 +103,7 @@ Other prerequisites that you need:
 
 * A password file with exactly two lines (followed by a newline) of the **same password.** For now, this is the only way to set up the (temporary) accounts for sealing and deploying on the new auxiliary chain.
 * A websocket connection to a node that is connected to an existing origin chain. It has to have an unlocked account with sufficient balance. The account address of the unlocked account must be added to the file in the `initialize` directory (see next bullet point).
-* An initial configuration file in the project's `initialize` directory. The file name has to equal the new chain ID that you want to use. You can copy the example file and fill in your values. If you want to know what the parameters mean, check the [relevant documentation in the code](./src/Config/InitConfig.ts).
+* An initial configuration file in the project's `initialize` directory. The file name has to equal the new chain ID that you want to use. You can copy the example file and fill in your values. If you want to know what the parameters mean, check the [relevant documentation in the code](src/Config/InitConfig.ts).
 
 To see the help:
 
@@ -182,6 +182,38 @@ Where:
 
 *Refer integration test of mosaic-create command to understand end to end flow.*
 
+## Subgraph deployment
+Subgraph command can be used to deploy mosaic subgraph. Subgraph by [thegraph](https://thegraph.com) protocol is used to index transactions and events by mosaic smart contract. 
+
+#### Prerequisite: 
+Below commands assumes the blockchain node and graph node is already running. You can use `mosaic start` command to start a node and graph node.
+
+##### Subgraph deployment for mosaic gateways: 
+Below command deploys subgraph of mosaic gateways.
+
+```bash
+./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chainType> <admin-graph-rpc> <graph-ipfs> 
+```
+**where:** 
+1. origin-chain-identifier: Origin chain identifier like ropsten, goerli, dev-origin
+2. auxiliary-chain-identifier: Auxiliary chain ID like 1405, 1406, 1407 or 1000(dev-auxiliary).
+3. chainType: Either`origin` or `auxiliary` chain.
+4. admin-graph-rpc: RPC endpoint of graph node.
+5. graph-ipfs: IPFS endpoint used by graph node.
+
+Optionally `--mosaic-config` option can be used to pass mosaic config otherwise command will search on default path.
+
+#### Subgraph deployment for any EIP20 gateways:
+Below command deploys subgraph of any eip20gateway.
+```bash
+./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chain> <admin-graph-rpc> <graph-ipfs>  --gateway-config <gateway-config>
+```
+**where:**
+1. gateway-config: Path of gateway config. 
+
+Optionally `gateway-address` option can be passed which will search gateway config on default path.  
+
+Subgraph deployment command also prints subgraph endpoint after execution.
 ## Chain Verifier
 
 Chain verifier makes sure that newly created chain is being setup correctly.
@@ -214,6 +246,50 @@ If you have those, follow the steps below:
 4. Run `./build.sh` to generate all chain inits.
 5. Add `./chains/<origin_chain>/<chain_id>/bootnodes` and add the boot nodes (see other chains for examples).
 
+## Tool
+
+ #### Whitelist worker for stakepool and redeempool. 
+ 
+ This tool enables whitelisting of workers for stake and redeem pool contract. It expects organization admin of stakepool and redeempool contract is unlocked on the node. 
+ 
+   *1. Set below environment variables*:
+    
+     
+     export ORIGIN_WEB3_ENDPOINT='replace_with_origin_web3_endpoint';
+     export AUXILIARY_WEB3_ENDPOINT='replace_with_auxiliary_web3_endpoint';
+     export AUXILIARY_CHAIN_ID='replace_with_auxiliary_chain_id';
+     export MOSAIC_CONFIG_PATH='replace_with_mosaic_config_path';
+     export ORIGIN_WORKER_ADDRESS='replace_with_origin_worker_address';
+     export AUXILIARY_WORKER_ADDRESS='replace_with_auxiliary_worker_address';
+     export ORIGIN_WORKER_EXPIRATION_HEIGHT='replace_with_origin_expiration_height';
+     export AUXILIARY_WORKER_EXPIRATION_HEIGHT='replace_with_auxiliary_expiration_height';
+ 
+ Origin and auxiliary worker addresses are generated with `facilitator init` step. 
+ Mosaic config path for supported chain should be available at `~/.mosaic/<origin-chain>/mosaic.json` where `<origin-chain>` is origin chain identifier e.g. `ropsten`.  
+ 
+ Origin and auxiliary worker expiration height is block height from current block for which worker keys are whitelisted. 
+ 
+ Example: If current block is 1000 and expiration height is set to 100 then worker keys will be whitelisted for 1100 block.
+ 
+ *2. run command*:
+      
+      npm run whitelist-workers
+
+
+
+## Mosaic Config: 
+Mosaic config file is required in various steps and commands. There are two ways to locate mosaic config file. 
+
+1. **On local machine**: Mosaic config is copied on local machine inside folder `~/.mosaic/<origin-chain-identifier>/mosaic.json` while starting mosaic chain. Here `<origin-chain-identifier>` can be `ropsten`, `goerli` and `dev-origin`.
+
+2. **On github**: Mosaic config can be download for different origin chains from [github](chains).
+  Mosaic config file exists inside folders [goerli](chains/goerli) and [ropsten](chains/ropsten).    
+  
+## Gateway config
+Gateway config file is also required for various commands. This file contains information about gateway addresses. Currently below config files are supported: 
+
+1. [WETH gateway config](chains/goerli/1405/0x6649c6ff3629ae875b91b6c1551139c9feaa2514.json).
+        
 ## Tests
 
 Run the tests with `npm test`.
