@@ -6,17 +6,17 @@ Mosaic will automatically identify if you want to run a geth node or a parity no
 Any string supported by parity as a network option will start a parity node container.
 Any other string it tries to match to one of the available IDs in the `./chains` directory and starts the geth node.
 
-The command to start a chain is `./mosac start <chain_id>`
+The command to start a chain is `./mosaic start <chain_id>`
 
 if option `--origin <origin_chain>` is not provided then `chain_id` itself is the origin chain identifier, otherwise `chain_id` is auxiliary chain id.
 
 Example:
 ```bash
 # start orign chain.
-./mosaic start ropsten
+./mosaic start goerli
 
 # start auxiliary chain.   
-./mosac start 1406 --origin ropsten
+./mosaic start 1405 --origin goerli
 ```
 
 Start command will also start a graph node by default and deploy a sub graph for the given chain.
@@ -41,16 +41,18 @@ You can specify a different directory with the `--mosaic-dir` option.
 ### Available chains
 
 Usually, you want to run a combination of at least one origin chain with at least one matching auxiliary chain.
-For example Ethereum mainnet and `1414` or Ropsten and `1406`.
+For example Ethereum mainnet and `1414` or Ropsten and `1406` or Goerli and `1405`.
 
 * Auxiliary chains running against Ethereum mainnet:
     * `1414`
 * Testnet auxiliary chains running against Ropsten:
     * `1406`
     * `1407`
-
+* Testnet auxiliary chains running against Goerli:
+    * `1405`
+    
 The chain id of future auxiliary chains running against Ethereum mainnet will increase by one number each.
-The chain id of future auxiliary chains running against Ropsten will decrease by one number each.
+The chain id of future auxiliary chains running against Ethereum testnet will decrease by one number each.
 
 ## Dev chains
 For development, you can use the dev chains. These chains have the initial chain setup contracts deployed. 
