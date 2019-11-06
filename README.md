@@ -143,7 +143,7 @@ Where:
  ./mosaic setup-stake-pool 12346  http://localhost:8545 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001
  ```
 
- Note: Setup stake pool command expects deployer address to be unlocked.
+ Note: Setup stake pool command expects deployer address to be unlocked and it must have funds to pay for gas.
  
 #### Redeem Pool
 Redeem pool command deploys redeem pool and organization contract on the auxiliary chain where redeemer can request redeem and pool of facilitators can facilitate redeem and unstake on behalf of redeemer.
@@ -166,7 +166,7 @@ Where:
  ```
 
  
- Note: Setup redeem pool command expects deployer address to be unlocked.
+ Note: Setup redeem pool command expects deployer address to be unlocked and it must have funds to pay for gas.
 
  
 ####Troubleshooting:
