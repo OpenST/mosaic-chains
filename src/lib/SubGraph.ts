@@ -2,6 +2,7 @@ import GatewayAddresses from '../Config/GatewayAddresses';
 import GatewayConfig from '../Config/GatewayConfig';
 import MosaicConfig from '../Config/MosaicConfig';
 import SubGraph, { SubGraphType } from '../Graph/SubGraph';
+import Validator from '../bin/Validator';
 
 const deploySubGraph = (
   originChain: string,
@@ -12,7 +13,18 @@ const deploySubGraph = (
   mosaicConfigPath?: string,
   gatewayAddress?: string,
   gatewayConfigPath?: string,
-) => {
+): {success: boolean; message: string; subgraphName: string} => {
+  if (!Validator.isValidOriginChain(originChain)) {
+    throw new Error(`Invalid origin chain identifier: ${originChain}`);
+  }
+
+  if (!Validator.isValidAuxChain(auxiliaryChain, originChain)) {
+    throw new Error(`Invalid aux chain identifier: ${auxiliaryChain}`);
+  }
+  if (gatewayAddress && !Validator.isValidAddress(gatewayAddress)) {
+    throw new Error(`Invalid deployer address: ${gatewayAddress}`);
+  }
+
   let gatewayAddresses: GatewayAddresses;
   let gatewayConfig: GatewayConfig;
   let mosaicConfig: MosaicConfig;
@@ -60,7 +72,7 @@ const deploySubGraph = (
     throw new Error('Mosaic config or gateway config not found . Use --mosaic-config or --gateway-config option to provide path.');
   }
 
-  new SubGraph(
+  return new SubGraph(
     originChain,
     auxiliaryChain.toString(),
     subgraphType,
@@ -68,6 +80,7 @@ const deploySubGraph = (
     graphIPFS,
     gatewayAddresses,
   ).deploy();
+
 };
 
 export default deploySubGraph;

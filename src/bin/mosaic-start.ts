@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as commander from 'commander';
+import * as markdownTable from 'markdown-table';
 import NodeFactory from '../Node/NodeFactory';
 import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
@@ -11,6 +12,8 @@ import NodeDescription from '../Node/NodeDescription';
 import DevChainOptions from './DevChainOptions';
 import Logger from '../Logger';
 import { default as ChainInfo, GETH_CLIENT, PARITY_CLIENT } from '../Node/ChainInfo';
+import Validator from './Validator';
+import Utils from '../Utils';
 
 let mosaic = commander
   .arguments('<chain>');
@@ -64,6 +67,8 @@ mosaic
   .option('-u,--unlock <accounts>', 'a comma separated list of accounts that get unlocked in the node; you must use this together with --password')
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
+  .option('-b,--bootnodes <bootnodes>', 'Path to bootnodes file for geth client')
+
   .action(async (chain: string, options) => {
     try {
       let chainInput = chain;
@@ -87,7 +92,24 @@ mosaic
         unlock,
         password,
         originChain,
+        bootNodesFile,
       } = NodeOptions.parseOptions(optionInput, chainInput);
+
+      if (originChain && originChain.length > 0) {
+        if (!Validator.isValidOriginChain(originChain)) {
+          Logger.error(`Invalid origin chain identifier: ${originChain}`);
+          process.exit(1);
+        }
+
+        if (!Validator.isValidAuxChain(chain, originChain)) {
+          Logger.error(`Invalid aux chain identifier: ${chain}`);
+          process.exit(1);
+        }
+      } else if (!Validator.isValidOriginChain(chain)) {
+        Logger.error(`Invalid origin chain identifier: ${chain}`);
+        process.exit(1);
+      }
+
       const nodeDescription: NodeDescription = {
         chain: chainInput,
         mosaicDir,
@@ -99,12 +121,14 @@ mosaic
         password,
         originChain,
         client: optionInput.client,
+        bootNodesFile,
       };
       const node: Node = NodeFactory.create(nodeDescription);
       node.start();
-
-      if (!optionInput.withoutGraphNode) {
-        const graphDescription: GraphDescription = GraphOptions.parseOptions(
+      let graphDescription: GraphDescription;
+      const isGraphServices = !optionInput.withoutGraphNode;
+      if (isGraphServices) {
+        graphDescription = GraphOptions.parseOptions(
           optionInput,
           chainInput,
         );
@@ -114,6 +138,45 @@ mosaic
         graphDescription.ethereumClient = nodeDescription.client;
 
         await (new Graph(graphDescription).start());
+      }
+
+      const ipAddress = Utils.ipAddress();
+      // printing of endpoints on console.
+      const chainEndPoints = markdownTable([
+        ['Type', 'URL'],
+        ['rpc', `http://${ipAddress}:${rpcPort}`],
+        ['ws', `ws://${ipAddress}:${websocketPort}`],
+      ], {
+        align: ['c', 'c', 'c'],
+      });
+
+      console.log(`\n Below are the list of endpoints for ${chain} chain : \n${chainEndPoints}\n`);
+      if (isGraphServices) {
+        const graphNodeEndPoints = markdownTable([
+          ['Type', 'URL'],
+          ['rpc', `http://${ipAddress}:${graphDescription.rpcPort}`],
+          ['ws', `ws://${ipAddress}:${graphDescription.websocketPort}`],
+          ['admin', `http://${ipAddress}:${graphDescription.rpcAdminPort}`],
+        ], {
+          align: ['c', 'c', 'c', 'c'],
+        });
+
+        const postGresEndPoints = markdownTable([
+          ['Type', 'URL'],
+          ['rpc', `http://${ipAddress}:${graphDescription.postgresPort}`],
+        ], {
+          align: ['c', 'c'],
+        });
+
+        const ipfsEndPoints = markdownTable([
+          ['Type', 'URL'],
+          ['rpc', `http://${ipAddress}:${graphDescription.ipfsPort}`],
+        ], {
+          align: ['c', 'c'],
+        });
+        console.log(`\n Below are the list of endpoints for graph node : \n${graphNodeEndPoints}\n`);
+        console.log(`\n Below are the list of endpoints for postgres db : \n${postGresEndPoints}\n`);
+        console.log(`\n Below are the list of endpoints for ipfs : \n${ipfsEndPoints}\n`);
       }
     } catch (e) {
       Logger.error(`Error starting node: ${e} `);
