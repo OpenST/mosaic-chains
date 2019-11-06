@@ -192,7 +192,7 @@ Below commands assumes the blockchain node and graph node is already running. Yo
 Below command deploys subgraph of mosaic gateways.
 
 ```bash
-./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chainType> <admin-graph-rpc> <graph-ipfs> 
+./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chainType> <admin-graph-url> <graph-ipfs-url> 
 ```
 **where:** 
 1. origin-chain-identifier: Origin chain identifier like ropsten, goerli, dev-origin
@@ -206,7 +206,7 @@ Optionally `--mosaic-config` option can be used to pass mosaic config otherwise 
 #### Subgraph deployment for any EIP20 gateways:
 Below command deploys subgraph of any eip20gateway.
 ```bash
-./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chain> <admin-graph-rpc> <graph-ipfs>  --gateway-config <gateway-config>
+./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chain> <admin-graph-url> <graph-ipfs-url>  --gateway-config <gateway-config>
 ```
 **where:**
 1. gateway-config: Path of gateway config. 
