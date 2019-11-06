@@ -84,6 +84,8 @@ Examples with different chain IDs:
 ## Creating a new auxiliary chain
 If there is no existing mosaic config with the library addresses for the `origin` chain then first run `./mosaic libraries <origin-chain-id> <origin-websocket> <deployer-address>`. This command will create a mosaic config file for the origin chain and stores library addresses of origin chain. Generated mosaic config must be used to create multiple auxiliary chains. Ideally `./mosaic libraries` command should be used once per origin chain. This command assumes that deployer address is unlocked already.
 
+Total gas consumption for libraries command is `4150100`. It deploys three contracts i.e merkle patricia proof, message bus and gateway lib which require `1431920`, `1913370` and `804810` gas respectively.
+
 The command to create a new auxiliary chain is `./mosaic create <new-chain-id> <origin-websocket> <password-file> --origin <origin_chain>`.
 See `./mosaic create --help` for more help.
 
@@ -145,6 +147,8 @@ Where:
 
  Note: Setup stake pool command expects deployer address to be unlocked and it must have funds to pay for gas.
  
+ Total gas consumption for setup stake pool command is `3227315`. It deploys two contracts i.e organization and OST composer which require `748146` and `2479169` gas respectively. 
+  
 #### Redeem Pool
 Redeem pool command deploys redeem pool and organization contract on the auxiliary chain where redeemer can request redeem and pool of facilitators can facilitate redeem and unstake on behalf of redeemer.
 
@@ -164,7 +168,8 @@ Where:
   ```bash
  ./mosaic setup-redeem-pool 12346 500 http://localhost:40500 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001
  ```
-
+ 
+Total gas consumption for setup redeem pool command is `2951611`. It deploys two contracts i.e organization and redeem pool which require `748146` and `2203465` gas respectively. 
  
  Note: Setup redeem pool command expects deployer address to be unlocked and it must have funds to pay for gas.
 
