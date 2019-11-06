@@ -180,13 +180,17 @@ export default class Directory {
    *
    * @return Path of gateway config file.
    */
-  public static getGatewayConfigPath(originChain: string, auxChainId: number, gatewayAddress: string):
-  string {
+  public static getGatewayConfigPath(
+    originChain: string,
+    auxChainId: number,
+    gatewayAddress: string,
+  ): string {
     return path.join(
       Directory.getDefaultMosaicDataDir,
       originChain,
       auxChainId.toString(),
-      `${gatewayAddress.toLowerCase()}.json`,
+      `gateway-${gatewayAddress}`,
+      'gateway-config.json',
     );
   }
 }
