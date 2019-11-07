@@ -117,8 +117,6 @@ describe('Mosaic create', () => {
       initialMosaicConfig.auxiliaryChains[auxChainId].contractAddresses.auxiliary.redeemPoolAddress,
       finalMosaicConfig.auxiliaryChains[auxChainId].contractAddresses.auxiliary.redeemPoolAddress,
       'Redeem Pool Address must change',
-      'Redeem Pool Address must change',
-      'Redeem Pool Address must change',
     );
   });
 
