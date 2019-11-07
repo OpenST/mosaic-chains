@@ -182,8 +182,10 @@ start_origin_node ropsten geth
 grep_try ropsten geth
 rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
 deploy_subgraph ropsten 1406 origin $GRAPH_ADMIN_RPC_ROPSTEN $GRAPH_IPFS_ROPSTEN
-deploy_subgraph ropsten 1407 origin $GRAPH_ADMIN_RPC_ROPSTEN $GRAPH_IPFS_ROPSTEN
+sleep 10
 rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_ROPSTEN_1406
+deploy_subgraph ropsten 1407 origin $GRAPH_ADMIN_RPC_ROPSTEN $GRAPH_IPFS_ROPSTEN
+sleep 10
 rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_ROPSTEN_1407
 
 # Stop and start some nodes and make sure they are or are not running.
