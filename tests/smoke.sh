@@ -166,27 +166,32 @@ DEV_AUXILIARY_CHAIN_ID=1000
 GRAPH_ADMIN_RPC_DEV_AUXILIARY=9020
 GRAPH_IPFS_DEV_AUXILIARY=6001
 
-start_auxiliary_node 1406
-grep_try 1406 geth
-rpc_node_try 1406
-deploy_subgraph ropsten 1406 auxiliary $GRAPH_ADMIN_RPC_1406 $GRAPH_IPFS_1406
-rpc_auxiliary_sub_graph_try 1406 $OST_COGATEWAY_ADDRESS_1406
-
-start_auxiliary_node 1407
-grep_try 1407 geth
-rpc_node_try 1407
-deploy_subgraph ropsten 1407 auxiliary $GRAPH_ADMIN_RPC_1407 $GRAPH_IPFS_1407
-rpc_auxiliary_sub_graph_try 1407 $OST_COGATEWAY_ADDRESS_1407
-
 start_origin_node ropsten geth
+sleep 10
 grep_try ropsten geth
 rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
 deploy_subgraph ropsten 1406 origin $GRAPH_ADMIN_RPC_ROPSTEN $GRAPH_IPFS_ROPSTEN
-sleep 10
+sleep 5
 rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_ROPSTEN_1406
 deploy_subgraph ropsten 1407 origin $GRAPH_ADMIN_RPC_ROPSTEN $GRAPH_IPFS_ROPSTEN
-sleep 10
+sleep 5
 rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_ROPSTEN_1407
+
+start_auxiliary_node 1406
+sleep 10
+grep_try 1406 geth
+rpc_node_try 1406
+deploy_subgraph ropsten 1406 auxiliary $GRAPH_ADMIN_RPC_1406 $GRAPH_IPFS_1406
+sleep 5
+rpc_auxiliary_sub_graph_try 1406 $OST_COGATEWAY_ADDRESS_1406
+
+start_auxiliary_node 1407
+sleep 10
+grep_try 1407 geth
+rpc_node_try 1407
+deploy_subgraph ropsten 1407 auxiliary $GRAPH_ADMIN_RPC_1407 $GRAPH_IPFS_1407
+sleep 5
+rpc_auxiliary_sub_graph_try 1407 $OST_COGATEWAY_ADDRESS_1407
 
 # Stop and start some nodes and make sure they are or are not running.
 stop_node ropsten
@@ -206,10 +211,14 @@ grep_try ropsten parity
 
 # Deploy subgraph with gateway config
 start_origin_node dev-origin geth
+sleep 10
 start_auxiliary_node dev-auxiliary geth
+sleep 10
 deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID origin $GRAPH_ADMIN_RPC_DEV_ORIGIN $GRAPH_IPFS_DEV_ORIGIN $OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
-deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID auxiliary $GRAPH_ADMIN_RPC_DEV_AUXILIARY $GRAPH_IPFS_DEV_AUXILIARY $OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
+sleep 5
 rpc_origin_sub_graph_try  $GRAPH_WS_PORT_DEV_ORIGIN $OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
+deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID auxiliary $GRAPH_ADMIN_RPC_DEV_AUXILIARY $GRAPH_IPFS_DEV_AUXILIARY $OST_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
+sleep 5
 rpc_auxiliary_sub_graph_try $DEV_AUXILIARY_CHAIN_ID $OST_CO_GATEWAY_ADDRESS_DEV_ORIGIN_WETH
 # When done, stop all nodes.
 stop_nodes
