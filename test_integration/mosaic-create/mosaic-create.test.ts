@@ -5,10 +5,10 @@ import Shell from '../../src/Shell';
 import Utils from './Utils';
 import InitConfig from '../../src/Config/InitConfig';
 import MosaicConfig from '../../src/Config/MosaicConfig';
+import Directory from '../../src/Directory';
 
 import Web3 = require('web3');
 import BN = require('bn.js');
-import Directory from "../../src/Directory";
 
 /**
  * Integration test for a auxiliary chain setup
