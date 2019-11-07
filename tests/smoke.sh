@@ -53,7 +53,7 @@ function stop_nodes {
 # $4 graph admin rpc port
 # $5 graph IPFS port
 function  deploy_subgraph {
-    info "Deploying origin subraph."
+    info "Deploying $3 subraph."
     try_silent "./mosaic subgraph $1 $2 $3 http://localhost:$4 http://localhost:$5"
 }
 
@@ -65,7 +65,7 @@ function  deploy_subgraph {
 # $5 graph IPFS port
 # gateway config
 function  deploy_subgraph_gateway_config {
-    info "Deploying origin subraph."
+    info "Deploying $3 subraph."
     try_silent "./mosaic subgraph $1 $2 $3 http://localhost:$4 http://localhost:$5 --gateway-config ~/.mosaic/$1/$2/gateway-$6/gateway-config.json"
 }
 
