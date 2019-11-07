@@ -1,4 +1,5 @@
 import * as ip from 'ip';
+import ChainInfo from './Node/ChainInfo';
 
 import Web3 = require('web3');
 
@@ -37,5 +38,17 @@ export default class Utils {
    */
   public static graphRPCEndPoint(subgraphName: string): string {
     return `http://{host}:{graph-http-port/subgraphs/name/${subgraphName}`;
+  }
+
+  /**
+   * Returns chainId from chain identifier.
+   * @param chainIdentifier Chain Identifier.
+   */
+  public static getChainId(chainIdentifier: string): string {
+    let chainId = chainIdentifier;
+    if (ChainInfo.isDevChain(chainIdentifier)) {
+      chainId = ChainInfo.getChainId(chainIdentifier);
+    }
+    return chainId;
   }
 }
