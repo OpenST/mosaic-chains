@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as os from 'os';
+import * as web3Utils from 'web3-utils';
 
 const MOSAIC_CONFIG_FILE = 'mosaic.json';
 /**
@@ -180,13 +181,17 @@ export default class Directory {
    *
    * @return Path of gateway config file.
    */
-  public static getGatewayConfigPath(originChain: string, auxChainId: number, gatewayAddress: string):
-  string {
+  public static getGatewayConfigPath(
+    originChain: string,
+    auxChainId: number,
+    gatewayAddress: string,
+  ): string {
     return path.join(
       Directory.getDefaultMosaicDataDir,
       originChain,
       auxChainId.toString(),
-      `${gatewayAddress.toLowerCase()}.json`,
+      `gateway-${web3Utils.toChecksumAddress(gatewayAddress)}`,
+      'gateway-config.json',
     );
   }
 }
