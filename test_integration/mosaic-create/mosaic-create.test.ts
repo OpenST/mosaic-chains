@@ -8,6 +8,7 @@ import MosaicConfig from '../../src/Config/MosaicConfig';
 
 import Web3 = require('web3');
 import BN = require('bn.js');
+import Directory from "../../src/Directory";
 
 /**
  * Integration test for a auxiliary chain setup
@@ -73,9 +74,8 @@ describe('Mosaic create', () => {
 
 
   it('Deploy stake pool contract with mosaic config option', async () => {
-    const filePath = '~/.mosaic/dev-origin/mosaic.json';
-    // No mosaic config exists. This will give blank config object.
-    const initialMosaicConfig = MosaicConfig.fromChain(originChainId);
+    const filePath = Directory.sanitize('~/.mosaic/dev-origin/mosaic.json');
+    const initialMosaicConfig = MosaicConfig.fromFile(filePath);
     const command = `./mosaic setup-stake-pool ${originChainId} ${originWeb3RPCEndPoint} ${originDeployerAddress} ${originDeployerAddress} ${originDeployerAddress} --mosaic-config ${filePath}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
     const finalMosaicConfig = MosaicConfig.fromFile(filePath);
@@ -107,7 +107,7 @@ describe('Mosaic create', () => {
     // Second account password.
     const password = fs.readFileSync(passwordFile).toString().trim().split('\n')[1];
 
-    const file = '~/.mosaic/dev-origin/mosaic.json';
+    const file = Directory.sanitize('~/.mosaic/dev-origin/mosaic.json');
     const initialMosaicConfig = MosaicConfig.fromFile(file);
     auxiliaryWeb3.eth.personal.unlockAccount(beneficiary, password);
     const command = `./mosaic setup-redeem-pool ${originChainId} ${auxChainId} ${auxiliaryEndpoint} ${beneficiary} ${beneficiary} ${beneficiary} --mosaic-config ~/.mosaic/dev-origin/mosaic.json`;
