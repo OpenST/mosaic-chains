@@ -114,10 +114,10 @@ describe('GatewayConfig.fromChain()', () => {
     const expectedFilePath = Directory.getGatewayConfigPath(
       originChain,
       auxChainId,
-      'invalidaddress',
+      '0x19F64B29789F02FFcCE2c37DFB3d65FEaDdea66a',
     );
     assert.throws(
-      () => GatewayConfig.fromChain(originChain, auxChainId, 'invalidAddress'),
+      () => GatewayConfig.fromChain(originChain, auxChainId, '0x19F64B29789F02FFcCE2c37DFB3d65FEaDdea66a'),
       `Missing GatewayConfig file at path: ${expectedFilePath}`,
     );
     sinon.restore();

@@ -7,7 +7,7 @@ import ChainInfo from './ChainInfo';
 import NodeDescription from './NodeDescription';
 import Logger from '../Logger';
 
-const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.0';
+const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.1';
 /**
  * Represents a geth node that runs in a docker container.
  */
