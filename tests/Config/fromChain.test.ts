@@ -114,7 +114,7 @@ describe('GatewayConfig.fromChain()', () => {
     const expectedFilePath = Directory.getGatewayConfigPath(
       originChain,
       auxChainId,
-      'invalidaddress',
+      'invalidAddress',
     );
     assert.throws(
       () => GatewayConfig.fromChain(originChain, auxChainId, 'invalidAddress'),
