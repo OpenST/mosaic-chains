@@ -145,7 +145,7 @@ Where:
  ./mosaic setup-stake-pool 12346  http://localhost:8545 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001
  ```
 
- Note: Setup stake pool command expects deployer address to be unlocked and it must have funds to pay for gas.
+ **Note:** Setup stake pool command expects deployer address to be unlocked and it must have funds to pay for gas.
  
  Total gas consumption for setup stake pool command is `3227315`. It deploys two contracts i.e organization and OST composer which require `748146` and `2479169` gas respectively. 
   
@@ -171,7 +171,7 @@ Where:
  
 Total gas consumption for setup redeem pool command is `2951611`. It deploys two contracts i.e organization and redeem pool which require `748146` and `2203465` gas respectively. 
  
- Note: Setup redeem pool command expects deployer address to be unlocked and it must have funds to pay for gas.
+ **Note:** Setup redeem pool command expects deployer address to be unlocked and it must have funds to pay for gas.
 
  
 ####Troubleshooting:
@@ -294,7 +294,17 @@ Mosaic config file is required in various steps and commands. There are two ways
 Gateway config file is also required for various commands. This file contains information about gateway addresses. Currently below config files are supported: 
 
 1. [WETH gateway config](chains/goerli/1405/0x6649c6ff3629ae875b91b6c1551139c9feaa2514.json).
+
+## Gas consumption in mosaic commands
+
+```
+| Command           | Gas consumption |
+|-------------------|-----------------|
+| libraries         | 4150100         |
+| setup-stake-pool  | 3227315         |
+| setup-redeem-pool | 2951611         |
         
+```        
 ## Tests
 
 Run the tests with `npm test`.
