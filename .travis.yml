@@ -28,11 +28,13 @@ notifications:
     on_failure: always
 install:
   - npm ci
-script:
-  - npm run test:unit
-  - npm run test:smoke
-  - npm run test:package
-  - sudo env PATH=$PATH npm run test:integration
-
+jobs:
+  include:
+    - stage: "Unit Tests"
+      script: npm run test:unit
+    - stage: "Package Tests"
+      script: npm run test:package
+    - stage: "Integration Tests"
+      script: sudo env PATH=$PATH npm run test:integration
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
