@@ -31,8 +31,8 @@ OST_GATEWAY_ADDRESS_ROPSTEN_1406=0x04df90efbedf393361cdf498234af818da14f562
 OST_GATEWAY_ADDRESS_ROPSTEN_1407=0x31c8870c76390c5eb0d425799b5bd214a2600438
 
 # goerli config
-GRAPH_ADMIN_RPC_GOERLI=8023
-GRAPH_IPFS_GOERLI=5004
+GRAPH_ADMIN_RPC_GOERLI=8025
+GRAPH_IPFS_GOERLI=5006
 GRAPH_WS_PORT_GOERLI=60005
 OST_GATEWAY_ADDRESS_GOERLI_1405=0xe11e76C1ecA13Ae4ABA871EabDf37C24b8e1928B
 WETH_GATEWAY_ADDRESS_GOERLI_1405=0x6649c6FF3629aE875b91B6C1551139c9feaA2514
@@ -69,7 +69,7 @@ function start_origin_node {
 # Starts a single auxiliary node.
 function start_auxiliary_node {
     info "Starting node $1."
-    try_silent "./mosaic start $1 --origin ropsten" "Could not start node $1."
+    try_silent "./mosaic start $1 --origin $2" "Could not start node $1 with origin $2."
 }
 
 # Stops a single node.
@@ -207,7 +207,7 @@ function test_goerli {
 }
 
 function test_1406 {
-    start_auxiliary_node 1406
+    start_auxiliary_node 1406 ropsten
     sleep 25
     grep_try 1406 geth
     rpc_node_try 1406
@@ -218,7 +218,7 @@ function test_1406 {
 }
 
 function test_1407 {
-    start_auxiliary_node 1407
+    start_auxiliary_node 1407 ropsten
     sleep 25
     grep_try 1407 geth
     rpc_node_try 1407
@@ -229,7 +229,7 @@ function test_1407 {
 }
 
 function test_1405 {
-    start_auxiliary_node 1405
+    start_auxiliary_node 1405 goerli
     sleep 25
     grep_try 1405 geth
     rpc_node_try 1405
@@ -252,7 +252,7 @@ function test_dev_origin {
 }
 
 function test_dev_auxiliary {
-  start_auxiliary_node dev-auxiliary geth
+  start_auxiliary_node dev-auxiliary dev-origin
   sleep 25
   deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID auxiliary $GRAPH_ADMIN_RPC_DEV_AUXILIARY $GRAPH_IPFS_DEV_AUXILIARY $WETH_GATEWAY_ADDRESS_DEV_ORIGIN
   sleep 25
