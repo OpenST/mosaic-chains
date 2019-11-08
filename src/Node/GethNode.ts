@@ -219,8 +219,6 @@ export default class GethNode extends Node {
       ]);
     }
 
-    console.log('args :- ',args);
-
     if (this.unlock !== '') {
       args = args.concat([
         '--unlock', this.unlock,

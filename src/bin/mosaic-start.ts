@@ -7,7 +7,6 @@ import Node from '../Node/Node';
 import NodeOptions from './NodeOptions';
 import GraphOptions from './GraphOptions';
 import GraphDescription from '../Graph/GraphDescription';
-import SubGraphDeployer from '../Graph/SubGraphDeployer';
 import Graph from '../Graph/Graph';
 import NodeDescription from '../Node/NodeDescription';
 import DevChainOptions from './DevChainOptions';
