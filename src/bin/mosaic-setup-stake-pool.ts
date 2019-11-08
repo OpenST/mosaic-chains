@@ -4,7 +4,6 @@ import * as commander from 'commander';
 import Logger from '../Logger';
 import deployStakePool from '../lib/StakePool';
 import Validator from './Validator';
-import MosaicConfig from '../Config/MosaicConfig';
 import Utils from '../Utils';
 
 const mosaic = commander
@@ -42,18 +41,13 @@ mosaic.action(
       process.exit(1);
     }
     try {
-      let mosaicConfig: MosaicConfig;
-      if (options.mosaicConfig) {
-        mosaicConfig = MosaicConfig.fromFile(options.mosaicConfig);
-      }
-
       const stakePoolAddress = await deployStakePool(
         chain,
         originWebsocket,
         deployer,
         organizationOwner,
         organizationAdmin,
-        mosaicConfig,
+        options.mosaicConfig,
       );
       Utils.printContracts(['Stake pool'], [stakePoolAddress]);
     } catch (error) {

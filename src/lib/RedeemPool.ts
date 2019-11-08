@@ -13,7 +13,7 @@ import Web3 = require('web3');
  * @param deployer Address of the deployer.
  * @param organizationOwner Address of organization owner of redeem pool.
  * @param organizationAdmin Address of organization admin of redeem pool.
- * @param mosaicConfigObject Mosaic config Object.
+ * @param mosaicConfigFilePath Mosaic config file path.
  */
 const setupRedeemPool = async (
   originChain: string,
@@ -22,16 +22,24 @@ const setupRedeemPool = async (
   deployer: string,
   organizationOwner: string,
   organizationAdmin: string,
-  mosaicConfigObject?: MosaicConfig,
+  mosaicConfigFilePath?: string,
 ): Promise<string> => {
   // Publishes mosaic configs for existing chains
   PublishMosaicConfig.tryPublish(originChain);
 
-  if (!(MosaicConfig.exists(originChain) || mosaicConfigObject)) {
+  if (!(MosaicConfig.exists(originChain) || mosaicConfigFilePath)) {
     throw new MosaicConfigNotFoundException(`Mosaic config for ${originChain} not found.`);
   }
 
-  const mosaicConfig = mosaicConfigObject || MosaicConfig.fromChain(originChain);
+  const mosaicConfig = mosaicConfigFilePath
+    ? MosaicConfig.fromFile(mosaicConfigFilePath)
+    : MosaicConfig.fromChain(originChain);
+
+  if (!mosaicConfig.auxiliaryChains[auxiliaryChain]) {
+    throw new Error(
+      `Mosaic config for ${originChain} does not contain auxiliary chain ${auxiliaryChain}.`,
+    );
+  }
 
   const auxiliaryWeb3 = new Web3(auxiliaryChainEndPoint);
   const gasPrice = await auxiliaryWeb3.eth.getGasPrice();
@@ -41,17 +49,16 @@ const setupRedeemPool = async (
     organizationAdmin,
     { from: deployer, gasPrice },
   );
-
-  if (!mosaicConfig.auxiliaryChains[auxiliaryChain]) {
-    throw new Error(
-      `Mosaic config for ${originChain} does not contain auxiliary chain ${auxiliaryChain}.`,
-    );
-  }
   mosaicConfig.auxiliaryChains[auxiliaryChain]
     .contractAddresses
     .auxiliary
     .redeemPoolAddress = redeemPool.options.address;
-  mosaicConfig.writeToMosaicConfigDirectory();
+
+  if (mosaicConfigFilePath) {
+    mosaicConfig.writeToFile(mosaicConfigFilePath);
+  } else {
+    mosaicConfig.writeToMosaicConfigDirectory();
+  }
   return redeemPool.options.address;
 };
 

@@ -2,8 +2,7 @@ import * as commander from 'commander';
 import Logger from '../Logger';
 import setupRedeemPool from '../lib/RedeemPool';
 import Validator from './Validator';
-import MosaicConfig from '../Config/MosaicConfig';
-import Utils from "../Utils";
+import Utils from '../Utils';
 
 const mosaic = commander
   .arguments('<originChain> <auxiliaryChain> <auxChainWeb3EndPoint> <deployer> <organizationOwner> <organizationAdmin>');
@@ -48,10 +47,6 @@ mosaic.action(
     }
 
     try {
-      let mosaicConfig: MosaicConfig;
-      if (options.mosaicConfig) {
-        mosaicConfig = MosaicConfig.fromFile(options.mosaicConfig);
-      }
       const redeemPoolAddress = await setupRedeemPool(
         originChain,
         auxiliaryChain,
@@ -59,7 +54,7 @@ mosaic.action(
         deployer,
         organizationOwner,
         organizationAdmin,
-        mosaicConfig,
+        options.mosaicConfig,
       );
       Utils.printContracts(['Redeem Pool'], [redeemPoolAddress]);
     } catch (error) {

@@ -4,6 +4,8 @@ import { assert } from 'chai';
 import Shell from '../../src/Shell';
 import Utils from './Utils';
 import InitConfig from '../../src/Config/InitConfig';
+import MosaicConfig from '../../src/Config/MosaicConfig';
+import Directory from '../../src/Directory';
 
 import Web3 = require('web3');
 import BN = require('bn.js');
@@ -58,14 +60,31 @@ describe('Mosaic create', () => {
   });
 
   it('Deploy stake pool contract', async () => {
+    const initialMosaicConfig = MosaicConfig.fromChain(originChainId);
     const command = `./mosaic setup-stake-pool ${originChainId} ${originWeb3RPCEndPoint} ${originDeployerAddress} ${originDeployerAddress} ${originDeployerAddress}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
+    const finalMosaicConfig = MosaicConfig.fromChain(originChainId);
+
+    assert.notStrictEqual(
+      initialMosaicConfig.originChain.contractAddresses.stakePoolAddress,
+      finalMosaicConfig.originChain.contractAddresses.stakePoolAddress,
+      'Stake Pool Address must change',
+    );
   });
 
 
   it('Deploy stake pool contract with mosaic config option', async () => {
-    const command = `./mosaic setup-stake-pool ${originChainId} ${originWeb3RPCEndPoint} ${originDeployerAddress} ${originDeployerAddress} ${originDeployerAddress} --mosaic-config ~/.mosaic/dev-origin/mosaic.json`;
+    const filePath = Directory.sanitize('~/.mosaic/dev-origin/mosaic.json');
+    const initialMosaicConfig = MosaicConfig.fromFile(filePath);
+    const command = `./mosaic setup-stake-pool ${originChainId} ${originWeb3RPCEndPoint} ${originDeployerAddress} ${originDeployerAddress} ${originDeployerAddress} --mosaic-config ${filePath}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
+    const finalMosaicConfig = MosaicConfig.fromFile(filePath);
+
+    assert.notStrictEqual(
+      initialMosaicConfig.originChain.contractAddresses.stakePoolAddress,
+      finalMosaicConfig.originChain.contractAddresses.stakePoolAddress,
+      'Stake Pool Address must change',
+    );
   });
 
   it('Deploy redeem pool contract', async () => {
@@ -73,17 +92,32 @@ describe('Mosaic create', () => {
     const password = fs.readFileSync(passwordFile).toString().trim().split('\n')[1];
 
     auxiliaryWeb3.eth.personal.unlockAccount(beneficiary, password);
+    const initialMosaicConfig = MosaicConfig.fromChain(originChainId);
     const command = `./mosaic setup-redeem-pool ${originChainId} ${auxChainId} ${auxiliaryEndpoint} ${beneficiary} ${beneficiary} ${beneficiary}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
+    const finalMosaicConfig = MosaicConfig.fromChain(originChainId);
+    assert.notStrictEqual(
+      initialMosaicConfig.auxiliaryChains[auxChainId].contractAddresses.auxiliary.redeemPoolAddress,
+      finalMosaicConfig.auxiliaryChains[auxChainId].contractAddresses.auxiliary.redeemPoolAddress,
+      'Redeem Pool Address must change',
+    );
   });
 
   it('Deploy redeem pool contract with mosaic config option', async () => {
     // Second account password.
     const password = fs.readFileSync(passwordFile).toString().trim().split('\n')[1];
 
+    const file = Directory.sanitize('~/.mosaic/dev-origin/mosaic.json');
+    const initialMosaicConfig = MosaicConfig.fromFile(file);
     auxiliaryWeb3.eth.personal.unlockAccount(beneficiary, password);
     const command = `./mosaic setup-redeem-pool ${originChainId} ${auxChainId} ${auxiliaryEndpoint} ${beneficiary} ${beneficiary} ${beneficiary} --mosaic-config ~/.mosaic/dev-origin/mosaic.json`;
     Shell.executeInShell(command, { stdio: 'inherit' });
+    const finalMosaicConfig = MosaicConfig.fromFile(file);
+    assert.notStrictEqual(
+      initialMosaicConfig.auxiliaryChains[auxChainId].contractAddresses.auxiliary.redeemPoolAddress,
+      finalMosaicConfig.auxiliaryChains[auxChainId].contractAddresses.auxiliary.redeemPoolAddress,
+      'Redeem Pool Address must change',
+    );
   });
 
   it(`Verify auxiliary chain ${auxChainId}`, () => {
