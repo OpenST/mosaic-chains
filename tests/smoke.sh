@@ -7,6 +7,12 @@
 
 chain=$1
 
+# 1405 config
+GRAPH_ADMIN_RPC_1405=9425
+GRAPH_IPFS_1405=6406
+OST_COGATEWAY_ADDRESS_1405=0x5efae177c9f37e6da82e807530ea550aa5f0afdd
+WETH_COGATEWAY_ADDRESS_1405=0x962e1404d6957d8ff56f8fe79a3fc2b670c3d578
+
 # 1406 config
 GRAPH_ADMIN_RPC_1406=9426
 GRAPH_IPFS_1406=6407
@@ -23,6 +29,13 @@ GRAPH_IPFS_ROPSTEN=5004
 GRAPH_WS_PORT_ROPSTEN=60003
 OST_GATEWAY_ADDRESS_ROPSTEN_1406=0x04df90efbedf393361cdf498234af818da14f562
 OST_GATEWAY_ADDRESS_ROPSTEN_1407=0x31c8870c76390c5eb0d425799b5bd214a2600438
+
+# goerli config
+GRAPH_ADMIN_RPC_GOERLI=8023
+GRAPH_IPFS_GOERLI=5004
+GRAPH_WS_PORT_GOERLI=60005
+OST_GATEWAY_ADDRESS_GOERLI_1405=0xe11e76C1ecA13Ae4ABA871EabDf37C24b8e1928B
+WETH_GATEWAY_ADDRESS_GOERLI_1405=0x6649c6FF3629aE875b91B6C1551139c9feaA2514
 
 # Dev chain config
 GRAPH_ADMIN_RPC_DEV_ORIGIN=9535
@@ -174,11 +187,23 @@ function test_ropsten {
     sleep 25
     rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_ROPSTEN_1407
     stop_node ropsten
-    grep_fail ropsten geth
     start_origin_node ropsten parity
     grep_try ropsten parity
     stop_node ropsten
-    grep_fail ropsten parity
+}
+
+function test_goerli {
+    start_origin_node goerli geth
+    sleep 25
+    grep_try goerli geth
+    rpc_node_try "0005" # Given like this as it is used for the port in `rpc_node_try`.
+    deploy_subgraph_mosaic_config goerli 1405 origin $GRAPH_ADMIN_RPC_GOERLI $GRAPH_IPFS_GOERLI
+    sleep 25
+    rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_GOERLI_1405
+    deploy_subgraph_gateway_config goerli 1405 origin $GRAPH_ADMIN_RPC_GOERLI $GRAPH_IPFS_GOERLI $WETH_GATEWAY_ADDRESS_GOERLI_1405
+    sleep 25
+    rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $WETH_GATEWAY_ADDRESS_GOERLI_1405
+    stop_node goerli
 }
 
 function test_1406 {
@@ -190,7 +215,6 @@ function test_1406 {
     sleep 25
     rpc_auxiliary_sub_graph_try 1406 $OST_COGATEWAY_ADDRESS_1406
     stop_node 1406
-    grep_fail 1406 geth
 }
 
 function test_1407 {
@@ -202,7 +226,20 @@ function test_1407 {
     sleep 25
     rpc_auxiliary_sub_graph_try 1407 $OST_COGATEWAY_ADDRESS_1407
     stop_node 1407
-    grep_fail 1407 geth
+}
+
+function test_1405 {
+    start_auxiliary_node 1405
+    sleep 25
+    grep_try 1405 geth
+    rpc_node_try 1405
+    deploy_subgraph_mosaic_config goerli 1405 auxiliary $GRAPH_ADMIN_RPC_1405 $GRAPH_IPFS_1405
+    sleep 25
+    rpc_auxiliary_sub_graph_try 1405 $OST_COGATEWAY_ADDRESS_1405
+    deploy_subgraph_gateway_config goerli 1405 auxiliary $GRAPH_ADMIN_RPC_1405 $GRAPH_IPFS_1405 $WETH_GATEWAY_ADDRESS_GOERLI_1405
+    sleep 25
+    rpc_auxiliary_sub_graph_try 1405 $WETH_COGATEWAY_ADDRESS_1405
+    stop_node 1405
 }
 
 function test_dev_origin {
@@ -228,10 +265,14 @@ try_silent "ls mosaic" "Script must be run from the mosaic chains root directory
 
 if [ $chain = "ropsten" ]; then
 	test_ropsten
+elif [ $chain = "goerli" ]; then
+	test_goerli
 elif [ $chain = "1406" ]; then
 	test_1406
 elif [ $chain = "1407" ]; then
 	test_1407
+elif [ $chain = "1405" ]; then
+	test_1405
 elif [ $chain = "dev-origin" ]; then
 	test_dev_origin
 elif [ $chain = "dev-auxiliary" ]; then

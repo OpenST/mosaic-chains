@@ -33,6 +33,10 @@ jobs:
     - stage: "Smoke Tests"
       script: npm run test:smoke:ropsten
       name: ropsten
+      script: npm run test:smoke:goerli
+      name: goerli
+    - script: npm run test:smoke:1405
+      name: 1405
     - script: npm run test:smoke:1406
       name: 1406
     - script: npm run test:smoke:1407
