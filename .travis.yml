@@ -18,6 +18,7 @@ node_js:
 branches:
   only:
   - master
+  - GH/226
   - develop
   - /^release-.*/
 notifications:
@@ -45,13 +46,15 @@ jobs:
       name: "Dev Origin"
     - script: npm run test:smoke:dev-auxiliary
       name: "Dev Auxiliary"
-    - stage: "Nightly Build Tests"
-      if: type = cron
+    - if: type = cron
+      stage: "Nightly Build Tests"
       script: npm run test:smoke:ropsten
       name: ropsten
-    - script: npm run test:smoke:1406
+    - if: type = cron
+      script: npm run test:smoke:1406
       name: 1406
-    - script: npm run test:smoke:1407
+    - if: type = cron
+      script: npm run test:smoke:1407
       name: 1407
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
