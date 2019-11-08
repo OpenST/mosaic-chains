@@ -30,11 +30,17 @@ install:
   - npm ci
 jobs:
   include:
+    - stage: "Smoke Tests"
+      script: npm run test:smoke:ropsten
+      script: npm run test:smoke:1406
+      script: npm run test:smoke:1407
+      script: npm run test:smoke:dev-origin
+      script: npm run test:smoke:dev-auxiliary
     - stage: "Unit Tests"
       script: npm run test:unit
-    - stage: "Package Tests"
-      script: npm run test:package
     - stage: "Integration Tests"
       script: sudo env PATH=$PATH npm run test:integration
+    - stage: "Package Tests"
+      script: npm run test:package
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
