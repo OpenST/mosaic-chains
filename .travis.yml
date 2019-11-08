@@ -18,7 +18,6 @@ node_js:
 branches:
   only:
   - master
-  - GH/226
   - develop
   - /^release-.*/
 notifications:
