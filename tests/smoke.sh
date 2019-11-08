@@ -55,6 +55,8 @@ function info {
 # Prints an error string to stdout after it attempted to stop all running nodes.
 function error {
     echo "ERROR! Aborting."
+    echo "Currently running processes."
+    try_silent "docker ps" "Could not get running processes list from Docker."
     stop_nodes
     echo "ERROR: $1"
     exit 1
@@ -166,8 +168,8 @@ function rpc_node_try {
 }
 
 function rpc_origin_sub_graph_try {
-    info "Checking RPC connection to origin sub graph at port $1 on node for $2."
-    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/origin-verifier.ts $1 $2" "Origin sub graph at port $1 was expected to be deployed on $2, but wasn't."
+    info "Checking RPC connection to origin sub graph at port $1 on node for gateway: $2."
+    try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/origin-verifier.ts $1 $2" "Origin sub graph at port $1 was expected to be deployed for gateway: $2, but wasn't."
 }
 
 function rpc_auxiliary_sub_graph_try {
@@ -199,10 +201,10 @@ function test_goerli {
     rpc_node_try "0005" # Given like this as it is used for the port in `rpc_node_try`.
     deploy_subgraph_mosaic_config goerli 1405 origin $GRAPH_ADMIN_RPC_GOERLI $GRAPH_IPFS_GOERLI
     sleep 25
-    rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_GOERLI_1405
+    rpc_origin_sub_graph_try $GRAPH_WS_PORT_GOERLI $OST_GATEWAY_ADDRESS_GOERLI_1405
     deploy_subgraph_gateway_config goerli 1405 origin $GRAPH_ADMIN_RPC_GOERLI $GRAPH_IPFS_GOERLI $WETH_GATEWAY_ADDRESS_GOERLI_1405
     sleep 25
-    rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $WETH_GATEWAY_ADDRESS_GOERLI_1405
+    rpc_origin_sub_graph_try $GRAPH_WS_PORT_GOERLI $WETH_GATEWAY_ADDRESS_GOERLI_1405
     stop_node goerli
 }
 
