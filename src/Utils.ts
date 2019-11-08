@@ -1,5 +1,6 @@
 import * as ip from 'ip';
 import * as markdownTable from 'markdown-table';
+import ChainInfo from './Node/ChainInfo';
 
 import Web3 = require('web3');
 
@@ -54,5 +55,17 @@ export default class Utils {
       align: ['c', 'c'],
     });
     console.log(`\n ${details}`);
+  }
+
+  /**
+   * Returns chainId from chain identifier.
+   * @param chainIdentifier Chain Identifier.
+   */
+  public static getChainId(chainIdentifier: string): string {
+    let chainId = chainIdentifier;
+    if (ChainInfo.isDevChain(chainIdentifier)) {
+      chainId = ChainInfo.getChainId(chainIdentifier);
+    }
+    return chainId;
   }
 }
