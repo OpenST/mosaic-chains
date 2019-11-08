@@ -36,7 +36,7 @@ describe('Directory.sanitize()', () => {
       path.join(
         Directory.projectRoot,
         'some',
-        'path'
+        'path',
       ),
       'Does not properly replace `.` with the project root.',
     );
@@ -46,9 +46,41 @@ describe('Directory.sanitize()', () => {
       path.join(
         Directory.projectRoot,
         'other',
-        'path'
+        'path',
       ),
       'Does not properly add project root before a relative path.',
+    );
+  });
+
+  it('Returns full path of GatewayConfig', () => {
+    const originChain = 'dev';
+    const auxChainId = 1000;
+    const gatewayAddress = '0xae02c7b1c324a8d94a564bc8d713df89eae441fe';
+    const expectedPath = `${Directory.getDefaultMosaicDataDir}/dev/1000/gateway-0xaE02C7b1C324A8D94A564bC8d713Df89eae441fe/gateway-config.json`;
+    const fullPath = Directory.getGatewayConfigPath(
+      originChain,
+      auxChainId,
+      gatewayAddress,
+    );
+    assert.strictEqual(
+      fullPath,
+      expectedPath,
+      `Path: ${fullPath} is not equal to expectedPath: ${expectedPath}`,
+    );
+  });
+});
+
+describe('Directory.getProjectChainsDirectory()', () => {
+  it('should return project chain directory', () => {
+    const projectChainsDirectory = Directory.getProjectChainsDirectory;
+
+    assert.strictEqual(
+      projectChainsDirectory,
+      path.join(
+        Directory.projectRoot,
+        'chains',
+      ),
+      'Expected project chain directory doesnot match',
     );
   });
 });

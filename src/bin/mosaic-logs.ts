@@ -5,16 +5,14 @@ import Shell from '../Shell';
 import Node from '../Node/Node';
 import NodeDescription from '../Node/NodeDescription';
 import NodeFactory from '../Node/NodeFactory';
-import DevChainOptions from './DevChainOptions';
+import Utils from '../Utils';
 
 mosaic
   .arguments('<chain>')
   .action((chain: string) => {
-    let chainInput = chain;
-    if (DevChainOptions.isDevChain(chain)) {
-      chainInput = DevChainOptions.getDevChainParams(chain).chain;
-    }
-    const node: Node = NodeFactory.create(new NodeDescription(chainInput));
+    const chainId = Utils.getChainId(chain);
+    // Chain can't be validated as origin chain id is not received for aux chain.
+    const node: Node = NodeFactory.create(new NodeDescription(chainId));
     const args = [
       'logs',
       '-f',

@@ -1,9 +1,9 @@
 import * as sinon from 'sinon';
 import Web3 = require('web3');
 
-import assert from '../test_utils/assert'
+import assert from '../test_utils/assert';
 import SpyAssert from '../test_utils/SpyAssert';
-import Utils from '../../src/Utils'
+import Utils from '../../src/Utils';
 
 describe('Utils.toChecksumAddress()', () => {
   it('should be successfully', () => {

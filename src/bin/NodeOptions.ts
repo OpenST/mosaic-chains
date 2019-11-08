@@ -44,6 +44,9 @@ export default class NodeOptions {
    */
   public originChain: string;
 
+  /** List of boot nodes to start the node */
+  public bootNodesFile: string;
+
   /** rpc api to be exposed for a chain. */
   public rpcApi: string;
 
@@ -62,10 +65,12 @@ export default class NodeOptions {
     unlock: string;
     password: string;
     originChain: string;
+    bootNodesFile: string;
     rpcApi: string;
     wsApi: string;
   }) {
     Object.assign(this, options);
+    this.bootNodesFile = options.bootNodesFile;
   }
 
   /**
@@ -103,6 +108,7 @@ export default class NodeOptions {
       unlock: options.unlock || '',
       password: options.password || '',
       originChain: options.origin || '',
+      bootNodesFile: options.bootnodes,
       rpcApi: options.rpcApi || '',
       wsApi: options.wsApi || '',
     });

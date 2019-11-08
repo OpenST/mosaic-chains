@@ -5,6 +5,7 @@ import MosaicConfig, { ContractAddresses } from '../Config/MosaicConfig';
 import Logger from '../Logger';
 
 import Web3 = require('web3');
+import BN = require('bn.js');
 
 /**
  * Chain verifier does verification of newly created auxiliary chains.
@@ -89,7 +90,7 @@ export default class ChainVerifier {
     await this.validateLinkedBin(
       this.originWeb3,
       'EIP20Gateway',
-      this.contractAddresses.origin.ostEIP20GatewayAddress,
+      this.contractAddresses.origin.eip20GatewayAddress,
       messageBusLinkInfo,
       gatewayLibLinkInfo,
       'ContractsBin: Mismatch of gateway BIN!!!',
@@ -106,7 +107,7 @@ export default class ChainVerifier {
     await this.validateLinkedBin(
       this.auxiliaryWeb3,
       'EIP20CoGateway',
-      this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+      this.contractAddresses.auxiliary.eip20CoGatewayAddress,
       messageBusLinkInfo,
       gatewayLibLinkInfo,
       'ContractsBin: Mismatch of CoGateway BIN!!!',
@@ -143,22 +144,22 @@ export default class ChainVerifier {
     await this.validateBIN(
       this.originWeb3,
       'Organization',
-      this.contractAddresses.origin.ostGatewayOrganizationAddress,
+      this.contractAddresses.origin.gatewayOrganizationAddress,
       'ContractsBin: Mismatch of origin gateway organization BIN!!!',
     );
 
     await this.validateBIN(
       this.auxiliaryWeb3,
       'Organization',
-      this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
+      this.contractAddresses.auxiliary.coGatewayOrganizationAddress,
       'ContractsBin: Mismatch of auxiliary coGateway organization BIN!!!',
     );
 
     await this.validateBIN(
       this.auxiliaryWeb3,
       'OSTPrime',
-      this.contractAddresses.auxiliary.ostPrimeAddress,
-      'ContractsBin: Mismatch of OSTPrime BIN!!!',
+      this.contractAddresses.auxiliary.utilityTokenAddress,
+      'ContractsBin: Mismatch of utilityTokenAddress BIN!!!',
     );
 
     Logger.info('Successfully completed contracts BIN verification!!!');
@@ -171,7 +172,7 @@ export default class ChainVerifier {
    */
   private async verifyGateway(): Promise<void> {
     const gatewayInstance = this.mosaicContract.EIP20Gateway(
-      this.contractAddresses.origin.ostEIP20GatewayAddress,
+      this.contractAddresses.origin.eip20GatewayAddress,
     );
 
     const isActivated = await gatewayInstance.methods.activated().call();
@@ -185,7 +186,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       valueToken,
-      this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
+      this.mosaicConfig.originChain.contractAddresses.valueTokenAddress,
       'Gateway: Invalid valueToken address!!!',
     );
 
@@ -193,7 +194,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       baseToken,
-      this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
+      this.mosaicConfig.auxiliaryChains[this.auxiliaryChainId].contractAddresses.origin.baseTokenAddress,
       'Gateway: Invalid baseToken address!!!',
     );
 
@@ -201,7 +202,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       organization,
-      this.contractAddresses.origin.ostGatewayOrganizationAddress,
+      this.contractAddresses.origin.gatewayOrganizationAddress,
       'Gateway: Invalid gateway organization address!!!',
     );
 
@@ -209,7 +210,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.originWeb3,
       remoteGateway,
-      this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+      this.contractAddresses.auxiliary.eip20CoGatewayAddress,
       'Gateway: Invalid CoGateway address!!!',
     );
 
@@ -231,30 +232,31 @@ export default class ChainVerifier {
    */
   private async verifyCoGateway(): Promise<void> {
     const coGatewayInstance = this.mosaicContract.EIP20CoGateway(
-      this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+      this.contractAddresses.auxiliary.eip20CoGatewayAddress,
     );
 
     const valueToken = await coGatewayInstance.methods.valueToken().call();
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       valueToken,
-      this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
+      this.mosaicConfig.originChain.contractAddresses.valueTokenAddress,
       'CoGateway: Invalid valueToken address!!!',
     );
 
     const utilityToken = await coGatewayInstance.methods.utilityToken().call();
+
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       utilityToken,
-      this.contractAddresses.auxiliary.ostPrimeAddress,
-      'CoGateway: Invalid OSTPrime address!!!',
+      this.contractAddresses.auxiliary.utilityTokenAddress,
+      'CoGateway: Invalid utilityToken address!!!',
     );
 
     const organization = await coGatewayInstance.methods.organization().call();
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       organization,
-      this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
+      this.contractAddresses.auxiliary.coGatewayOrganizationAddress,
       'CoGateway: Invalid organization address!!!',
     );
 
@@ -262,7 +264,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       remoteGateway,
-      this.contractAddresses.origin.ostEIP20GatewayAddress,
+      this.contractAddresses.origin.eip20GatewayAddress,
       'CoGateway: Invalid remoteGateway address!!!',
     );
 
@@ -339,7 +341,8 @@ export default class ChainVerifier {
     );
 
     const remoteChainId = await anchorInstance.methods.getRemoteChainId().call();
-    if (remoteChainId !== this.mosaicConfig.originChain.chain) {
+    const originChainId = await this.originWeb3.eth.net.getId();
+    if (!new BN(remoteChainId).eq(new BN(originChainId))) {
       const errMsg = 'AuxiliaryAnchor: Invalid remoteChainId!!!';
       Logger.error(errMsg);
       throw new Error(errMsg);
@@ -355,14 +358,14 @@ export default class ChainVerifier {
    */
   private async verifyOSTPrime(): Promise<void> {
     const ostPrimeInstance = this.mosaicContract.OSTPrime(
-      this.contractAddresses.auxiliary.ostPrimeAddress,
+      this.contractAddresses.auxiliary.utilityTokenAddress,
     );
 
     const valueToken = await ostPrimeInstance.methods.token().call();
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       valueToken,
-      this.mosaicConfig.originChain.contractAddresses.simpleTokenAddress,
+      this.mosaicConfig.originChain.contractAddresses.valueTokenAddress,
       'OSTPrime: Invalid OSTPrime address!!!',
     );
 
@@ -377,7 +380,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       organization,
-      this.contractAddresses.auxiliary.ostCoGatewayOrganizationAddress,
+      this.contractAddresses.auxiliary.coGatewayOrganizationAddress,
       'OSTPrime: Invalid organization address!!!',
     );
 
@@ -385,7 +388,7 @@ export default class ChainVerifier {
     ChainVerifier.validateDeployedAddress(
       this.auxiliaryWeb3,
       coGateway,
-      this.contractAddresses.auxiliary.ostEIP20CogatewayAddress,
+      this.contractAddresses.auxiliary.eip20CoGatewayAddress,
       'OSTPrime: Invalid coGateway address!!!',
     );
 

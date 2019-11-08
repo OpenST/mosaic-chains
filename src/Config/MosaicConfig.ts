@@ -12,7 +12,7 @@ const schema = require('./MosaicConfig.schema.json');
  * Hold contract addresses on origin chain independent of auxiliary chain.
  */
 export class OriginLibraries {
-  public simpleTokenAddress: Address;
+  public valueTokenAddress: Address;
 
   public merklePatriciaLibAddress: Address;
 
@@ -20,7 +20,7 @@ export class OriginLibraries {
 
   public messageBusAddress: Address;
 
-  public ostComposerAddress: Address;
+  public stakePoolAddress: Address;
 }
 
 /**
@@ -40,20 +40,22 @@ export class OriginChain {
  * Contract addresses of the origin chain specific to an auxiliary chain.
  */
 export class OriginContracts {
+  public baseTokenAddress: Address;
+
   public anchorOrganizationAddress: Address;
 
   public anchorAddress: Address;
 
-  public ostGatewayOrganizationAddress: Address;
+  public gatewayOrganizationAddress: Address;
 
-  public ostEIP20GatewayAddress: Address;
+  public eip20GatewayAddress: Address;
 }
 
 /**
  * Contract addresses deployed on the auxiliary chain.
  */
 export class AuxiliaryContracts {
-  public ostPrimeAddress: Address;
+  public utilityTokenAddress: Address;
 
   public anchorOrganizationAddress: Address;
 
@@ -65,9 +67,9 @@ export class AuxiliaryContracts {
 
   public messageBusAddress: Address;
 
-  public ostCoGatewayOrganizationAddress: Address;
+  public coGatewayOrganizationAddress: Address;
 
-  public ostEIP20CogatewayAddress: Address;
+  public eip20CoGatewayAddress: Address;
 
   public redeemPoolAddress: Address;
 }
@@ -167,6 +169,18 @@ export default class MosaicConfig {
     Logger.info('storing mosaic config', { configPath });
     fs.writeFileSync(
       configPath,
+      JSON.stringify(this, null, '    '),
+    );
+  }
+
+  /**
+   * This writes mosaic config to given path.
+   * @param mosaicConfigPath Path of mosaic-config.
+   */
+  public writeToFile(mosaicConfigPath: string): void{
+    Logger.info('storing mosaic config', { mosaicConfigPath });
+    fs.writeFileSync(
+      mosaicConfigPath,
       JSON.stringify(this, null, '    '),
     );
   }

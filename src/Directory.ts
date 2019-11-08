@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as os from 'os';
+import * as web3Utils from 'web3-utils';
 
 const MOSAIC_CONFIG_FILE = 'mosaic.json';
 /**
@@ -44,8 +45,7 @@ export default class Directory {
     }
 
     return path.join(
-      Directory.projectRoot,
-      'chains',
+      Directory.getProjectChainsDirectory,
       originChain,
       auxiliaryChainId,
     );
@@ -78,18 +78,15 @@ export default class Directory {
    *
    * @param originChain
    * @param auxiliaryChain
-   * @param chainClient
    * @return
    */
   public static getOriginSubGraphProjectDirSuffix(
     originChain: string,
     auxiliaryChain: string,
-    chainClient: string
   ): string {
     return path.join(
       originChain,
-      `origin-${chainClient}`,
-      'subgraph',
+      'origin-subgraph',
       auxiliaryChain,
     );
   }
@@ -162,6 +159,39 @@ export default class Directory {
       Directory.getDefaultMosaicDataDir,
       originChain,
       Directory.getMosaicFileName(),
+    );
+  }
+
+  /**
+   * This method return project chains directory.
+   */
+  public static get getProjectChainsDirectory(): string {
+    return path.join(
+      Directory.projectRoot,
+      'chains',
+    );
+  }
+
+  /**
+   * Returns the full path of GatewayConfig for a given origin, auxiliary and gatewayAddress.
+   *
+   * @param originChain Origin chain identifier.
+   * @param auxChainId Auxiliary chain Id.
+   * @param gatewayAddress Address of Gateway.
+   *
+   * @return Path of gateway config file.
+   */
+  public static getGatewayConfigPath(
+    originChain: string,
+    auxChainId: number,
+    gatewayAddress: string,
+  ): string {
+    return path.join(
+      Directory.getDefaultMosaicDataDir,
+      originChain,
+      auxChainId.toString(),
+      `gateway-${web3Utils.toChecksumAddress(gatewayAddress)}`,
+      'gateway-config.json',
     );
   }
 }

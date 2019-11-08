@@ -5,7 +5,6 @@ export const PARITY_CLIENT = 'parity';
  * Builds node based on the given chain id.
  */
 export default class ChainInfo {
-
   /**
    * array of supported origin chains.
    */
@@ -13,7 +12,7 @@ export default class ChainInfo {
     return [
       'ethereum',
       'ropsten',
-      'goerli'
+      'goerli',
     ];
   }
 
@@ -76,7 +75,10 @@ export default class ChainInfo {
    * @param chain Chain name.
    */
   public static isDevChain(chain: string): boolean {
-    return (ChainInfo.devChainInfo[chain] !== undefined);
+    const setOfChain = new Set(
+      [...Object.keys(ChainInfo.devChainInfo),
+        ...Object.values(ChainInfo.devChainInfo)]);
+    return setOfChain.has(chain);
   }
 
   /**

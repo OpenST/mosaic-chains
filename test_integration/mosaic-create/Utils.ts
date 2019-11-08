@@ -23,7 +23,7 @@ export default class Utils {
         '8546:8546',
         '--name',
         'integration_test_origin',
-        'mosaicdao/dev-chains',
+        'mosaicdao/dev-chains:1.0.0',
         'origin',
       ];
       const originNodeDockerProcess = spawn('docker', startOriginChainArgs, { stdio: 'inherit' });

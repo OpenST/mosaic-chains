@@ -6,6 +6,7 @@ import Initialization from '../NewChain/Initialization';
 import NodeOptions from './NodeOptions';
 import NodeDescription from '../Node/NodeDescription';
 import Directory from '../Directory';
+import Validator from './Validator';
 
 let mosaic = commander
   .arguments('<new-chain-id> <origin-websocket> <password-file>');
@@ -17,6 +18,10 @@ mosaic.action(
     passwordFile: string,
     options,
   ) => {
+    const isValidWeb3Connection = await Validator.isValidWeb3EndPoint(originWebsocket);
+    if (!isValidWeb3Connection) {
+      Logger.error('Could not connect to origin node with web3');
+    }
     const nodeOptions: NodeOptions = NodeOptions.parseOptions(options, newChainId);
     if (nodeOptions.originChain === '') {
       Logger.error('Unknown origin, please provide --origin');
