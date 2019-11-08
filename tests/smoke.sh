@@ -84,8 +84,10 @@ function stop_node {
 function stop_nodes {
     info "Stopping all nodes."
     stop_node ropsten
+    stop_node goerli
     stop_node 1407
     stop_node 1406
+    stop_node 1405
     stop_node dev-origin
     stop_node dev-auxiliary
 }
