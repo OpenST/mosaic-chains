@@ -39,7 +39,7 @@
     ```
 5. Move the mosaic config file in `configs` directory.
 
-6. Move the gateway config for a token to a folder having below folder structure:
+6. Move the gateway config for a gateway to a folder having below folder structure:
 
    `
      docker/root/origin-geth/1000/gateway-{gatewayAddress}/gateway-config.json   
