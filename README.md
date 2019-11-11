@@ -6,17 +6,17 @@ Mosaic will automatically identify if you want to run a geth node or a parity no
 Any string supported by parity as a network option will start a parity node container.
 Any other string it tries to match to one of the available IDs in the `./chains` directory and starts the geth node.
 
-The command to start a chain is `./mosac start <chain_id>`
+The command to start a chain is `./mosaic start <chain_id>`
 
 if option `--origin <origin_chain>` is not provided then `chain_id` itself is the origin chain identifier, otherwise `chain_id` is auxiliary chain id.
 
 Example:
 ```bash
 # start orign chain.
-./mosaic start ropsten
+./mosaic start goerli
 
 # start auxiliary chain.   
-./mosac start 1406 --origin ropsten
+./mosaic start 1405 --origin goerli
 ```
 
 Start command will also start a graph node by default and deploy a sub graph for the given chain.
@@ -41,16 +41,18 @@ You can specify a different directory with the `--mosaic-dir` option.
 ### Available chains
 
 Usually, you want to run a combination of at least one origin chain with at least one matching auxiliary chain.
-For example Ethereum mainnet and `1414` or Ropsten and `1406`.
 
+Please use one of below combinations:
 * Auxiliary chains running against Ethereum mainnet:
     * `1414`
-* Testnet auxiliary chains running against Ropsten:
+* Auxiliary chains running against Ropsten testnet:
     * `1406`
     * `1407`
-
+* Auxiliary chains running against Goerli testnet:
+    * `1405`
+    
 The chain id of future auxiliary chains running against Ethereum mainnet will increase by one number each.
-The chain id of future auxiliary chains running against Ropsten will decrease by one number each.
+The chain id of future auxiliary chains running against Ethereum testnet will decrease by one number each.
 
 ## Dev chains
 For development, you can use the dev chains. These chains have the initial chain setup contracts deployed. 
@@ -93,12 +95,12 @@ Creating a new auxiliary chain assumes that you have an unlocked account on a no
 If that is **not** the case, do one or more of the steps below as required.
 You should know what you are doing here.
 
-1. Make sure you have an origin node running. If that is not the case, start one (e.g. `./mosaic start ropsten`).
-2. Attach to the node (e.g. `./mosaic attach ropsten`).
+1. Make sure you have an origin node running. If that is not the case, start one (e.g. `./mosaic start goerli`).
+2. Attach to the node (e.g. `./mosaic attach goerli`).
 3. Create a new account (`personal.newAccount("password")`).
 4. Create a `./password.txt` (or different) file that contains `password` followed by a newline.
-5. Unlock the account (e.g. `./mosaic stop ropsten; ./mosaic start --unlock address --password ./password.txt ropsten`).
-6. You want to lock the account again after creating the auxiliary chain has finished (e.g. `./mosaic stop ropsten; ./mosaic start ropsten`).
+5. Unlock the account (e.g. `./mosaic stop goerli; ./mosaic start --unlock address --password ./password.txt goerli`).
+6. You want to lock the account again after creating the auxiliary chain has finished (e.g. `./mosaic stop goerli; ./mosaic start goerli`).
 7. You may want to delete the password file.
 
 Other prerequisites that you need:
@@ -116,7 +118,7 @@ To see the help:
 A simple run would be the following:
 
 ```
-./mosaic create 1337 ws://localhost:8746 ./password.txt --origin ropsten
+./mosaic create 1337 ws://localhost:8746 ./password.txt --origin goerli
 ```
 
 Where:
@@ -124,7 +126,7 @@ Where:
 * `1337` is the new ID of the new chain.
 * `ws://localhost:8746` is the websocket connection to the running origin node with an unlocked account.
 * `./password.txt` is the path to the password file that contains the **two identical passwords.**
-* `ropsten` is the origin chain.
+* `goerli` is the origin chain.
 
 #### Stake Pool
 Stake pool command deploys ost composer and organization contract on the origin chain where staker can request stake and pool of facilitators can facilitate stake and mint on behalf of staker.
@@ -270,7 +272,7 @@ If you have those, follow the steps below:
      export AUXILIARY_WORKER_EXPIRATION_HEIGHT='replace_with_auxiliary_expiration_height';
  
  Origin and auxiliary worker addresses are generated with `facilitator init` step. 
- Mosaic config path for supported chain should be available at `~/.mosaic/<origin-chain>/mosaic.json` where `<origin-chain>` is origin chain identifier e.g. `ropsten`.  
+ Mosaic config path for supported chain should be available at `~/.mosaic/<origin-chain>/mosaic.json` where `<origin-chain>` is origin chain identifier e.g. `goerli`.  
  
  Origin and auxiliary worker expiration height is block height from current block for which worker keys are whitelisted. 
  

@@ -26,12 +26,12 @@ mosaic.action(
     },
     WebSocket);
     subscriptionClient.onConnected(() => {
-      Logger.info(`Connected to sub graph: ${subGraphName}`);
+      Logger.info(`Connected to sub graph: ${subGraphName} url: ${wsEndPoint}`);
       subscriptionClient.close();
       process.exit(0);
     });
     subscriptionClient.onError((error) => {
-      Logger.error(`Could not connect to sub graph: ${subGraphName}`);
+      Logger.error(`Could not connect to sub graph: ${subGraphName} url: ${wsEndPoint}`);
       Logger.error(`Error: ${error.message}`);
       process.exit(1);
     });

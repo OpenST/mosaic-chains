@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Anchor
-    network: mainnet
+    network: dev
     source:
       address: "{{anchorAddress}}"
       abi: Anchor
@@ -24,7 +24,7 @@ dataSources:
 
   - kind: ethereum/contract
     name: EIP20CoGateway
-    network: mainnet
+    network: dev
     source:
       address: "{{eip20CoGatewayAddress}}"
       abi: EIP20CoGateway
@@ -56,7 +56,7 @@ dataSources:
 
   - kind: ethereum/contract
     name: RedeemPool
-    network: mainnet
+    network: dev
     source:
       address: "{{redeemPoolAddress}}"
       abi: RedeemPool

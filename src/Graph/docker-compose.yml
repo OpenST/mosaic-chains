@@ -1,7 +1,7 @@
 version: '3'
 services:
   graph-node:
-    image: graphprotocol/graph-node:v0.13.2
+    image: graphprotocol/graph-node:v0.15.1
     ports:
       - '${MOSAIC_GRAPH_RPC_PORT}:8000'
       - '${MOSAIC_GRAPH_WS_PORT}:8001'
