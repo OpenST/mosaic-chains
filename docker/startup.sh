@@ -45,6 +45,7 @@ args=("$@")
 cp -r /configs/. /root/
 cp -r /chain_data/origin-geth/. /root/origin-geth/
 cp -r /chain_data/1000/. /root/1000/
+chmod -R 775 ./root/
 if [ "$chainName" = "origin" ]; then
   buildCommand "origin"
   remainingCommands="${args[@]}"
