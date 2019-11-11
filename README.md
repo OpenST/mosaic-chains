@@ -27,6 +27,13 @@ Stopping a container that was started with mosaic completely removes that contai
 Only the content in the mounted data directory remains.
 If you want to keep the container around, for example to debug in the logs after it was stopped automatically after starting, use the `--keep` option of `./mosaic start`.
 
+By default, auxiliary node is started with eth, net, web3, network, debug, txpool, admin and personal apis and origin node is started with `all` option in parity client. Limited api's can be exposed using option `--rpcApi` for rpc apis and `--wsApi` for ws apis. If multiple apis are to be exposed then separate each one using comma.
+⚠ Graph node connecting to node(origin or auxiliary) requires eth and net apis to be enabled. 
+Example:
+```
+./mosac start ropsten --rpcApi eth,net,web3,personal --wsApi eth,net,web3
+```
+
 ⚠️  Nodes started with `mosaic` open *all* available APIs. If necessary, make sure your machine is secured.
 
 ## Running mosaic
