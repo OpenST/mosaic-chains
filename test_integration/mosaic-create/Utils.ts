@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import Shell from '../../src/Shell';
 import Directory from '../../src/Directory';
-import { DEV_CHAIN_DOCKER } from '../../src/Node/GethNode';
+import DEV_CHAIN_DOCKER from '../../src/Node/GethNode';
 
 const waitPort = require('wait-port');
 
