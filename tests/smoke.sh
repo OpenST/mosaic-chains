@@ -211,6 +211,14 @@ function test_goerli {
     stop_node goerli
 }
 
+function test_ethereum {
+    start_origin_node ethereum geth
+    sleep 25
+    grep_try ethereum geth
+    rpc_node_try "0001" # Given like this as it is used for the port in `rpc_node_try`.
+    stop_node ethereum
+}
+
 function test_1406 {
     start_auxiliary_node 1406 ropsten
     sleep 25
@@ -248,6 +256,14 @@ function test_1405 {
     stop_node 1405
 }
 
+function test_1414 {
+    start_auxiliary_node 1414 ethereum
+    sleep 25
+    grep_try 1414 geth
+    rpc_node_try 1414
+    stop_node 1414
+}
+
 function test_dev_origin {
   start_origin_node dev-origin geth
   sleep 25
@@ -273,12 +289,16 @@ if [ $chain = "ropsten" ]; then
 	test_ropsten
 elif [ $chain = "goerli" ]; then
 	test_goerli
+elif [ $chain = "ethereum" ]; then
+	test_ethereum
 elif [ $chain = "1406" ]; then
 	test_1406
 elif [ $chain = "1407" ]; then
 	test_1407
 elif [ $chain = "1405" ]; then
 	test_1405
+elif [ $chain = "1414" ]; then
+	test_1414
 elif [ $chain = "dev-origin" ]; then
 	test_dev_origin
 elif [ $chain = "dev-auxiliary" ]; then
