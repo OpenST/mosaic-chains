@@ -56,7 +56,7 @@ describe('Directory.sanitize()', () => {
     const originChain = 'dev';
     const auxChainId = 1000;
     const gatewayAddress = '0xae02c7b1c324a8d94a564bc8d713df89eae441fe';
-    const expectedPath = `${Directory.getDefaultMosaicDataDir}/dev/1000/0xae02c7b1c324a8d94a564bc8d713df89eae441fe.json`;
+    const expectedPath = `${Directory.getDefaultMosaicDataDir}/dev/1000/gateway-0xaE02C7b1C324A8D94A564bC8d713Df89eae441fe/gateway-config.json`;
     const fullPath = Directory.getGatewayConfigPath(
       originChain,
       auxChainId,

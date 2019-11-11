@@ -84,6 +84,8 @@ Examples with different chain IDs:
 ## Creating a new auxiliary chain
 If there is no existing mosaic config with the library addresses for the `origin` chain then first run `./mosaic libraries <origin-chain-id> <origin-websocket> <deployer-address>`. This command will create a mosaic config file for the origin chain and stores library addresses of origin chain. Generated mosaic config must be used to create multiple auxiliary chains. Ideally `./mosaic libraries` command should be used once per origin chain. This command assumes that deployer address is unlocked already.
 
+Total gas consumption for libraries command is `4150100`. It deploys three contracts i.e merkle patricia proof, message bus and gateway lib which require `1431920`, `1913370` and `804810` gas respectively.
+
 The command to create a new auxiliary chain is `./mosaic create <new-chain-id> <origin-websocket> <password-file> --origin <origin_chain>`.
 See `./mosaic create --help` for more help.
 
@@ -143,8 +145,10 @@ Where:
  ./mosaic setup-stake-pool 12346  http://localhost:8545 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001
  ```
 
- Note: Setup stake pool command expects deployer address to be unlocked.
+ **Note:** Setup stake pool command expects deployer address to be unlocked and it must have funds to pay for gas.
  
+ Total gas consumption for setup stake pool command is `3227315`. It deploys two contracts i.e organization and OST composer which require `748146` and `2479169` gas respectively. 
+  
 #### Redeem Pool
 Redeem pool command deploys redeem pool and organization contract on the auxiliary chain where redeemer can request redeem and pool of facilitators can facilitate redeem and unstake on behalf of redeemer.
 
@@ -164,9 +168,10 @@ Where:
   ```bash
  ./mosaic setup-redeem-pool 12346 500 http://localhost:40500 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001
  ```
-
  
- Note: Setup redeem pool command expects deployer address to be unlocked.
+Total gas consumption for setup redeem pool command is `2951611`. It deploys two contracts i.e organization and redeem pool which require `748146` and `2203465` gas respectively. 
+ 
+ **Note:** Setup redeem pool command expects deployer address to be unlocked and it must have funds to pay for gas.
 
  
 ####Troubleshooting:
@@ -192,7 +197,7 @@ Below commands assumes the blockchain node and graph node is already running. Yo
 Below command deploys subgraph of mosaic gateways.
 
 ```bash
-./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chainType> <admin-graph-rpc> <graph-ipfs> 
+./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chainType> <admin-graph-url> <graph-ipfs-url> 
 ```
 **where:** 
 1. origin-chain-identifier: Origin chain identifier like ropsten, goerli, dev-origin
@@ -206,7 +211,7 @@ Optionally `--mosaic-config` option can be used to pass mosaic config otherwise 
 #### Subgraph deployment for any EIP20 gateways:
 Below command deploys subgraph of any eip20gateway.
 ```bash
-./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chain> <admin-graph-rpc> <graph-ipfs>  --gateway-config <gateway-config>
+./mosaic subgraph <origin-chain-identifier> <auxiliary-chain-identifier> <chain> <admin-graph-url> <graph-ipfs-url>  --gateway-config <gateway-config>
 ```
 **where:**
 1. gateway-config: Path of gateway config. 
@@ -289,7 +294,17 @@ Mosaic config file is required in various steps and commands. There are two ways
 Gateway config file is also required for various commands. This file contains information about gateway addresses. Currently below config files are supported: 
 
 1. [WETH gateway config](chains/goerli/1405/0x6649c6ff3629ae875b91b6c1551139c9feaa2514.json).
+
+## Gas consumption in mosaic commands
+
+```
+| Command           | Gas consumption |
+|-------------------|-----------------|
+| libraries         | 4150100         |
+| setup-stake-pool  | 3227315         |
+| setup-redeem-pool | 2951611         |
         
+```        
 ## Tests
 
 Run the tests with `npm test`.

@@ -66,7 +66,7 @@ function  deploy_subgraph {
 # gateway config
 function  deploy_subgraph_gateway_config {
     info "Deploying origin subraph."
-    try_silent "./mosaic subgraph $1 $2 $3 http://localhost:$4 http://localhost:$5 --gateway-config ~/.mosaic/$1/$2/$( echo "$6" | tr -s  '[:upper:]'  '[:lower:]' ).json"
+    try_silent "./mosaic subgraph $1 $2 $3 http://localhost:$4 http://localhost:$5 --gateway-config ~/.mosaic/$1/$2/gateway-$6/gateway-config.json"
 }
 
 
