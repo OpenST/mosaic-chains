@@ -99,7 +99,7 @@ function stop_nodes {
 # $4 graph admin rpc port
 # $5 graph IPFS port
 function  deploy_subgraph_mosaic_config {
-    info "Deploying $3 subraph."
+    info "Deploying $3 subgraph."
     try_silent "./mosaic subgraph $1 $2 $3 http://localhost:$4 http://localhost:$5"
 }
 
@@ -111,7 +111,7 @@ function  deploy_subgraph_mosaic_config {
 # $5 graph IPFS port
 # gateway config
 function  deploy_subgraph_gateway_config {
-    info "Deploying $3 subraph."
+    info "Deploying $3 subgraph."
     try_silent "./mosaic subgraph $1 $2 $3 http://localhost:$4 http://localhost:$5 --gateway-config ~/.mosaic/$1/$2/gateway-$6/gateway-config.json"
 }
 
@@ -179,6 +179,27 @@ function rpc_auxiliary_sub_graph_try {
     try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/auxiliary-verifier.ts 6$1 $2" "Auxiliary sub graph was expected to be deployed, but wasn't."
 }
 
+# Function to test Dev Origin origin
+function test_dev_origin {
+  start_origin_node dev-origin geth
+  sleep 25
+  deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID origin $GRAPH_ADMIN_RPC_DEV_ORIGIN $GRAPH_IPFS_DEV_ORIGIN $WETH_GATEWAY_ADDRESS_DEV_ORIGIN
+  sleep 25
+  rpc_origin_sub_graph_try  $GRAPH_WS_PORT_DEV_ORIGIN $WETH_GATEWAY_ADDRESS_DEV_ORIGIN
+  stop_node dev-origin
+}
+
+# Function to test Dev Auxiliary origin
+function test_dev_auxiliary {
+  start_auxiliary_node dev-auxiliary dev-origin
+  sleep 25
+  deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID auxiliary $GRAPH_ADMIN_RPC_DEV_AUXILIARY $GRAPH_IPFS_DEV_AUXILIARY $WETH_GATEWAY_ADDRESS_DEV_ORIGIN
+  sleep 25
+  rpc_auxiliary_sub_graph_try $DEV_AUXILIARY_CHAIN_ID $WETH_CO_GATEWAY_ADDRESS_DEV_ORIGIN
+  stop_node dev-auxiliary
+}
+
+# Function to test Ropsten origin
 function test_ropsten {
     start_origin_node ropsten geth
     sleep 25
@@ -196,6 +217,31 @@ function test_ropsten {
     stop_node ropsten
 }
 
+# Function to test 1406 origin
+function test_1406 {
+    start_auxiliary_node 1406 ropsten
+    sleep 25
+    grep_try 1406 geth
+    rpc_node_try 1406
+    deploy_subgraph_mosaic_config ropsten 1406 auxiliary $GRAPH_ADMIN_RPC_1406 $GRAPH_IPFS_1406
+    sleep 25
+    rpc_auxiliary_sub_graph_try 1406 $OST_COGATEWAY_ADDRESS_1406
+    stop_node 1406
+}
+
+# Function to test 1407 origin
+function test_1407 {
+    start_auxiliary_node 1407 ropsten
+    sleep 25
+    grep_try 1407 geth
+    rpc_node_try 1407
+    deploy_subgraph_mosaic_config ropsten 1407 auxiliary $GRAPH_ADMIN_RPC_1407 $GRAPH_IPFS_1407
+    sleep 25
+    rpc_auxiliary_sub_graph_try 1407 $OST_COGATEWAY_ADDRESS_1407
+    stop_node 1407
+}
+
+# Function to test Goerli origin
 function test_goerli {
     start_origin_node goerli geth
     sleep 25
@@ -211,36 +257,7 @@ function test_goerli {
     stop_node goerli
 }
 
-function test_ethereum {
-    start_origin_node ethereum geth
-    sleep 25
-    grep_try ethereum geth
-    rpc_node_try "0001" # Given like this as it is used for the port in `rpc_node_try`.
-    stop_node ethereum
-}
-
-function test_1406 {
-    start_auxiliary_node 1406 ropsten
-    sleep 25
-    grep_try 1406 geth
-    rpc_node_try 1406
-    deploy_subgraph_mosaic_config ropsten 1406 auxiliary $GRAPH_ADMIN_RPC_1406 $GRAPH_IPFS_1406
-    sleep 25
-    rpc_auxiliary_sub_graph_try 1406 $OST_COGATEWAY_ADDRESS_1406
-    stop_node 1406
-}
-
-function test_1407 {
-    start_auxiliary_node 1407 ropsten
-    sleep 25
-    grep_try 1407 geth
-    rpc_node_try 1407
-    deploy_subgraph_mosaic_config ropsten 1407 auxiliary $GRAPH_ADMIN_RPC_1407 $GRAPH_IPFS_1407
-    sleep 25
-    rpc_auxiliary_sub_graph_try 1407 $OST_COGATEWAY_ADDRESS_1407
-    stop_node 1407
-}
-
+# Function to test 1405 origin
 function test_1405 {
     start_auxiliary_node 1405 goerli
     sleep 25
@@ -254,32 +271,6 @@ function test_1405 {
     # sleep 25
     # rpc_auxiliary_sub_graph_try 1405 $WETH_COGATEWAY_ADDRESS_1405
     stop_node 1405
-}
-
-function test_1414 {
-    start_auxiliary_node 1414 ethereum
-    sleep 25
-    grep_try 1414 geth
-    rpc_node_try 1414
-    stop_node 1414
-}
-
-function test_dev_origin {
-  start_origin_node dev-origin geth
-  sleep 25
-  deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID origin $GRAPH_ADMIN_RPC_DEV_ORIGIN $GRAPH_IPFS_DEV_ORIGIN $WETH_GATEWAY_ADDRESS_DEV_ORIGIN
-  sleep 25
-  rpc_origin_sub_graph_try  $GRAPH_WS_PORT_DEV_ORIGIN $WETH_GATEWAY_ADDRESS_DEV_ORIGIN
-  stop_node dev-origin
-}
-
-function test_dev_auxiliary {
-  start_auxiliary_node dev-auxiliary dev-origin
-  sleep 25
-  deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID auxiliary $GRAPH_ADMIN_RPC_DEV_AUXILIARY $GRAPH_IPFS_DEV_AUXILIARY $WETH_GATEWAY_ADDRESS_DEV_ORIGIN
-  sleep 25
-  rpc_auxiliary_sub_graph_try $DEV_AUXILIARY_CHAIN_ID $WETH_CO_GATEWAY_ADDRESS_DEV_ORIGIN
-  stop_node dev-auxiliary
 }
 
 # Making sure the mosaic command exists (we are in the right directory).
