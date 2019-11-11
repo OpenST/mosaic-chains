@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: OSTComposer
-    network: mainnet
+    network: dev
     source:
       address: "{{stakePoolAddress}}"
       abi: OSTComposer
@@ -24,7 +24,7 @@ dataSources:
 
   - kind: ethereum/contract
     name: EIP20Gateway
-    network: mainnet
+    network: dev
     source:
       address: "{{eip20GatewayAddress}}"
       abi: EIP20Gateway
@@ -56,7 +56,7 @@ dataSources:
 
   - kind: ethereum/contract
     name: Anchor
-    network: mainnet
+    network: dev
     source:
       address: "{{anchorAddress}}"
       abi: Anchor
