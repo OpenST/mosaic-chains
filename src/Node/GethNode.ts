@@ -46,7 +46,7 @@ export default class GethNode extends Node {
         // init geth directory ONLY for auxiliary chains
         this.initializeGethDirectory();
       }
-      args = this.defaultDockerGethArgs;
+      args = this.defaultDockerGethArgs();
     }
     this.logInfo('starting geth node');
     Shell.executeDockerCommand(args);
@@ -57,7 +57,7 @@ export default class GethNode extends Node {
     super.ensureNetworkExists();
 
     this.logInfo('starting geth sealer node');
-    let args = this.defaultDockerGethArgs;
+    let args = this.defaultDockerGethArgs(true);
     args = args.concat([
       '--syncmode', 'full',
       '--gasprice', gasPrice,
@@ -186,7 +186,7 @@ export default class GethNode extends Node {
     return args;
   }
 
-  private get defaultDockerGethArgs(): string[] {
+  private defaultDockerGethArgs(startSealer: boolean = false): string[] {
     let args = this.getDefaultDockerArgs();
     args = args.concat([
       '--volume', `${this.chainDir}:/chain_data`,
@@ -213,6 +213,13 @@ export default class GethNode extends Node {
       '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
       '--wsorigins=*',
     ]);
+
+    if (startSealer) {
+      args = args.concat([
+        '--allow-insecure-unlock',
+      ]);
+    }
+
     if (this.clefSigner) {
       args = args.concat([
         `--signer=${this.clefSigner}`,
