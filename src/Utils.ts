@@ -56,16 +56,4 @@ export default class Utils {
     });
     console.log(`\n ${details}`);
   }
-
-  /**
-   * Returns chainId from chain identifier.
-   * @param chainIdentifier Chain Identifier.
-   */
-  public static getChainId(chainIdentifier: string): string {
-    let chainId = chainIdentifier;
-    if (ChainInfo.isDevChain(chainIdentifier)) {
-      chainId = ChainInfo.getChainId(chainIdentifier);
-    }
-    return chainId;
-  }
 }
