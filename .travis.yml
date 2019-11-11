@@ -28,11 +28,33 @@ notifications:
     on_failure: always
 install:
   - npm ci
-script:
-  - npm run test:unit
-  - npm run test:smoke
-  - npm run test:package
-  - sudo env PATH=$PATH npm run test:integration
-
+jobs:
+  include:
+    - stage: "Tests"
+      script: npm run test:unit
+      name: Unit
+    - script: sudo env PATH=$PATH npm run test:integration
+      name: Integration
+    - script: npm run test:package
+      name: Package
+    - stage: "Smoke"
+      script: npm run test:smoke:goerli
+      name: goerli
+    - script: npm run test:smoke:1405
+      name: 1405
+    - script: npm run test:smoke:dev-origin
+      name: "Dev Origin"
+    - script: npm run test:smoke:dev-auxiliary
+      name: "Dev Auxiliary"
+    - if: type = cron
+      stage: "Nightly Build"
+      script: npm run test:smoke:ropsten
+      name: ropsten
+    - if: type = cron
+      script: npm run test:smoke:1406
+      name: 1406
+    - if: type = cron
+      script: npm run test:smoke:1407
+      name: 1407
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
