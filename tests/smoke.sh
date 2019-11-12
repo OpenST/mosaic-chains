@@ -179,7 +179,7 @@ function rpc_auxiliary_sub_graph_try {
     try_silent "./node_modules/.bin/ts-node tests/Graph/SubGraphDeployment/auxiliary-verifier.ts 6$1 $2" "Auxiliary sub graph was expected to be deployed, but wasn't."
 }
 
-# Function to test Dev Origin origin
+# Function to test Dev Origin origin chain
 function test_dev_origin {
   start_origin_node dev-origin geth
   sleep 25
@@ -189,7 +189,7 @@ function test_dev_origin {
   stop_node dev-origin
 }
 
-# Function to test Dev Auxiliary origin
+# Function to test Dev Auxiliary auxiliary chain
 function test_dev_auxiliary {
   start_auxiliary_node dev-auxiliary dev-origin
   sleep 25
@@ -199,7 +199,7 @@ function test_dev_auxiliary {
   stop_node dev-auxiliary
 }
 
-# Function to test Ropsten origin
+# Function to test Ropsten origin chain
 function test_ropsten {
     start_origin_node ropsten geth
     sleep 25
@@ -217,7 +217,7 @@ function test_ropsten {
     stop_node ropsten
 }
 
-# Function to test 1406 origin
+# Function to test 1406 auxiliary chain
 function test_1406 {
     start_auxiliary_node 1406 ropsten
     sleep 25
@@ -229,7 +229,7 @@ function test_1406 {
     stop_node 1406
 }
 
-# Function to test 1407 origin
+# Function to test 1407 auxiliary chain
 function test_1407 {
     start_auxiliary_node 1407 ropsten
     sleep 25
@@ -241,7 +241,7 @@ function test_1407 {
     stop_node 1407
 }
 
-# Function to test Goerli origin
+# Function to test Goerli origin chain
 function test_goerli {
     start_origin_node goerli geth
     sleep 25
@@ -257,7 +257,7 @@ function test_goerli {
     stop_node goerli
 }
 
-# Function to test 1405 origin
+# Function to test 1405 auxiliary chain
 function test_1405 {
     start_auxiliary_node 1405 goerli
     sleep 25
@@ -273,6 +273,24 @@ function test_1405 {
     stop_node 1405
 }
 
+# Function to test Ethereum origin chain
+function test_ethereum {
+    start_origin_node ethereum geth
+    sleep 25
+    grep_try ethereum geth
+    rpc_node_try "0001" # Given like this as it is used for the port in `rpc_node_try`.
+    stop_node ethereum
+}
+
+# Function to test 1414 auxiliary chain
+function test_1414 {
+    start_auxiliary_node 1414 ethereum
+    sleep 25
+    grep_try 1414 geth
+    rpc_node_try 1414
+    stop_node 1414
+}
+
 # Making sure the mosaic command exists (we are in the right directory).
 try_silent "ls mosaic" "Script must be run from the mosaic chains root directory so that the required node modules are available."
 
@@ -280,12 +298,16 @@ if [ $chain = "ropsten" ]; then
 	test_ropsten
 elif [ $chain = "goerli" ]; then
 	test_goerli
+elif [ $chain = "ethereum" ]; then
+	test_ethereum
 elif [ $chain = "1406" ]; then
 	test_1406
 elif [ $chain = "1407" ]; then
 	test_1407
 elif [ $chain = "1405" ]; then
 	test_1405
+elif [ $chain = "1414" ]; then
+	test_1414
 elif [ $chain = "dev-origin" ]; then
 	test_dev_origin
 elif [ $chain = "dev-auxiliary" ]; then

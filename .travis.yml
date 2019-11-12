@@ -51,10 +51,16 @@ jobs:
       script: npm run test:smoke:ropsten
       name: ropsten
     - if: type = cron
+      script: npm run test:smoke:ethereum
+      name: ethereum
+    - if: type = cron
       script: npm run test:smoke:1406
       name: 1406
     - if: type = cron
       script: npm run test:smoke:1407
       name: 1407
+    - if: type = cron
+      script: npm run test:smoke:1414
+      name: 1414
 after_failure:
   - cat /home/travis/.npm/_logs/*-debug.log
