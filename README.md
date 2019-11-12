@@ -84,29 +84,19 @@ Examples with different chain IDs:
 | `1406` | `31406` | `41406` | `51406` |
 
 ## Creating a new auxiliary chain
-If there is no existing mosaic config with the library addresses for the `origin` chain then first run `./mosaic libraries <origin-chain-id> <origin-websocket> <deployer-address>`. This command will create a mosaic config file for the origin chain and stores library addresses of origin chain. Generated mosaic config must be used to create multiple auxiliary chains. Ideally `./mosaic libraries` command should be used once per origin chain. This command assumes that deployer address is unlocked already.
+If there is no existing mosaic config with the library addresses for the `origin` chain then first run `./mosaic libraries <origin-chain-id> <origin-websocket> <deployer-address>`. This command will create a mosaic config file for the origin chain and stores library addresses of origin chain. Generated mosaic config must be used to create multiple auxiliary chains. Ideally `./mosaic libraries` command should be used once per origin chain. This command assumes that signer is already been setup. Refer [signer section](#Signing_Of_Transaction).
 
 Total gas consumption for libraries command is `4150100`. It deploys three contracts i.e merkle patricia proof, message bus and gateway lib which require `1431920`, `1913370` and `804810` gas respectively.
 
 The command to create a new auxiliary chain is `./mosaic create <new-chain-id> <origin-websocket> <password-file> --origin <origin_chain>`.
 See `./mosaic create --help` for more help.
 
-Creating a new auxiliary chain assumes that you have an unlocked account on a node that is connected to the **origin chain.**
-If that is **not** the case, do one or more of the steps below as required.
-You should know what you are doing here.
-
-1. Make sure you have an origin node running. If that is not the case, start one (e.g. `./mosaic start goerli`).
-2. Attach to the node (e.g. `./mosaic attach goerli`).
-3. Create a new account (`personal.newAccount("password")`).
-4. Create a `./password.txt` (or different) file that contains `password` followed by a newline.
-5. Unlock the account (e.g. `./mosaic stop goerli; ./mosaic start --unlock address --password ./password.txt goerli`).
-6. You want to lock the account again after creating the auxiliary chain has finished (e.g. `./mosaic stop goerli; ./mosaic start goerli`).
-7. You may want to delete the password file.
+Creating a new auxiliary chain assumes that you have a signer setup on a node that is connected to the **origin chain.** Refer [signer section](#Signing_Of_Transaction). 
 
 Other prerequisites that you need:
 
 * A password file with exactly two lines (followed by a newline) of the **same password.** For now, this is the only way to set up the (temporary) accounts for sealing and deploying on the new auxiliary chain.
-* A websocket connection to a node that is connected to an existing origin chain. It has to have an unlocked account with sufficient balance. The account address of the unlocked account must be added to the file in the `initialize` directory (see next bullet point).
+* A websocket connection to a node that is connected to an existing origin chain. It has to have an account with sufficient balance. The account address of the account must be added to the file in the `initialize` directory (see next bullet point).
 * An initial configuration file in the project's `initialize` directory. The file name has to equal the new chain ID that you want to use. You can copy the example file and fill in your values. If you want to know what the parameters mean, check the [relevant documentation in the code](src/Config/InitConfig.ts).
 
 To see the help:
@@ -124,7 +114,7 @@ A simple run would be the following:
 Where:
 
 * `1337` is the new ID of the new chain.
-* `ws://localhost:8746` is the websocket connection to the running origin node with an unlocked account.
+* `ws://localhost:8746` is the websocket connection to the running origin node with an account with the signer setup. Refer [signer section](#Signing_Of_Transaction).
 * `./password.txt` is the path to the password file that contains the **two identical passwords.**
 * `goerli` is the origin chain.
 
@@ -147,7 +137,7 @@ Where:
  ./mosaic setup-stake-pool 12346  http://localhost:8545 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001 0x0000000000000000000000000000000000000001
  ```
 
- **Note:** Setup stake pool command expects deployer address to be unlocked and it must have funds to pay for gas.
+ **Note:** Setup stake pool command expects deployer address to be setup for signing and it must have funds to pay for gas. Refer [signer section](#Signing_Of_Transaction).
  
  Total gas consumption for setup stake pool command is `3227315`. It deploys two contracts i.e organization and OST composer which require `748146` and `2479169` gas respectively. 
   
@@ -173,7 +163,7 @@ Where:
  
 Total gas consumption for setup redeem pool command is `2951611`. It deploys two contracts i.e organization and redeem pool which require `748146` and `2203465` gas respectively. 
  
- **Note:** Setup redeem pool command expects deployer address to be unlocked and it must have funds to pay for gas.
+ **Note:** Setup redeem pool command expects deployer address to be setup for signing and it must have funds to pay for gas. Refer [signer section](#Signing_Of_Transaction).
 
  
 ####Troubleshooting:
@@ -253,11 +243,40 @@ If you have those, follow the steps below:
 4. Run `./build.sh` to generate all chain inits.
 5. Add `./chains/<origin_chain>/<chain_id>/bootnodes` and add the boot nodes (see other chains for examples).
 
+## Signing of transaction
+Mosaic command supports two different kind of signing mechanisms.
+
+1. For geth client mosaic commands support [clef](https://github.com/ethereum/go-ethereum/tree/master/cmd/clef) signer which can be used to sign transactions. Refer official documentation to setup [clef](https://github.com/ethereum/go-ethereum/tree/master/cmd/clef) signer. Clef signer can be configured while starting a mosaic chain with option `--clef-signer` which accepts RPC or IPC endpoint of clef.
+
+    Example 
+    ```bash
+      mosaic start 1405 --origin goerli --clef-signer http://{ipaddress}:{port}
+    ```
+    Replace `ipaddress` and `port` with actual values. Alternatively, IPC endpoint can also be passed for `--clef-signer` option.
+ 
+2. For parity client, mosaic commands assumes that accounts are already unlocked on the node itself. 
+
+**Steps to unlock a new account:**
+
+   1. Make sure you have an  node running. If that is not the case, start one (e.g. `./mosaic start goerli`).
+    
+   2. Attach to the node (e.g. `./mosaic attach goerli`).
+    
+   3. Create a new account (`personal.newAccount("password")`).
+   
+   4. Create a `./password.txt` (or different) file that contains `password` followed by a newline.
+   
+   5. Unlock the account (e.g. `./mosaic stop goerli; ./mosaic start --unlock address --password ./password.txt goerli`).
+   
+   6. You want to lock the account again after creating the auxiliary chain has finished (e.g. `./mosaic stop goerli; ./mosaic start goerli`).
+   
+   7. You may want to delete the password file.
+   
 ## Tool
 
  #### Whitelist worker for stakepool and redeempool. 
  
- This tool enables whitelisting of workers for stake and redeem pool contract. It expects organization admin of stakepool and redeempool contract is unlocked on the node. 
+ This tool enables whitelisting of workers for stake and redeem pool contract. It expects organization admin of stakepool and redeempool contract is setup for signing on the node. 
  
    *1. Set below environment variables*:
     
