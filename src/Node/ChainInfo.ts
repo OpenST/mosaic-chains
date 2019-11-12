@@ -1,4 +1,4 @@
-import {DEV_CHAIN_ROOT} from "../bin/DevChainOptions";
+import { DEV_CHAIN_ROOT } from '../bin/DevChainOptions';
 
 export const GETH_CLIENT = 'geth';
 export const PARITY_CLIENT = 'parity';
@@ -79,7 +79,8 @@ export default class ChainInfo {
   public static isDevChain(chain: string): boolean {
     const setOfChain = new Set(
       [...Object.keys(ChainInfo.devChainInfo),
-        ...Object.values(ChainInfo.devChainInfo)]);
+        ...Object.values(ChainInfo.devChainInfo)],
+    );
     return setOfChain.has(chain);
   }
 
@@ -123,5 +124,4 @@ export default class ChainInfo {
       options: optionInput,
     };
   }
-
 }

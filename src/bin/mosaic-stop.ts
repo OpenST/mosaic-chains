@@ -6,7 +6,7 @@ import NodeDescription from '../Node/NodeDescription';
 import Node from '../Node/Node';
 import GraphDescription from '../Graph/GraphDescription';
 import Graph from '../Graph/Graph';
-import ChainInfo from "../Node/ChainInfo";
+import ChainInfo from '../Node/ChainInfo';
 
 mosaic
   .arguments('<chains...>')
