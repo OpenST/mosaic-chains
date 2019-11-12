@@ -250,9 +250,10 @@ Mosaic command supports two different kind of signing mechanisms.
 
     Example 
     ```bash
-      mosaic start 1405 --origin goerli --clef-signer http://host.docker.internal:8550
+      mosaic start 1405 --origin goerli --clef-signer http://{ipaddress}:{port}
     ```
-
+    Replace `ipaddress` and `port` with actual values. Alternatively, IPC endpoint can also be passed for `--clef-signer` option.
+ 
 2. For parity client, mosaic commands assumes that accounts are already unlocked on the node itself. 
 
 **Steps to unlock a new account:**
