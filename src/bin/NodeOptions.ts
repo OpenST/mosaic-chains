@@ -47,6 +47,9 @@ export default class NodeOptions {
   /** List of boot nodes to start the node */
   public bootNodesFile: string;
 
+  /** RPC and IPC endpoint of clef */
+  public clefSigner?: string;
+
   /** rpc api to be exposed for a chain. */
   public rpcApi: string;
 
@@ -66,11 +69,13 @@ export default class NodeOptions {
     password: string;
     originChain: string;
     bootNodesFile: string;
+    clefSigner: string;
     rpcApi: string;
     wsApi: string;
   }) {
     Object.assign(this, options);
     this.bootNodesFile = options.bootNodesFile;
+    this.clefSigner = options.clefSigner;
   }
 
   /**
@@ -109,6 +114,7 @@ export default class NodeOptions {
       password: options.password || '',
       originChain: options.origin || '',
       bootNodesFile: options.bootnodes,
+      clefSigner: options.clefSigner,
       rpcApi: options.rpcApi || '',
       wsApi: options.wsApi || '',
     });

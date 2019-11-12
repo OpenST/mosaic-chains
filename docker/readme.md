@@ -39,13 +39,19 @@
     ```
 5. Move the mosaic config file in `configs` directory.
 
-6. Go to docker folder. Run the following command to build the docker image.
+6. Move the gateway config of dev chain to a folder with below folder structure:
+
+   `
+     docker/root/origin-geth/1000/gateway-{gatewayAddress}/gateway-config.json   
+   `
+
+7. Go to docker folder. Run the following command to build the docker image.
 
     `docker build -t mosaicdao/dev-chains . -f docker/Dockerfile`
     
-7. Authenticate docker with `Docker login` if not already done.    
+8. Authenticate docker with `Docker login` if not already done.    
 
-7. Run the following command to publish the Docker image.
+9. Run the following command to publish the Docker image.
 
     `docker push mosaicdao/dev-chains`
 

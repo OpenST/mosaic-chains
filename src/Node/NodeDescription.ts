@@ -24,6 +24,8 @@ export default class NodeDescription {
 
   public bootNodesFile?: string;
 
+  public clefSigner?: string;
+
   /** rpc api to be exposed for a chain. */
   public rpcApi: string;
 
