@@ -77,7 +77,7 @@ mosaic
         process.exit(1);
       }
       if (DevChainOptions.isDevChain(chain, options)) {
-        const devParams = DevChainOptions.getDevChainParams(chain, options);
+        const devParams = ChainInfo.getChainParams(chain, options);
         chainInput = devParams.chain;
         optionInput = devParams.options;
         // Dev chain should always start with geth.
