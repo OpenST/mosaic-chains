@@ -1,3 +1,5 @@
+import { DEV_CHAIN_ROOT } from '../bin/DevChainOptions';
+
 export const GETH_CLIENT = 'geth';
 export const PARITY_CLIENT = 'parity';
 
@@ -77,7 +79,8 @@ export default class ChainInfo {
   public static isDevChain(chain: string): boolean {
     const setOfChain = new Set(
       [...Object.keys(ChainInfo.devChainInfo),
-        ...Object.values(ChainInfo.devChainInfo)]);
+        ...Object.values(ChainInfo.devChainInfo)],
+    );
     return setOfChain.has(chain);
   }
 
@@ -95,5 +98,30 @@ export default class ChainInfo {
    */
   public static isDevAuxiliaryChain(chain: string): boolean {
     return (ChainInfo.devAuxiliaryChainInfo[chain] !== undefined);
+  }
+
+  /**
+   * For the ease of use the mosaic command accepts origin or auxiliary as
+   * params to start the dev chains. This function identifies the params
+   * provided to the mosaic command. If its dev chains then it returns the
+   * proper params that are needed to start the dev chains. For other chains like goerli/1405 or
+   * ropsten/1406 return chain without modifying.
+   *
+   * @param chain Chain provided in the mosaic command.
+   * @param options Options provided in the mosaic command.
+   */
+  public static getChainParams(chain: string, options = { origin: '' }) {
+    let chainInput = chain;
+    const optionInput = Object.assign({}, options);
+    if (ChainInfo.isDevOriginChain(chain)) {
+      chainInput = DEV_CHAIN_ROOT;
+    } else if (ChainInfo.isDevAuxiliaryChain(chain)) {
+      chainInput = ChainInfo.getChainId(chain);
+      optionInput.origin = DEV_CHAIN_ROOT;
+    }
+    return {
+      chain: chainInput,
+      options: optionInput,
+    };
   }
 }
