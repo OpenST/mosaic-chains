@@ -1,4 +1,5 @@
 import * as fs from 'fs-extra';
+
 const path = require('path');
 
 /**
@@ -83,5 +84,4 @@ export default class FileSystem {
     }
     return filePath;
   }
-
 }

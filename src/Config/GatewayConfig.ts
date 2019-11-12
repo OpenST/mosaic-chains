@@ -7,7 +7,7 @@ import {
 } from '../Exception';
 import FileSystem from '../FileSystem ';
 import Directory from '../Directory';
-import Logger from "../Logger";
+import Logger from '../Logger';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const schema = require('./GatewayConfig.schema.json');

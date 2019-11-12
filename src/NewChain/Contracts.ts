@@ -231,7 +231,7 @@ export default class Contracts {
     });
     const deployTxOptions = {
       ...txOptions,
-      gas: (await rawDeployTransaction.estimateGas()),
+      gas: (await rawDeployTransaction.estimateGas(txOptions)),
     };
     return rawDeployTransaction.send(deployTxOptions);
   }
@@ -266,7 +266,7 @@ export default class Contracts {
     });
     const deployTxOptions = {
       ...txOptions,
-      gas: (await rawDeployTransaction.estimateGas()),
+      gas: (await rawDeployTransaction.estimateGas(txOptions)),
     };
     return rawDeployTransaction.send(deployTxOptions);
   }

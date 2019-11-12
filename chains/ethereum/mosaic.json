@@ -1,0 +1,68 @@
+{
+  "originChain": {
+    "contractAddresses": {
+      "gatewayLibAddress": "0x1c9e18c8ab156753f7eca95d8c042f7842aaf09e",
+      "messageBusAddress": "0x0b71bb83d2814633f7dfeb9cb5c4c2e63be215ed",
+      "merklePatriciaLibAddress": "0x30db9dd1875dbea601ba061e81dd88325d68fd18",
+      "valueTokenAddress": "0x2c4e8f2d746113d0696ce89b35f0d8bf88e0aeca"
+    },
+    "chain": "ethereum"
+  },
+  "auxiliaryChains": {
+    "1414": {
+      "bootNodes": [
+        "enode://c677ea2e455828db3d2f7bbc232518cfe683475edae66ab46fcf27bc21efb991fb37776f815d679a449374e7363692aee3c89a70f6b8cd754abc95fa11a3c757@99.80.181.153:30301"
+      ],
+      "contractAddresses": {
+        "origin": {
+          "baseTokenAddress": "0x2c4e8f2d746113d0696ce89b35f0d8bf88e0aeca",
+          "anchorOrganizationAddress": "0xc450a2fa865972fb7a07acad6cf6c3654e37c617",
+          "anchorAddress": "0x981884d4369f7b7892d8c279d2125daf7422d9e0",
+          "gatewayOrganizationAddress": "0x813bcae43e1aff7466d9d34a8163a2bf5216dc1f",
+          "eip20GatewayAddress": "0xe0a3929c6947cdc091e6e6725826a09615062131"
+        },
+        "auxiliary": {
+          "anchorOrganizationAddress": "0xbe29a93ced3ca8801ccdc4a4f8cc756f293e8973",
+          "anchorAddress": "0xe66af880713e8b34e54150b95794736bea96e4be",
+          "coGatewayOrganizationAddress": "0x47dfd95dbcb3006813a483b1122f81b843a873a7",
+          "utilityTokenAddress": "0x2f973cb687ebab040c3e448cc31ca281d9a5ca45",
+          "eip20CoGatewayAddress": "0x25cf88ef96af49950b1bb942d04b5563312dd82b",
+          "gatewayLibAddress": "0x9902f4fe064a8471333224e68c6e9159e38ad73f",
+          "messageBusAddress": "0x82207dd728f447056b61284983595fa95ad3b627",
+          "merklePatriciaLibAddress": "0x4045c0155fe09757f2576c2624aa15826bb87fa7"
+        }
+      },
+      "chainId": 1414,
+      "genesis": {
+        "config": {
+          "chainId": 1414,
+          "homesteadBlock": 1,
+          "eip150Block": 2,
+          "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "eip155Block": 3,
+          "eip158Block": 3,
+          "byzantiumBlock": 4,
+          "clique": {
+            "period": 3,
+            "epoch": 30000
+          }
+        },
+        "nonce": "0x0",
+        "timestamp": "0x5a71660b",
+        "extraData": "0x7574696c69747920636861696e0000000000000000000000000000000000000082Af4EFe75Fa0fe0525f59e51453DF961528fD570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "gasLimit": "0x989680",
+        "difficulty": "0x1",
+        "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "coinbase": "0x0000000000000000000000000000000000000000",
+        "alloc": {
+          "2daded60b5d68d7e4f12307c4f6fa8fb11956f32": {
+            "balance": "0x295be96e640669720000000"
+          }
+        },
+        "number": "0x0",
+        "gasUsed": "0x0",
+        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  }
+}

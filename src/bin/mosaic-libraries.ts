@@ -36,14 +36,13 @@ mosaic.action(
       // Publishes mosaic configs for existing chains
       PublishMosaicConfig.tryPublish(chain);
 
+      const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
       const originWeb3 = new Web3(originWebsocket);
       const {
         gatewayLib,
         messageBus,
         merklePatriciaProof,
       } = await OriginChainInteract.deployLibraries(originWeb3, deployer);
-
-      const mosaicConfig: MosaicConfig = MosaicConfig.fromChain(chain);
 
       mosaicConfig.originChain.chain = chain;
       mosaicConfig.originChain.contractAddresses.gatewayLibAddress = Utils.toChecksumAddress(
@@ -57,6 +56,8 @@ mosaic.action(
       );
 
       mosaicConfig.writeToMosaicConfigDirectory();
+      Utils.printContracts(['Gateway library', 'Message bus library', 'Merkle patricia proof library'],
+        [gatewayLib.address, messageBus.address, merklePatriciaProof.address]);
     } catch (error) {
       Logger.error('error while executing mosaic libraries', { error: error.toString() });
       process.exit(1);

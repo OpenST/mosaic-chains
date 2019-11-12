@@ -174,6 +174,18 @@ export default class MosaicConfig {
   }
 
   /**
+   * This writes mosaic config to given path.
+   * @param mosaicConfigPath Path of mosaic-config.
+   */
+  public writeToFile(mosaicConfigPath: string): void{
+    Logger.info('storing mosaic config', { mosaicConfigPath });
+    fs.writeFileSync(
+      mosaicConfigPath,
+      JSON.stringify(this, null, '    '),
+    );
+  }
+
+  /**
    * read config from file, validate it and return as JSON object
    * @param {string} filePath
    * @return {object}

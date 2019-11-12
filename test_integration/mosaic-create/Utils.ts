@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import Shell from '../../src/Shell';
 import Directory from '../../src/Directory';
+import { DEV_CHAIN_DOCKER } from '../../src/Node/GethNode';
 
 const waitPort = require('wait-port');
 
@@ -23,7 +24,7 @@ export default class Utils {
         '8546:8546',
         '--name',
         'integration_test_origin',
-        'mosaicdao/dev-chains:1.0.0',
+        DEV_CHAIN_DOCKER,
         'origin',
       ];
       const originNodeDockerProcess = spawn('docker', startOriginChainArgs, { stdio: 'inherit' });
