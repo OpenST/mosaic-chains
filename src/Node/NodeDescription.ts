@@ -26,5 +26,11 @@ export default class NodeDescription {
 
   public clefSigner?: string;
 
+  /** rpc api to be exposed for a chain. */
+  public rpcApi: string;
+
+  /** ws api to be exposed for a chain. */
+  public wsApi: string;
+
   constructor(readonly chain: string) { }
 }

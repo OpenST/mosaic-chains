@@ -45,6 +45,12 @@ export default abstract class Node {
    */
   public originChain: string;
 
+  /** rpc api to be exposed for a chain. */
+  protected rpcApi: string;
+
+  /** ws api to be exposed for a chain. */
+  protected wsApi: string;
+
   /**
    * Docker container names will have this prefix.
    * @returns The prefix.
@@ -71,6 +77,8 @@ export default abstract class Node {
     this.unlock = nodeDescription.unlock;
     this.password = nodeDescription.password;
     this.originChain = nodeDescription.originChain;
+    this.rpcApi = nodeDescription.rpcApi;
+    this.wsApi = nodeDescription.wsApi;
 
     if (this.originChain === '') {
       this.chainDir = path.join(this.mosaicDir, this.chain, `origin-${nodeDescription.client}`);

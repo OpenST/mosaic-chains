@@ -73,6 +73,8 @@ mosaic
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
   .option('-b,--bootnodes <bootnodes>', 'Path to bootnodes file for geth client')
   .option('-a, --clef-signer <clefsigner>', 'RPC or IPC endpoint of clef signer')
+  .option('-z,--rpcApi <rpcApi>','rpc api to be exposed when chain starts')
+  .option('-y,--wsApi <wsApi>','ws rpi to be exposed when chain starts')
 
   .action(async (chain: string, options) => {
     try {
@@ -81,6 +83,17 @@ mosaic
       if (!validateCLIOptions(chain, optionInput)) {
         process.exit(1);
       }
+
+      if(optionInput.rpcApi && !(Utils.validateMandatoryApiForGraphNode(optionInput.rpcApi))) {
+       Logger.error(`mandatory rpc api ${Utils.mandatoryApiForGraphNode} for graphnode not found`);
+       process.exit(1);
+      }
+
+      if(optionInput.wsApi && !(Utils.validateMandatoryApiForGraphNode(optionInput.wsApi))) {
+        Logger.error(`mandatory ws api ${Utils.mandatoryApiForGraphNode} for graphnode not found`);
+        process.exit(1);
+      }
+
       if (DevChainOptions.isDevChain(chain, options)) {
         const devParams = ChainInfo.getChainParams(chain, options);
         chainInput = devParams.chain;
@@ -99,6 +112,8 @@ mosaic
         originChain,
         bootNodesFile,
         clefSigner,
+        rpcApi,
+        wsApi,
       } = NodeOptions.parseOptions(optionInput, chainInput);
 
       if (originChain && originChain.length > 0) {
@@ -129,6 +144,8 @@ mosaic
         client: optionInput.client,
         bootNodesFile,
         clefSigner,
+        rpcApi,
+        wsApi,
       };
       const node: Node = NodeFactory.create(nodeDescription);
       node.start();

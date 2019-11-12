@@ -50,6 +50,12 @@ export default class NodeOptions {
   /** RPC and IPC endpoint of clef */
   public clefSigner?: string;
 
+  /** rpc api to be exposed for a chain. */
+  public rpcApi: string;
+
+  /** ws api to be exposed for a chain. */
+  public wsApi: string;
+
   /**
    * @param options The options from the command line.
    */
@@ -64,6 +70,8 @@ export default class NodeOptions {
     originChain: string;
     bootNodesFile: string;
     clefSigner: string;
+    rpcApi: string;
+    wsApi: string;
   }) {
     Object.assign(this, options);
     this.bootNodesFile = options.bootNodesFile;
@@ -107,6 +115,8 @@ export default class NodeOptions {
       originChain: options.origin || '',
       bootNodesFile: options.bootnodes,
       clefSigner: options.clefSigner,
+      rpcApi: options.rpcApi || '',
+      wsApi: options.wsApi || '',
     });
 
     parsedOptions.mosaicDir = Directory.sanitize(parsedOptions.mosaicDir);
