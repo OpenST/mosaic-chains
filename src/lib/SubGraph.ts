@@ -80,7 +80,6 @@ const deploySubGraph = (
     graphIPFS,
     gatewayAddresses,
   ).deploy();
-
 };
 
 export default deploySubGraph;

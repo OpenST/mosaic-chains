@@ -37,6 +37,10 @@ function validateClientOption(chain, options) {
     return false;
   }
   if (client === PARITY_CLIENT) {
+    if (options.clefSigner) {
+      Logger.error('Clef signer currently supports geth. Please refer clef documentation.');
+      return false;
+    }
     if (!ChainInfo.chainsSupportedByParity.includes(chain)) {
       Logger.error(`Parity client does not support chain: ${chain}`);
       return false;
@@ -68,6 +72,7 @@ mosaic
   .option('-s,--password <file>', 'the path to the password file on your machine; you must use this together with --unlock')
   .option('-g,--withoutGraphNode', 'boolean flag which decides if graph node should be started')
   .option('-b,--bootnodes <bootnodes>', 'Path to bootnodes file for geth client')
+  .option('-a, --clef-signer <clefsigner>', 'RPC or IPC endpoint of clef signer')
 
   .action(async (chain: string, options) => {
     try {
@@ -77,7 +82,7 @@ mosaic
         process.exit(1);
       }
       if (DevChainOptions.isDevChain(chain, options)) {
-        const devParams = DevChainOptions.getDevChainParams(chain, options);
+        const devParams = ChainInfo.getChainParams(chain, options);
         chainInput = devParams.chain;
         optionInput = devParams.options;
         // Dev chain should always start with geth.
@@ -93,6 +98,7 @@ mosaic
         password,
         originChain,
         bootNodesFile,
+        clefSigner,
       } = NodeOptions.parseOptions(optionInput, chainInput);
 
       if (originChain && originChain.length > 0) {
@@ -122,6 +128,7 @@ mosaic
         originChain,
         client: optionInput.client,
         bootNodesFile,
+        clefSigner,
       };
       const node: Node = NodeFactory.create(nodeDescription);
       node.start();
