@@ -1,4 +1,5 @@
 # ⛓ Mosaic Chains
+[![Build Status](https://travis-ci.org/mosaicdao/mosaic-chains.svg?branch=develop)](https://travis-ci.org/mosaicdao/mosaic-chains)
 
 You need node and docker installed to run the chains.
 
