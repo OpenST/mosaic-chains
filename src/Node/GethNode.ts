@@ -142,13 +142,9 @@ export default class GethNode extends Node {
    * It initializes the geth directory from genesis file if not already done.
    */
   private initializeGethDirectory(): void {
-    if (!this.isGethAlreadyInitiliazed()) {
-      const { gethInitArgs } = this;
-      this.logInfo('initializing geth directory');
-      Shell.executeDockerCommand(gethInitArgs);
-    } else {
-      this.logInfo('skipping directory initialization as it is already done');
-    }
+    const { gethInitArgs } = this;
+    this.logInfo('initializing geth directory');
+    Shell.executeDockerCommand(gethInitArgs);
   }
 
   /**
