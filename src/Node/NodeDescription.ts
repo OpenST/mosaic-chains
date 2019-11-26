@@ -26,5 +26,7 @@ export default class NodeDescription {
 
   public clefSigner?: string;
 
+  public forceGethInit?: boolean;
+
   constructor(readonly chain: string) { }
 }
