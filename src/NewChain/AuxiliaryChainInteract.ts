@@ -14,7 +14,7 @@ import Shell from '../Shell';
 import Directory from '../Directory';
 import Logger from '../Logger';
 import NodeDescription from '../Node/NodeDescription';
-import GethNode from '../Node/GethNode';
+import GethNode, { GETH_VERSION } from '../Node/GethNode';
 import InitConfig from '../Config/InitConfig';
 import Proof from './Proof';
 
@@ -348,7 +348,7 @@ export default class AuxiliaryChainInteract {
       '--rm',
       '--volume', `${this.chainDir}:/chain_data`,
       '--volume', `${this.nodeDescription.password}:/password.txt`,
-      'ethereum/client-go:v1.8.23',
+      `ethereum/client-go:${GETH_VERSION}`,
       'account',
       'new',
       '--password', '/password.txt',
@@ -643,7 +643,7 @@ export default class AuxiliaryChainInteract {
       'run',
       '--rm',
       '--volume', `${this.chainDir}:/chain_data`,
-      'ethereum/client-go:v1.8.23',
+      `ethereum/client-go:${GETH_VERSION}`,
       '--datadir', '/chain_data',
       'init',
       '/chain_data/genesis.json',
@@ -711,7 +711,7 @@ export default class AuxiliaryChainInteract {
       'run',
       '--rm',
       '--volume', `${this.chainDir}:/chain_data`,
-      'ethereum/client-go:alltools-v1.8.23',
+      `ethereum/client-go:alltools-${GETH_VERSION}`,
       'bootnode',
       '--genkey', `/chain_data/${bootKeyFile}`,
     ];

@@ -7,8 +7,9 @@ import ChainInfo from './ChainInfo';
 import NodeDescription from './NodeDescription';
 import Logger from '../Logger';
 
-const DOCKER_GETH_IMAGE = 'ethereum/client-go:v1.9.5';
-export const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.3';
+export const GETH_VERSION = 'v1.9.5';
+const DOCKER_GETH_IMAGE = `ethereum/client-go:${GETH_VERSION}`;
+export const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.4';
 /**
  * Represents a geth node that runs in a docker container.
  */
