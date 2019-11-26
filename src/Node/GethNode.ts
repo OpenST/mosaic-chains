@@ -20,13 +20,13 @@ export default class GethNode extends Node {
   public clefSigner?: string;
 
   /** if set, code will perform geth init before starting node. Defaults to false. */
-  public forceGethInit?: boolean;
+  public forceInit?: boolean;
 
   public constructor(nodeDescription: NodeDescription) {
     super(nodeDescription);
     this.bootNodesFile = nodeDescription.bootNodesFile;
     this.clefSigner = nodeDescription.clefSigner;
-    this.forceGethInit = nodeDescription.forceGethInit;
+    this.forceInit = nodeDescription.forceInit;
   }
 
   /** A list of bootnodes that are passed to the geth container. */
@@ -145,7 +145,7 @@ export default class GethNode extends Node {
    * It initializes the geth directory from genesis file if not already done.
    */
   private initializeGethDirectory(): void {
-    if (this.forceGethInit || !this.isGethAlreadyInitiliazed()) {
+    if (this.forceInit || !this.isGethAlreadyInitiliazed()) {
       const { gethInitArgs } = this;
       this.logInfo('initializing geth directory');
       Shell.executeDockerCommand(gethInitArgs);
