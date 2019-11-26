@@ -1,4 +1,4 @@
-FROM ethereum/client-go:v1.8.23
+FROM ethereum/client-go:v1.9.5
 ADD /docker/chain_data /chain_data
 ADD /docker/configs /configs
 ADD /docker/root /root

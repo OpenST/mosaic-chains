@@ -18,7 +18,9 @@ export default class CliqueGenesis {
         eip155Block: 0,
         eip158Block: 0,
         byzantiumBlock: 0,
-        // constantinopleBlock: 0,
+        constantinopleBlock: 0,
+        petersburgBlock: 0,
+        istanbulBlock: 0,
         clique: {
           period: 3,
           epoch: 30000,
