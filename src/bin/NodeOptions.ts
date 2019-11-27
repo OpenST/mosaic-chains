@@ -89,7 +89,7 @@ export default class NodeOptions {
       .option('-r,--rpc-port <port>', 'the RPC port to use for forwarding from host to container', Integer.parseString)
       .option('-w,--ws-port <port>', 'the WS port to use for forwarding from host to container', Integer.parseString)
       .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped')
-      .option('-f,--forceInit', 'if set, code will perform geth init before starting node');
+      .option('-f,--force-init', 'if set, code will perform geth init before starting node');
     return command;
   }
 
