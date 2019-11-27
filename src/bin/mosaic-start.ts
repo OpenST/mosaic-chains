@@ -50,7 +50,7 @@ function validateClientOption(chain, options) {
       return false;
     }
     if (options.forceInit) {
-      Logger.error('geth init can not be performed for Parity client.');
+      Logger.error('Force init can not be performed for Parity client.');
       return false;
     }
     if (DevChainOptions.isDevChain(chain, options)) {
