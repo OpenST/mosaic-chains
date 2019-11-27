@@ -69,6 +69,13 @@ Istanbul EVM would be applied to 1405 at a block height of 3621496 which is like
 ./mosaic start 1405 --origin goerli --forceInit
 ```
 
+#### Else 
+
+```bash
+# start chain command would take care of it.
+./mosaic start 1405 --origin goerli 
+```
+
 ## Dev chains
 For development, you can use the dev chains. These chains have the initial chain setup contracts deployed. 
 
