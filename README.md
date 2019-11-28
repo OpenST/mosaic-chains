@@ -65,8 +65,8 @@ Istanbul EVM would be applied to 1405 at a block height of 3621496 which is like
 # stop chain.
 ./mosaic stop 1405
 
-# for once start chain with `forceInit` flag (this would do a geth init using updated genesis file on the existing data dir).   
-./mosaic start 1405 --origin goerli --forceInit
+# for once start chain with `force-init` flag (this would do a geth init using updated genesis file on the existing data dir).   
+./mosaic start 1405 --origin goerli --force-init
 ```
 
 #### Else 
