@@ -49,6 +49,10 @@ function validateClientOption(chain, options) {
       Logger.error('Parity client is not supported for auxiliary-chains');
       return false;
     }
+    if (options.forceInit) {
+      Logger.error('Force init can not be performed for Parity client.');
+      return false;
+    }
     if (DevChainOptions.isDevChain(chain, options)) {
       Logger.error('Parity client is not supported for dev-chains');
       return false;
@@ -99,6 +103,7 @@ mosaic
         originChain,
         bootNodesFile,
         clefSigner,
+        forceInit,
       } = NodeOptions.parseOptions(optionInput, chainInput);
 
       if (originChain && originChain.length > 0) {
@@ -129,6 +134,7 @@ mosaic
         client: optionInput.client,
         bootNodesFile,
         clefSigner,
+        forceInit,
       };
       const node: Node = NodeFactory.create(nodeDescription);
       node.start();

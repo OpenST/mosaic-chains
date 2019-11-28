@@ -7,8 +7,9 @@ import ChainInfo from './ChainInfo';
 import NodeDescription from './NodeDescription';
 import Logger from '../Logger';
 
-const DOCKER_GETH_IMAGE = 'ethereum/client-go:v1.9.5';
-export const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.3';
+export const GETH_VERSION = 'v1.9.5';
+const DOCKER_GETH_IMAGE = `ethereum/client-go:${GETH_VERSION}`;
+export const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.4';
 /**
  * Represents a geth node that runs in a docker container.
  */
@@ -19,11 +20,14 @@ export default class GethNode extends Node {
   /** RPC and IPC endpoint of clef */
   public clefSigner?: string;
 
+  /** if set, code will perform geth init before starting node. Defaults to false. */
+  public forceInit?: boolean;
 
   public constructor(nodeDescription: NodeDescription) {
     super(nodeDescription);
     this.bootNodesFile = nodeDescription.bootNodesFile;
     this.clefSigner = nodeDescription.clefSigner;
+    this.forceInit = nodeDescription.forceInit;
   }
 
   /** A list of bootnodes that are passed to the geth container. */
@@ -142,7 +146,7 @@ export default class GethNode extends Node {
    * It initializes the geth directory from genesis file if not already done.
    */
   private initializeGethDirectory(): void {
-    if (!this.isGethAlreadyInitiliazed()) {
+    if (this.forceInit || !this.isGethAlreadyInitiliazed()) {
       const { gethInitArgs } = this;
       this.logInfo('initializing geth directory');
       Shell.executeDockerCommand(gethInitArgs);

@@ -1,4 +1,5 @@
 # ⛓ Mosaic Chains
+[![Build Status](https://travis-ci.org/mosaicdao/mosaic-chains.svg?branch=develop)](https://travis-ci.org/mosaicdao/mosaic-chains)
 
 You need node and docker installed to run the chains.
 
@@ -53,6 +54,27 @@ Please use one of below combinations:
     
 The chain id of future auxiliary chains running against Ethereum mainnet will increase by one number each.
 The chain id of future auxiliary chains running against Ethereum testnet will decrease by one number each.
+
+### Upgrading 1405 to Istanbul
+
+Istanbul EVM would be applied to 1405 at a block height of 3621496 which is likely to be mined around December, 4, 2019, 1 PM Berlin Time (GMT+1))
+
+#### If you were already running a node follow the below steps to upgrade
+
+```bash
+# stop chain.
+./mosaic stop 1405
+
+# for once start chain with `forceInit` flag (this would do a geth init using updated genesis file on the existing data dir).   
+./mosaic start 1405 --origin goerli --forceInit
+```
+
+#### Else 
+
+```bash
+# start chain command would take care of it.
+./mosaic start 1405 --origin goerli 
+```
 
 ## Dev chains
 For development, you can use the dev chains. These chains have the initial chain setup contracts deployed. 

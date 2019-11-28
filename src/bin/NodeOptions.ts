@@ -50,6 +50,9 @@ export default class NodeOptions {
   /** RPC and IPC endpoint of clef */
   public clefSigner?: string;
 
+  /** if set, code will perform geth init before starting node. Defaults to false. */
+  public forceInit?: boolean;
+
   /**
    * @param options The options from the command line.
    */
@@ -64,6 +67,7 @@ export default class NodeOptions {
     originChain: string;
     bootNodesFile: string;
     clefSigner: string;
+    forceInit: boolean;
   }) {
     Object.assign(this, options);
     this.bootNodesFile = options.bootNodesFile;
@@ -84,7 +88,8 @@ export default class NodeOptions {
       .option('-p,--port <port>', 'the port to use for forwarding from host to container', Integer.parseString)
       .option('-r,--rpc-port <port>', 'the RPC port to use for forwarding from host to container', Integer.parseString)
       .option('-w,--ws-port <port>', 'the WS port to use for forwarding from host to container', Integer.parseString)
-      .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped');
+      .option('-k,--keep', 'if set, the container will not automatically be deleted when stopped')
+      .option('-f,--force-init', 'if set, code will perform geth init before starting node');
     return command;
   }
 
@@ -107,6 +112,7 @@ export default class NodeOptions {
       originChain: options.origin || '',
       bootNodesFile: options.bootnodes,
       clefSigner: options.clefSigner,
+      forceInit: !!options.forceInit,
     });
 
     parsedOptions.mosaicDir = Directory.sanitize(parsedOptions.mosaicDir);
