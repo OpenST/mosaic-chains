@@ -9,6 +9,8 @@ function clean {
 
     rm -rf "./node_modules" || exit 1
     rm -f openst-mosaic-chains-*.tgz || exit 1
+    rm -f package.json || exit 1
+    rm -f package-lock.json || exit 1
 
     cd -
 }
