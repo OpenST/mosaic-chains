@@ -44,7 +44,7 @@ You can specify a different directory with the `--mosaic-dir` option.
 The Graph uses Postgres for storing data from chain. Default user & password which are used can be found [here](src/bin/GraphOptions.ts).
 One can override these values by passing `--graph-postgres-user` / `--graph-postgres-password-file` (path to file containing password) in `./mosaic start` command.
 
-Note : As per the current implementation of Docker postgres image, user is created with the given password when `./mosaic start` runs for this first time. To change these credentials, one will have to manually connect to this postgres instance and alter user (to change password) / create user & give privilages to database (to use a new user) using standard postgres commands.
+Note : To rotate these credentials, one will have to manually connect to this postgres instance and alter user (to change password) / create user & give privilages to database (to use a new user) using standard postgres commands.
 
 ### Available chains
 
