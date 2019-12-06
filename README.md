@@ -65,8 +65,8 @@ Istanbul EVM would be applied to 1405 at a block height of 3621496 which is like
 # stop chain.
 ./mosaic stop 1405
 
-# for once start chain with `forceInit` flag (this would do a geth init using updated genesis file on the existing data dir).   
-./mosaic start 1405 --origin goerli --forceInit
+# for once start chain with `force-init` flag (this would do a geth init using updated genesis file on the existing data dir).   
+./mosaic start 1405 --origin goerli --force-init
 ```
 
 #### Else 
@@ -198,6 +198,8 @@ Total gas consumption for setup redeem pool command is `2951611`. It deploys two
   * Make sure that you set the correct OST address in you init configuration and that your origin account has sufficient funds to pay for the stake amount plus the bounty amount (on origin).
 * Your machine is showing sign of slowness because of creation of auxiliary chains:
   * Too many docker containers could be running while creation of auxiliary chains with different chain ids. Make sure you stop the docker containers of auxiliary chains if it's not being used.  
+* If `npm i @openst/mosaic-chains` fails with an error regarding installation of `sha3` dependency:
+  * As a workaround one can checkout source code and run mosaic commands from there.   
 
 *Refer integration test of mosaic-create command to understand end to end flow.*
 

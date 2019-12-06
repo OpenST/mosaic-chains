@@ -35,8 +35,6 @@ jobs:
       name: Unit
     - script: sudo env PATH=$PATH npm run test:integration
       name: Integration
-    - script: npm run test:package
-      name: Package
     - stage: "Smoke"
       script: npm run test:smoke:goerli
       name: goerli

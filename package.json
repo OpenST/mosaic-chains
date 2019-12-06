@@ -1,6 +1,6 @@
 {
   "name": "@openst/mosaic-chains",
-  "version": "0.1.0-alpha.9",
+  "version": "0.1.0-alpha.10",
   "description": "Mosaic chains is an executable to run and manage mosaic chains.",
   "bin": {
     "mosaic": "lib/src/bin/mosaic.js"
@@ -13,7 +13,7 @@
     "lint": "eslint src -c .eslintrc.json --ext ts",
     "package": "./package.sh",
     "prepack": "npm run package",
-    "test": "npm run test:unit && npm run test:smoke && npm run test:package && npm run test:integration",
+    "test": "npm run test:unit && npm run test:smoke && npm run test:integration",
     "test:unit": "mocha -r ts-node/register tests/**/**/*.test.ts tests/**/*.test.ts tests/*.test.ts",
     "test:smoke": "npm run test:smoke:ropsten && npm run test:smoke:goerli && npm run test:smoke:1405 && npm run test:smoke:1406 && npm run test:smoke:1407 && npm run test:smoke:dev-origin && npm run test:smoke:dev-auxiliary",
     "test:smoke:ethereum": "./tests/smoke.sh ethereum",

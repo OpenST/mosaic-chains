@@ -31,7 +31,6 @@ mv $root_dir/openst-mosaic-chains-*.tgz . || exit 1
 
 echo "Initiating npm project for test."
 npm init -y || exit 1
-npm install assert || exit 1
 
 echo "Installing openst-mosaic-chains npm package into newly created project."
 npm install openst-mosaic-chains-*.tgz || exit 1
