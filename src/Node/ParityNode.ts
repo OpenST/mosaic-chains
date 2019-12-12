@@ -2,6 +2,8 @@ import * as fs from 'fs';
 import * as os from 'os';
 import Node from './Node';
 import Shell from '../Shell';
+import Directory from '../Directory';
+import * as path from 'path';
 
 /**
  * Represents a parity node that runs in a docker container.
@@ -31,8 +33,20 @@ export default class ParityNode extends Node {
       '--publish', `${this.rpcPort}:8545`,
       '--publish', `${this.websocketPort}:8546`,
       '--volume', `${this.chainDir}:/home/parity/.local/share/io.parity.ethereum`,
-      '--volume', `./chains/goerli/1405/parity.json:/home/parity/parity.json`,
     ]);
+
+    if (this.originChain) {
+      const genesisFilePath = path.join(
+        Directory.projectRoot,
+        'chains',
+        this.originChain,
+        this.chain,
+        'parity.json',
+      );
+      args = args.concat([
+        '--volume', `${genesisFilePath}:/home/parity/parity.json`,
+      ]);
+    }
 
     // Running the parity process inside the container as the same user id that is executing this
     // script.
@@ -54,7 +68,6 @@ export default class ParityNode extends Node {
 
     args = args.concat([
       'parity/parity:v2.5.11-stable',
-      `--chain=/home/parity/parity.json`,
       '--base-path=/home/parity/.local/share/io.parity.ethereum/',
       `--port=${this.port}`,
       '--jsonrpc-apis=all',
@@ -65,6 +78,11 @@ export default class ParityNode extends Node {
       '--ws-apis=all',
       '--ws-origins=all',
       '--ws-hosts=all',
+    ]);
+
+    const chainParam = this.originChain ? '/home/parity/parity.json' : this.chain;
+    args = args.concat([
+      `--chain=${chainParam}`,
     ]);
 
     if (this.unlock !== '') {
