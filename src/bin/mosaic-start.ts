@@ -45,7 +45,7 @@ function validateClientOption(chain, options) {
       Logger.error(`Parity client does not support chain: ${chain}`);
       return false;
     }
-    if (options.origin) {
+    if (options.origin && chain !== '1405') {
       Logger.error('Parity client is not supported for auxiliary-chains');
       return false;
     }
