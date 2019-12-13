@@ -15,7 +15,8 @@ export default class ChainInfo {
       'ethereum',
       'ropsten',
       'goerli',
-      '1405'
+      '1405',
+      '1414'
     ];
   }
 
