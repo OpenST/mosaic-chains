@@ -70,6 +70,7 @@ export default class ParityNode extends Node {
       'parity/parity:v2.5.11-stable',
       '--base-path=/home/parity/.local/share/io.parity.ethereum/',
       `--port=${this.port}`,
+      '--jsonrpc-port=8545',
       '--jsonrpc-apis=all',
       '--jsonrpc-interface=all',
       '--jsonrpc-experimental',
