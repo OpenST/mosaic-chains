@@ -75,7 +75,7 @@ export default abstract class Node {
     if (this.originChain === '') {
       this.chainDir = path.join(this.mosaicDir, this.chain, `origin-${nodeDescription.client}`);
     } else {
-      this.chainDir = path.join(this.mosaicDir, this.originChain, this.chain);
+      this.chainDir = path.join(this.mosaicDir, this.originChain, `auxiliary-${this.chain}-${nodeDescription.client}`);
     }
     this.containerName = `${Node.prefix}${this.chain}`;
   }
