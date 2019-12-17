@@ -71,7 +71,7 @@ function start_origin_node {
 # Starts a single auxiliary node.
 function start_auxiliary_node {
     info "Starting node $1."
-    try_silent "./mosaic start $1 --origin $2" "Could not start node $1 with origin $2."
+    try_silent "./mosaic start $1 --origin $2 --client $3" "Could not start node $1 with origin $2 using client $3."
 }
 
 # Stops a single node.
@@ -191,7 +191,7 @@ function test_dev_origin {
 
 # Function to test Dev Auxiliary auxiliary chain
 function test_dev_auxiliary {
-  start_auxiliary_node dev-auxiliary dev-origin
+  start_auxiliary_node dev-auxiliary dev-origin geth
   sleep 25
   deploy_subgraph_gateway_config dev-origin $DEV_AUXILIARY_CHAIN_ID auxiliary $GRAPH_ADMIN_RPC_DEV_AUXILIARY $GRAPH_IPFS_DEV_AUXILIARY $WETH_GATEWAY_ADDRESS_DEV_ORIGIN
   sleep 25
@@ -212,14 +212,15 @@ function test_ropsten {
     sleep 25
     rpc_origin_sub_graph_try $GRAPH_WS_PORT_ROPSTEN $OST_GATEWAY_ADDRESS_ROPSTEN_1407
     stop_node ropsten
-    start_origin_node ropsten parity
+    start_origin_node ropsten parity -g
     grep_try ropsten parity
+    rpc_node_try "0003" # Given like this as it is used for the port in `rpc_node_try`.
     stop_node ropsten
 }
 
 # Function to test 1406 auxiliary chain
 function test_1406 {
-    start_auxiliary_node 1406 ropsten
+    start_auxiliary_node 1406 ropsten geth
     sleep 25
     grep_try 1406 geth
     rpc_node_try 1406
@@ -227,17 +228,27 @@ function test_1406 {
     sleep 25
     rpc_auxiliary_sub_graph_try 1406 $OST_COGATEWAY_ADDRESS_1406
     stop_node 1406
+    start_auxiliary_node 1406 ropsten parity -g
+    sleep 25
+    grep_try 1406 parity
+    rpc_node_try 1406
+    stop_node 1406
 }
 
 # Function to test 1407 auxiliary chain
 function test_1407 {
-    start_auxiliary_node 1407 ropsten
+    start_auxiliary_node 1407 ropsten geth
     sleep 25
     grep_try 1407 geth
     rpc_node_try 1407
     deploy_subgraph_mosaic_config ropsten 1407 auxiliary $GRAPH_ADMIN_RPC_1407 $GRAPH_IPFS_1407
     sleep 25
     rpc_auxiliary_sub_graph_try 1407 $OST_COGATEWAY_ADDRESS_1407
+    stop_node 1407
+    start_auxiliary_node 1407 ropsten parity -g
+    sleep 25
+    grep_try 1407 parity
+    rpc_node_try 1407
     stop_node 1407
 }
 
@@ -259,7 +270,7 @@ function test_goerli {
 
 # Function to test 1405 auxiliary chain
 function test_1405 {
-    start_auxiliary_node 1405 goerli
+    start_auxiliary_node 1405 goerli geth
     sleep 25
     grep_try 1405 geth
     rpc_node_try 1405
@@ -270,6 +281,11 @@ function test_1405 {
     # deploy_subgraph_gateway_config goerli 1405 auxiliary $GRAPH_ADMIN_RPC_1405 $GRAPH_IPFS_1405 $WETH_GATEWAY_ADDRESS_GOERLI_1405
     # sleep 25
     # rpc_auxiliary_sub_graph_try 1405 $WETH_COGATEWAY_ADDRESS_1405
+    stop_node 1405
+    start_auxiliary_node 1405 goerli parity -g
+    sleep 25
+    grep_try 1405 parity
+    rpc_node_try 1405
     stop_node 1405
 }
 
@@ -284,9 +300,14 @@ function test_ethereum {
 
 # Function to test 1414 auxiliary chain
 function test_1414 {
-    start_auxiliary_node 1414 ethereum
+    start_auxiliary_node 1414 ethereum geth
     sleep 25
     grep_try 1414 geth
+    rpc_node_try 1414
+    stop_node 1414
+    start_auxiliary_node 1414 ethereum parity -g
+    sleep 25
+    grep_try 1414 parity
     rpc_node_try 1414
     stop_node 1414
 }
