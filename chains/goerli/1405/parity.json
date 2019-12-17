@@ -22,7 +22,6 @@
     "eip214Transition": "0x0",
     "eip658Transition": "0x0",
     "eip1283Transition": "0x0",
-    "eip98Transition": "0x0",
     "eip145Transition": "0x374276",
     "eip1014Transition": "0x374276",
     "eip1052Transition": "0x374276",
@@ -914,7 +913,7 @@
     "0x00000000000000000000000000000000000000ff": {
       "balance": "0x1"
     },
-    "1e8de4dd1290876b7f5fc6baa8002a4653941b80": {
+    "0x1e8de4dd1290876b7f5fc6baa8002a4653941b80": {
       "balance": "0x295be96e640669720000000"
     }
   }
