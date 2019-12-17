@@ -16,7 +16,9 @@ export default class ChainInfo {
       'ropsten',
       'goerli',
       '1405',
-      '1414'
+      '1406',
+      '1407',
+      '1414',
     ];
   }
 
