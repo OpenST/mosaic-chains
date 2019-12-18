@@ -106,6 +106,18 @@ export default class ParityNode extends Node {
     throw 'to be implemented';
   }
 
+  public generateAccounts(count: number): string[] {
+    throw 'to be implemented';
+  }
+
+  public generateGenesisFile(chainId: string, sealer: string, deployer: string): any {
+    throw 'to be implemented';
+  }
+
+  public initFromGenesis(): void {
+    // do nothing here as init is not required in parity
+  }
+
   /**
    * Initialize directories required by parity to run.
    */

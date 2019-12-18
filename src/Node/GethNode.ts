@@ -4,6 +4,7 @@ import Node from './Node';
 import Shell from '../Shell';
 import Directory from '../Directory';
 import ChainInfo from './ChainInfo';
+import CliqueGenesis from '../NewChain/CliqueGenesis';
 import NodeDescription from './NodeDescription';
 import Logger from '../Logger';
 
@@ -35,6 +36,86 @@ export default class GethNode extends Node {
 
   /** A list of bootnodes that are passed to the geth container. */
   private bootnodes: string = '';
+
+  public generateAccounts(count: number): string[] {
+
+    const args = [
+      'run',
+      '--rm',
+      '--volume', `${this.chainDir}:/chain_data`,
+      '--volume', `${this.password}:/password.txt`,
+      `ethereum/client-go:${GETH_VERSION}`,
+      'account',
+      'new',
+      '--password', '/password.txt',
+      '--datadir', '/chain_data',
+    ];
+
+    // The command is executed count number of times. Each time the command is run,
+    // it creates one new account. This is also the reason why the password file must contain the
+    // same password count number of times, once per line. All accounts get created with the password on the first
+    // line of the file, but all of them are read for unlocking when the node is later started.
+    for (let i=1; i<= count; i++) {
+      Shell.executeDockerCommand(args);
+    }
+
+    const addresses: string[] = this.readAddressesFromKeystore();
+    if (addresses.length !== count) {
+      const message = 'did not find exactly two addresses in auxiliary keystore; aborting';
+      Logger.error(message);
+      throw new Error(message);
+    }
+
+    return addresses.map(address => `0x${address}`);
+  }
+
+  public generateGenesisFile(chainId: string, sealer: string, deployer: string): any {
+    return CliqueGenesis.create(chainId, sealer,deployer)
+  }
+
+  /**
+   * Initializes a new auxiliary chain from a stored genesis in the chain data directory.
+   */
+  public initFromGenesis(): void {
+    const args = [
+      'run',
+      '--rm',
+      '--volume', `${this.chainDir}:/chain_data`,
+      `ethereum/client-go:${GETH_VERSION}`,
+      '--datadir', '/chain_data',
+      'init',
+      '/chain_data/genesis.json',
+    ];
+
+    Shell.executeDockerCommand(args);
+  }
+
+  /**
+   * @returns The raw addresses from the key store, without leading `0x`.
+   */
+  private readAddressesFromKeystore(): string[] {
+    this.logInfo('reading addresses from keystore');
+    const addresses: string[] = [];
+
+    const filesInKeystore: string[] = fs.readdirSync(path.join(this.chainDir, 'keystore'));
+    for (const file of filesInKeystore) {
+      const fileContent = JSON.parse(
+        fs.readFileSync(
+          path.join(
+            this.chainDir,
+            'keystore',
+            file,
+          ),
+          { encoding: 'utf8' },
+        ),
+      );
+      if (fileContent.address !== undefined) {
+        addresses.push(fileContent.address);
+      }
+    }
+
+    return addresses;
+  }
 
   /**
    * Starts the container that runs this chain node.

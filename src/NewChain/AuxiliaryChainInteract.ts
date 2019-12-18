@@ -8,15 +8,12 @@ import {
 } from '@openst/mosaic.js';
 
 import { Tx } from 'web3/eth/types';
-import CliqueGenesis from './CliqueGenesis';
 import Contracts from './Contracts';
-import Shell from '../Shell';
 import Directory from '../Directory';
 import Logger from '../Logger';
 import NodeDescription from '../Node/NodeDescription';
 import Node from '../Node/Node';
 import NodeFactory from '../Node/NodeFactory';
-import { GETH_VERSION } from '../Node/GethNode';
 import InitConfig from '../Config/InitConfig';
 import Proof from './Proof';
 
@@ -95,7 +92,6 @@ export default class AuxiliaryChainInteract {
    * to it in the genesis file.
    */
   public async startNewChainSealer(): Promise<{ sealer: string; deployer: string }> {
-    this.generateAccounts();
     this.generateChain();
     await this.startNewSealer();
 
@@ -264,7 +260,7 @@ export default class AuxiliaryChainInteract {
    * This returns genesis of the auxiliary chain.
    */
   public getGenesis(): any {
-    return CliqueGenesis.create(this.chainId, this.sealer, this.deployer);
+    return this.node.generateGenesisFile(this.chainId, this.sealer, this.deployer);
   }
 
   /**
@@ -340,31 +336,9 @@ export default class AuxiliaryChainInteract {
 
       throw new Error(message);
     }
-
     this.logInfo('generating auxiliary address for sealer and deployer');
-
-    const args = [
-      'run',
-      '--rm',
-      '--volume', `${this.chainDir}:/chain_data`,
-      '--volume', `${this.nodeDescription.password}:/password.txt`,
-      `ethereum/client-go:${GETH_VERSION}`,
-      'account',
-      'new',
-      '--password', '/password.txt',
-      '--datadir', '/chain_data',
-    ];
-
-    // The command is executed twice in order to create two accounts. Each time the command is run,
-    // it creates one new account. This is also the reason why the password file must contain the
-    // same password twice, once per line. Both accounts get created with the password on the first
-    // line of the file, but both lines are read for unlocking when the node is later started.
-    Shell.executeDockerCommand(args);
-    Shell.executeDockerCommand(args);
-
-
     // It doesn't matter which account we assign which role as both accounts are new.
-    [this.sealer, this.deployer] = this.getAccounts();
+    [this.sealer, this.deployer] = this.node.generateAccounts(2);
   }
 
   /**
@@ -372,6 +346,7 @@ export default class AuxiliaryChainInteract {
    */
   private generateChain(): void {
     this.logInfo('generating a new auxiliary chain');
+    this.generateAccounts();
     this.generateGenesisFile();
     this.initFromGenesis();
     this.copyStateToChainsDir();
@@ -615,8 +590,8 @@ export default class AuxiliaryChainInteract {
    * Creates a new genesis file for this chain and stores it in the chain data directory.
    */
   private generateGenesisFile(): void {
-    this.logInfo('generating and writing genesis.json to chain directory');
-    const genesis = CliqueGenesis.create(this.chainId, this.sealer, this.deployer);
+    this.logInfo('generating and writing genesis to chain directory');
+    const genesis = this.getGenesis();
 
     fs.writeFileSync(
       path.join(this.chainDir, 'genesis.json'),
@@ -633,17 +608,7 @@ export default class AuxiliaryChainInteract {
    */
   private initFromGenesis(): void {
     this.logInfo('initializing chain from genesis');
-    const args = [
-      'run',
-      '--rm',
-      '--volume', `${this.chainDir}:/chain_data`,
-      `ethereum/client-go:${GETH_VERSION}`,
-      '--datadir', '/chain_data',
-      'init',
-      '/chain_data/genesis.json',
-    ];
-
-    Shell.executeDockerCommand(args);
+    this.node.initFromGenesis();
   }
 
   /**
@@ -676,49 +641,6 @@ export default class AuxiliaryChainInteract {
       this.logError('could not copy', { source, destination, error: error.toString() });
       throw error;
     }
-  }
-
-  /**
-   * Reads the sealer and deployer addresses from the keystore.
-   * @returns Both addresses with leading `0x`.
-   */
-  private getAccounts(): string[] {
-    this.logInfo('reading sealer and deployer address from disk');
-    const addresses: string[] = this.readAddressesFromKeystore();
-    if (addresses.length !== 2) {
-      const message = 'did not find exactly two addresses in auxiliary keystore; aborting';
-      Logger.error(message);
-      throw new Error(message);
-    }
-
-    return addresses.map(address => `0x${address}`);
-  }
-
-  /**
-   * @returns The raw addresses from the key store, without leading `0x`.
-   */
-  private readAddressesFromKeystore(): string[] {
-    this.logInfo('reading addresses from keystore');
-    const addresses: string[] = [];
-
-    const filesInKeystore: string[] = fs.readdirSync(path.join(this.chainDir, 'keystore'));
-    for (const file of filesInKeystore) {
-      const fileContent = JSON.parse(
-        fs.readFileSync(
-          path.join(
-            this.chainDir,
-            'keystore',
-            file,
-          ),
-          { encoding: 'utf8' },
-        ),
-      );
-      if (fileContent.address !== undefined) {
-        addresses.push(fileContent.address);
-      }
-    }
-
-    return addresses;
   }
 
   /**

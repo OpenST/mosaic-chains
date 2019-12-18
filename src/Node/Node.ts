@@ -135,6 +135,12 @@ export default abstract class Node {
 
   public abstract getBootNode(): string;
 
+  public abstract generateAccounts(count: number): string[];
+
+  public abstract generateGenesisFile(chainId: string, sealer: string, deployer: string): any;
+
+  public abstract initFromGenesis(): void;
+
   /**
    * Stops the docker container that runs this chain.
    */
