@@ -7,6 +7,7 @@ import NodeOptions from './NodeOptions';
 import NodeDescription from '../Node/NodeDescription';
 import Directory from '../Directory';
 import Validator from './Validator';
+import { GETH_CLIENT } from '../Node/ChainInfo';
 
 let mosaic = commander
   .arguments('<new-chain-id> <origin-websocket> <password-file>');
@@ -30,6 +31,7 @@ mosaic.action(
     let nodeDescription = new NodeDescription(newChainId);
     nodeDescription = Object.assign(nodeDescription, nodeOptions);
     nodeDescription.password = Directory.sanitize(passwordFile);
+    nodeDescription.client = GETH_CLIENT;
 
     try {
       await Initialization.initialize(

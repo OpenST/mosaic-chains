@@ -14,6 +14,9 @@ export const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.4';
  * Represents a geth node that runs in a docker container.
  */
 export default class GethNode extends Node {
+
+  private bootKeyFilePath: string;
+
   /** Path of bootnodes file. */
   public bootNodesFile?: string;
 
@@ -56,9 +59,27 @@ export default class GethNode extends Node {
     Shell.executeDockerCommand(args);
   }
 
-  public startSealer(gasPrice: string, targetGasLimit: string, bootKey: string): void {
+  /**
+   *  This returns boot node of the auxiliary chain.
+   */
+  public getBootNode(): string {
+    const bootNodeKey = fs.readFileSync(this.bootKeyFilePath).toString();
+    const command = `docker run -e NODE_KEY=${bootNodeKey} hawyasunaga/ethereum-bootnode /bin/sh -c 'bootnode --nodekeyhex=$NODE_KEY --writeaddress'`;
+    const bootNode = Shell.executeInShell(command);
+    return bootNode.toString().trim();
+  }
+
+  public startSealer(): void {
+
     this.initializeDirectories();
     super.ensureNetworkExists();
+
+    // We always start a new chain with gas price zero.
+    const gasPrice = '0';
+    // 10 mio. as per `CliqueGenesis.ts`.
+    const targetGasLimit = '10000000';
+
+    const bootKeyFile = this.generateBootKey();
 
     this.logInfo('starting geth sealer node');
     let args = this.defaultDockerGethArgs;
@@ -67,7 +88,7 @@ export default class GethNode extends Node {
       '--gasprice', gasPrice,
       '--targetgaslimit', targetGasLimit,
       '--mine',
-      '--nodekey', `/chain_data/${bootKey}`,
+      '--nodekey', `/chain_data/${bootKeyFile}`,
       '--allow-insecure-unlock',
     ]);
 
@@ -140,6 +161,27 @@ export default class GethNode extends Node {
     ]);
 
     return args;
+  }
+
+  /**
+   * Generates a new boot key and stores it in the chain data directory.
+   */
+  private generateBootKey(): string {
+    this.logInfo('generating boot key');
+    const bootKeyFile = 'boot.key';
+
+    const args = [
+      'run',
+      '--rm',
+      '--volume', `${this.chainDir}:/chain_data`,
+      `ethereum/client-go:alltools-${GETH_VERSION}`,
+      'bootnode',
+      '--genkey', `/chain_data/${bootKeyFile}`,
+    ];
+    Shell.executeDockerCommand(args);
+
+    this.bootKeyFilePath = `${this.chainDir}/${bootKeyFile}`;
+    return bootKeyFile;
   }
 
   /**

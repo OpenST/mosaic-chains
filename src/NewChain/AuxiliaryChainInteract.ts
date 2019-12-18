@@ -14,7 +14,9 @@ import Shell from '../Shell';
 import Directory from '../Directory';
 import Logger from '../Logger';
 import NodeDescription from '../Node/NodeDescription';
-import GethNode, { GETH_VERSION } from '../Node/GethNode';
+import Node from '../Node/Node';
+import NodeFactory from '../Node/NodeFactory';
+import { GETH_VERSION } from '../Node/GethNode';
 import InitConfig from '../Config/InitConfig';
 import Proof from './Proof';
 
@@ -25,6 +27,8 @@ import Web3 = require('web3');
  */
 export default class AuxiliaryChainInteract {
   private web3: Web3;
+
+  private node: Node;
 
   private chainDir: string;
 
@@ -52,8 +56,6 @@ export default class AuxiliaryChainInteract {
 
   private _auxiliaryDeployer: string;
 
-  private bootKeyFilePath: string;
-
   /*
   Anchor
    * * Organization for co-gateway and OST prime
@@ -69,7 +71,8 @@ export default class AuxiliaryChainInteract {
     private originChain: string,
     private nodeDescription: NodeDescription,
   ) {
-    this.chainDir = path.join(nodeDescription.mosaicDir, originChain, this.chainId);
+    this.node = NodeFactory.create(nodeDescription);
+    this.chainDir = this.node.getChainDir();
   }
 
   /**
@@ -268,10 +271,7 @@ export default class AuxiliaryChainInteract {
    *  This returns boot node of the auxiliary chain.
    */
   public getBootNode(): string {
-    const bootNodeKey = fs.readFileSync(this.bootKeyFilePath).toString();
-    const command = `docker run -e NODE_KEY=${bootNodeKey} hawyasunaga/ethereum-bootnode /bin/sh -c 'bootnode --nodekeyhex=$NODE_KEY --writeaddress'`;
-    const bootNode = Shell.executeInShell(command);
-    return bootNode.toString().trim();
+    return this.node.getBootNode();
   }
 
   /**
@@ -382,17 +382,11 @@ export default class AuxiliaryChainInteract {
    */
   private async startNewSealer(): Promise<void> {
     this.logInfo('starting a sealer node');
-    const bootKeyFile = this.generateBootKey();
 
     const unlockAccounts = [this.sealer, this.deployer];
-    this.nodeDescription.unlock = unlockAccounts.join(',');
+    this.node.setUnlock(unlockAccounts.join(','));
 
-    const node = new GethNode(this.nodeDescription);
-    // We always start a new chain with gas price zero.
-    const gasPrice = '0';
-    // 10 mio. as per `CliqueGenesis.ts`.
-    const targetGasLimit = '10000000';
-    node.startSealer(gasPrice, targetGasLimit, bootKeyFile);
+    this.node.startSealer();
     // The sealer runs locally on this machine and the port is published to the host from the
     // docker container.
     // Has to be RPC and not WS. WS connection was closed before deploying the Co-Gateway.
@@ -698,27 +692,6 @@ export default class AuxiliaryChainInteract {
     }
 
     return addresses.map(address => `0x${address}`);
-  }
-
-  /**
-   * Generates a new boot key and stores it in the chain data directory.
-   */
-  private generateBootKey(): string {
-    this.logInfo('generating boot key');
-    const bootKeyFile = 'boot.key';
-
-    const args = [
-      'run',
-      '--rm',
-      '--volume', `${this.chainDir}:/chain_data`,
-      `ethereum/client-go:alltools-${GETH_VERSION}`,
-      'bootnode',
-      '--genkey', `/chain_data/${bootKeyFile}`,
-    ];
-    Shell.executeDockerCommand(args);
-
-    this.bootKeyFilePath = `${this.chainDir}/${bootKeyFile}`;
-    return bootKeyFile;
   }
 
   /**

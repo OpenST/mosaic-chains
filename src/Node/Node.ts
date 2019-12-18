@@ -112,6 +112,10 @@ export default abstract class Node {
     return this.keepAfterStop;
   }
 
+  public setUnlock(unlock: string): void {
+    this.unlock = unlock;
+  }
+
   /**
    * Create a docker network if network doesn't exists.
    */
@@ -126,6 +130,10 @@ export default abstract class Node {
    * Starts the docker container that runs this chain.
    */
   public abstract start(): void;
+
+  public abstract startSealer(): void;
+
+  public abstract getBootNode(): string;
 
   /**
    * Stops the docker container that runs this chain.

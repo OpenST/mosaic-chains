@@ -96,6 +96,17 @@ export default class ParityNode extends Node {
   }
 
   /**
+   *  This returns boot node of the auxiliary chain.
+   */
+  public getBootNode(): string {
+    throw 'to be implemented';
+  }
+
+  public startSealer(): void {
+    throw 'to be implemented';
+  }
+
+  /**
    * Initialize directories required by parity to run.
    */
   private initializeDirectories(): void {
