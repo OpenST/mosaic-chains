@@ -18,7 +18,7 @@ describe('AuxiliaryChainInteract.setCoAnchorAddress()', () => {
     // Deployer address is not defined aux chain interact it's created on chain setup.
     from: undefined,
     gasPrice: '0',
-    gas: '10000000',
+    gas: '9000000',
   };
   const coAnchorAddress = '0x000000000000000000000000000000000000002';
 
