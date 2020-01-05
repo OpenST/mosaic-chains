@@ -39,6 +39,13 @@ You can use the `--help` option with any sub-command to get the relevant help fo
 The default directory for mosaic to store mosaic chain data is `~/.mosaic`.
 You can specify a different directory with the `--mosaic-dir` option.
 
+### Postgres Credentials
+
+The Graph uses Postgres for storing data from chain. Default user & password which are used can be found [here](src/bin/GraphOptions.ts).
+One can override these values by passing `--graph-postgres-user` / `--graph-postgres-password-file` (path to file containing password) in `./mosaic start` command.
+
+Note : To rotate these credentials, one will have to manually connect to this postgres instance and alter user (to change password) / create user & give privilages to database (to use a new user) using standard postgres commands.
+
 ### Available chains
 
 Usually, you want to run a combination of at least one origin chain with at least one matching auxiliary chain.
@@ -198,6 +205,8 @@ Total gas consumption for setup redeem pool command is `2951611`. It deploys two
   * Make sure that you set the correct OST address in you init configuration and that your origin account has sufficient funds to pay for the stake amount plus the bounty amount (on origin).
 * Your machine is showing sign of slowness because of creation of auxiliary chains:
   * Too many docker containers could be running while creation of auxiliary chains with different chain ids. Make sure you stop the docker containers of auxiliary chains if it's not being used.  
+* If `npm i @openst/mosaic-chains` fails with an error regarding installation of `sha3` dependency:
+  * As a workaround one can checkout source code and run mosaic commands from there.   
 
 *Refer integration test of mosaic-create command to understand end to end flow.*
 
@@ -336,7 +345,7 @@ Mosaic config file is required in various steps and commands. There are two ways
 ## Gateway config
 Gateway config file is also required for various commands. This file contains information about gateway addresses. Currently below config files are supported: 
 
-1. [WETH gateway config](chains/goerli/1405/0x6649c6ff3629ae875b91b6c1551139c9feaa2514.json).
+1. [WETH gateway config](chains/goerli/1405/gateway-0x6649c6FF3629aE875b91B6C1551139c9feaA2514/gateway-config.json).
 
 ## Gas consumption in mosaic commands
 

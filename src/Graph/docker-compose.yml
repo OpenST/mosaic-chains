@@ -11,9 +11,9 @@ services:
       - postgres
     environment:
       postgres_host: postgres:5432
-      postgres_user: graph-node
-      postgres_pass: let-me-in
-      postgres_db: graph-node
+      postgres_user: '${MOSAIC_POSTGRES_USER}'
+      postgres_pass: '${MOSAIC_POSTGRES_PASSWORD}'
+      postgres_db: '${MOSAIC_POSTGRES_DATABASE}'
       ipfs: 'ipfs:5001'
       ethereum: 'dev:http://${MOSAIC_GRAPH_NODE_HOST}:${MOSAIC_ETHEREUM_RPC_PORT}'
       RUST_LOG: info
@@ -29,10 +29,10 @@ services:
   postgres:
     image: postgres:alpine
     ports:
-      - '${MOSAIC_GRAPH_POSTGRES_PORT}:5432'
+      - '${MOSAIC_POSTGRES_PORT}:5432'
     environment:
-      POSTGRES_USER: graph-node
-      POSTGRES_PASSWORD: let-me-in
-      POSTGRES_DB: graph-node
+      POSTGRES_USER: '${MOSAIC_POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${MOSAIC_POSTGRES_PASSWORD}'
+      POSTGRES_DB: '${MOSAIC_POSTGRES_DATABASE}'
     volumes:
       - '${MOSAIC_GRAPH_DATA_FOLDER}/postgres:/var/lib/postgresql/data'

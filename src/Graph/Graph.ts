@@ -38,6 +38,15 @@ export default class Graph {
   /** Docker will publish this Postgres port on the host. */
   private readonly postgresPort: number;
 
+  /** User to use for Postgres */
+  public postgresUser: string;
+
+  /** Password to use for Postgres */
+  public postgresPassword: string;
+
+  /** Database name to use for Postgres */
+  public postgresDatabase: string;
+
   /** The name of the docker container which runs graph node. */
   private readonly containerName: string;
 
@@ -68,6 +77,9 @@ export default class Graph {
     this.websocketPort = graphDescription.websocketPort;
     this.rpcAdminPort = graphDescription.rpcAdminPort;
     this.ipfsPort = graphDescription.ipfsPort;
+    this.postgresUser = graphDescription.postgresUser;
+    this.postgresPassword = graphDescription.postgresPassword;
+    this.postgresDatabase = graphDescription.postgresDatabase;
     this.postgresPort = graphDescription.postgresPort;
     this.originChain = graphDescription.originChain;
     this.ethereumClient = graphDescription.ethereumClient;
@@ -115,7 +127,10 @@ export default class Graph {
       `MOSAIC_GRAPH_WS_PORT=${this.websocketPort}`,
       `MOSAIC_GRAPH_RPC_ADMIN_PORT=${this.rpcAdminPort}`,
       `MOSAIC_GRAPH_IPFS_PORT=${this.ipfsPort}`,
-      `MOSAIC_GRAPH_POSTGRES_PORT=${this.postgresPort}`,
+      `MOSAIC_POSTGRES_USER=${this.postgresUser}`,
+      `MOSAIC_POSTGRES_PASSWORD=${this.postgresPassword}`,
+      `MOSAIC_POSTGRES_DATABASE=${this.postgresDatabase}`,
+      `MOSAIC_POSTGRES_PORT=${this.postgresPort}`,
       `MOSAIC_GRAPH_DATA_FOLDER=${this.getMosaicGraphDataFolder()}`,
       `MOSAIC_ETHEREUM_RPC_PORT=${this.ethereumRpcPort}`,
       `MOSAIC_GRAPH_NODE_HOST=${Utils.ipAddress()}`,

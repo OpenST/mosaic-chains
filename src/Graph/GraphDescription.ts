@@ -18,6 +18,12 @@ export default class GraphDescription {
 
   public postgresPort: number = 5432;
 
+  public postgresUser: string;
+
+  public postgresPassword: string;
+
+  public postgresDatabase: string;
+
   public keepAfterStop: boolean = false;
 
   public ethereumClient: string;

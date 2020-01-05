@@ -37,8 +37,6 @@ jobs:
       name: Integration on Geth
     - script: sudo env PATH=$PATH npm run test:integration:parity
       name: Integration on parity
-    - script: npm run test:package
-      name: Package
     - stage: "Smoke"
       script: npm run test:smoke:goerli
       name: goerli
