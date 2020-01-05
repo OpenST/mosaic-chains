@@ -7,20 +7,6 @@ export const PARITY_CLIENT = 'parity';
  * Builds node based on the given chain id.
  */
 export default class ChainInfo {
-  /**
-   * array of supported origin chains.
-   */
-  public static get chainsSupportedByParity(): string[] {
-    return [
-      'ethereum',
-      'ropsten',
-      'goerli',
-      '1405',
-      '1406',
-      '1407',
-      '1414',
-    ];
-  }
 
   /**
    * Mapping of supported origin chain name against chain id.

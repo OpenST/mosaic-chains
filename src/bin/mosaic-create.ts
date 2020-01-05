@@ -31,7 +31,7 @@ mosaic.action(
     let nodeDescription = new NodeDescription(newChainId);
     nodeDescription = Object.assign(nodeDescription, nodeOptions);
     nodeDescription.password = Directory.sanitize(passwordFile);
-    nodeDescription.client = GETH_CLIENT;
+    nodeDescription.client = options.client || GETH_CLIENT;
 
     try {
       await Initialization.initialize(

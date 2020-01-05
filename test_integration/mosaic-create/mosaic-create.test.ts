@@ -1,19 +1,21 @@
 import 'mocha';
 import * as fs from 'fs';
 import { assert } from 'chai';
+import Web3 = require('web3');
+import BN = require('bn.js');
+
 import Shell from '../../src/Shell';
 import Utils from './Utils';
 import InitConfig from '../../src/Config/InitConfig';
 import MosaicConfig from '../../src/Config/MosaicConfig';
 import Directory from '../../src/Directory';
-
-import Web3 = require('web3');
-import BN = require('bn.js');
+import { GETH_CLIENT } from '../../src/Node/ChainInfo';
 
 /**
  * Integration test for a auxiliary chain setup
  */
 describe('Mosaic create', () => {
+  const client = process.env.CLIENT;
   const originHost = 'http://localhost';
   const originPort = 8545;
   const originWeb3RPCEndPoint = `${originHost}:${originPort}`;
@@ -42,7 +44,7 @@ describe('Mosaic create', () => {
   });
 
   it('Create new auxiliary chain(This also performs initial stake and mint)', () => {
-    const command = `./mosaic create ${auxChainId}  ${originWeb3RPCEndPoint} ${passwordFile} --origin ${originChainId}`;
+    const command = `./mosaic create ${auxChainId}  ${originWeb3RPCEndPoint} ${passwordFile} --origin ${originChainId} --client ${client}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
   });
 
@@ -50,7 +52,8 @@ describe('Mosaic create', () => {
     auxiliaryWeb3 = new Web3(auxiliaryEndpoint);
     const accounts = await auxiliaryWeb3.eth.getAccounts();
     // Select the beneficiary amount i.e. second account as first account is sealer.
-    beneficiary = accounts[1];
+    // geth and parity return accounts in different order.
+    beneficiary = client == GETH_CLIENT ? accounts[1] : accounts[0];
     const beneficiaryBalance = await auxiliaryWeb3.eth.getBalance(beneficiary);
     assert.strictEqual(
       new BN(stakeAmount).eq(new BN(beneficiaryBalance)),

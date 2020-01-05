@@ -4,6 +4,7 @@ import Logger from '../Logger';
 import Shell from '../Shell';
 import NodeDescription from './NodeDescription';
 import PublishMosaicConfig from '../Config/PublishMosaicConfig';
+import Web3 = require('web3');
 
 /**
  * Represents a chain that is managed by docker.
@@ -127,19 +128,38 @@ export default abstract class Node {
   }
 
   /**
+   * Creates the directory for the chain.
+   */
+  public initializeDirectories(): void {
+    this.initializeDataDir();
+    if (!fs.existsSync(this.chainDir)) {
+      this.logInfo(`${this.chainDir} does not exist; initializing`);
+      fs.mkdirpSync(this.chainDir);
+    }
+  }
+
+  /**
    * Starts the docker container that runs this chain.
    */
   public abstract start(): void;
 
-  public abstract startSealer(): void;
+  public abstract async startSealer(sealer: string): Promise<void>;
 
   public abstract getBootNode(): string;
 
+  public abstract get keysFolder(): string;
+
+  public abstract get genesisFileName(): string;
+
   public abstract generateAccounts(count: number): string[];
 
-  public abstract generateGenesisFile(chainId: string, sealer: string, deployer: string): any;
+  public abstract generateGenesisFile(chainId: string): any;
+
+  public abstract appendAddressesToGenesisFile(genesis: any, sealer: string, deployer: string): any;
 
   public abstract initFromGenesis(): void;
+
+  public abstract verifyAccountsUnlocking(web3: Web3): Promise<void>;
 
   /**
    * Stops the docker container that runs this chain.
@@ -152,6 +172,16 @@ export default abstract class Node {
     ];
 
     Shell.executeDockerCommand(args);
+  }
+
+  /**
+   * returns genesis file path
+   */
+  public genesisFilePath(): string {
+    return path.join(
+      this.chainDir,
+      this.genesisFileName,
+    );
   }
 
   /**

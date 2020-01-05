@@ -1,13 +1,14 @@
-import Integer from '../Integer';
+import Integer from '../../../Integer';
+import Utils from '../../../Utils';
 
 /**
  * A genesis file for a new clique PoA chain.
  */
-export default class CliqueGenesis {
+export default class CliqueGethGenesis {
   /**
-   * Creates a new clique genesis frorm a template and fills in the given values.
+   * Creates a new clique genesis from a template and fills in the given values.
    */
-  public static create(chainId: string, sealer: string, deployer: string): any {
+  public static create(chainId: string): any {
     const initialGenesis = {
       config: {
         chainId: Integer.parseString(chainId),
@@ -27,7 +28,7 @@ export default class CliqueGenesis {
         },
       },
       nonce: '0x0',
-      timestamp: CliqueGenesis.getHexTimestamp(),
+      timestamp: Utils.getHexTimestamp(),
       // Sealer will be added here:
       extraData: '',
       // Decimal: 10 mio.
@@ -813,27 +814,17 @@ export default class CliqueGenesis {
       parentHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
     };
 
-    // Remove leading `0x` as it should not be present in the genesis addresses.
-    deployer = CliqueGenesis.removeLeading0x(deployer);
-    sealer = CliqueGenesis.removeLeading0x(sealer);
-
-    // Equals 800 mio. in hex format. Is a given from the original OST EIP20 contract.
-    initialGenesis.alloc[deployer] = { balance: '0x295be96e640669720000000' };
-    initialGenesis.extraData = this.generateSealerExtraData(sealer);
-
     return initialGenesis;
   }
 
-  /**
-   * @returns The current unix timestamp in hex format with a leading `0x`.
-   */
-  private static getHexTimestamp(): string {
-    const timestampInMilliseconds = Date.now();
-    // 1000 milliseconds per second:
-    const unixTimestamp = Math.floor(timestampInMilliseconds / 1000);
-    const hexTimestamp = unixTimestamp.toString(16);
-
-    return `0x${hexTimestamp}`;
+  public static appendAddresses(genesis: any, sealer: string, deployer: string): any {
+    // Remove leading `0x` as it should not be present in the genesis addresses.
+    deployer = Utils.removeLeading0x(deployer);
+    // Equals 800 mio. in hex format. Is a given from the original OST EIP20 contract.
+    genesis.alloc[deployer] = { balance: '0x295be96e640669720000000' };
+    sealer = Utils.removeLeading0x(sealer);
+    genesis.extraData = CliqueGethGenesis.generateSealerExtraData(sealer);
+    return genesis;
   }
 
   /**
@@ -841,16 +832,5 @@ export default class CliqueGenesis {
    */
   private static generateSealerExtraData(sealer: string): string {
     return `0x0000000000000000000000000000000000000000000000000000000000000000${sealer}0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000`;
-  }
-
-  /**
-   * Removes the optional leading `0x` of a given string.
-   */
-  private static removeLeading0x(input: string): string {
-    if (input.substring(0, 2) === '0x') {
-      input = input.substring(2);
-    }
-
-    return input;
   }
 }

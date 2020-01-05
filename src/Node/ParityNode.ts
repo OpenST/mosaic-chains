@@ -1,22 +1,162 @@
 import * as fs from 'fs';
 import * as os from 'os';
+import * as path from 'path';
 import Node from './Node';
 import Shell from '../Shell';
-import Directory from '../Directory';
-import * as path from 'path';
+import Logger from '../Logger';
+import CliqueParityGenesis from '../NewChain/Genesis/Clique/Parity';
+import Utils from '../Utils';
+import Web3 = require('web3');
+
+const waitPort = require('wait-port');
+
+const PARITY_VERSION = 'v2.5.11-stable';
+const PARITY_DOCKER_DIR = '/home/parity/.local/share/io.parity.ethereum';
+const PARITY_DOCKER_GENESIS_FILE = '/home/parity/parity.json';
 
 /**
  * Represents a parity node that runs in a docker container.
  */
 export default class ParityNode extends Node {
+
+  /**
+   * generates accounts
+   */
+  public generateAccounts(count: number): string[] {
+    this.logInfo('generating addresses for parity node in keys folder');
+    let args = [
+      'run',
+      '--rm',
+      '--volume', `${this.chainDir}:${PARITY_DOCKER_DIR}`,
+      '--volume', `${this.password}:/password.txt`,
+    ];
+
+    args = args.concat(this.genesisParityArgs());
+
+    args = args.concat([
+      `parity/parity:${PARITY_VERSION}`,
+      'account',
+      'new',
+      '--password', '/password.txt',
+      '--base-path', PARITY_DOCKER_DIR,
+      '--chain', PARITY_DOCKER_GENESIS_FILE,
+    ]);
+
+    // The command is executed count number of times. Each time the command is run,
+    // it creates one new account. This is also the reason why the password file must contain the
+    // same password count number of times, once per line. All accounts get created with the password on the first
+    // line of the file, but all of them are read for unlocking when the node is later started.
+    for (let i=1; i<= count; i++) {
+      Shell.executeDockerCommand(args);
+    }
+
+    const addresses: string[] = this.readAddressesFromKeystore();
+    if (addresses.length !== count) {
+      const message = 'did not find exactly two addresses in auxiliary keystore; aborting';
+      Logger.error(message);
+      throw new Error(message);
+    }
+    return addresses;
+  }
+
+  /**
+   * returns path to folder where keystore files are written to disk
+   */
+  public get keysFolder(): string {
+    return path.join(this.chainDir, 'keys', this.chain);
+  }
+
+  /**
+   * returns genesis file name
+   */
+  public get genesisFileName(): string {
+    return 'parity.json';
+  }
+
+  public async startSealer(sealer: string): Promise<void> {
+    this.logInfo('starting parity sealer');
+    this.performStartPrequisites();
+    let args = this.defaultParityArgs();
+    args = args.concat([
+      '--engine-signer', sealer,
+      '--min-gas-price', '0',
+      '--force-sealing'
+    ]);
+    Shell.executeDockerCommand(args);
+    const waitForWebsocketPort = waitPort({ port: this.rpcPort, output: 'silent' });
+    const waitForRpcAdminPort = waitPort({ port: this.websocketPort, output: 'silent' });
+    await Promise.all([
+      waitForWebsocketPort,
+      waitForRpcAdminPort,
+    ]).then(() => new Promise((resolve, reject) => {
+      // even after the ports are available the nodes need a bit of time to get online
+      setTimeout(resolve, 10000);
+    }));
+  }
+
   /**
    * Starts the container that runs this chain node.
    */
   public start(): void {
     this.logInfo('starting parity container');
-    this.initializeDirectories();
-    super.ensureNetworkExists();
+    this.performStartPrequisites();
+    const args = this.defaultParityArgs();
+    Shell.executeDockerCommand(args);
+  }
 
+  /**
+   *  This returns boot node of the auxiliary chain.
+   */
+  public getBootNode(): string {
+    const command = `curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"parity_enode","params":[],"id":1}' ${Utils.ipAddress()}:${this.rpcPort}`;
+    const enodeResponseString = Shell.executeInShell(command);
+    const enodeResponseJson = JSON.parse(enodeResponseString.toString());
+    const enode = enodeResponseJson.result;
+    let matchResult = enode.match(/enode:\/\/(\w*)@*/);
+    return matchResult[1];
+  }
+
+  /**
+   * Generates genesis file data
+   */
+  public generateGenesisFile(chainId: string): any {
+    return CliqueParityGenesis.create(chainId);
+  }
+
+  /**
+   * Appends blocks specific to generated addresses to existing genesis data
+   */
+  public appendAddressesToGenesisFile(genesis: any, sealer: string, deployer: string): any {
+    return CliqueParityGenesis.appendAddresses(genesis, sealer, deployer);
+  }
+
+  /**
+   * Initializes a new auxiliary chain from a stored genesis in the chain data directory.
+   */
+  public initFromGenesis(): void {
+    // do nothing here as init is not required in parity
+  }
+
+  /**
+   * It polls every 4-secs to fetch the list of wallets.
+   * It logs error when connection is not established even after max tries.
+   */
+  public async verifyAccountsUnlocking(web3: Web3): Promise<void> {
+    // do nothing here as it is not supported in parity
+  }
+
+  /**
+   * Perform steps which are prerequisite for starting a parity node.
+   */
+  private performStartPrequisites(): void{
+    super.initializeDirectories();
+    super.ensureNetworkExists();
+  }
+
+  /**
+   * returns default args for starting a parity node.
+   */
+  private defaultParityArgs(): string[] {
     let args = [
       'run',
     ];
@@ -32,20 +172,11 @@ export default class ParityNode extends Node {
       '--publish', `${this.port}:${this.port}`,
       '--publish', `${this.rpcPort}:8545`,
       '--publish', `${this.websocketPort}:8546`,
-      '--volume', `${this.chainDir}:/home/parity/.local/share/io.parity.ethereum`,
+      '--volume', `${this.chainDir}:${PARITY_DOCKER_DIR}`,
     ]);
 
     if (this.originChain) {
-      const genesisFilePath = path.join(
-        Directory.projectRoot,
-        'chains',
-        this.originChain,
-        this.chain,
-        'parity.json',
-      );
-      args = args.concat([
-        '--volume', `${genesisFilePath}:/home/parity/parity.json`,
-      ]);
+      args = args.concat(this.genesisParityArgs());
     }
 
     // Running the parity process inside the container as the same user id that is executing this
@@ -67,8 +198,8 @@ export default class ParityNode extends Node {
     }
 
     args = args.concat([
-      'parity/parity:v2.5.11-stable',
-      '--base-path=/home/parity/.local/share/io.parity.ethereum/',
+      `parity/parity:${PARITY_VERSION}`,
+      `--base-path=${PARITY_DOCKER_DIR}`,
       `--port=${this.port}`,
       '--jsonrpc-port=8545',
       '--jsonrpc-apis=all',
@@ -81,7 +212,7 @@ export default class ParityNode extends Node {
       '--ws-hosts=all',
     ]);
 
-    const chainParam = this.originChain ? '/home/parity/parity.json' : this.chain;
+    const chainParam = this.originChain ? PARITY_DOCKER_GENESIS_FILE : this.chain;
     args = args.concat([
       `--chain=${chainParam}`,
     ]);
@@ -92,41 +223,41 @@ export default class ParityNode extends Node {
         '--password', '/home/parity/password.txt',
       ]);
     }
-    Shell.executeDockerCommand(args);
+
+    return args;
   }
 
   /**
-   *  This returns boot node of the auxiliary chain.
+   * returns argument for mounting parity genesis.
    */
-  public getBootNode(): string {
-    throw 'to be implemented';
-  }
-
-  public startSealer(): void {
-    throw 'to be implemented';
-  }
-
-  public generateAccounts(count: number): string[] {
-    throw 'to be implemented';
-  }
-
-  public generateGenesisFile(chainId: string, sealer: string, deployer: string): any {
-    throw 'to be implemented';
-  }
-
-  public initFromGenesis(): void {
-    // do nothing here as init is not required in parity
+  private genesisParityArgs(): string[] {
+    return [
+      '--volume', `${super.genesisFilePath()}:${PARITY_DOCKER_GENESIS_FILE}`,
+    ];
   }
 
   /**
-   * Initialize directories required by parity to run.
+   * returns The raw addresses from the keys folder, with leading `0x`.
    */
-  private initializeDirectories(): void {
-    super.initializeDataDir();
-
-    if (!fs.existsSync(this.chainDir)) {
-      this.logInfo(`${this.chainDir} does not exist; initializing`);
-      fs.mkdirSync(this.chainDir, { recursive: true });
+  private readAddressesFromKeystore(): string[] {
+    this.logInfo('reading addresses from keys folder');
+    const addresses: string[] = [];
+    const filesInKeystore: string[] = fs.readdirSync(this.keysFolder);
+    for (const file of filesInKeystore) {
+      const fileContent = JSON.parse(
+        fs.readFileSync(
+          path.join(
+            this.keysFolder,
+            file,
+          ),
+          { encoding: 'utf8' },
+        ),
+      );
+      if (fileContent.address !== undefined) {
+        addresses.push(`0x${fileContent.address}`);
+      }
     }
+    return addresses;
   }
+
 }

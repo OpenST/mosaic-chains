@@ -1,6 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as RLP from 'rlp';
+import Web3 = require('web3');
 import {
   ContractInteract,
   Contracts as MosaicContracts,
@@ -17,8 +18,6 @@ import NodeFactory from '../Node/NodeFactory';
 import InitConfig from '../Config/InitConfig';
 import Proof from './Proof';
 
-import Web3 = require('web3');
-
 /**
  * The new auxiliary chain that shall be created.
  */
@@ -32,8 +31,6 @@ export default class AuxiliaryChainInteract {
   private sealer: string;
 
   private deployer: string;
-
-  private maxTriesToUnlockAccounts = 5;
 
   // The below nonces are more for documentation.
   // However, they are set on the deployment transaction options to enforce failure if the order
@@ -260,7 +257,12 @@ export default class AuxiliaryChainInteract {
    * This returns genesis of the auxiliary chain.
    */
   public getGenesis(): any {
-    return this.node.generateGenesisFile(this.chainId, this.sealer, this.deployer);
+    const genesisFilePath = this.node.genesisFilePath();
+    const genesisString = fs.readFileSync(genesisFilePath).toString();
+    if (genesisString && genesisString.length > 0) {
+      return JSON.parse(genesisString);
+    }
+    throw `blank genesis file found at: ${genesisFilePath}`;
   }
 
   /**
@@ -330,13 +332,12 @@ export default class AuxiliaryChainInteract {
    * @throws If keystore already exists for the chain.
    */
   private generateAccounts(): void {
-    if (fs.existsSync(path.join(this.chainDir, 'keystore'))) {
+    if (fs.existsSync(this.node.keysFolder)) {
       const message = 'keystore already exists; cannot continue; delete keystore before running command again';
       this.logError(message);
 
       throw new Error(message);
     }
-    this.logInfo('generating auxiliary address for sealer and deployer');
     // It doesn't matter which account we assign which role as both accounts are new.
     [this.sealer, this.deployer] = this.node.generateAccounts(2);
   }
@@ -346,9 +347,22 @@ export default class AuxiliaryChainInteract {
    */
   private generateChain(): void {
     this.logInfo('generating a new auxiliary chain');
+    this.node.initializeDirectories();
+
+    this.logInfo('generating and writing genesis to chain directory');
+    const genesisData = this.node.generateGenesisFile(this.chainId);
+    this.writeGenesisDataToFile(genesisData);
+
+    this.logInfo('generating accounts');
     this.generateAccounts();
-    this.generateGenesisFile();
+
+    this.logInfo('adding block related to generated accounts to genesis file');
+    const modifiedGenesisData = this.node.appendAddressesToGenesisFile(genesisData, this.sealer, this.deployer);
+    this.writeGenesisDataToFile(modifiedGenesisData);
+
+    this.logInfo('initializing chain from genesis');
     this.initFromGenesis();
+
     this.copyStateToChainsDir();
   }
 
@@ -361,80 +375,14 @@ export default class AuxiliaryChainInteract {
     const unlockAccounts = [this.sealer, this.deployer];
     this.node.setUnlock(unlockAccounts.join(','));
 
-    this.node.startSealer();
+    await this.node.startSealer(this.sealer);
     // The sealer runs locally on this machine and the port is published to the host from the
     // docker container.
     // Has to be RPC and not WS. WS connection was closed before deploying the Co-Gateway.
     // Reason unknown. Possibly due to the fact that according to `lsof` node keeps opening new
     // connections.
     this.web3 = new Web3(`http://127.0.0.1:${this.nodeDescription.rpcPort}`);
-    await this.verifyAccountsUnlocking();
-  }
-
-  /**
-   * It polls every 4-secs to fetch the list of wallets.
-   * It logs error when connection is not established even after max tries.
-   */
-  private async verifyAccountsUnlocking(): Promise<void> {
-    let totalWaitTimeInSeconds = 0;
-    const timeToWaitInSecs = 4;
-    let unlockStatus: boolean;
-    do {
-      await AuxiliaryChainInteract.sleep(timeToWaitInSecs * 1000);
-      totalWaitTimeInSeconds += timeToWaitInSecs;
-      if (totalWaitTimeInSeconds > (this.maxTriesToUnlockAccounts * timeToWaitInSecs)) {
-        throw new Error('node did not unlock accounts in time');
-      }
-      unlockStatus = await this.getAccountsStatus(totalWaitTimeInSeconds / timeToWaitInSecs);
-    } while (!unlockStatus);
-    this.logInfo('accounts unlocked successful');
-  }
-
-  /**
-   * It iterates over accounts to get the status(Locked or Unlocked) of the accounts.
-   */
-  private async getAccountsStatus(noOfTries: number): Promise<boolean> {
-    this.logInfo(`number of tries to fetch unlocked accounts from node is ${noOfTries}`);
-    let noOfUnlockedAccounts = 0;
-    let response;
-    try {
-      response = await this.getWallets();
-    } catch (err) {
-      this.logError(`error from here ${err}`);
-    }
-    if (response) {
-      const accounts = response.result;
-      for (let index = 0; index < accounts.length; index += 1) {
-        if (accounts[index].status === 'Unlocked') {
-          noOfUnlockedAccounts += 1;
-        }
-      }
-      if (noOfUnlockedAccounts > 0) {
-        return (noOfUnlockedAccounts === accounts.length);
-      }
-    }
-    return false;
-  }
-
-  /**
-   * It fetches the list of wallets with their status. It is only supported in Geth client.
-   */
-  private getWallets() {
-    return new Promise((resolve, reject) => {
-      this.web3.currentProvider.send({
-        jsonrpc: '2.0',
-        method: 'personal_listWallets',
-        id: new Date().getTime(),
-        params: [],
-      },
-      (err, res?) => {
-        if (res) {
-          resolve(res);
-        } else {
-          reject(err);
-        }
-      });
-    });
+    await this.node.verifyAccountsUnlocking(this.web3);
   }
 
   /**
@@ -582,19 +530,16 @@ export default class AuxiliaryChainInteract {
       gasPrice: '0',
       // This can be any arbitrarily high number as the gas price is zero and we do not want the
       // transaction to be limited by the gas allowance.
-      gas: '10000000',
+      gas: '9000000',
     };
   }
 
   /**
-   * Creates a new genesis file for this chain and stores it in the chain data directory.
+   * Creates a genesis file for this chain and stores it in the chain data directory.
    */
-  private generateGenesisFile(): void {
-    this.logInfo('generating and writing genesis to chain directory');
-    const genesis = this.getGenesis();
-
+  private writeGenesisDataToFile(genesis: any): void {
     fs.writeFileSync(
-      path.join(this.chainDir, 'genesis.json'),
+      this.node.genesisFilePath(),
       JSON.stringify(
         genesis,
         null,
@@ -607,7 +552,6 @@ export default class AuxiliaryChainInteract {
    * Initializes a new auxiliary chain from a stored genesis in the chain data directory.
    */
   private initFromGenesis(): void {
-    this.logInfo('initializing chain from genesis');
     this.node.initFromGenesis();
   }
 
@@ -617,9 +561,7 @@ export default class AuxiliaryChainInteract {
    */
   private copyStateToChainsDir(): void {
     fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.originChain, this.chainId));
-
-    this.copy('geth');
-    this.copy('genesis.json');
+    this.copy(this.node.genesisFileName);
   }
 
   /**
@@ -757,12 +699,5 @@ export default class AuxiliaryChainInteract {
    */
   private logError(message: string, metaData: any = {}): void {
     Logger.error(message, { chain: 'auxiliary', chainId: this.chainId, ...metaData });
-  }
-
-  /**
-   * @returns A promise that resolves after the given number of milliseconds.
-   */
-  private static sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

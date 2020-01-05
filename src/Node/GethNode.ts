@@ -4,17 +4,20 @@ import Node from './Node';
 import Shell from '../Shell';
 import Directory from '../Directory';
 import ChainInfo from './ChainInfo';
-import CliqueGenesis from '../NewChain/CliqueGenesis';
+import CliqueGethGenesis from '../NewChain/Genesis/Clique/Geth';
 import NodeDescription from './NodeDescription';
 import Logger from '../Logger';
+import Web3 = require('web3');
 
-export const GETH_VERSION = 'v1.9.5';
+const GETH_VERSION = 'v1.9.5';
 const DOCKER_GETH_IMAGE = `ethereum/client-go:${GETH_VERSION}`;
 export const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.4';
 /**
  * Represents a geth node that runs in a docker container.
  */
 export default class GethNode extends Node {
+
+  private maxTriesToUnlockAccounts = 5;
 
   private bootKeyFilePath: string;
 
@@ -69,8 +72,18 @@ export default class GethNode extends Node {
     return addresses.map(address => `0x${address}`);
   }
 
-  public generateGenesisFile(chainId: string, sealer: string, deployer: string): any {
-    return CliqueGenesis.create(chainId, sealer,deployer)
+  /**
+   * Generates genesis file data
+   */
+  public generateGenesisFile(chainId: string): any {
+    return CliqueGethGenesis.create(chainId)
+  }
+
+  /**
+   * Appends blocks specific to generated addresses to existing genesis data
+   */
+  public appendAddressesToGenesisFile(genesis: any, sealer: string, deployer: string): any {
+    return CliqueGethGenesis.appendAddresses(genesis, sealer, deployer)
   }
 
   /**
@@ -97,13 +110,12 @@ export default class GethNode extends Node {
     this.logInfo('reading addresses from keystore');
     const addresses: string[] = [];
 
-    const filesInKeystore: string[] = fs.readdirSync(path.join(this.chainDir, 'keystore'));
+    const filesInKeystore: string[] = fs.readdirSync(this.keysFolder);
     for (const file of filesInKeystore) {
       const fileContent = JSON.parse(
         fs.readFileSync(
           path.join(
-            this.chainDir,
-            'keystore',
+            this.keysFolder,
             file,
           ),
           { encoding: 'utf8' },
@@ -121,7 +133,7 @@ export default class GethNode extends Node {
    * Starts the container that runs this chain node.
    */
   public start(): void {
-    this.initializeDirectories();
+    super.initializeDirectories();
     super.ensureNetworkExists();
 
     let args = [];
@@ -150,14 +162,14 @@ export default class GethNode extends Node {
     return bootNode.toString().trim();
   }
 
-  public startSealer(): void {
+  public async startSealer(sealer: string): Promise<void> {
 
-    this.initializeDirectories();
+    super.initializeDirectories();
     super.ensureNetworkExists();
 
     // We always start a new chain with gas price zero.
     const gasPrice = '0';
-    // 10 mio. as per `CliqueGenesis.ts`.
+    // 10 mio. as per `CliqueGethGenesis.ts`.
     const targetGasLimit = '10000000';
 
     const bootKeyFile = this.generateBootKey();
@@ -174,6 +186,86 @@ export default class GethNode extends Node {
     ]);
 
     Shell.executeDockerCommand(args);
+  }
+
+  /**
+   * returns path to folder where keystore files are written to disk
+   */
+  public get keysFolder(): string {
+    return path.join(this.chainDir, 'keystore');
+  }
+
+  /**
+   * returns genesis file name
+   */
+  public get genesisFileName(): string {
+    return 'genesis.json';
+  }
+
+  /**
+   * It polls every 4-secs to fetch the list of wallets.
+   * It logs error when connection is not established even after max tries.
+   */
+  public async verifyAccountsUnlocking(web3: Web3): Promise<void> {
+    let totalWaitTimeInSeconds = 0;
+    const timeToWaitInSecs = 4;
+    let unlockStatus: boolean;
+    do {
+      await GethNode.sleep(timeToWaitInSecs * 1000);
+      totalWaitTimeInSeconds += timeToWaitInSecs;
+      if (totalWaitTimeInSeconds > (this.maxTriesToUnlockAccounts * timeToWaitInSecs)) {
+        throw new Error('node did not unlock accounts in time');
+      }
+      unlockStatus = await this.getAccountsStatus(web3,totalWaitTimeInSeconds / timeToWaitInSecs);
+    } while (!unlockStatus);
+    this.logInfo('accounts unlocked successful');
+  }
+
+  /**
+   * It iterates over accounts to get the status(Locked or Unlocked) of the accounts.
+   */
+  private async getAccountsStatus(web3: Web3, noOfTries: number): Promise<boolean> {
+    this.logInfo(`number of tries to fetch unlocked accounts from node is ${noOfTries}`);
+    let noOfUnlockedAccounts = 0;
+    let response;
+    try {
+      response = await this.getWallets(web3);
+    } catch (err) {
+      this.logError(`error from here ${err}`);
+    }
+    if (response) {
+      const accounts = response.result;
+      for (let index = 0; index < accounts.length; index += 1) {
+        if (accounts[index].status === 'Unlocked') {
+          noOfUnlockedAccounts += 1;
+        }
+      }
+      if (noOfUnlockedAccounts > 0) {
+        return (noOfUnlockedAccounts === accounts.length);
+      }
+    }
+    return false;
+  }
+
+  /**
+   * It fetches the list of wallets with their status. It is only supported in Geth client.
+   */
+  private getWallets(web3: Web3) {
+    return new Promise((resolve, reject) => {
+      web3.currentProvider.send({
+          jsonrpc: '2.0',
+          method: 'personal_listWallets',
+          id: new Date().getTime(),
+          params: [],
+        },
+        (err, res?) => {
+          if (res) {
+            resolve(res);
+          } else {
+            reject(err);
+          }
+        });
+    });
   }
 
   /**
@@ -292,18 +384,11 @@ export default class GethNode extends Node {
    * @returns geth init arguments.
    */
   private get gethInitArgs(): string [] {
-    const genesisFilePath = path.join(
-      Directory.projectRoot,
-      'chains',
-      this.originChain,
-      this.chain,
-      'genesis.json',
-    );
 
     const args = [
       'run',
       '--rm',
-      '--volume', `${genesisFilePath}:/genesis.json`,
+      '--volume', `${this.genesisFilePath()}:/genesis.json`,
       '--volume', `${this.chainDir}:/chain_data`,
       DOCKER_GETH_IMAGE,
       'init',
@@ -401,14 +486,16 @@ export default class GethNode extends Node {
   }
 
   /**
-   * Creates the directory for the chain.
+   * @returns A promise that resolves after the given number of milliseconds.
    */
-  protected initializeDirectories(): void {
-    super.initializeDataDir();
+  private static sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
-    if (!fs.existsSync(this.chainDir)) {
-      this.logInfo(`${this.chainDir} does not exist; initializing`);
-      fs.mkdirpSync(this.chainDir);
-    }
+  /**
+   * Logs the given message and meta data as log level error.
+   */
+  private logError(message: string, metaData: any = {}): void {
+    Logger.error(message, { chain: this.chain, originChain: this.originChain, ...metaData });
   }
 }
