@@ -86,5 +86,4 @@ export default class Utils {
   public static toHex(value: string): string {
     return `0x${Integer.parseString(value).toString(16)}`;
   }
-
 }

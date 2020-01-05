@@ -16,55 +16,55 @@ export default class CliqueParityGenesis {
         clique: {
           params: {
             period: 3,
-            epoch: 30000
-          }
-        }
+            epoch: 30000,
+          },
+        },
       },
       params: {
-        accountStartNonce: "0x0",
+        accountStartNonce: '0x0',
         chainID: chainIdHex,
-        eip140Transition: "0x0",
-        eip150Transition: "0x0",
-        eip155Transition: "0x0",
-        eip160Transition: "0x0",
-        eip161abcTransition: "0x0",
-        eip161dTransition: "0x0",
-        eip211Transition: "0x0",
-        eip214Transition: "0x0",
-        eip658Transition: "0x0",
-        eip1283Transition: "0x0",
-        eip145Transition: "0x0",
-        eip1014Transition: "0x0",
-        eip1052Transition: "0x0",
-        eip1283DisableTransition: "0x0",
-        eip1283ReenableTransition: "0x0",
-        eip1344Transition: "0x0",
-        eip1706Transition: "0x0",
-        eip1884Transition: "0x0",
-        eip2028Transition: "0x0",
-        gasLimitBoundDivisor: "0x400",
-        maxCodeSize: "0x6000",
-        maxCodeSizeTransition: "0x0",
-        maximumExtraDataSize: "0xffff",
-        minGasLimit: "0x7A1200",
-        networkID: chainIdHex
+        eip140Transition: '0x0',
+        eip150Transition: '0x0',
+        eip155Transition: '0x0',
+        eip160Transition: '0x0',
+        eip161abcTransition: '0x0',
+        eip161dTransition: '0x0',
+        eip211Transition: '0x0',
+        eip214Transition: '0x0',
+        eip658Transition: '0x0',
+        eip1283Transition: '0x0',
+        eip145Transition: '0x0',
+        eip1014Transition: '0x0',
+        eip1052Transition: '0x0',
+        eip1283DisableTransition: '0x0',
+        eip1283ReenableTransition: '0x0',
+        eip1344Transition: '0x0',
+        eip1706Transition: '0x0',
+        eip1884Transition: '0x0',
+        eip2028Transition: '0x0',
+        gasLimitBoundDivisor: '0x400',
+        maxCodeSize: '0x6000',
+        maxCodeSizeTransition: '0x0',
+        maximumExtraDataSize: '0xffff',
+        minGasLimit: '0x7A1200',
+        networkID: chainIdHex,
       },
       genesis: {
-        author: "0x0000000000000000000000000000000000000000",
-        difficulty: "0x1",
+        author: '0x0000000000000000000000000000000000000000',
+        difficulty: '0x1',
         extraData: '', // Sealer will be added here:
-        gasLimit: "0x989680",
-        parentHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
+        gasLimit: '0x989680',
+        parentHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
         seal: {
           ethereum: {
-            nonce: "0x0000000000000000",
+            nonce: '0x0000000000000000',
             // No mixHash required as this block was not generated using PnW.
-            mixHash: "0x0000000000000000000000000000000000000000000000000000000000000000"
-          }
+            mixHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+          },
         },
         timestamp: Utils.getHexTimestamp(),
       },
-      "nodes": [
+      nodes: [
         // enodes would go in here later
       ],
       // The deployer and its initial balance are added below.
@@ -75,119 +75,119 @@ export default class CliqueParityGenesis {
         '0000000000000000000000000000000000000001': {
           balance: '0x1',
           builtin: {
-            name: "ecrecover",
+            name: 'ecrecover',
             pricing: {
               linear: {
                 base: 3000,
-                word: 0
-              }
-            }
-          }
+                word: 0,
+              },
+            },
+          },
         },
         '0000000000000000000000000000000000000002': {
           balance: '0x1',
           builtin: {
-            name: "sha256",
+            name: 'sha256',
             pricing: {
               linear: {
                 base: 60,
-                word: 12
-              }
-            }
-          }
+                word: 12,
+              },
+            },
+          },
         },
         '0000000000000000000000000000000000000003': {
           balance: '0x1',
           builtin: {
-            name: "ripemd160",
+            name: 'ripemd160',
             pricing: {
               linear: {
                 base: 600,
-                word: 120
-              }
-            }
-          }
+                word: 120,
+              },
+            },
+          },
         },
         '0000000000000000000000000000000000000004': {
           balance: '0x1',
           builtin: {
-            name: "identity",
+            name: 'identity',
             pricing: {
               linear: {
                 base: 15,
-                word: 3
-              }
-            }
-          }
+                word: 3,
+              },
+            },
+          },
         },
         '0000000000000000000000000000000000000005': {
           balance: '0x1',
           builtin: {
-            name: "modexp",
-            activate_at: "0x0",
+            name: 'modexp',
+            activate_at: '0x0',
             pricing: {
               modexp: {
-                divisor: 20
-              }
-            }
-          }
+                divisor: 20,
+              },
+            },
+          },
         },
         '0000000000000000000000000000000000000006': {
           balance: '0x1',
           builtin: {
-            name: "alt_bn128_add",
+            name: 'alt_bn128_add',
             pricing: {
-              "0": {
-                price: { alt_bn128_const_operations: { price: 500 }}
+              0: {
+                price: { alt_bn128_const_operations: { price: 500 } },
               },
-              "0x17d433": {
-                info: "EIP 1108 transition at block 1_561_651 (0x17d433)",
-                price: { alt_bn128_const_operations: { price: 150 }}
-              }
-            }
-          }
+              '0x17d433': {
+                info: 'EIP 1108 transition at block 1_561_651 (0x17d433)',
+                price: { alt_bn128_const_operations: { price: 150 } },
+              },
+            },
+          },
         },
         '0000000000000000000000000000000000000007': {
           balance: '0x1',
           builtin: {
-            name: "alt_bn128_mul",
+            name: 'alt_bn128_mul',
             pricing: {
-              "0": {
-                price: { alt_bn128_const_operations: { price: 40000 }}
+              0: {
+                price: { alt_bn128_const_operations: { price: 40000 } },
               },
-              "0x17d433": {
-                info: "EIP 1108 transition at block 1_561_651 (0x17d433)",
-                price: { alt_bn128_const_operations: { price: 6000 }}
-              }
-            }
-          }
+              '0x17d433': {
+                info: 'EIP 1108 transition at block 1_561_651 (0x17d433)',
+                price: { alt_bn128_const_operations: { price: 6000 } },
+              },
+            },
+          },
         },
         '0000000000000000000000000000000000000008': {
           balance: '0x1',
           builtin: {
-            name: "alt_bn128_pairing",
+            name: 'alt_bn128_pairing',
             pricing: {
-              "0": {
-                price: { alt_bn128_pairing: { base: 100000, pair: 80000 }}
+              0: {
+                price: { alt_bn128_pairing: { base: 100000, pair: 80000 } },
               },
-              "0x17d433": {
-                info: "EIP 1108 transition at block 1_561_651 (0x17d433)",
-                price: { alt_bn128_pairing: { base: 45000, pair: 34000 }}
-              }
-            }
-          }
+              '0x17d433': {
+                info: 'EIP 1108 transition at block 1_561_651 (0x17d433)',
+                price: { alt_bn128_pairing: { base: 45000, pair: 34000 } },
+              },
+            },
+          },
         },
         '0000000000000000000000000000000000000009': {
           balance: '0x1',
           builtin: {
-            name: "blake2_f",
-            activate_at: "0x17d433",
+            name: 'blake2_f',
+            activate_at: '0x17d433',
             pricing: {
               blake2_f: {
-                gas_per_round: 1
-              }
-            }
-          }
+                gas_per_round: 1,
+              },
+            },
+          },
         },
         '000000000000000000000000000000000000000a': {
           balance: '0x1',
@@ -932,7 +932,7 @@ export default class CliqueParityGenesis {
     return initialGenesis;
   }
 
-  public static appendAddresses(genesis: any, sealer: string, deployer: string):any {
+  public static appendAddresses(genesis: any, sealer: string, deployer: string): any {
     // Equals 800 mio. in hex format. Is a given from the original OST EIP20 contract.
     genesis.accounts[deployer] = { balance: '0x295be96e640669720000000' };
     // Remove leading `0x` as it should not be present in the genesis addresses.

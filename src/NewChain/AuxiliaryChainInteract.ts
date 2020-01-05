@@ -1,7 +1,6 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as RLP from 'rlp';
-import Web3 = require('web3');
 import {
   ContractInteract,
   Contracts as MosaicContracts,
@@ -17,6 +16,8 @@ import Node from '../Node/Node';
 import NodeFactory from '../Node/NodeFactory';
 import InitConfig from '../Config/InitConfig';
 import Proof from './Proof';
+
+import Web3 = require('web3');
 
 /**
  * The new auxiliary chain that shall be created.

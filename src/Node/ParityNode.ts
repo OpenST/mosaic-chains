@@ -6,6 +6,7 @@ import Shell from '../Shell';
 import Logger from '../Logger';
 import CliqueParityGenesis from '../NewChain/Genesis/Clique/Parity';
 import Utils from '../Utils';
+
 import Web3 = require('web3');
 
 const waitPort = require('wait-port');
@@ -18,7 +19,6 @@ const PARITY_DOCKER_GENESIS_FILE = '/home/parity/parity.json';
  * Represents a parity node that runs in a docker container.
  */
 export default class ParityNode extends Node {
-
   /**
    * generates accounts
    */
@@ -46,7 +46,7 @@ export default class ParityNode extends Node {
     // it creates one new account. This is also the reason why the password file must contain the
     // same password count number of times, once per line. All accounts get created with the password on the first
     // line of the file, but all of them are read for unlocking when the node is later started.
-    for (let i=1; i<= count; i++) {
+    for (let i = 1; i <= count; i++) {
       Shell.executeDockerCommand(args);
     }
 
@@ -80,7 +80,7 @@ export default class ParityNode extends Node {
     args = args.concat([
       '--engine-signer', sealer,
       '--min-gas-price', '0',
-      '--force-sealing'
+      '--force-sealing',
     ]);
     Shell.executeDockerCommand(args);
     const waitForWebsocketPort = waitPort({ port: this.rpcPort, output: 'silent' });
@@ -112,7 +112,7 @@ export default class ParityNode extends Node {
     const enodeResponseString = Shell.executeInShell(command);
     const enodeResponseJson = JSON.parse(enodeResponseString.toString());
     const enode = enodeResponseJson.result;
-    let matchResult = enode.match(/enode:\/\/(\w*)@*/);
+    const matchResult = enode.match(/enode:\/\/(\w*)@*/);
     return matchResult[1];
   }
 
@@ -259,5 +259,4 @@ export default class ParityNode extends Node {
     }
     return addresses;
   }
-
 }

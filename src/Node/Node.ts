@@ -4,6 +4,7 @@ import Logger from '../Logger';
 import Shell from '../Shell';
 import NodeDescription from './NodeDescription';
 import PublishMosaicConfig from '../Config/PublishMosaicConfig';
+
 import Web3 = require('web3');
 
 /**

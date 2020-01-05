@@ -7,6 +7,7 @@ import ChainInfo from './ChainInfo';
 import CliqueGethGenesis from '../NewChain/Genesis/Clique/Geth';
 import NodeDescription from './NodeDescription';
 import Logger from '../Logger';
+
 import Web3 = require('web3');
 
 const GETH_VERSION = 'v1.9.5';
@@ -16,7 +17,6 @@ export const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.4';
  * Represents a geth node that runs in a docker container.
  */
 export default class GethNode extends Node {
-
   private maxTriesToUnlockAccounts = 5;
 
   private bootKeyFilePath: string;
@@ -41,7 +41,6 @@ export default class GethNode extends Node {
   private bootnodes: string = '';
 
   public generateAccounts(count: number): string[] {
-
     const args = [
       'run',
       '--rm',
@@ -58,7 +57,7 @@ export default class GethNode extends Node {
     // it creates one new account. This is also the reason why the password file must contain the
     // same password count number of times, once per line. All accounts get created with the password on the first
     // line of the file, but all of them are read for unlocking when the node is later started.
-    for (let i=1; i<= count; i++) {
+    for (let i = 1; i <= count; i++) {
       Shell.executeDockerCommand(args);
     }
 
@@ -76,14 +75,14 @@ export default class GethNode extends Node {
    * Generates genesis file data
    */
   public generateGenesisFile(chainId: string): any {
-    return CliqueGethGenesis.create(chainId)
+    return CliqueGethGenesis.create(chainId);
   }
 
   /**
    * Appends blocks specific to generated addresses to existing genesis data
    */
   public appendAddressesToGenesisFile(genesis: any, sealer: string, deployer: string): any {
-    return CliqueGethGenesis.appendAddresses(genesis, sealer, deployer)
+    return CliqueGethGenesis.appendAddresses(genesis, sealer, deployer);
   }
 
   /**
@@ -163,7 +162,6 @@ export default class GethNode extends Node {
   }
 
   public async startSealer(sealer: string): Promise<void> {
-
     super.initializeDirectories();
     super.ensureNetworkExists();
 
@@ -216,7 +214,7 @@ export default class GethNode extends Node {
       if (totalWaitTimeInSeconds > (this.maxTriesToUnlockAccounts * timeToWaitInSecs)) {
         throw new Error('node did not unlock accounts in time');
       }
-      unlockStatus = await this.getAccountsStatus(web3,totalWaitTimeInSeconds / timeToWaitInSecs);
+      unlockStatus = await this.getAccountsStatus(web3, totalWaitTimeInSeconds / timeToWaitInSecs);
     } while (!unlockStatus);
     this.logInfo('accounts unlocked successful');
   }
@@ -253,18 +251,18 @@ export default class GethNode extends Node {
   private getWallets(web3: Web3) {
     return new Promise((resolve, reject) => {
       web3.currentProvider.send({
-          jsonrpc: '2.0',
-          method: 'personal_listWallets',
-          id: new Date().getTime(),
-          params: [],
-        },
-        (err, res?) => {
-          if (res) {
-            resolve(res);
-          } else {
-            reject(err);
-          }
-        });
+        jsonrpc: '2.0',
+        method: 'personal_listWallets',
+        id: new Date().getTime(),
+        params: [],
+      },
+      (err, res?) => {
+        if (res) {
+          resolve(res);
+        } else {
+          reject(err);
+        }
+      });
     });
   }
 
@@ -384,7 +382,6 @@ export default class GethNode extends Node {
    * @returns geth init arguments.
    */
   private get gethInitArgs(): string [] {
-
     const args = [
       'run',
       '--rm',

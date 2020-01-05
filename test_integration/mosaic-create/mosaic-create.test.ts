@@ -1,8 +1,6 @@
 import 'mocha';
 import * as fs from 'fs';
 import { assert } from 'chai';
-import Web3 = require('web3');
-import BN = require('bn.js');
 
 import Shell from '../../src/Shell';
 import Utils from './Utils';
@@ -10,6 +8,9 @@ import InitConfig from '../../src/Config/InitConfig';
 import MosaicConfig from '../../src/Config/MosaicConfig';
 import Directory from '../../src/Directory';
 import { GETH_CLIENT } from '../../src/Node/ChainInfo';
+
+import Web3 = require('web3');
+import BN = require('bn.js');
 
 /**
  * Integration test for a auxiliary chain setup

@@ -7,7 +7,6 @@ export const PARITY_CLIENT = 'parity';
  * Builds node based on the given chain id.
  */
 export default class ChainInfo {
-
   /**
    * Mapping of supported origin chain name against chain id.
    */
