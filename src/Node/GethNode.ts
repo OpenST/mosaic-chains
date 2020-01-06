@@ -179,6 +179,7 @@ export default class GethNode extends Node {
       '--gasprice', gasPrice,
       '--targetgaslimit', targetGasLimit,
       '--mine',
+      '--etherbase', sealer,
       '--nodekey', `/chain_data/${bootKeyFile}`,
       '--allow-insecure-unlock',
     ]);
