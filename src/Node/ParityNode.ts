@@ -33,6 +33,7 @@ export default class ParityNode extends Node {
     ];
 
     args = args.concat(this.genesisParityArgs());
+    args = args.concat(ParityNode.userParityArgs());
 
     args = args.concat([
       `parity/parity:${PARITY_VERSION}`,
@@ -176,18 +177,7 @@ export default class ParityNode extends Node {
       args = args.concat(this.genesisParityArgs());
     }
 
-    // Running the parity process inside the container as the same user id that is executing this
-    // script.
-    // This is required, because otherwise the parity process will not be able to write to the
-    // mounted directory. The parity process inside the container is not run as root (as usual),
-    // but instead runs with uid/guid 1000/1000 by default. This option overrides that default
-    // behavior so that the parity process can write to its mounted chain directory in all
-    // environments. This was introduced after failing tests on Travis CI.
-    const userInfo = os.userInfo();
-    Logger.debug('userInfo', userInfo);
-    args = args.concat([
-      '--user', `${userInfo.uid}:${userInfo.gid}`,
-    ]);
+    args = args.concat(ParityNode.userParityArgs());
 
     if (this.password !== '') {
       args = args.concat([
@@ -233,4 +223,21 @@ export default class ParityNode extends Node {
       '--volume', `${super.genesisFilePath()}:${PARITY_DOCKER_GENESIS_FILE}`,
     ];
   }
+
+  /**
+   * returns argument for user details with which parity docker commands should run
+   */
+  private static userParityArgs(): string[] {
+    const userInfo = os.userInfo();
+    // Running the parity process inside the container as the same user id that is executing this
+    // script. This is required, because otherwise the parity process will not be able to write to the
+    // mounted directory. The parity process inside the container is not run as root (as usual),
+    // but instead runs with uid/guid 1000/1000 by default. This option overrides that default
+    // behavior so that the parity process can write to its mounted chain directory in all
+    // environments. This was introduced after failing tests on Travis CI.
+    return [
+      '--user', `${userInfo.uid}:${userInfo.gid}`,
+    ];
+  }
+
 }
