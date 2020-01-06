@@ -172,7 +172,7 @@ export default class GethNode extends Node {
 
     const bootKeyFile = this.generateBootKey();
 
-    this.logInfo('starting geth sealer node');
+    this.logInfo(`starting geth sealer node with sealer: ${sealer}`);
     let args = this.defaultDockerGethArgs;
     args = args.concat([
       '--syncmode', 'full',
