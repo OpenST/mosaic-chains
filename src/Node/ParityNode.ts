@@ -184,6 +184,7 @@ export default class ParityNode extends Node {
     // behavior so that the parity process can write to its mounted chain directory in all
     // environments. This was introduced after failing tests on Travis CI.
     const userInfo = os.userInfo();
+    Logger.debug('userInfo', userInfo);
     args = args.concat([
       '--user', `${userInfo.uid}:${userInfo.gid}`,
     ]);
