@@ -25,6 +25,7 @@ export default class ParityNode extends Node {
   public generateAccounts(count: number): string[] {
     this.logInfo('generating addresses for parity node in keys folder');
     let args = [
+      'docker',
       'run',
       '--rm',
       '--volume', `${this.chainDir}:${PARITY_DOCKER_DIR}`,
@@ -42,19 +43,15 @@ export default class ParityNode extends Node {
       '--chain', PARITY_DOCKER_GENESIS_FILE,
     ]);
 
+    const addresses: string[] = [];
     // The command is executed count number of times. Each time the command is run,
     // it creates one new account. This is also the reason why the password file must contain the
     // same password count number of times, once per line. All accounts get created with the password on the first
     // line of the file, but all of them are read for unlocking when the node is later started.
     for (let i = 1; i <= count; i++) {
-      Shell.executeDockerCommand(args);
-    }
-
-    const addresses: string[] = this.readAddressesFromKeystore();
-    if (addresses.length !== count) {
-      const message = 'did not find exactly two addresses in auxiliary keystore; aborting';
-      Logger.error(message);
-      throw new Error(message);
+      // as we need the response which holds the address generated, using executeInShell
+      const addrGenerationResponseBuffer = Shell.executeInShell(args.join(' '));
+      addresses.push(addrGenerationResponseBuffer.toString().trim());
     }
     return addresses;
   }
@@ -234,29 +231,5 @@ export default class ParityNode extends Node {
     return [
       '--volume', `${super.genesisFilePath()}:${PARITY_DOCKER_GENESIS_FILE}`,
     ];
-  }
-
-  /**
-   * returns The raw addresses from the keys folder, with leading `0x`.
-   */
-  private readAddressesFromKeystore(): string[] {
-    this.logInfo('reading addresses from keys folder');
-    const addresses: string[] = [];
-    const filesInKeystore: string[] = fs.readdirSync(this.keysFolder);
-    for (const file of filesInKeystore) {
-      const fileContent = JSON.parse(
-        fs.readFileSync(
-          path.join(
-            this.keysFolder,
-            file,
-          ),
-          { encoding: 'utf8' },
-        ),
-      );
-      if (fileContent.address !== undefined) {
-        addresses.push(`0x${fileContent.address}`);
-      }
-    }
-    return addresses;
   }
 }
