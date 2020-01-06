@@ -21,11 +21,13 @@ describe('Mosaic create', () => {
   const originWeb3RPCEndPoint = `${originHost}:${originPort}`;
   const auxChainId = 500;
   const passwordFile = './test_integration/mosaic-create/integration_test_password.txt';
-  let originWeb3;
+  const mosaicDir = process.env.MOSAIC_DIR || '~/.mosaic';
+  const mosaicConfigFilePath = Directory.sanitize(`${mosaicDir}/dev-origin/mosaic.json`);
   const originChainId = 'dev-origin';
+  const auxiliaryEndpoint = 'http://localhost:40500';
+  let originWeb3;
   let originDeployerAddress: string;
   let auxiliaryWeb3;
-  const auxiliaryEndpoint = 'http://localhost:40500';
   let beneficiary;
   let stakeAmount;
 
@@ -44,7 +46,7 @@ describe('Mosaic create', () => {
   });
 
   it('Create new auxiliary chain(This also performs initial stake and mint)', () => {
-    const command = `./mosaic create ${auxChainId}  ${originWeb3RPCEndPoint} ${passwordFile} --origin ${originChainId} --client ${client}`;
+    const command = `./mosaic create ${auxChainId}  ${originWeb3RPCEndPoint} ${passwordFile} --origin ${originChainId} --client ${client} --mosaic-dir ${mosaicDir}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
   });
 
@@ -78,11 +80,10 @@ describe('Mosaic create', () => {
 
 
   it('Deploy stake pool contract with mosaic config option', async () => {
-    const filePath = Directory.sanitize('~/.mosaic/dev-origin/mosaic.json');
-    const initialMosaicConfig = MosaicConfig.fromFile(filePath);
-    const command = `./mosaic setup-stake-pool ${originChainId} ${originWeb3RPCEndPoint} ${originDeployerAddress} ${originDeployerAddress} ${originDeployerAddress} --mosaic-config ${filePath}`;
+    const initialMosaicConfig = MosaicConfig.fromFile(mosaicConfigFilePath);
+    const command = `./mosaic setup-stake-pool ${originChainId} ${originWeb3RPCEndPoint} ${originDeployerAddress} ${originDeployerAddress} ${originDeployerAddress} --mosaic-config ${mosaicConfigFilePath}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
-    const finalMosaicConfig = MosaicConfig.fromFile(filePath);
+    const finalMosaicConfig = MosaicConfig.fromFile(mosaicConfigFilePath);
 
     assert.notStrictEqual(
       initialMosaicConfig.originChain.contractAddresses.stakePoolAddress,
@@ -110,13 +111,11 @@ describe('Mosaic create', () => {
   it('Deploy redeem pool contract with mosaic config option', async () => {
     // Second account password.
     const password = fs.readFileSync(passwordFile).toString().trim().split('\n')[1];
-
-    const file = Directory.sanitize('~/.mosaic/dev-origin/mosaic.json');
-    const initialMosaicConfig = MosaicConfig.fromFile(file);
+    const initialMosaicConfig = MosaicConfig.fromFile(mosaicConfigFilePath);
     auxiliaryWeb3.eth.personal.unlockAccount(beneficiary, password);
-    const command = `./mosaic setup-redeem-pool ${originChainId} ${auxChainId} ${auxiliaryEndpoint} ${beneficiary} ${beneficiary} ${beneficiary} --mosaic-config ~/.mosaic/dev-origin/mosaic.json`;
+    const command = `./mosaic setup-redeem-pool ${originChainId} ${auxChainId} ${auxiliaryEndpoint} ${beneficiary} ${beneficiary} ${beneficiary} --mosaic-config ${mosaicConfigFilePath}`;
     Shell.executeInShell(command, { stdio: 'inherit' });
-    const finalMosaicConfig = MosaicConfig.fromFile(file);
+    const finalMosaicConfig = MosaicConfig.fromFile(mosaicConfigFilePath);
     assert.notStrictEqual(
       initialMosaicConfig.auxiliaryChains[auxChainId].contractAddresses.auxiliary.redeemPoolAddress,
       finalMosaicConfig.auxiliaryChains[auxChainId].contractAddresses.auxiliary.redeemPoolAddress,
@@ -132,6 +131,6 @@ describe('Mosaic create', () => {
   after(() => {
     Shell.executeInShell(`./mosaic stop ${auxChainId}`);
     Utils.stopOriginChain();
-    Utils.cleanDirectories(`${originChainId}`);
+    Utils.cleanDirectories(mosaicDir,`${originChainId}`);
   });
 });

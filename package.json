@@ -28,7 +28,7 @@
     "test:package": "./tests/package.sh",
     "test:integration": "npm run test:integration:geth && npm run test:integration:parity",
     "test:integration:geth": "CLIENT=geth mocha -r ts-node/register test_integration/**/*.test.ts test_integration/*.test.ts --timeout 3000000",
-    "test:integration:parity": "CLIENT=parity mocha -r ts-node/register test_integration/**/*.test.ts test_integration/*.test.ts --timeout 3000000",
+    "test:integration:parity": "MOSAIC_DIR=./mosaic-dir CLIENT=parity mocha -r ts-node/register test_integration/**/*.test.ts test_integration/*.test.ts --timeout 3000000",
     "pull-abi": "sh ./tools/abi_downloader/run.sh",
     "whitelist-workers": "ts-node tools/whitelistworker.ts"
   },
