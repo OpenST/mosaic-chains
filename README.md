@@ -40,7 +40,7 @@ If you want to keep the container around, for example to debug in the logs after
 
 ## Running mosaic
 
-Clone `git clone git@github.com:OpenST/mosaic-chains.git` and install `npm ci`.
+Clone `https://github.com/mosaicdao/mosaic-chains.git` and install `npm ci`.
 Run `./mosaic --help` to get the help output.
 You can use the `--help` option with any sub-command to get the relevant help for that sub-command, e.g. `./mosaic start --help`.
 
