@@ -340,7 +340,9 @@ export default class AuxiliaryChainInteract {
       throw new Error(message);
     }
     // It doesn't matter which account we assign which role as both accounts are new.
-    [this.sealer, this.deployer] = this.node.generateAccounts(2);
+    // as geth and parity return addresses in different order we would sort first and then use
+    const addresses = this.node.generateAccounts(2);
+    [this.sealer, this.deployer] = addresses.sort();
   }
 
   /**

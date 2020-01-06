@@ -7,7 +7,6 @@ import Utils from './Utils';
 import InitConfig from '../../src/Config/InitConfig';
 import MosaicConfig from '../../src/Config/MosaicConfig';
 import Directory from '../../src/Directory';
-import { GETH_CLIENT } from '../../src/Node/ChainInfo';
 
 import Web3 = require('web3');
 import BN = require('bn.js');
@@ -52,9 +51,10 @@ describe('Mosaic create', () => {
   it('Assert beneficiary balance after initial stake and mint', async () => {
     auxiliaryWeb3 = new Web3(auxiliaryEndpoint);
     const accounts = await auxiliaryWeb3.eth.getAccounts();
+    // as geth and parity return addresses in different order we had sorted first and then used
+    const sortedAccounts = accounts.sort();
     // Select the beneficiary amount i.e. second account as first account is sealer.
-    // geth and parity return accounts in different order.
-    beneficiary = client == GETH_CLIENT ? accounts[1] : accounts[0];
+    beneficiary = sortedAccounts[1];
     const beneficiaryBalance = await auxiliaryWeb3.eth.getBalance(beneficiary);
     assert.strictEqual(
       new BN(stakeAmount).eq(new BN(beneficiaryBalance)),
