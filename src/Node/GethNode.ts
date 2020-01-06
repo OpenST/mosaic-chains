@@ -93,10 +93,11 @@ export default class GethNode extends Node {
       'run',
       '--rm',
       '--volume', `${this.chainDir}:/chain_data`,
+      '--volume', `${this.genesisProjectFilePath()}:/genesis.json`,
       `ethereum/client-go:${GETH_VERSION}`,
       '--datadir', '/chain_data',
       'init',
-      '/chain_data/genesis.json',
+      '/genesis.json',
     ];
 
     Shell.executeDockerCommand(args);
