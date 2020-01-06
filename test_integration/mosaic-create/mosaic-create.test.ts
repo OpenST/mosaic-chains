@@ -22,8 +22,8 @@ describe('Mosaic create', () => {
   const auxChainId = 500;
   const passwordFile = './test_integration/mosaic-create/integration_test_password.txt';
   const mosaicDir = process.env.MOSAIC_DIR || '~/.mosaic';
-  const mosaicConfigFilePath = Directory.sanitize(`${mosaicDir}/dev-origin/mosaic.json`);
   const originChainId = 'dev-origin';
+  const mosaicConfigFilePath = Directory.sanitize(`${mosaicDir}/${originChainId}/mosaic.json`);
   const auxiliaryEndpoint = 'http://localhost:40500';
   let originWeb3;
   let originDeployerAddress: string;
