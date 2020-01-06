@@ -185,7 +185,7 @@ export default class ParityNode extends Node {
     // environments. This was introduced after failing tests on Travis CI.
     const userInfo = os.userInfo();
     args = args.concat([
-      // '--user', `${userInfo.uid}:${userInfo.gid}`,
+      '--user', `${userInfo.uid}:${userInfo.gid}`,
     ]);
 
     if (this.password !== '') {
