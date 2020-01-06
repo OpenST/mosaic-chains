@@ -2,6 +2,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import Logger from '../Logger';
 import Shell from '../Shell';
+import Directory from '../Directory';
 import NodeDescription from './NodeDescription';
 import PublishMosaicConfig from '../Config/PublishMosaicConfig';
 
@@ -176,11 +177,21 @@ export default abstract class Node {
   }
 
   /**
-   * returns genesis file path
+   * returns genesis file path from mosaic dir
    */
-  public genesisFilePath(): string {
+  public genesisMosaicDirFilePath(): string {
     return path.join(
       this.chainDir,
+      this.genesisFileName,
+    );
+  }
+
+  /**
+   * returns project genesis file path from project dir
+   */
+  public genesisProjectFilePath(): string {
+    return path.join(
+      Directory.getProjectUtilityChainDir(this.originChain, this.chain),
       this.genesisFileName,
     );
   }
@@ -194,7 +205,6 @@ export default abstract class Node {
       this.logInfo(`${this.mosaicDir} does not exist; initializing`);
       fs.mkdirSync(this.mosaicDir, { recursive: true });
     }
-
     // If the `this.originChain` is not present, then `this.chain` is the
     // origin chain itself.
     PublishMosaicConfig.tryPublish(this.originChain || this.chain);

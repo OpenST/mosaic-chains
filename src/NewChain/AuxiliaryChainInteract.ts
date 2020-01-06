@@ -258,7 +258,7 @@ export default class AuxiliaryChainInteract {
    * This returns genesis of the auxiliary chain.
    */
   public getGenesis(): any {
-    const genesisFilePath = this.node.genesisFilePath();
+    const genesisFilePath = this.node.genesisProjectFilePath();
     const genesisString = fs.readFileSync(genesisFilePath).toString();
     if (genesisString && genesisString.length > 0) {
       return JSON.parse(genesisString);
@@ -349,6 +349,8 @@ export default class AuxiliaryChainInteract {
    * Initializes a new chain from a new genesis.
    */
   private generateChain(): void {
+    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.originChain, this.chainId));
+
     this.logInfo('generating a new auxiliary chain');
     this.node.initializeDirectories();
 
@@ -366,7 +368,7 @@ export default class AuxiliaryChainInteract {
     this.logInfo('initializing chain from genesis');
     this.initFromGenesis();
 
-    this.copyStateToChainsDir();
+    // this.copyStateToChainsDir();
   }
 
   /**
@@ -542,7 +544,7 @@ export default class AuxiliaryChainInteract {
    */
   private writeGenesisDataToFile(genesis: any): void {
     fs.writeFileSync(
-      this.node.genesisFilePath(),
+      this.node.genesisProjectFilePath(),
       JSON.stringify(
         genesis,
         null,
@@ -563,7 +565,6 @@ export default class AuxiliaryChainInteract {
    * to connect.
    */
   private copyStateToChainsDir(): void {
-    fs.ensureDirSync(Directory.getProjectUtilityChainDir(this.originChain, this.chainId));
     this.copy(this.node.genesisFileName);
   }
 

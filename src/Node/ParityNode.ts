@@ -220,7 +220,7 @@ export default class ParityNode extends Node {
    */
   private genesisParityArgs(): string[] {
     return [
-      '--volume', `${super.genesisFilePath()}:${PARITY_DOCKER_GENESIS_FILE}`,
+      '--volume', `${super.genesisProjectFilePath()}:${PARITY_DOCKER_GENESIS_FILE}`,
     ];
   }
 

@@ -386,7 +386,7 @@ export default class GethNode extends Node {
     const args = [
       'run',
       '--rm',
-      '--volume', `${this.genesisFilePath()}:/genesis.json`,
+      '--volume', `${this.genesisProjectFilePath()}:/genesis.json`,
       '--volume', `${this.chainDir}:/chain_data`,
       DOCKER_GETH_IMAGE,
       'init',
