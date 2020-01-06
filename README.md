@@ -2,7 +2,13 @@
 
 [![Build Status](https://travis-ci.org/mosaicdao/mosaic-chains.svg?branch=develop)](https://travis-ci.org/mosaicdao/mosaic-chains)
 
-You need node and docker installed to run the chains.
+## Prerequisites
+
+| Service | Version  |
+| ------- | -------- |
+| Node    | 11.0.0   |
+| NPM     | >6.13.4  |
+| Docker  | >19.03.5 |
 
 Mosaic will automatically identify if you want to run a geth node or a parity node based on the chain id or name.
 Any string supported by parity as a network option will start a parity node container.
