@@ -45,10 +45,6 @@ function validateClientOption(chain, options) {
       Logger.error('Force init can not be performed for Parity client.');
       return false;
     }
-    if (!ChainInfo.isDevOriginChain(options.origin)) {
-      Logger.error('Parity client is not supported for dev-origin-chains');
-      return false;
-    }
   }
   return true;
 }
