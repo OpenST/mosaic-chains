@@ -41,20 +41,8 @@ function validateClientOption(chain, options) {
       Logger.error('Clef signer currently supports geth. Please refer clef documentation.');
       return false;
     }
-    if (!ChainInfo.chainsSupportedByParity.includes(chain)) {
-      Logger.error(`Parity client does not support chain: ${chain}`);
-      return false;
-    }
-    if (options.origin) {
-      Logger.error('Parity client is not supported for auxiliary-chains');
-      return false;
-    }
     if (options.forceInit) {
       Logger.error('Force init can not be performed for Parity client.');
-      return false;
-    }
-    if (DevChainOptions.isDevChain(chain, options)) {
-      Logger.error('Parity client is not supported for dev-chains');
       return false;
     }
   }
@@ -90,7 +78,7 @@ mosaic
         chainInput = devParams.chain;
         optionInput = devParams.options;
         // Dev chain should always start with geth.
-        optionInput.client = GETH_CLIENT;
+        optionInput.client = optionInput.client || GETH_CLIENT;
       }
       const {
         mosaicDir,

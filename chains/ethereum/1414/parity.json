@@ -1,0 +1,152 @@
+{
+  "name": "1414",
+  "dataDir": "1414",
+  "engine": {
+    "clique": {
+      "params": {
+        "period": 3,
+        "epoch": 30000
+      }
+    }
+  },
+  "params": {
+    "accountStartNonce": "0x0",
+    "chainID": "0x586",
+    "eip140Transition": "0x0",
+    "eip150Transition": "0x0",
+    "eip155Transition": "0x0",
+    "eip160Transition": "0x0",
+    "eip161abcTransition": "0x0",
+    "eip161dTransition": "0x0",
+    "eip211Transition": "0x0",
+    "eip214Transition": "0x0",
+    "eip658Transition": "0x0",
+    "eip1283Transition": "0x0",
+    "eip1283DisableTransition": "0x0",
+    "gasLimitBoundDivisor": "0x400",
+    "maxCodeSize": "0x6000",
+    "maxCodeSizeTransition": "0x0",
+    "maximumExtraDataSize": "0xffff",
+    "minGasLimit": "0x989680",
+    "networkID": "0x586"
+  },
+  "genesis": {
+    "author": "0x0000000000000000000000000000000000000000",
+    "difficulty": "0x1",
+    "extraData": "0x7574696c69747920636861696e0000000000000000000000000000000000000082Af4EFe75Fa0fe0525f59e51453DF961528fD570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "gasLimit": "0x989680",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "seal": {
+      "ethereum": {
+        "nonce": "0x0000000000000000",
+        "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    "timestamp": "0x5a71660b"
+  },
+  "nodes": [
+    "enode://c677ea2e455828db3d2f7bbc232518cfe683475edae66ab46fcf27bc21efb991fb37776f815d679a449374e7363692aee3c89a70f6b8cd754abc95fa11a3c757@99.80.181.153:30301"
+  ],
+  "accounts": {
+    "0x0000000000000000000000000000000000000001": {
+      "builtin": {
+        "name": "ecrecover",
+        "pricing": {
+          "linear": {
+            "base": 3000,
+            "word": 0
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000002": {
+      "builtin": {
+        "name": "sha256",
+        "pricing": {
+          "linear": {
+            "base": 60,
+            "word": 12
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000003": {
+      "builtin": {
+        "name": "ripemd160",
+        "pricing": {
+          "linear": {
+            "base": 600,
+            "word": 120
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000004": {
+      "builtin": {
+        "name": "identity",
+        "pricing": {
+          "linear": {
+            "base": 15,
+            "word": 3
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000005": {
+      "builtin": {
+        "name": "modexp",
+        "activate_at": "0x0",
+        "pricing": {
+          "modexp": {
+            "divisor": 20
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000006": {
+      "builtin": {
+        "name": "alt_bn128_add",
+        "pricing": {
+          "0": {
+            "price": { "alt_bn128_const_operations": { "price": 500 }}
+          },
+          "0x17d433": {
+            "info": "EIP 1108 transition at block 1_561_651 (0x17d433)",
+            "price": { "alt_bn128_const_operations": { "price": 150 }}
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000007": {
+      "builtin": {
+        "name": "alt_bn128_mul",
+        "pricing": {
+          "0": {
+            "price": { "alt_bn128_const_operations": { "price": 40000 }}
+          },
+          "0x17d433": {
+            "info": "EIP 1108 transition at block 1_561_651 (0x17d433)",
+            "price": { "alt_bn128_const_operations": { "price": 6000 }}
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000008": {
+      "builtin": {
+        "name": "alt_bn128_pairing",
+        "pricing": {
+          "0": {
+            "price": { "alt_bn128_pairing": { "base": 100000, "pair": 80000 }}
+          },
+          "0x17d433": {
+            "info": "EIP 1108 transition at block 1_561_651 (0x17d433)",
+            "price": { "alt_bn128_pairing": { "base": 45000, "pair": 34000 }}
+          }
+        }
+      }
+    },
+    "0x2daded60b5d68d7e4f12307c4f6fa8fb11956f32": {
+      "balance": "0x295be96e640669720000000"
+    }
+  }
+}

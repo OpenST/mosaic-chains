@@ -51,11 +51,12 @@ export default class Utils {
 
   /**
    * This methods cleans directory after tests are complete.
+   * @param mosaicDataDir mosaic data directory.
    * @param originChain Origin chain identifier.
    */
-  public static cleanDirectories(originChain: string) {
+  public static cleanDirectories(mosaicDataDir: string, originChain: string) {
     const originDirectory = path.join(
-      Directory.getDefaultMosaicDataDir,
+      mosaicDataDir,
       originChain,
     );
 

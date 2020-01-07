@@ -8,17 +8,6 @@ export const PARITY_CLIENT = 'parity';
  */
 export default class ChainInfo {
   /**
-   * array of supported origin chains.
-   */
-  public static get chainsSupportedByParity(): string[] {
-    return [
-      'ethereum',
-      'ropsten',
-      'goerli',
-    ];
-  }
-
-  /**
    * Mapping of supported origin chain name against chain id.
    */
   public static get publicOriginChainNameToIdMap(): Record<string, string> {

@@ -125,7 +125,7 @@ export default class Initialization {
     const { sealer, deployer } = await auxiliaryChainInteract.startNewChainSealer();
     auxiliaryChainInteract.auxiliarySealer = sealer;
     auxiliaryChainInteract.auxiliaryDeployer = deployer;
-    Logger.info('Sealer started');
+    Logger.info(`Sealer started with sealer: ${sealer}`);
     const auxiliaryStateRootZero: string = await auxiliaryChainInteract.getStateRootZero();
     const expectedOstCoGatewayAddress: string = auxiliaryChainInteract.getExpectedOstCoGatewayAddress(
       auxiliaryChainInteract.auxiliaryDeployer,

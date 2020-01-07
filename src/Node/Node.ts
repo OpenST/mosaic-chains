@@ -2,8 +2,11 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import Logger from '../Logger';
 import Shell from '../Shell';
+import Directory from '../Directory';
 import NodeDescription from './NodeDescription';
 import PublishMosaicConfig from '../Config/PublishMosaicConfig';
+
+import Web3 = require('web3');
 
 /**
  * Represents a chain that is managed by docker.
@@ -75,7 +78,7 @@ export default abstract class Node {
     if (this.originChain === '') {
       this.chainDir = path.join(this.mosaicDir, this.chain, `origin-${nodeDescription.client}`);
     } else {
-      this.chainDir = path.join(this.mosaicDir, this.originChain, this.chain);
+      this.chainDir = path.join(this.mosaicDir, this.originChain, `auxiliary-${this.chain}-${nodeDescription.client}`);
     }
     this.containerName = `${Node.prefix}${this.chain}`;
   }
@@ -112,6 +115,10 @@ export default abstract class Node {
     return this.keepAfterStop;
   }
 
+  public setUnlock(unlock: string): void {
+    this.unlock = unlock;
+  }
+
   /**
    * Create a docker network if network doesn't exists.
    */
@@ -123,9 +130,38 @@ export default abstract class Node {
   }
 
   /**
+   * Creates the directory for the chain.
+   */
+  public initializeDirectories(): void {
+    this.initializeDataDir();
+    if (!fs.existsSync(this.chainDir)) {
+      this.logInfo(`${this.chainDir} does not exist; initializing`);
+      fs.mkdirpSync(this.chainDir);
+    }
+  }
+
+  /**
    * Starts the docker container that runs this chain.
    */
   public abstract start(): void;
+
+  public abstract async startSealer(sealer: string): Promise<void>;
+
+  public abstract getBootNode(): string;
+
+  public abstract get keysFolder(): string;
+
+  public abstract get genesisFileName(): string;
+
+  public abstract generateAccounts(count: number): string[];
+
+  public abstract generateGenesisFile(chainId: string): any;
+
+  public abstract appendAddressesToGenesisFile(genesis: any, sealer: string, deployer: string): any;
+
+  public abstract initFromGenesis(): void;
+
+  public abstract verifyAccountsUnlocking(web3: Web3): Promise<void>;
 
   /**
    * Stops the docker container that runs this chain.
@@ -141,6 +177,26 @@ export default abstract class Node {
   }
 
   /**
+   * returns genesis file path from mosaic dir
+   */
+  public genesisMosaicDirFilePath(): string {
+    return path.join(
+      this.chainDir,
+      this.genesisFileName,
+    );
+  }
+
+  /**
+   * returns project genesis file path from project dir
+   */
+  public genesisProjectFilePath(): string {
+    return path.join(
+      Directory.getProjectUtilityChainDir(this.originChain, this.chain),
+      this.genesisFileName,
+    );
+  }
+
+  /**
    * 1. Creates the mosaic data directory if it does not exist.
    * 2. Publishes mosaic configs for existing chains
    */
@@ -149,7 +205,6 @@ export default abstract class Node {
       this.logInfo(`${this.mosaicDir} does not exist; initializing`);
       fs.mkdirSync(this.mosaicDir, { recursive: true });
     }
-
     // If the `this.originChain` is not present, then `this.chain` is the
     // origin chain itself.
     PublishMosaicConfig.tryPublish(this.originChain || this.chain);
