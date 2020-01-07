@@ -269,7 +269,7 @@ export default class AuxiliaryChainInteract {
    */
   public getBootNode(): string {
     const bootNodeKey = fs.readFileSync(this.bootKeyFilePath).toString();
-    const command = `docker run -e NODE_KEY=${bootNodeKey} hawyasunaga/ethereum-bootnode /bin/sh -c 'bootnode --nodekeyhex=$NODE_KEY --writeaddress'`;
+    const command = `docker run --restart always -e NODE_KEY=${bootNodeKey} hawyasunaga/ethereum-bootnode /bin/sh -c 'bootnode --nodekeyhex=$NODE_KEY --writeaddress'`;
     const bootNode = Shell.executeInShell(command);
     return bootNode.toString().trim();
   }

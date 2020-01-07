@@ -2,6 +2,7 @@ version: '3'
 services:
   graph-node:
     image: graphprotocol/graph-node:v0.16.0
+    restart: always
     ports:
       - '${MOSAIC_GRAPH_RPC_PORT}:8000'
       - '${MOSAIC_GRAPH_WS_PORT}:8001'
@@ -22,12 +23,14 @@ services:
       ETHEREUM_REORG_THRESHOLD: 0
   ipfs:
     image: ipfs/go-ipfs:v0.4.22-rc1
+    restart: always
     ports:
       - '${MOSAIC_GRAPH_IPFS_PORT}:5001'
     volumes:
       - '${MOSAIC_GRAPH_DATA_FOLDER}/ipfs:/data/ipfs'
   postgres:
     image: postgres:alpine
+    restart: always
     ports:
       - '${MOSAIC_POSTGRES_PORT}:5432'
     environment:
