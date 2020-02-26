@@ -24,5 +24,7 @@ export default class NodeDescription {
 
   public bootNodesFile?: string;
 
+  public clefSigner?: string;
+
   constructor(readonly chain: string) { }
 }

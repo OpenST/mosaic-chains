@@ -6,14 +6,14 @@ import NodeDescription from '../Node/NodeDescription';
 import Node from '../Node/Node';
 import GraphDescription from '../Graph/GraphDescription';
 import Graph from '../Graph/Graph';
-import DevChainOptions from "./DevChainOptions";
+import ChainInfo from '../Node/ChainInfo';
 
 mosaic
   .arguments('<chains...>')
   .action((chains: string[]) => {
     // Chain can't be validated as origin chain id is not received for aux chain.
     for (const chain of chains) {
-      const chainIdentifier = DevChainOptions.getDevChainParams(chain).chain;
+      const chainIdentifier = ChainInfo.getChainParams(chain).chain;
       const node: Node = NodeFactory.create(new NodeDescription(chainIdentifier));
       node.stop();
       const graph: Graph = new Graph(new GraphDescription(chainIdentifier));

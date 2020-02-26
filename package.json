@@ -1,6 +1,6 @@
 {
   "name": "@openst/mosaic-chains",
-  "version": "0.1.0-alpha.8",
+  "version": "0.1.0-alpha.9",
   "description": "Mosaic chains is an executable to run and manage mosaic chains.",
   "bin": {
     "mosaic": "lib/src/bin/mosaic.js"
@@ -16,11 +16,13 @@
     "test": "npm run test:unit && npm run test:smoke && npm run test:package && npm run test:integration",
     "test:unit": "mocha -r ts-node/register tests/**/**/*.test.ts tests/**/*.test.ts tests/*.test.ts",
     "test:smoke": "npm run test:smoke:ropsten && npm run test:smoke:goerli && npm run test:smoke:1405 && npm run test:smoke:1406 && npm run test:smoke:1407 && npm run test:smoke:dev-origin && npm run test:smoke:dev-auxiliary",
+    "test:smoke:ethereum": "./tests/smoke.sh ethereum",
     "test:smoke:ropsten": "./tests/smoke.sh ropsten",
     "test:smoke:goerli": "./tests/smoke.sh goerli",
     "test:smoke:1405": "./tests/smoke.sh 1405",
     "test:smoke:1406": "./tests/smoke.sh 1406",
     "test:smoke:1407": "./tests/smoke.sh 1407",
+    "test:smoke:1414": "./tests/smoke.sh 1414",
     "test:smoke:dev-origin": "./tests/smoke.sh dev-origin",
     "test:smoke:dev-auxiliary": "./tests/smoke.sh dev-auxiliary",
     "test:package": "./tests/package.sh",

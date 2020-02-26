@@ -7,7 +7,8 @@ import ChainInfo from './ChainInfo';
 import NodeDescription from './NodeDescription';
 import Logger from '../Logger';
 
-const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.1';
+const DOCKER_GETH_IMAGE = 'ethereum/client-go:v1.9.5';
+export const DEV_CHAIN_DOCKER = 'mosaicdao/dev-chains:1.0.3';
 /**
  * Represents a geth node that runs in a docker container.
  */
@@ -15,9 +16,14 @@ export default class GethNode extends Node {
   /** Path of bootnodes file. */
   public bootNodesFile?: string;
 
+  /** RPC and IPC endpoint of clef */
+  public clefSigner?: string;
+
+
   public constructor(nodeDescription: NodeDescription) {
     super(nodeDescription);
     this.bootNodesFile = nodeDescription.bootNodesFile;
+    this.clefSigner = nodeDescription.clefSigner;
   }
 
   /** A list of bootnodes that are passed to the geth container. */
@@ -58,6 +64,7 @@ export default class GethNode extends Node {
       '--targetgaslimit', targetGasLimit,
       '--mine',
       '--nodekey', `/chain_data/${bootKey}`,
+      '--allow-insecure-unlock',
     ]);
 
     Shell.executeDockerCommand(args);
@@ -171,7 +178,7 @@ export default class GethNode extends Node {
       '--rm',
       '--volume', `${genesisFilePath}:/genesis.json`,
       '--volume', `${this.chainDir}:/chain_data`,
-      'ethereum/client-go:v1.8.23',
+      DOCKER_GETH_IMAGE,
       'init',
       '/genesis.json',
       '--datadir', '/chain_data',
@@ -190,8 +197,7 @@ export default class GethNode extends Node {
         '--volume', `${this.password}:/password.txt`,
       ]);
     }
-
-    args = args.concat(['ethereum/client-go:v1.8.23']);
+    args = args.concat([DOCKER_GETH_IMAGE]);
     args = args.concat(this.networkOption());
     args = args.concat([
       '--datadir', './chain_data',
@@ -208,7 +214,11 @@ export default class GethNode extends Node {
       '--wsapi', 'eth,net,web3,network,debug,txpool,admin,personal',
       '--wsorigins=*',
     ]);
-
+    if (this.clefSigner) {
+      args = args.concat([
+        `--signer=${this.clefSigner}`,
+      ]);
+    }
     if (this.bootnodes !== '') {
       args = args.concat([
         '--bootnodes', this.bootnodes.trim(),
