@@ -204,6 +204,8 @@ export default class GethNode extends Node {
       '--port', `${this.port}`,
       '--rpc',
       '--rpcaddr', '0.0.0.0',
+      '--syncmode', 'full',
+      '--gcmode', 'archive',
       '--rpcvhosts=*',
       '--rpccorsdomain=*',
       '--rpcapi', 'eth,net,web3,network,debug,txpool,admin,personal',
