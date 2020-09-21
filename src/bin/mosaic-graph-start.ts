@@ -14,9 +14,6 @@ import Directory from '../Directory';
 import waitPort = require('wait-port');
 import UrlParse = require('url-parse');
 
-const DEFAULT_POSTGRES_PASSWORD = 'let-me-in';
-const DEFAULT_POSTGRES_DATABASE = 'graph-node';
-
 class GraphDescription {
   public containerName: string;
 
@@ -183,11 +180,9 @@ function parseOptions(options): GraphDescription {
   const { graphRpcAdminPort } = options;
   const { graphIpfsPort } = options;
   const { graphPostgresPort } = options;
+  const { graphPostgresDatabase } = options;
   const { graphPostgresUser } = options;
-
-  const graphPostgresPassword = DEFAULT_POSTGRES_PASSWORD;
-
-  const graphPostgresDatabase = DEFAULT_POSTGRES_DATABASE;
+  const { graphPostgresPassword } = options;
 
   return {
     containerName,
@@ -238,12 +233,16 @@ mosaic
     Integer.parseString,
   )
   .requiredOption(
+    '-B,--graph-postgres-database <database>',
+    'user of postgres database of graph node',
+  )
+  .requiredOption(
     '-U,--graph-postgres-user <user>',
     'user of postgres database of graph node',
   )
-  .option(
-    '-P,--graph-postgres-password-file <password>',
-    'path of a file containing password of postgres database of graph node',
+  .requiredOption(
+    '-P,--graph-postgres-password <password>',
+    'password of postgres database of graph node',
   )
   .requiredOption(
     '-S,--graph-postgres-port <port>',
