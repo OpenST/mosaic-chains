@@ -12,7 +12,6 @@ import Utils from '../Utils';
 import Directory from '../Directory';
 
 import waitPort = require('wait-port');
-import UrlParse = require('url-parse');
 
 class GraphDescription {
   public containerName: string;
@@ -115,8 +114,6 @@ export default class Graph {
   }
 
   private get defaultDockerGraphCommand(): string[] {
-    const url = new UrlParse(this.ethereumRpcEndpoint);
-
     return [
       `MOSAIC_GRAPH_RPC_PORT=${this.graphRpcPort}`,
       `MOSAIC_GRAPH_WS_PORT=${this.graphWsPort}`,
@@ -127,8 +124,7 @@ export default class Graph {
       `MOSAIC_POSTGRES_DATABASE=${this.graphPostgresDatabase}`,
       `MOSAIC_POSTGRES_PORT=${this.graphPostgresPort}`,
       `MOSAIC_GRAPH_DATA_FOLDER=${this.graphDatadir}`,
-      `MOSAIC_ETHEREUM_RPC_PORT=${url.port}`,
-      `MOSAIC_GRAPH_NODE_HOST=${url.protocol}//${url.hostname}`,
+      `MOSAIC_ETHEREUM=${this.ethereumRpcEndpoint}`,
       'docker-compose',
       `-f ${path.join(Directory.getProjectGraphDir(), 'docker-compose.yml')}`,
       '-p', this.containerName,

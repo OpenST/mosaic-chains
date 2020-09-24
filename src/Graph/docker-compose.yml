@@ -15,7 +15,7 @@ services:
       postgres_pass: '${MOSAIC_POSTGRES_PASSWORD}'
       postgres_db: '${MOSAIC_POSTGRES_DATABASE}'
       ipfs: 'ipfs:5001'
-      ethereum: 'dev:http://${MOSAIC_GRAPH_NODE_HOST}:${MOSAIC_ETHEREUM_RPC_PORT}'
+      ethereum: '${MOSAIC_ETHEREUM}'
       RUST_LOG: info
       GRAPH_LOG: info
       ETHEREUM_POLLING_INTERVAL: 3000
