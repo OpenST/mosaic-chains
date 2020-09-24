@@ -131,7 +131,7 @@ export default class Graph {
       `MOSAIC_POSTGRES_PORT=${this.graphPostgresPort}`,
       `MOSAIC_GRAPH_DATA_FOLDER=${this.graphDatadir}`,
       `MOSAIC_ETHEREUM_RPC_PORT=${url.port}`,
-      `MOSAIC_GRAPH_NODE_HOST=${url.protocol}:${url.hostname}`,
+      `MOSAIC_GRAPH_NODE_HOST=${url.protocol}//${url.hostname}`,
       'docker-compose',
       `-f ${path.join(Directory.getProjectGraphDir(), 'docker-compose.yml')}`,
       '-p', this.containerName,
