@@ -111,7 +111,15 @@ export default class SubGraph {
    * Copy auto generated code to a temp dir.
    */
   private copyCodeToTempDir(): void {
-    this.logInfo('copying auto generated graph code to temp directory');
+    this.logInfo(
+      'copying auto generated graph code to the temp directory: '
+      + `${this.getTempGraphInstallationDir}`,
+    );
+    this.logInfo(
+      'auto generated graph code directory: '
+      + `${Directory.getProjectAutoGenGraphDir(this.subGraphType)}`,
+    );
+
     FileSystem.ensureDirSync(this.getTempGraphInstallationDir);
     FileSystem.copySync(
       Directory.getProjectAutoGenGraphDir(this.subGraphType),
@@ -124,7 +132,7 @@ export default class SubGraph {
    */
   private installNodeModules(): void {
     this.logInfo('installing node modules');
-    Shell.executeInShell(`cd ${this.getTempGraphInstallationDir} && npm ci`);
+    Shell.executeInShell(`cd "${this.getTempGraphInstallationDir}" && npm ci --silent --no-warnings`);
   }
 
   /**
@@ -135,7 +143,7 @@ export default class SubGraph {
     this.logInfo('attempting to create local graph');
     try {
       this.tryRemovingSubgraph();
-      this.executeGraphCommand(`create --node ${this.graphRPCAdminEndPoint}/ ${this.name}`);
+      this.executeGraphCommand(`create --node "${this.graphRPCAdminEndPoint}" "${this.name}"`);
       return { success: true, message: '' };
     } catch (ex) {
       const message = this.extractMessageFromError(ex);
@@ -147,9 +155,9 @@ export default class SubGraph {
   /**
    * This method tries to remove the subgraph if already deployed.
    */
-  private tryRemovingSubgraph() {
+  private tryRemovingSubgraph(): void {
     try {
-      this.executeGraphCommand(`remove --node ${this.graphRPCAdminEndPoint}/ ${this.name}`);
+      this.executeGraphCommand(`remove --node "${this.graphRPCAdminEndPoint}" "${this.name}"`);
     } catch (e) {
       this.logInfo('No subgraph exists, deploying for the first time.');
     }

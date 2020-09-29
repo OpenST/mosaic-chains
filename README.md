@@ -124,6 +124,27 @@ Examples with different chain IDs:
 | `200`         | `30200` | `40200` | `50200` |
 | `1406`        | `31406` | `41406` | `51406` |
 
+## Running a Graph Node
+
+`mosaic` executable allows to run a graph node instance against the given ethereum endpoint.
+
+```bash
+./mosaic graph-start                      \
+    --container-name <container-name>     \
+    --ethereum-rpc-endpoint <endpoint>    \
+    --graph-datadir <datadir>             \
+    --graph-rpc-port <port>               \
+    --graph-ws-port <port>                \
+    --graph-rpc-admin-port <port>         \
+    --graph-ipfs-port <port>              \
+    --graph-postgres-database <database>  \
+    --graph-postgres-user <user>          \
+    --graph-postgres-password <password>  \
+    --graph-postgres-port <port>
+```
+
+All the options are required for now.
+
 ## Creating a new auxiliary chain
 
 If there is no existing mosaic config with the library addresses for the `origin` chain then first run `./mosaic libraries <origin-chain-id> <origin-websocket> <deployer-address>`. This command will create a mosaic config file for the origin chain and stores library addresses of origin chain. Generated mosaic config must be used to create multiple auxiliary chains. Ideally `./mosaic libraries` command should be used once per origin chain. This command assumes that signer is already been setup. Refer [signer section](#Signing_Of_Transaction).
