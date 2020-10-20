@@ -5,7 +5,7 @@ import ChainInfo from '../Node/ChainInfo';
 import Directory from '../Directory';
 import MosaicConfig from '../Config/MosaicConfig';
 
-import Web3 = require('web3');
+import Web3 from 'web3';
 
 /**
  * This class contains methods to validate commandline  arguments.

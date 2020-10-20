@@ -2,7 +2,7 @@ import * as ip from 'ip';
 import * as markdownTable from 'markdown-table';
 import ChainInfo from './Node/ChainInfo';
 
-import Web3 = require('web3');
+import * as web3Utils from 'web3-utils';
 
 /**
  * It contains utility methods.
@@ -14,7 +14,7 @@ export default class Utils {
    * @returns It returns checksum address.
    */
   public static toChecksumAddress(address: string): string {
-    return Web3.utils.toChecksumAddress(address);
+    return web3Utils.toChecksumAddress(address);
   }
 
   /**
