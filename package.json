@@ -71,7 +71,7 @@
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-json": "1.4.0",
-    "mocha": "6.1.4",
+    "mocha": "10.2.0",
     "subscriptions-transport-ws": "0.9.16",
     "ws": "7.0.0",
     "sinon": "7.3.2",
